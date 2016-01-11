@@ -19,7 +19,7 @@ import com.hotcast.vr.R;
  * @since 2013-7-30
  */
 public class FooterLoadingLayout extends LoadingLayout {
-    /**进度条*/
+    /**进度条，么么大*/
     private ProgressBar mProgressBar;
     /** 显示的文本 */
     private TextView mHintView;
