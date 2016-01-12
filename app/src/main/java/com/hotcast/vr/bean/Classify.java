@@ -1,10 +1,12 @@
 package com.hotcast.vr.bean;
 
 
+import java.io.Serializable;
+
 /**
  * Created by lostnote on 15/11/29.
  */
-public class Classify {
+public class Classify implements Serializable {
 //    频道标题
     String title;
 //    频道ID
@@ -15,7 +17,19 @@ public class Classify {
     String image;
 //    点击图片
     String image_click;
+//    一体机使用的平道图片
+    String big_logo;
     int id;
+
+    public String getBig_logo() {
+        return big_logo;
+    }
+
+    public void setBig_logo(String big_logo) {
+        this.big_logo = big_logo;
+    }
+
+
 
     public int getId() {
         return id;
@@ -73,6 +87,8 @@ public class Classify {
                 ", show_type='" + show_type + '\'' +
                 ", image='" + image + '\'' +
                 ", image_click='" + image_click + '\'' +
+                ", big_logo='" + big_logo + '\'' +
+                ", id=" + id +
                 '}';
     }
 }

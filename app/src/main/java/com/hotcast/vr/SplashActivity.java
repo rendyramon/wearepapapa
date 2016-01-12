@@ -51,6 +51,7 @@ public class SplashActivity extends BaseActivity {
     private String requestUrl;
     //下载路径
     private String spec ;
+    //更新日志
     private String newFeatures;
     //是否强制更新
     private int force;
@@ -62,7 +63,7 @@ public class SplashActivity extends BaseActivity {
     public int getLayoutId() {
         return R.layout.activity_splash;
     }
-    PackageInfo info;
+    private PackageInfo info;
     @Override
     public void init() {
         AnalyticsConfig.enableEncrypt(true);
@@ -108,7 +109,7 @@ public class SplashActivity extends BaseActivity {
             }
         });
     }
-    String current;
+   private String current;
     private void setViewData(String json){
         if (Utils.textIsNull(json)) {
             return;
@@ -239,6 +240,7 @@ public class SplashActivity extends BaseActivity {
         try {
             PackageManager packageManager = ctx.getPackageManager();
             if (packageManager != null) {
+
                 ApplicationInfo applicationInfo = packageManager.getApplicationInfo(ctx.getPackageName(), PackageManager.GET_META_DATA);
                 if (applicationInfo != null) {
                     if (applicationInfo.metaData != null) {
