@@ -1,19 +1,24 @@
 package com.hotcast.vr;
 
 import android.content.Intent;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.hotcast.vr.bean.Classify;
 import com.hotcast.vr.image3D.Image3DSwitchView;
 import com.hotcast.vr.pageview.LandscapeView;
 import com.hotcast.vr.tools.DensityUtils;
 import com.hotcast.vr.tools.L;
+
+import java.util.List;
 
 import butterknife.InjectView;
 
@@ -30,6 +35,8 @@ public class LandscapeActivity extends BaseActivity implements View.OnClickListe
     private LandscapeView view1, view2;
     private View updateV1, updateV2;
     private Image3DSwitchView image3D_1, image3D_2;
+    UpdateAppManager updateAppManager;
+    List<Classify> netClassifys;
 
     @Override
     public int getLayoutId() {
@@ -97,33 +104,59 @@ public class LandscapeActivity extends BaseActivity implements View.OnClickListe
         container1.addView(view1.getRootView(), ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         container2.addView(view2.getRootView(), ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
 //        if (BaseApplication.isUpdate) {
-            showUpdate();
+        showUpdate();
 //        }
     }
 
+    LinearLayout ll_updatetext1;
+    LinearLayout ll_updatetext2;
+    Button bt_ok1;
+    Button bt_cancel1;
+    Button bt_ok2;
+    Button bt_cancel2;
+
     private void showUpdate() {
-        updateV1 = View.inflate(this, R.layout.update_window, null);
-        updateV2 = View.inflate(this, R.layout.update_window, null);
-        Button bt_ok1 = (Button) updateV1.findViewById(R.id.bt_ok);
-        Button bt_cancel1 = (Button) updateV1.findViewById(R.id.bt_cancel);
-        Button bt_ok2 = (Button) updateV2.findViewById(R.id.bt_ok);
-        Button bt_cancel2 = (Button) updateV2.findViewById(R.id.bt_cancel);
-        bt_ok1.setOnClickListener(this);
-        bt_cancel1.setOnClickListener(this);
-        bt_ok2.setOnClickListener(this);
-        bt_cancel2.setOnClickListener(this);
-        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-        params.width = DensityUtils.dp2px(this,220);
+        if (force == 1) {
+            updateAppManager = new UpdateAppManager(this, spec, force, newFeatures);
+            updateAppManager.downloadApp();
+            // TODO 显示进度条
+        }else{
+            updateV1 = View.inflate(this, R.layout.update_window, null);
+            updateV2 = View.inflate(this, R.layout.update_window, null);
+            ll_updatetext1 = (LinearLayout) updateV1.findViewById(R.id.ll_updatetext);
+            ll_updatetext2 = (LinearLayout) updateV2.findViewById(R.id.ll_updatetext);
+            bt_ok1 = (Button) updateV1.findViewById(R.id.bt_ok);
+            bt_cancel1 = (Button) updateV1.findViewById(R.id.bt_cancel);
+            bt_ok2 = (Button) updateV2.findViewById(R.id.bt_ok);
+            bt_cancel2 = (Button) updateV2.findViewById(R.id.bt_cancel);
+            bt_ok1.setOnClickListener(this);
+            bt_cancel1.setOnClickListener(this);
+            bt_ok2.setOnClickListener(this);
+            bt_cancel2.setOnClickListener(this);
+            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+            params.width = DensityUtils.dp2px(this, 220);
 //        params.height = DensityUtils.dp2px(this,80);
-        params.addRule(RelativeLayout.CENTER_IN_PARENT);
-        updateV1.setLayoutParams(params);
-        updateV2.setLayoutParams(params);
-        container1.addView(updateV1);
-        container2.addView(updateV2);
+            params.addRule(RelativeLayout.CENTER_IN_PARENT);
+            updateV1.setLayoutParams(params);
+            updateV2.setLayoutParams(params);
+            container1.addView(updateV1);
+            container2.addView(updateV2);
+        }
     }
+
+    //下载路径
+    private String spec;
+    //是否强制更新
+    private int force;
+    //更新日志
+    String newFeatures;
 
     @Override
     public void getIntentData(Intent intent) {
+        spec = getIntent().getStringExtra("spec");
+        force = getIntent().getIntExtra("force", 0);
+        newFeatures = getIntent().getStringExtra("newFeatures");
+        netClassifys = (List<Classify>) getIntent().getSerializableExtra("classifies");
     }
 
     @Override
@@ -250,14 +283,20 @@ public class LandscapeActivity extends BaseActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.bt_ok:
-                Toast.makeText(this,"开始下载更新包",Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "开始下载更新包", Toast.LENGTH_LONG).show();
                 container1.removeView(updateV1);
                 container2.removeView(updateV2);
+                if (isNetworkConnected(this) || isWifiConnected(this) || isMobileConnected(this)) {
+                    if (!TextUtils.isEmpty(spec)) {
+                        updateAppManager = new UpdateAppManager(this, spec, force, newFeatures);
+                        updateAppManager.downloadApp();
+                    }
+                }
                 break;
             case R.id.bt_cancel:
-                Toast.makeText(this,"取消更新",Toast.LENGTH_LONG).show();
                 container1.removeView(updateV1);
                 container2.removeView(updateV2);
+                Toast.makeText(this, "取消更新", Toast.LENGTH_LONG).show();
                 break;
         }
     }

@@ -140,7 +140,7 @@ public class UpdateAppManager {
     /**
      * 下载新版本应用
      */
-    private void downloadApp() {
+    public void downloadApp() {
 //         多线程断点下载。
 
         final HttpUtils http = new HttpUtils();
@@ -167,6 +167,9 @@ public class UpdateAppManager {
             @Override
             public void onLoading(long total, long current,
                                   boolean isUploading) {
+                if (isCancel){
+                    httpHandler.cancel();
+                }
 //                        tv_info.setText(current + "/" + total);
                 L.e("----正在下载：" + current + "/" + total);
                 curProgress = (int) (((float) current / total) * 100);
@@ -175,10 +178,6 @@ public class UpdateAppManager {
                 super.onLoading(total, current, isUploading);
             }
         });
-        if (isCancel){
-            httpHandler.cancel();
-        }
-
     }
 
     /**
