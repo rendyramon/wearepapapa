@@ -3,7 +3,6 @@ package com.hotcast.vr;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
@@ -21,7 +20,6 @@ import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -48,6 +46,7 @@ public class SplashScapeActivity extends BaseActivity {
     public int getLayoutId() {
         try {
             info = this.getPackageManager().getPackageInfo(this.getPackageName(), 0);
+            System.out.println("--versioName = " + info.versionName);
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
@@ -127,7 +126,7 @@ public class SplashScapeActivity extends BaseActivity {
         current = update.getCurrent();
         System.out.println("--current = " + current);
         newFeatures = update.getLog();
-//        System.out.println("***SplashActivity spec:" + spec + ",force:" + force);
+        System.out.println("----SplashActivity spec:" + spec + ",force:" + force);
     }
     @Override
     protected void onResume() {
