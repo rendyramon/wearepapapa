@@ -9,6 +9,6 @@ import com.hotcast.vr.R;
  */
 public class SplashView extends BaseView {
     public SplashView(BaseActivity activity) {
-        super(activity, R.layout.activity_splash);
+        super(activity, R.layout.splash_scape);
     }
 }
