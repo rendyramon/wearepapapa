@@ -71,4 +71,25 @@
             android:text="切换到手机视图"
             android:layout_marginTop="20dp"/>
     </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/rl_update"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <ProgressBar
+            android:id="@+id/progressBar_update"
+            android:layout_centerInParent="true"
+            android:layout_width="250dp"
+            android:layout_height="10dp"
+            style="?android:attr/progressBarStyleHorizontal"
+            />
+        <Button
+            android:id="@+id/bt_cancel_progressbar"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="8dp"
+            android:layout_below="@id/progressBar_update"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:text="取消更新"/>
+    </RelativeLayout>
 </RelativeLayout>

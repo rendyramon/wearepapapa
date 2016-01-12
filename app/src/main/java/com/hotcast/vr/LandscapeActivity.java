@@ -1,6 +1,10 @@
 package com.hotcast.vr;
 
 import android.content.Intent;
+import android.net.Uri;
+import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -9,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -17,7 +22,9 @@ import com.hotcast.vr.image3D.Image3DSwitchView;
 import com.hotcast.vr.pageview.LandscapeView;
 import com.hotcast.vr.tools.DensityUtils;
 import com.hotcast.vr.tools.L;
+import com.lidroid.xutils.http.HttpHandler;
 
+import java.io.File;
 import java.util.List;
 
 import butterknife.InjectView;
@@ -35,8 +42,12 @@ public class LandscapeActivity extends BaseActivity implements View.OnClickListe
     private LandscapeView view1, view2;
     private View updateV1, updateV2;
     private Image3DSwitchView image3D_1, image3D_2;
+    private ProgressBar progressBar_update1, progressBar_update2;
+    private Button bt_cancel_progressbar1, bt_cancel_progressbar2;
+    private RelativeLayout rl_update1,rl_update2;
     UpdateAppManager updateAppManager;
     List<Classify> netClassifys;
+    private HttpHandler httphandler;
 
     @Override
     public int getLayoutId() {
@@ -47,6 +58,14 @@ public class LandscapeActivity extends BaseActivity implements View.OnClickListe
     public void init() {
         view1 = new LandscapeView(this);
         view2 = new LandscapeView(this);
+        progressBar_update1 = (ProgressBar) view1.getRootView().findViewById(R.id.progressBar_update);
+        progressBar_update2 = (ProgressBar) view2.getRootView().findViewById(R.id.progressBar_update);
+        bt_cancel_progressbar1 = (Button) view1.getRootView().findViewById(R.id.bt_cancel_progressbar);
+        bt_cancel_progressbar1.setOnClickListener(this);
+        bt_cancel_progressbar2 = (Button) view2.getRootView().findViewById(R.id.bt_cancel_progressbar);
+        bt_cancel_progressbar2.setOnClickListener(this);
+        rl_update1 = (RelativeLayout) view1.getRootView().findViewById(R.id.rl_update);
+        rl_update2 = (RelativeLayout) view2.getRootView().findViewById(R.id.rl_update);
         image3D_1 = (Image3DSwitchView) view1.getRootView().findViewById(R.id.image);
         image3D_2 = (Image3DSwitchView) view2.getRootView().findViewById(R.id.image);
         image3D_1.setOnMovechangeListener(new Image3DSwitchView.OnMovechangeListener() {
@@ -103,24 +122,49 @@ public class LandscapeActivity extends BaseActivity implements View.OnClickListe
         });
         container1.addView(view1.getRootView(), ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         container2.addView(view2.getRootView(), ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-//        if (BaseApplication.isUpdate) {
-        showUpdate();
-//        }
+        System.out.println("---是否更新"+BaseApplication.isUpdate);
+        if (BaseApplication.isUpdate) {
+            showUpdate();
+        }
     }
 
+    // 更新应用版本标记
+    private static final int UPDARE_TOKEN = 0x29;
+    // 准备安装新版本应用标记
+    private static final int INSTALL_TOKEN = 0x31;
     LinearLayout ll_updatetext1;
     LinearLayout ll_updatetext2;
     Button bt_ok1;
     Button bt_cancel1;
     Button bt_ok2;
     Button bt_cancel2;
+    Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case UPDARE_TOKEN:
+                    progressBar_update2.setProgress((int) msg.obj);
+                    progressBar_update1.setProgress((int) msg.obj);
+//                    System.out.println("***正在下载");
+                    break;
+                case INSTALL_TOKEN:
+                    installApp();
+                    break;
+//                case STOP:
+
+            }
+        }
+    };
 
     private void showUpdate() {
         if (force == 1) {
             updateAppManager = new UpdateAppManager(this, spec, force, newFeatures);
-            updateAppManager.downloadApp();
+            httphandler = updateAppManager.downloadAppInlandscape(mHandler);
+            System.out.println("---强制更新");
             // TODO 显示进度条
-        }else{
+            rl_update1.setVisibility(View.VISIBLE);
+            rl_update2.setVisibility(View.VISIBLE);
+        } else {
             updateV1 = View.inflate(this, R.layout.update_window, null);
             updateV2 = View.inflate(this, R.layout.update_window, null);
             ll_updatetext1 = (LinearLayout) updateV1.findViewById(R.id.ll_updatetext);
@@ -154,6 +198,7 @@ public class LandscapeActivity extends BaseActivity implements View.OnClickListe
     @Override
     public void getIntentData(Intent intent) {
         spec = getIntent().getStringExtra("spec");
+
         force = getIntent().getIntExtra("force", 0);
         newFeatures = getIntent().getStringExtra("newFeatures");
         netClassifys = (List<Classify>) getIntent().getSerializableExtra("classifies");
@@ -289,7 +334,9 @@ public class LandscapeActivity extends BaseActivity implements View.OnClickListe
                 if (isNetworkConnected(this) || isWifiConnected(this) || isMobileConnected(this)) {
                     if (!TextUtils.isEmpty(spec)) {
                         updateAppManager = new UpdateAppManager(this, spec, force, newFeatures);
-                        updateAppManager.downloadApp();
+                        httphandler = updateAppManager.downloadAppInlandscape(mHandler);
+                        rl_update1.setVisibility(View.VISIBLE);
+                        rl_update2.setVisibility(View.VISIBLE);
                     }
                 }
                 break;
@@ -298,6 +345,32 @@ public class LandscapeActivity extends BaseActivity implements View.OnClickListe
                 container2.removeView(updateV2);
                 Toast.makeText(this, "取消更新", Toast.LENGTH_LONG).show();
                 break;
+            case R.id.bt_cancel_progressbar:
+                httphandler.cancel();
+                rl_update1.setVisibility(View.GONE);
+                rl_update2.setVisibility(View.GONE);
+                break;
         }
+    }
+
+    /**
+     * 安装新版本应用
+     */
+    private void installApp() {
+        Intent intent = new Intent();
+        //执行动作
+        intent.setAction(Intent.ACTION_VIEW);
+        //执行的数据类型
+        intent.setDataAndType(Uri.fromFile(new File(Environment
+                .getExternalStorageDirectory(), "VR热播.apk")), "application/vnd.android.package-archive");//编者按：此处Android应为android，否则造成安装不了
+        startActivity(intent);
+    }
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (httphandler!=null){
+            httphandler.cancel();
+        }
+
     }
 }

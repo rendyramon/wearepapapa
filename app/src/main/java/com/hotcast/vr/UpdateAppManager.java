@@ -193,4 +193,48 @@ public class UpdateAppManager {
         context.startActivity(intent);
 
     }
+
+    public HttpHandler downloadAppInlandscape(final Handler mHandler) {
+//         多线程断点下载。
+
+        final HttpUtils http = new HttpUtils();
+        httpHandler = http.download(spec, "/mnt/sdcard/VR热播.apk", new RequestCallBack<File>() {
+            @Override
+            public void onStart() {
+                super.onStart();
+            }
+
+            @Override
+            public void onSuccess(ResponseInfo<File> arg0) {
+                System.out.println("安装 /mnt/sdcard/VR热播.apk");
+                mHandler.sendEmptyMessage(INSTALL_TOKEN);
+            }
+
+            @Override
+            public void onFailure(HttpException arg0, String arg1) {
+                Toast.makeText(context, "下载失败", Toast.LENGTH_SHORT).show();
+                System.out.println(arg1);
+                arg0.printStackTrace();
+//                        loadMainUI();
+            }
+
+            @Override
+            public void onLoading(long total, long current,
+                                  boolean isUploading) {
+                if (isCancel){
+                    httpHandler.cancel();
+                }
+//                        tv_info.setText(current + "/" + total);
+                L.e("----正在下载：" + current + "/" + total);
+                curProgress = (int) (((float) current / total) * 100);
+                System.out.println(curProgress);
+                Message msg = Message.obtain();
+                msg.obj = curProgress;
+                msg.what = UPDARE_TOKEN;
+                mHandler.sendMessage(msg);
+                super.onLoading(total, current, isUploading);
+            }
+        });
+        return httpHandler;
+    }
 }
