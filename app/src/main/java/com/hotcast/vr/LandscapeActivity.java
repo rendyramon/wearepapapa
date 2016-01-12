@@ -17,14 +17,26 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.hotcast.vr.bean.Classify;
+import com.hotcast.vr.bean.VrPlay;
 import com.hotcast.vr.image3D.Image3DSwitchView;
-import com.hotcast.vr.pageview.LandscapeView;
+import com.hotcast.vr.imageView.Image3DView;
+import com.hotcast.vr.pageview.VrListView;
+import com.hotcast.vr.tools.Constants;
 import com.hotcast.vr.tools.DensityUtils;
 import com.hotcast.vr.tools.L;
+import com.hotcast.vr.tools.Utils;
+import com.lidroid.xutils.BitmapUtils;
+import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.HttpHandler;
+import com.lidroid.xutils.http.RequestParams;
+import com.lidroid.xutils.http.ResponseInfo;
+import com.lidroid.xutils.http.callback.RequestCallBack;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.List;
 
 import butterknife.InjectView;
@@ -39,15 +51,16 @@ public class LandscapeActivity extends BaseActivity implements View.OnClickListe
     @InjectView(R.id.container2)
     RelativeLayout container2;
 
-    private LandscapeView view1, view2;
+    private VrListView view1, view2;
     private View updateV1, updateV2;
-    private Image3DSwitchView image3D_1, image3D_2;
+    private com.hotcast.vr.imageView.Image3DSwitchView img3D, img3D2;
     private ProgressBar progressBar_update1, progressBar_update2;
     private Button bt_cancel_progressbar1, bt_cancel_progressbar2;
-    private RelativeLayout rl_update1,rl_update2;
+    private RelativeLayout rl_update1, rl_update2;
     UpdateAppManager updateAppManager;
     List<Classify> netClassifys;
     private HttpHandler httphandler;
+    BitmapUtils bitmapUtils;
 
     @Override
     public int getLayoutId() {
@@ -56,8 +69,14 @@ public class LandscapeActivity extends BaseActivity implements View.OnClickListe
 
     @Override
     public void init() {
-        view1 = new LandscapeView(this);
-        view2 = new LandscapeView(this);
+        view1 = new VrListView(this);
+        view2 = new VrListView(this);
+        view1.hideTextView();
+        view1.setPageCenter();
+        view2.hideTextView();
+        view2.setPageCenter();
+        bitmapUtils = new BitmapUtils(this);
+        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         progressBar_update1 = (ProgressBar) view1.getRootView().findViewById(R.id.progressBar_update);
         progressBar_update2 = (ProgressBar) view2.getRootView().findViewById(R.id.progressBar_update);
         bt_cancel_progressbar1 = (Button) view1.getRootView().findViewById(R.id.bt_cancel_progressbar);
@@ -66,63 +85,95 @@ public class LandscapeActivity extends BaseActivity implements View.OnClickListe
         bt_cancel_progressbar2.setOnClickListener(this);
         rl_update1 = (RelativeLayout) view1.getRootView().findViewById(R.id.rl_update);
         rl_update2 = (RelativeLayout) view2.getRootView().findViewById(R.id.rl_update);
-        image3D_1 = (Image3DSwitchView) view1.getRootView().findViewById(R.id.image);
-        image3D_2 = (Image3DSwitchView) view2.getRootView().findViewById(R.id.image);
-        image3D_1.setOnMovechangeListener(new Image3DSwitchView.OnMovechangeListener() {
+        img3D = (com.hotcast.vr.imageView.Image3DSwitchView) view1.getRootView().findViewById(R.id.id_sv);
+        img3D2 = (com.hotcast.vr.imageView.Image3DSwitchView) view2.getRootView().findViewById(R.id.id_sv);
+        for (int i = 0; i < netClassifys.size(); i++) {
+            Image3DView image3DView = new Image3DView(this);
+            bitmapUtils.display(image3DView, netClassifys.get(i).getImage());
+            image3DView.setLayoutParams(params);
+            final String channel_id = netClassifys.get(i).getChannel_id();
+            image3DView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    getNetData(channel_id);
+                    System.out.println("***你点击了item，准备播放**");
+                }
+            });
+
+            img3D.addView(image3DView);
+        }
+        for (int i = 0; i < netClassifys.size(); i++) {
+            Image3DView image3DView = new Image3DView(this);
+            bitmapUtils.display(image3DView, netClassifys.get(i).getImage());
+            image3DView.setLayoutParams(params);
+            final String channel_id = netClassifys.get(i).getChannel_id();
+            image3DView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    getNetData(channel_id);
+                    System.out.println("***你点击了item，准备播放**");
+                }
+            });
+            img3D2.addView(image3DView);
+        }
+        img3D.setOnMovechangeListener(new com.hotcast.vr.imageView.Image3DSwitchView.OnMovechangeListener() {
             @Override
             public void OnMovechange(int dix) {
                 System.out.println("---OnMovechange1");
-                image3D_2.scrollBy(dix, 0);
-                image3D_2.refreshImageShowing();
+                img3D2.scrollBy(dix, 0);
+                img3D2.refreshImageShowing();
             }
 
             @Override
             public void Next() {
                 System.out.println("---Next1");
-                image3D_2.scrollToNext();
+                img3D2.scrollToNext();
             }
 
             @Override
             public void Previous() {
                 System.out.println("---Previous1");
-                image3D_2.scrollToPrevious();
+                img3D2.scrollToPrevious();
             }
 
             @Override
             public void Back() {
                 System.out.println("---Back1");
-                image3D_2.scrollBack();
+                img3D2.scrollBack();
             }
         });
-        image3D_2.setOnMovechangeListener(new Image3DSwitchView.OnMovechangeListener() {
+
+
+        img3D2.setOnMovechangeListener(new com.hotcast.vr.imageView.Image3DSwitchView.OnMovechangeListener() {
             @Override
             public void OnMovechange(int dix) {
-                System.out.println("---OnMovechange2");
-                image3D_1.scrollBy(dix, 0);
-                image3D_1.refreshImageShowing();
+                System.out.println("---OnMovechange1");
+                img3D.scrollBy(dix, 0);
+                img3D.refreshImageShowing();
             }
 
             @Override
             public void Next() {
-                System.out.println("---Next2");
-                image3D_1.scrollToNext();
+                System.out.println("---Next1");
+                img3D.scrollToNext();
             }
 
             @Override
             public void Previous() {
-                System.out.println("---Previous2");
-                image3D_1.scrollToPrevious();
+                System.out.println("---Previous1");
+                img3D.scrollToPrevious();
             }
 
             @Override
             public void Back() {
-                System.out.println("---Back2");
-                image3D_1.scrollBack();
+                System.out.println("---Back1");
+                img3D.scrollBack();
             }
         });
+
         container1.addView(view1.getRootView(), ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         container2.addView(view2.getRootView(), ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        System.out.println("---是否更新"+BaseApplication.isUpdate);
+        System.out.println("---是否更新" + BaseApplication.isUpdate);
         if (BaseApplication.isUpdate) {
             showUpdate();
         }
@@ -160,7 +211,6 @@ public class LandscapeActivity extends BaseActivity implements View.OnClickListe
         if (force == 1) {
             updateAppManager = new UpdateAppManager(this, spec, force, newFeatures);
             httphandler = updateAppManager.downloadAppInlandscape(mHandler);
-            System.out.println("---强制更新");
             // TODO 显示进度条
             rl_update1.setVisibility(View.VISIBLE);
             rl_update2.setVisibility(View.VISIBLE);
@@ -196,12 +246,22 @@ public class LandscapeActivity extends BaseActivity implements View.OnClickListe
     String newFeatures;
 
     @Override
+    protected void onRestart() {
+        super.onRestart();
+        System.out.println("---netClassifys in on restart:" + netClassifys.size());
+        BaseApplication.size = netClassifys.size();
+        System.out.println("---BaseApplication.size in on restart:" + BaseApplication.size);
+    }
+
+    @Override
     public void getIntentData(Intent intent) {
         spec = getIntent().getStringExtra("spec");
 
         force = getIntent().getIntExtra("force", 0);
         newFeatures = getIntent().getStringExtra("newFeatures");
         netClassifys = (List<Classify>) getIntent().getSerializableExtra("classifies");
+        BaseApplication.size = netClassifys.size();
+        System.out.println("---netClassifys:" + netClassifys.size());
     }
 
     @Override
@@ -209,13 +269,13 @@ public class LandscapeActivity extends BaseActivity implements View.OnClickListe
         System.out.println("---keyCode = " + keyCode);
         switch (keyCode) {
             case KeyEvent.KEYCODE_DPAD_LEFT:
-                image3D_1.scrollToNext();
-                image3D_2.scrollToNext();
+                img3D.scrollToNext();
+                img3D2.scrollToNext();
                 L.e("你点击了下一张");
                 break;
             case KeyEvent.KEYCODE_DPAD_RIGHT:
-                image3D_1.scrollToPrevious();
-                image3D_2.scrollToPrevious();
+                img3D.scrollToPrevious();
+                img3D2.scrollToPrevious();
                 L.e("你点击了上一张");
                 break;
 
@@ -241,13 +301,13 @@ public class LandscapeActivity extends BaseActivity implements View.OnClickListe
      */
     private static final int SNAP_VELOCITY = 600;
     private VelocityTracker mVelocityTracker;
-    public com.hotcast.vr.image3D.Image3DSwitchView.OnMovechangeListener changeLisener;
+    public com.hotcast.vr.imageView.Image3DSwitchView.OnMovechangeListener changeLisener;
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
 //        getParent().requestDisallowInterceptTouchEvent(true);
 
-        if (image3D_1.getmScroller().isFinished()) {
+        if (img3D.getmScroller().isFinished()) {
             if (mVelocityTracker == null) {
                 mVelocityTracker = VelocityTracker.obtain();
             }
@@ -256,7 +316,7 @@ public class LandscapeActivity extends BaseActivity implements View.OnClickListe
             float x = event.getX();
             switch (action) {
                 case MotionEvent.ACTION_DOWN:
-                    changeLisener = image3D_1.getChangeLisener();
+                    changeLisener = img3D.getChangeLisener();
                     // 记录按下时的横坐标
                     mLastMotionX = x;
                     break;
@@ -264,8 +324,8 @@ public class LandscapeActivity extends BaseActivity implements View.OnClickListe
                     int disX = (int) (mLastMotionX - x);
                     mLastMotionX = x;
                     // 当发生移动时刷新图片的显示状态
-                    image3D_1.scrollBy(disX, 0);
-                    image3D_1.refreshImageShowing();
+                    img3D.scrollBy(disX, 0);
+                    img3D.refreshImageShowing();
                     if (changeLisener != null) {
                         changeLisener.OnMovechange(disX);
 
@@ -276,20 +336,20 @@ public class LandscapeActivity extends BaseActivity implements View.OnClickListe
                     int velocityX = (int) mVelocityTracker.getXVelocity();
                     if (shouldScrollToNext(velocityX)) {
                         // 滚动到下一张图
-                        image3D_1.scrollToNext();
+                        img3D.scrollToNext();
                         if (changeLisener != null) {
                             changeLisener.Next();
 
                         }
                     } else if (shouldScrollToPrevious(velocityX)) {
                         // 滚动到上一张图
-                        image3D_1.scrollToPrevious();
+                        img3D.scrollToPrevious();
                         if (changeLisener != null) {
                             changeLisener.Previous();
                         }
                     } else {
                         // 滚动回当前图片
-                        image3D_1.scrollBack();
+                        img3D.scrollBack();
                         if (changeLisener != null) {
                             changeLisener.Back();
 
@@ -314,14 +374,14 @@ public class LandscapeActivity extends BaseActivity implements View.OnClickListe
      * 判断是否应该滚动到上一张图片。
      */
     private boolean shouldScrollToPrevious(int velocityX) {
-        return velocityX > SNAP_VELOCITY || image3D_1.getScrollX() < -mImageWidth / 2;
+        return velocityX > SNAP_VELOCITY || img3D.getScrollX() < -mImageWidth / 2;
     }
 
     /**
      * 判断是否应该滚动到下一张图片。
      */
     private boolean shouldScrollToNext(int velocityX) {
-        return velocityX < -SNAP_VELOCITY || image3D_1.getScrollX() > mImageWidth / 2;
+        return velocityX < -SNAP_VELOCITY || img3D.getScrollX() > mImageWidth / 2;
     }
 
     @Override
@@ -365,12 +425,59 @@ public class LandscapeActivity extends BaseActivity implements View.OnClickListe
                 .getExternalStorageDirectory(), "VR热播.apk")), "application/vnd.android.package-archive");//编者按：此处Android应为android，否则造成安装不了
         startActivity(intent);
     }
+
     @Override
     protected void onStop() {
         super.onStop();
-        if (httphandler!=null){
+        if (httphandler != null) {
             httphandler.cancel();
         }
 
+    }
+
+    List<VrPlay> vrPlays;
+
+    public void getNetData(final String channel_id) {
+        String mUlr = Constants.URL_VR_PLAY;
+        System.out.println("***VrListActivity *** getNetData()" + mUlr);
+        L.e("播放路径 mUrl=" + mUlr);
+        RequestParams params = new RequestParams();
+        System.out.println("***VrListActivity *** getNetData()" + params);
+        params.addBodyParameter("token", "123");
+        params.addBodyParameter("channel_id", channel_id);
+        System.out.println("***VrListActivity *** getNetData()" + channel_id);
+        this.httpPost(mUlr, params, new RequestCallBack<String>() {
+            @Override
+            public void onStart() {
+                System.out.println("***VrListActivity *** onStart()");
+                super.onStart();
+            }
+
+            @Override
+            public void onSuccess(ResponseInfo<String> responseInfo) {
+                System.out.println("***VrListActivity *** onSuccess()" + responseInfo.result);
+                if (Utils.textIsNull(responseInfo.result)) {
+                    return;
+                }
+                vrPlays = new Gson().fromJson(responseInfo.result, new TypeToken<List<VrPlay>>() {
+                }.getType());
+                System.out.println("***VrListActivity *** onSuccess()" + vrPlays);
+                System.out.println("***VrListActivity *** onSuccess()" + vrPlays.size());
+
+                Intent intent = new Intent(LandscapeActivity.this, VrListActivity.class);
+                intent.putExtra("channel_id", channel_id);
+                intent.putExtra("vrPlays", (Serializable) vrPlays);
+                System.out.println("跳转到VrListActivity vrPlays" + vrPlays);
+                LandscapeActivity.this.startActivity(intent);
+                BaseApplication.size = vrPlays.size();
+//                for (int i = 0; i < vrPlays.size(); i++){
+//                    vrPlayArrayList.add(vrPlays.get(i));
+//                }
+            }
+
+            @Override
+            public void onFailure(HttpException e, String s) {
+            }
+        });
     }
 }

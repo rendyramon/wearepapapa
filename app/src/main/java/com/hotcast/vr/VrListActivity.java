@@ -126,7 +126,7 @@ public class VrListActivity extends BaseActivity {
             image3DView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    play(url,title);
+                    play(url, title);
                     System.out.println("***你点击了item，准备播放**");
                 }
             });
@@ -405,11 +405,11 @@ public class VrListActivity extends BaseActivity {
                 break;
             case KeyEvent.KEYCODE_DPAD_CENTER:
             case KeyEvent.KEYCODE_BUTTON_A:
-                for(int i = 0; i < vrPlays.size();i ++){
+                for (int i = 0; i < vrPlays.size(); i++) {
                     if (i == index) {
                         String url = vrPlays.get(i).getVideo_url();
                         String title = vrPlays.get(i).getTitle();
-                        play(url,title);
+                        play(url, title);
                     }
                 }
                 L.e("你点击了进入播放页");
@@ -421,7 +421,7 @@ public class VrListActivity extends BaseActivity {
         return true;
     }
 
-    private void play(String url,String title){
+    private void play(String url, String title) {
         intent = new Intent(VrListActivity.this, PlayerVRActivityNew.class);
         intent.putExtra("play_url", url);
         intent.putExtra("title", title);
@@ -429,6 +429,7 @@ public class VrListActivity extends BaseActivity {
         VrListActivity.this.startActivity(intent);
         System.out.println("***你点击了item，准备播放**");
     }
+
     /**
      * 记录上次触摸的横坐标值
      */
@@ -439,6 +440,7 @@ public class VrListActivity extends BaseActivity {
     private static final int SNAP_VELOCITY = 600;
     private VelocityTracker mVelocityTracker;
     public Image3DSwitchView.OnMovechangeListener changeLisener;
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
 //        getParent().requestDisallowInterceptTouchEvent(true);
@@ -462,7 +464,7 @@ public class VrListActivity extends BaseActivity {
                     // 当发生移动时刷新图片的显示状态
                     img3D.scrollBy(disX, 0);
                     img3D.refreshImageShowing();
-                    if (changeLisener!=null){
+                    if (changeLisener != null) {
                         changeLisener.OnMovechange(disX);
 
                     }
@@ -473,20 +475,20 @@ public class VrListActivity extends BaseActivity {
                     if (shouldScrollToNext(velocityX)) {
                         // 滚动到下一张图
                         img3D.scrollToNext();
-                        if (changeLisener!=null){
+                        if (changeLisener != null) {
                             changeLisener.Next();
 
                         }
                     } else if (shouldScrollToPrevious(velocityX)) {
                         // 滚动到上一张图
                         img3D.scrollToPrevious();
-                        if (changeLisener!=null){
+                        if (changeLisener != null) {
                             changeLisener.Previous();
                         }
                     } else {
                         // 滚动回当前图片
                         img3D.scrollBack();
-                        if (changeLisener!=null){
+                        if (changeLisener != null) {
                             changeLisener.Back();
 
                         }
@@ -500,21 +502,23 @@ public class VrListActivity extends BaseActivity {
         }
         return true;
     }
+
     /**
      * 记录每张图片的宽度
      */
     private int mImageWidth;
+
     /**
      * 判断是否应该滚动到上一张图片。
      */
     private boolean shouldScrollToPrevious(int velocityX) {
-        return velocityX > SNAP_VELOCITY || img3D.getScrollX() < -mImageWidth / 2 ;
+        return velocityX > SNAP_VELOCITY || img3D.getScrollX() < -mImageWidth / 2;
     }
+
     /**
      * 判断是否应该滚动到下一张图片。
      */
     private boolean shouldScrollToNext(int velocityX) {
-        return velocityX < -SNAP_VELOCITY || img3D.getScrollX() > mImageWidth / 2 ;
+        return velocityX < -SNAP_VELOCITY || img3D.getScrollX() > mImageWidth / 2;
     }
-
 }

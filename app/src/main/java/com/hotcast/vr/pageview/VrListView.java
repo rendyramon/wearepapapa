@@ -6,6 +6,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.hotcast.vr.BaseActivity;
@@ -19,6 +21,7 @@ import com.hotcast.vr.bean.ListBean;
 import com.hotcast.vr.bean.LocalBean;
 import com.hotcast.vr.imageView.Image3DSwitchView;
 import com.hotcast.vr.imageView.Image3DView;
+import com.hotcast.vr.tools.DensityUtils;
 import com.hotcast.vr.tools.L;
 import com.hotcast.vr.tools.ScreenUtils;
 import com.hotcast.vr.tools.ViewUtils;
@@ -56,8 +59,9 @@ public class VrListView extends BaseView implements GestureDetector.OnGestureLis
     void clickBack() {
         activity.finish();
     }
+
     @OnClick(R.id.bt_ceach)
-    void bt_ceach(){
+    void bt_ceach() {
         if (!BaseApplication.isDownLoad) {
             activity.showDialog(null, "是否下载影片?", null, null, new BaseActivity.OnAlertSureClickListener() {
                 @Override
@@ -89,7 +93,7 @@ public class VrListView extends BaseView implements GestureDetector.OnGestureLis
 
                 }
             });
-        }else {
+        } else {
             activity.showToast("亲，您已经缓存了");
         }
     }
@@ -110,6 +114,7 @@ public class VrListView extends BaseView implements GestureDetector.OnGestureLis
     GestureDetector detector = new
 
             GestureDetector(this);
+
     public VrListView(BaseActivity activity) {
         super(activity, R.layout.view_vr_gallery);
         initListView();
@@ -123,7 +128,7 @@ public class VrListView extends BaseView implements GestureDetector.OnGestureLis
         return adapter.getCount();
     }
 
-    public ListBean getItem(int pos){
+    public ListBean getItem(int pos) {
         return (ListBean) adapter.getItem(pos);
     }
 
@@ -143,16 +148,16 @@ public class VrListView extends BaseView implements GestureDetector.OnGestureLis
                 ViewUtils.setViewHeight(iv, ScreenUtils.getScreenWidth(activity) / 2);
                 helper.setImageUrl(R.id.iv, item.getImg().getUrl());
                 String displayname = item.getName();
-                if(bLocal){
+                if (bLocal) {
                     String surfix = "";
-                    if(item.getCurState() == ListBean.STATE_DOWNLOADING){
-                        surfix = (int)(item.getCurrent()*100/item.getTotal()) +"%";
-                    }else if(item.getCurState() == ListBean.STATE_SUCCESS){
+                    if (item.getCurState() == ListBean.STATE_DOWNLOADING) {
+                        surfix = (int) (item.getCurrent() * 100 / item.getTotal()) + "%";
+                    } else if (item.getCurState() == ListBean.STATE_SUCCESS) {
                         surfix = "下载完成";
-                    }else if(item.getCurState() == ListBean.STATE_FAILED){
+                    } else if (item.getCurState() == ListBean.STATE_FAILED) {
                         surfix = "下载失败";
                     }
-                    displayname+=surfix;
+                    displayname += surfix;
                 }
                 helper.setText(R.id.tv, displayname);
             }
@@ -199,4 +204,23 @@ public class VrListView extends BaseView implements GestureDetector.OnGestureLis
     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
         return true;
     }
+
+    public void hideTextView() {
+        this.getRootView().findViewById(R.id.tv_page).setVisibility(View.GONE);
+        this.getRootView().findViewById(R.id.tv_title).setVisibility(View.GONE);
+        this.getRootView().findViewById(R.id.tv_desc).setVisibility(View.GONE);
+        bt_ceach.setVisibility(View.GONE);
+        this.getRootView().findViewById(R.id.tv_fanhui).setVisibility(View.GONE);
+    }
+    public void setPageCenter(){
+        RelativeLayout.LayoutParams  params = (RelativeLayout.LayoutParams)id_sv.getLayoutParams();
+        params.height = RelativeLayout.LayoutParams.MATCH_PARENT;
+        params.width = RelativeLayout.LayoutParams.MATCH_PARENT;
+        params.setMargins(0,0,0, DensityUtils.dp2px(activity,20));
+        id_sv.setLayoutParams(params);
+        ImageView iv_cancel = (ImageView) this.getRootView().findViewById(R.id.iv_cancel);
+        LinearLayout.LayoutParams  params1 = (LinearLayout.LayoutParams)iv_cancel.getLayoutParams();
+        params1.setMargins(0,0,0,0);
+    }
+
 }
