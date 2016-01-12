@@ -47,6 +47,7 @@
 
     </com.hotcast.vr.image3D.Image3DSwitchView>
     <RelativeLayout
+        android:visibility="gone"
         android:id="@+id/rl_phone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

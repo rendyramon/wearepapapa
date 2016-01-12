@@ -24,12 +24,7 @@ public class FooterLoadingLayout extends LoadingLayout {
     /** 显示的文本 */
     private TextView mHintView;
     
-    /**
-     * 构造方法
-     * 
-     * @param context context
-     */
-    public FooterLoadingLayout(Context context) {
+     public FooterLoadingLayout(Context context) {
         super(context);
         init(context);
     }
