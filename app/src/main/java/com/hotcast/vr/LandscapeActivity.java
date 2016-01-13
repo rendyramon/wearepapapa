@@ -1,6 +1,7 @@
 package com.hotcast.vr;
 
 import android.content.Intent;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Environment;
 import android.os.Handler;
@@ -102,6 +103,16 @@ public class LandscapeActivity extends BaseActivity implements View.OnClickListe
 
             img3D.addView(image3DView);
         }
+        Image3DView image3DView1 = new Image3DView(this);
+        image3DView1.setImageResource(R.drawable.icon_4);
+        image3DView1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //查询本地指定的缓存文件夹
+
+            }
+        });
+        img3D.addView(image3DView1);
         for (int i = 0; i < netClassifys.size(); i++) {
             Image3DView image3DView = new Image3DView(this);
             bitmapUtils.display(image3DView, netClassifys.get(i).getImage());
@@ -116,6 +127,9 @@ public class LandscapeActivity extends BaseActivity implements View.OnClickListe
             });
             img3D2.addView(image3DView);
         }
+        Image3DView image3DView2 = new Image3DView(this);
+        image3DView2.setImageResource(R.drawable.icon_4);
+        img3D2.addView(image3DView2);
         img3D.setOnMovechangeListener(new com.hotcast.vr.imageView.Image3DSwitchView.OnMovechangeListener() {
             @Override
             public void OnMovechange(int dix) {
@@ -249,7 +263,7 @@ public class LandscapeActivity extends BaseActivity implements View.OnClickListe
     protected void onRestart() {
         super.onRestart();
         System.out.println("---netClassifys in on restart:" + netClassifys.size());
-        BaseApplication.size = netClassifys.size();
+        BaseApplication.size = netClassifys.size()+1;
         System.out.println("---BaseApplication.size in on restart:" + BaseApplication.size);
     }
 
@@ -260,7 +274,7 @@ public class LandscapeActivity extends BaseActivity implements View.OnClickListe
         force = getIntent().getIntExtra("force", 0);
         newFeatures = getIntent().getStringExtra("newFeatures");
         netClassifys = (List<Classify>) getIntent().getSerializableExtra("classifies");
-        BaseApplication.size = netClassifys.size();
+        BaseApplication.size = netClassifys.size()+1;
         System.out.println("---netClassifys:" + netClassifys.size());
     }
 
@@ -474,7 +488,6 @@ public class LandscapeActivity extends BaseActivity implements View.OnClickListe
 //                    vrPlayArrayList.add(vrPlays.get(i));
 //                }
             }
-
             @Override
             public void onFailure(HttpException e, String s) {
             }

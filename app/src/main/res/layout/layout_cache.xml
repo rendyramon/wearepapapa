@@ -14,7 +14,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:textColor="#ff0000"
+            android:textColor="#66ff0000"
             android:textSize="30sp"
             android:text="亲，您还没有缓存影片哦！"/>
     </FrameLayout>
