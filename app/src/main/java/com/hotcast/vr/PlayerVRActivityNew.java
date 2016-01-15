@@ -380,7 +380,7 @@ public class PlayerVRActivityNew extends BaseLanActivity implements PFAssetObser
         }
         mPlayerContralView1.setTitle(title);
         mPlayerContralView2.setTitle(title);
-        System.out.println("--titleLength = " + title.length());
+//        System.out.println("--titleLength = " + title.length());
 
     }
 

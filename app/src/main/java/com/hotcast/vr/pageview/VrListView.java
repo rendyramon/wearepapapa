@@ -44,7 +44,7 @@ public class VrListView extends BaseView implements GestureDetector.OnGestureLis
     Image3DSwitchView id_sv;
     @InjectView(R.id.bt_ceach)
     Button bt_ceach;
-
+    View loadingBar;
 
     final String START = "START";
     final String DOWNLOADING = "DOWNLOADING";
@@ -132,36 +132,51 @@ public class VrListView extends BaseView implements GestureDetector.OnGestureLis
         return (ListBean) adapter.getItem(pos);
     }
 
+    /**
+     * 显示或者关闭小菊花
+     *
+     * @param flag
+     */
+    public void showOrHideProgressBar(boolean flag) {
+        if (flag) {
+            loadingBar.setVisibility(View.VISIBLE);
+        } else {
+            loadingBar.setVisibility(View.GONE);
+        }
+    }
+
     private void initListView() {
-        id_sv.setOnImageSwitchListener(new Image3DSwitchView.OnImageSwitchListener() {
-            @Override
-            public void onImageSwitch(int currentImage) {
+        loadingBar = this.getRootView().findViewById(R.id.loadingbar);
+        loadingBar.setVisibility(View.GONE);
+//        id_sv.setOnImageSwitchListener(new Image3DSwitchView.OnImageSwitchListener() {
+//            @Override
+//            public void onImageSwitch(int currentImage) {
+//
+//            }
+//        });
 
-            }
-        });
-
-        adapter = new QuickAdapter<ListBean>(activity, R.layout.item_vr_gallery) {
-            @Override
-            protected void convert(BaseAdapterHelper helper, ListBean item) {
-                ImageView iv = ButterKnife.findById(helper.getView(), R.id.iv);
-
-                ViewUtils.setViewHeight(iv, ScreenUtils.getScreenWidth(activity) / 2);
-                helper.setImageUrl(R.id.iv, item.getImg().getUrl());
-                String displayname = item.getName();
-                if (bLocal) {
-                    String surfix = "";
-                    if (item.getCurState() == ListBean.STATE_DOWNLOADING) {
-                        surfix = (int) (item.getCurrent() * 100 / item.getTotal()) + "%";
-                    } else if (item.getCurState() == ListBean.STATE_SUCCESS) {
-                        surfix = "下载完成";
-                    } else if (item.getCurState() == ListBean.STATE_FAILED) {
-                        surfix = "下载失败";
-                    }
-                    displayname += surfix;
-                }
-                helper.setText(R.id.tv, displayname);
-            }
-        };
+//        adapter = new QuickAdapter<ListBean>(activity, R.layout.item_vr_gallery) {
+//            @Override
+//            protected void convert(BaseAdapterHelper helper, ListBean item) {
+//                ImageView iv = ButterKnife.findById(helper.getView(), R.id.iv);
+//
+//                ViewUtils.setViewHeight(iv, ScreenUtils.getScreenWidth(activity) / 2);
+//                helper.setImageUrl(R.id.iv, item.getImg().getUrl());
+//                String displayname = item.getName();
+//                if (bLocal) {
+//                    String surfix = "";
+//                    if (item.getCurState() == ListBean.STATE_DOWNLOADING) {
+//                        surfix = (int) (item.getCurrent() * 100 / item.getTotal()) + "%";
+//                    } else if (item.getCurState() == ListBean.STATE_SUCCESS) {
+//                        surfix = "下载完成";
+//                    } else if (item.getCurState() == ListBean.STATE_FAILED) {
+//                        surfix = "下载失败";
+//                    }
+//                    displayname += surfix;
+//                }
+//                helper.setText(R.id.tv, displayname);
+//            }
+//        };
 
     }
 
@@ -212,15 +227,16 @@ public class VrListView extends BaseView implements GestureDetector.OnGestureLis
         bt_ceach.setVisibility(View.GONE);
         this.getRootView().findViewById(R.id.tv_fanhui).setVisibility(View.GONE);
     }
-    public void setPageCenter(){
-        RelativeLayout.LayoutParams  params = (RelativeLayout.LayoutParams)id_sv.getLayoutParams();
+
+    public void setPageCenter() {
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) id_sv.getLayoutParams();
         params.height = RelativeLayout.LayoutParams.MATCH_PARENT;
         params.width = RelativeLayout.LayoutParams.MATCH_PARENT;
-        params.setMargins(0,0,0, DensityUtils.dp2px(activity,20));
+        params.setMargins(0, 0, 0, DensityUtils.dp2px(activity, 20));
         id_sv.setLayoutParams(params);
         ImageView iv_cancel = (ImageView) this.getRootView().findViewById(R.id.iv_cancel);
-        LinearLayout.LayoutParams  params1 = (LinearLayout.LayoutParams)iv_cancel.getLayoutParams();
-        params1.setMargins(0,0,0,0);
+        LinearLayout.LayoutParams params1 = (LinearLayout.LayoutParams) iv_cancel.getLayoutParams();
+        params1.setMargins(0, 0, 0, 0);
     }
 
 }

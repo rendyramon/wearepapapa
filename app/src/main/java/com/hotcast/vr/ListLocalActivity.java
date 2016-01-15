@@ -125,7 +125,6 @@ public class ListLocalActivity extends BaseActivity {
         db = DbUtils.create(ListLocalActivity.this);
         try {
             list = db.findAll(LocalBean.class);
-
             if (list == null) {
                 tv_downloded.setVisibility(View.GONE);
                 tv_downloding.setVisibility(View.GONE);
@@ -166,7 +165,6 @@ public class ListLocalActivity extends BaseActivity {
                     file = new File(localurl);
                 } else {
                     file = new File(" ");
-
                 }
                 if (!editor) {
                     if (localurl != null && file.exists()) {

@@ -3,6 +3,7 @@ package com.hotcast.vr;
 import android.content.Intent;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
@@ -21,15 +22,21 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.hotcast.vr.bean.Classify;
+import com.hotcast.vr.bean.LocalBean;
 import com.hotcast.vr.bean.VrPlay;
 import com.hotcast.vr.image3D.Image3DSwitchView;
 import com.hotcast.vr.imageView.Image3DView;
 import com.hotcast.vr.pageview.VrListView;
 import com.hotcast.vr.tools.Constants;
 import com.hotcast.vr.tools.DensityUtils;
+import com.hotcast.vr.tools.HotVedioCacheUtils;
 import com.hotcast.vr.tools.L;
+import com.hotcast.vr.tools.SaveBitmapUtils;
 import com.hotcast.vr.tools.Utils;
+import com.hotcast.vr.tools.VedioBitmapUtils;
 import com.lidroid.xutils.BitmapUtils;
+import com.lidroid.xutils.DbUtils;
+import com.lidroid.xutils.exception.DbException;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.HttpHandler;
 import com.lidroid.xutils.http.RequestParams;
@@ -38,6 +45,7 @@ import com.lidroid.xutils.http.callback.RequestCallBack;
 
 import java.io.File;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.InjectView;
@@ -62,6 +70,7 @@ public class LandscapeActivity extends BaseActivity implements View.OnClickListe
     List<Classify> netClassifys;
     private HttpHandler httphandler;
     BitmapUtils bitmapUtils;
+    private Intent cacheIntent;
 
     @Override
     public int getLayoutId() {
@@ -109,7 +118,25 @@ public class LandscapeActivity extends BaseActivity implements View.OnClickListe
             @Override
             public void onClick(View v) {
                 //查询本地指定的缓存文件夹
-
+                if (dataCacheOk) {
+                    cacheIntent = new Intent(LandscapeActivity.this, LocalCachelActivity.class);
+                    cacheIntent.putExtra("dbList", (Serializable) dbList);
+                    startActivity(cacheIntent);
+                } else {
+                    //显示小菊花
+                    view1.showOrHideProgressBar(true);
+                    view2.showOrHideProgressBar(true);
+                    mHandler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            view1.showOrHideProgressBar(false);
+                            view2.showOrHideProgressBar(false);
+                            cacheIntent = new Intent(LandscapeActivity.this, LocalCachelActivity.class);
+                            cacheIntent.putExtra("dbList", (Serializable) dbList);
+                            startActivity(cacheIntent);
+                        }
+                    }, 5000);
+                }
             }
         });
         img3D.addView(image3DView1);
@@ -129,6 +156,31 @@ public class LandscapeActivity extends BaseActivity implements View.OnClickListe
         }
         Image3DView image3DView2 = new Image3DView(this);
         image3DView2.setImageResource(R.drawable.icon_4);
+        image3DView2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //查询本地指定的缓存文件夹
+                if (dataCacheOk) {
+                    cacheIntent = new Intent(LandscapeActivity.this, LocalCachelActivity.class);
+                    cacheIntent.putExtra("dbList", (Serializable) dbList);
+                    startActivity(cacheIntent);
+                } else {
+                    //显示小菊花
+                    view1.showOrHideProgressBar(true);
+                    view2.showOrHideProgressBar(true);
+                    mHandler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            view1.showOrHideProgressBar(false);
+                            view2.showOrHideProgressBar(false);
+                            cacheIntent = new Intent(LandscapeActivity.this, LocalCachelActivity.class);
+                            cacheIntent.putExtra("dbList", (Serializable) dbList);
+                            startActivity(cacheIntent);
+                        }
+                    }, 3000);
+                }
+            }
+        });
         img3D2.addView(image3DView2);
         img3D.setOnMovechangeListener(new com.hotcast.vr.imageView.Image3DSwitchView.OnMovechangeListener() {
             @Override
@@ -184,7 +236,6 @@ public class LandscapeActivity extends BaseActivity implements View.OnClickListe
                 img3D.scrollBack();
             }
         });
-
         container1.addView(view1.getRootView(), ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         container2.addView(view2.getRootView(), ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         System.out.println("---是否更新" + BaseApplication.isUpdate);
@@ -263,7 +314,7 @@ public class LandscapeActivity extends BaseActivity implements View.OnClickListe
     protected void onRestart() {
         super.onRestart();
         System.out.println("---netClassifys in on restart:" + netClassifys.size());
-        BaseApplication.size = netClassifys.size()+1;
+        BaseApplication.size = netClassifys.size() + 1;
         System.out.println("---BaseApplication.size in on restart:" + BaseApplication.size);
     }
 
@@ -274,7 +325,7 @@ public class LandscapeActivity extends BaseActivity implements View.OnClickListe
         force = getIntent().getIntExtra("force", 0);
         newFeatures = getIntent().getStringExtra("newFeatures");
         netClassifys = (List<Classify>) getIntent().getSerializableExtra("classifies");
-        BaseApplication.size = netClassifys.size()+1;
+        BaseApplication.size = netClassifys.size() + 1;
         System.out.println("---netClassifys:" + netClassifys.size());
     }
 
@@ -449,6 +500,13 @@ public class LandscapeActivity extends BaseActivity implements View.OnClickListe
 
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        MyAsyncTask task = new MyAsyncTask();
+        task.execute();
+    }
+
     List<VrPlay> vrPlays;
 
     public void getNetData(final String channel_id) {
@@ -484,13 +542,79 @@ public class LandscapeActivity extends BaseActivity implements View.OnClickListe
                 System.out.println("跳转到VrListActivity vrPlays" + vrPlays);
                 LandscapeActivity.this.startActivity(intent);
                 BaseApplication.size = vrPlays.size();
-//                for (int i = 0; i < vrPlays.size(); i++){
-//                    vrPlayArrayList.add(vrPlays.get(i));
-//                }
             }
+
             @Override
             public void onFailure(HttpException e, String s) {
             }
         });
+    }
+
+    //本地缓存的集合，在异步中处理
+    List<LocalBean> dbList = null;
+    boolean dataCacheOk = false;
+
+    class MyAsyncTask extends AsyncTask<Integer, Integer, List<LocalBean>> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected List doInBackground(Integer... params) {
+            DbUtils db = DbUtils.create(LandscapeActivity.this);
+            try {
+                dbList = db.findAll(LocalBean.class);
+            } catch (DbException e) {
+                e.printStackTrace();
+            }
+            if (dbList == null) {
+                dbList = new ArrayList<>();
+            }
+
+            String[] localNames = HotVedioCacheUtils.getVedioCache(BaseApplication.VedioCacheUrl);
+            int size = dbList.size();
+            for (int i = 0; i < localNames.length; i++) {
+                String title = localNames[i];
+                System.out.println("---本地title：" + title);
+                if (size == 0) {
+                    LocalBean localBean = new LocalBean();
+                    localBean.setLocalurl(BaseApplication.VedioCacheUrl + localNames[i]);
+                    localBean.setCurState(3);
+//                            localBean.setLocalBitmap(VedioBitmapUtils.getMiniVedioBitmap(BaseApplication.VedioCacheUrl + localNames[i]));
+                    SaveBitmapUtils.saveMyBitmap(title.replace(".mp4", ""), VedioBitmapUtils.getMiniVedioBitmap(BaseApplication.VedioCacheUrl + localNames[i]));
+                    System.out.println("---本地bitmap：" + VedioBitmapUtils.getMiniVedioBitmap(BaseApplication.VedioCacheUrl + localNames[i]));
+                    localBean.setImage(BaseApplication.ImgCacheUrl + title.replace(".mp4", "") + ".jpg");
+                    localBean.setTitle(localNames[i].replace(".mp4", ""));
+                    dbList.add(localBean);
+                } else {
+                    for (int j = 0; j < size; j++) {
+                        if (dbList.get(j).getTitle().equals(title.replace(".mp4", ""))) {
+                            //相同不添加
+                        } else {
+                            LocalBean localBean = new LocalBean();
+                            localBean.setLocalurl(BaseApplication.VedioCacheUrl + localNames[i]);
+                            localBean.setCurState(3);
+                            SaveBitmapUtils.saveMyBitmap(title.replace(".mp4", ""), VedioBitmapUtils.getMiniVedioBitmap(BaseApplication.VedioCacheUrl + localNames[i]));
+                            System.out.println("---本地bitmap：" + VedioBitmapUtils.getMiniVedioBitmap(BaseApplication.VedioCacheUrl + localNames[i]));
+                            localBean.setImage(BaseApplication.ImgCacheUrl + title.replace(".mp4", "") + ".jpg");
+                            localBean.setTitle(localNames[i].replace(".mp4", ""));
+                            dbList.add(localBean);
+                        }
+                    }
+                }
+            }
+            System.out.println("----数据处理完毕");
+            dataCacheOk = true;
+            return dbList;
+        }
+
+        @Override
+        protected void onPostExecute(List<LocalBean> s) {
+//            super.onPostExecute(s);
+            System.out.println("----数据处理完毕");
+            dataCacheOk = true;
+
+        }
     }
 }

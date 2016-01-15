@@ -3,6 +3,7 @@ package com.hotcast.vr;
 import android.app.Application;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.os.Environment;
 import android.util.DisplayMetrics;
 
 import com.hotcast.vr.bean.Classify;
@@ -30,6 +31,8 @@ public class BaseApplication extends Application {
     }
 
     public static final String IMG_DISCCACHE_DIR = "/mnt/sdcard/jarvis/imgcache";
+    public static final String VedioCacheUrl = Environment.getExternalStorageDirectory().getAbsolutePath() + "/hostcast/vr/";
+    public static final String ImgCacheUrl = Environment.getExternalStorageDirectory().getAbsolutePath() + "/hostcast/vr/vedioImg/";
     public static boolean pagerf = false;
     public static List<Classify> classifies = new ArrayList<>();
     public static List<String> playUrls = new ArrayList<>();//需要下載的電影地址

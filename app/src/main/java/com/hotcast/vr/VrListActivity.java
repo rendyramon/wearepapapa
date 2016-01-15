@@ -153,6 +153,16 @@ public class VrListActivity extends BaseActivity {
                     tv_desc2.setText(descs.get(index));
                 } else {
                     index = 1;
+                    page = index + "/" + vrPlays.size();
+                    span = new SpannableString(page);
+                    span.setSpan(new ForegroundColorSpan(VrListActivity.this.getResources().getColor(R.color.material_blue_500)),
+                            0, page.length() - 1 - ("" + vrPlays.size()).length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    tv_page1.setText(span);
+                    tv_page2.setText(span);
+                    tv_title1.setText(titles.get(index));
+                    tv_title2.setText(titles.get(index));
+                    tv_desc1.setText(descs.get(index));
+                    tv_desc2.setText(descs.get(index));
                 }
 
             }
@@ -175,6 +185,16 @@ public class VrListActivity extends BaseActivity {
                     tv_desc2.setText(descs.get(index));
                 } else {
                     index = 1;
+                    page = index + "/" + vrPlays.size();
+                    span = new SpannableString(page);
+                    span.setSpan(new ForegroundColorSpan(VrListActivity.this.getResources().getColor(R.color.material_blue_500)),
+                            0, page.length() - 1 - ("" + vrPlays.size()).length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    tv_page1.setText(span);
+                    tv_page2.setText(span);
+                    tv_title1.setText(titles.get(index));
+                    tv_title2.setText(titles.get(index));
+                    tv_desc1.setText(descs.get(index));
+                    tv_desc2.setText(descs.get(index));
                 }
             }
 
@@ -196,6 +216,16 @@ public class VrListActivity extends BaseActivity {
                     tv_desc2.setText(descs.get(index));
                 } else {
                     index = vrPlays.size();
+                    page = index + "/" + vrPlays.size();
+                    span = new SpannableString(page);
+                    span.setSpan(new ForegroundColorSpan(VrListActivity.this.getResources().getColor(R.color.material_blue_500)),
+                            0, page.length() - 1 - ("" + vrPlays.size()).length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    tv_page1.setText(span);
+                    tv_page2.setText(span);
+                    tv_title1.setText(titles.get(index));
+                    tv_title2.setText(titles.get(index));
+                    tv_desc1.setText(descs.get(index));
+                    tv_desc2.setText(descs.get(index));
                 }
             }
 
@@ -218,6 +248,16 @@ public class VrListActivity extends BaseActivity {
                     tv_desc2.setText(descs.get(index));
                 } else {
                     index = vrPlays.size();
+                    page = index + "/" + vrPlays.size();
+                    span = new SpannableString(page);
+                    span.setSpan(new ForegroundColorSpan(VrListActivity.this.getResources().getColor(R.color.material_blue_500)),
+                            0, page.length() - 1 - ("" + vrPlays.size()).length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    tv_page1.setText(span);
+                    tv_page2.setText(span);
+                    tv_title1.setText(titles.get(index));
+                    tv_title2.setText(titles.get(index));
+                    tv_desc1.setText(descs.get(index));
+                    tv_desc2.setText(descs.get(index));
                 }
             }
         });
@@ -240,6 +280,16 @@ public class VrListActivity extends BaseActivity {
                     tv_desc2.setText(descs.get(index));
                 } else {
                     index = 1;
+                    page = index + "/" + vrPlays.size();
+                    span = new SpannableString(page);
+                    span.setSpan(new ForegroundColorSpan(VrListActivity.this.getResources().getColor(R.color.material_blue_500)),
+                            0, page.length() - 1 - ("" + vrPlays.size()).length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    tv_page1.setText(span);
+                    tv_page2.setText(span);
+                    tv_title1.setText(titles.get(index));
+                    tv_title2.setText(titles.get(index));
+                    tv_desc1.setText(descs.get(index));
+                    tv_desc2.setText(descs.get(index));
                 }
 
             }
@@ -262,6 +312,16 @@ public class VrListActivity extends BaseActivity {
                     tv_desc2.setText(descs.get(index));
                 } else {
                     index = 1;
+                    page = index + "/" + vrPlays.size();
+                    span = new SpannableString(page);
+                    span.setSpan(new ForegroundColorSpan(VrListActivity.this.getResources().getColor(R.color.material_blue_500)),
+                            0, page.length() - 1 - ("" + vrPlays.size()).length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    tv_page1.setText(span);
+                    tv_page2.setText(span);
+                    tv_title1.setText(titles.get(index));
+                    tv_title2.setText(titles.get(index));
+                    tv_desc1.setText(descs.get(index));
+                    tv_desc2.setText(descs.get(index));
                 }
             }
 
@@ -283,6 +343,16 @@ public class VrListActivity extends BaseActivity {
                     tv_desc2.setText(descs.get(index));
                 } else {
                     index = vrPlays.size();
+                    page = index + "/" + vrPlays.size();
+                    span = new SpannableString(page);
+                    span.setSpan(new ForegroundColorSpan(VrListActivity.this.getResources().getColor(R.color.material_blue_500)),
+                            0, page.length() - 1 - ("" + vrPlays.size()).length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    tv_page1.setText(span);
+                    tv_page2.setText(span);
+                    tv_title1.setText(titles.get(index));
+                    tv_title2.setText(titles.get(index));
+                    tv_desc1.setText(descs.get(index));
+                    tv_desc2.setText(descs.get(index));
                 }
             }
 
@@ -305,6 +375,16 @@ public class VrListActivity extends BaseActivity {
                     tv_desc2.setText(descs.get(index));
                 } else {
                     index = vrPlays.size();
+                    page = index + "/" + vrPlays.size();
+                    span = new SpannableString(page);
+                    span.setSpan(new ForegroundColorSpan(VrListActivity.this.getResources().getColor(R.color.material_blue_500)),
+                            0, page.length() - 1 - ("" + vrPlays.size()).length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    tv_page1.setText(span);
+                    tv_page2.setText(span);
+                    tv_title1.setText(titles.get(index));
+                    tv_title2.setText(titles.get(index));
+                    tv_desc1.setText(descs.get(index));
+                    tv_desc2.setText(descs.get(index));
                 }
 
             }

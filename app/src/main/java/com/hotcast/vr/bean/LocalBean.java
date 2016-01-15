@@ -1,9 +1,13 @@
 package com.hotcast.vr.bean;
 
+import android.graphics.Bitmap;
+
+import java.io.Serializable;
+
 /**
  * Created by lostnote on 15/12/7.
  */
-public class LocalBean {
+public class LocalBean implements Serializable {
     String DOWNLOADING = "DOWNLOADING";
     String FINISH = "FINISH";
     String PAUSE = "PAUSE";
@@ -12,6 +16,15 @@ public class LocalBean {
     String title;
     String image;
     String url;
+    Bitmap localBitmap;
+
+    public Bitmap getLocalBitmap() {
+        return localBitmap;
+    }
+
+    public void setLocalBitmap(Bitmap localBitmap) {
+        this.localBitmap = localBitmap;
+    }
 
     public String getSpeed() {
         return speed;
@@ -40,10 +53,11 @@ public class LocalBean {
         this.state = state;
     }
 
-    String state = WAITING ;
+    String state = WAITING;
 
     String localurl;
     private boolean downloadSuccessed;
+
     public boolean isDownloadSuccessed() {
         return downloadSuccessed;
     }
@@ -59,6 +73,7 @@ public class LocalBean {
     public String getLocalurl() {
         return localurl;
     }
+
     public String getId() {
         return id;
     }

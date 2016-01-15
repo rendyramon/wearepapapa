@@ -10,25 +10,19 @@
         android:orientation="horizontal">
 
         <RelativeLayout
-            android:gravity="center"
             android:id="@+id/container1"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:gravity="center" />
 
         <RelativeLayout
-            android:gravity="center"
             android:id="@+id/container2"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:gravity="center" />
 
     </LinearLayout>
-
-    <View
-        android:layout_width="2dp"
-        android:layout_height="match_parent"
-        android:layout_centerHorizontal="true"
-        android:background="#99ffffff" />
 
 </RelativeLayout>
