@@ -211,6 +211,7 @@ public class LocalCachelActivity extends BaseActivity {
 //                        System.out.println("---本地地址：" + localurl + "---url:" + list.get(i).getUrl());
                 Intent intent = new Intent(LocalCachelActivity.this, PlayerVRActivityNew.class);
                 intent.putExtra("play_url", localurl);
+                intent.putExtra("title", dbList.get(i).getTitle());
                 intent.putExtra("splite_screen", false);
                 LocalCachelActivity.this.startActivity(intent);
             } else if (localurl == null) {
@@ -265,6 +266,9 @@ public class LocalCachelActivity extends BaseActivity {
     @Override
     public void getIntentData(Intent intent) {
         dbList = (ArrayList<LocalBean>) getIntent().getSerializableExtra("dbList");
+        if (dbList== null){
+            dbList = new ArrayList<>();
+        }
     }
 
     public void allChange() {

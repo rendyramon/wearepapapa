@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@mipmap/vr_cate_bg"
+    android:background="@mipmap/scape_bg"
     android:orientation="vertical">
 
 
@@ -95,6 +95,7 @@
         android:layout_height="match_parent"
         android:layout_above="@id/ivBack"
         android:scaleType="fitXY"
+        android:visibility="gone"
         android:src="@drawable/left" />
 
     <ImageView
@@ -104,6 +105,7 @@
         android:layout_alignParentRight="true"
         android:rotation="180"
         android:scaleType="fitXY"
+        android:visibility="gone"
         android:src="@drawable/right" />
 
     <RelativeLayout
