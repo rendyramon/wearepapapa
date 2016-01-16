@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@mipmap/vr_cate_bg"
+    android:background="@mipmap/backgroud_heng"
     android:orientation="vertical">
 
 
@@ -10,7 +10,7 @@
         android:id="@+id/id_sv"
         android:layout_width="match_parent"
         android:layout_height="150dp"
-        android:layout_marginTop="25dp">
+        android:layout_marginTop="50dp">
 
     </com.hotcast.vr.imageView.Image3DSwitchView>
 
@@ -67,7 +67,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:background="@drawable/buttom"
         android:gravity="center"
         android:orientation="horizontal">
 
@@ -92,6 +91,7 @@
 
     <ImageView
         android:layout_width="30dp"
+        android:visibility="gone"
         android:layout_height="match_parent"
         android:layout_above="@id/ivBack"
         android:scaleType="fitXY"
@@ -99,6 +99,7 @@
 
     <ImageView
         android:layout_width="30dp"
+        android:visibility="gone"
         android:layout_height="match_parent"
         android:layout_above="@id/ivBack"
         android:layout_alignParentRight="true"
@@ -128,7 +129,6 @@
             android:layout_marginTop="8dp"
             android:text="取消更新" />
     </RelativeLayout>
-
     <include
         android:id="@+id/loadingbar"
         layout="@layout/pagerchange_loading" />

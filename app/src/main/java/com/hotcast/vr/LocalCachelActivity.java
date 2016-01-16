@@ -150,6 +150,7 @@ public class LocalCachelActivity extends BaseActivity {
         for (int i = 0; i < dbList.size(); i++) {
             final int index = i;
             Image3DView image3DView = new Image3DView(this);
+            image3DView.setScaleType(ImageView.ScaleType.CENTER_CROP);
             String imgurl = dbList.get(i).getImage();
 //            if (imgurl == null || imgurl.equals("")) {
 ////                dbList.get(i).setLocalBitmap(VedioBitmapUtils.getMicroVedioBitmap(dbList.get(i).getLocalurl()));
@@ -170,6 +171,7 @@ public class LocalCachelActivity extends BaseActivity {
         for (int i = 0; i < dbList.size(); i++) {
             final int index = i;
             Image3DView image3DView = new Image3DView(this);
+            image3DView.setScaleType(ImageView.ScaleType.CENTER_CROP);
             String imgurl = dbList.get(i).getImage();
 //            if (imgurl == null || imgurl.equals("")) {
 ////                dbList.get(i).setLocalBitmap(VedioBitmapUtils.getMicroVedioBitmap(dbList.get(i).getLocalurl()));
@@ -562,9 +564,10 @@ public class LocalCachelActivity extends BaseActivity {
     String action;
 
     public void RefreshDownLoading() {
-        String indexSpeed = speeds.get(dbList.get(index-1).getUrl());
-        view1.RefreshTextView(indexSpeed);
-        view2.RefreshTextView(indexSpeed);
+
+//        String indexSpeed = speeds.get(dbList.get(index-1).getUrl());
+//        view1.RefreshTextView(indexSpeed);
+//        view2.RefreshTextView(indexSpeed);
 
     }
 
@@ -588,9 +591,9 @@ public class LocalCachelActivity extends BaseActivity {
                     speed = (current - pecent) / 1024 + "KB/S" + " 已下载" + (current * 100) / total + "%";
                     pecent = current;
                     speeds.put(play_url, speed);
+                    mHandler.sendEmptyMessage(100);
                 }
                 System.out.println("---接收到的信息：" + speed);
-                mHandler.sendEmptyMessage(100);
 //
             } else if ("FINISH".equals(action)) {
 //                下載完畢，執行下載完畢的邏輯

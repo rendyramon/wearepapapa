@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@mipmap/vr_cate_bg">
+    android:background="@mipmap/backgroud_heng">
 
     <RelativeLayout
         android:layout_width="wrap_content"
@@ -12,7 +12,7 @@
         <com.hotcast.vr.imageView.Image3DSwitchView
             android:id="@+id/id_sv"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="150dp"
             >
 
         </com.hotcast.vr.imageView.Image3DSwitchView>
@@ -42,14 +42,14 @@
             android:id="@+id/tv_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/id_sv"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="0dp"
             android:ellipsize="end"
             android:singleLine="true"
             android:text="未知影片"
             android:textColor="#ffffff"
-            android:textSize="15sp" />
+            android:textSize="15sp"
+            android:layout_below="@+id/id_sv"
+            android:layout_marginTop="20dp"
+            android:layout_centerHorizontal="true" />
         <TextView
             android:id="@+id/tv_page"
             android:layout_width="35dp"
@@ -103,6 +103,7 @@
 
     <ImageView
         android:layout_width="35dp"
+        android:visibility="gone"
         android:layout_height="match_parent"
         android:layout_above="@id/ivBack"
         android:scaleType="fitXY"
@@ -110,6 +111,7 @@
 
     <ImageView
         android:id="@+id/imageView"
+        android:visibility="gone"
         android:layout_width="35dp"
         android:layout_height="match_parent"
         android:layout_above="@id/ivBack"

@@ -67,6 +67,7 @@ public class DownLoadingService extends Service {
         @Override
         public void onReceive(final Context context, final Intent intent) {
             if (intent.getAction().equals(START) && BaseApplication.detailsList.size() > 0) {
+                System.out.println("---广播接收到了，开始执行下载");
 //                    Details details = (Details) intent.getSerializableExtra("Details");
                 final Details details = BaseApplication.detailsList.get(0);
                 final String localUrl = Environment.getExternalStorageDirectory().getAbsolutePath() + "/hostcast/vr/" + details.getTitle() + ".mp4";
@@ -120,6 +121,13 @@ public class DownLoadingService extends Service {
                     handler.cancel();
                 }
             }
+        }
+    }
+
+    class DownThread extends Thread{
+        @Override
+        public void run() {
+
         }
     }
 }

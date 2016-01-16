@@ -14,6 +14,7 @@ import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -27,6 +28,7 @@ import com.hotcast.vr.bean.VrPlay;
 import com.hotcast.vr.image3D.Image3DSwitchView;
 import com.hotcast.vr.imageView.Image3DView;
 import com.hotcast.vr.pageview.VrListView;
+import com.hotcast.vr.services.DownLoadingService;
 import com.hotcast.vr.tools.Constants;
 import com.hotcast.vr.tools.DensityUtils;
 import com.hotcast.vr.tools.HotVedioCacheUtils;
@@ -313,6 +315,7 @@ public class LandscapeActivity extends BaseActivity implements View.OnClickListe
     @Override
     protected void onRestart() {
         super.onRestart();
+        dataCacheOk = false;
         System.out.println("---netClassifys in on restart:" + netClassifys.size());
         BaseApplication.size = netClassifys.size() + 1;
         System.out.println("---BaseApplication.size in on restart:" + BaseApplication.size);
@@ -503,8 +506,11 @@ public class LandscapeActivity extends BaseActivity implements View.OnClickListe
     @Override
     protected void onStart() {
         super.onStart();
+        dbList = new ArrayList<>();
         MyAsyncTask task = new MyAsyncTask();
         task.execute();
+        Intent intent = new Intent(LandscapeActivity.this, DownLoadingService.class);
+        LandscapeActivity.this.startService(intent);
     }
 
     List<VrPlay> vrPlays;
@@ -571,12 +577,13 @@ public class LandscapeActivity extends BaseActivity implements View.OnClickListe
             if (dbList == null) {
                 dbList = new ArrayList<>();
             }
-
+            if (dbList!=null) {
+                System.out.println("---数据库原始尺寸："+dbList.size());
+            }
             String[] localNames = HotVedioCacheUtils.getVedioCache(BaseApplication.VedioCacheUrl);
             int size = dbList.size();
             for (int i = 0; i < localNames.length; i++) {
                 String title = localNames[i];
-                System.out.println("---本地title：" + title);
                 if (size == 0) {
                     LocalBean localBean = new LocalBean();
                     localBean.setLocalurl(BaseApplication.VedioCacheUrl + localNames[i]);
@@ -591,6 +598,7 @@ public class LandscapeActivity extends BaseActivity implements View.OnClickListe
                     for (int j = 0; j < size; j++) {
                         if (dbList.get(j).getTitle().equals(title.replace(".mp4", ""))) {
                             //相同不添加
+                            System.out.println("---dbList.get(j).getTitle()"+dbList.get(j).getTitle());
                         } else {
                             LocalBean localBean = new LocalBean();
                             localBean.setLocalurl(BaseApplication.VedioCacheUrl + localNames[i]);
@@ -600,6 +608,7 @@ public class LandscapeActivity extends BaseActivity implements View.OnClickListe
                             localBean.setImage(BaseApplication.ImgCacheUrl + title.replace(".mp4", "") + ".jpg");
                             localBean.setTitle(localNames[i].replace(".mp4", ""));
                             dbList.add(localBean);
+                            System.out.println("---不相同"+localNames[i].replace(".mp4", ""));
                         }
                     }
                 }
