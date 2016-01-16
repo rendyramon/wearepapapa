@@ -101,7 +101,8 @@ public class LandscapeActivity extends BaseActivity implements View.OnClickListe
         img3D2 = (com.hotcast.vr.imageView.Image3DSwitchView) view2.getRootView().findViewById(R.id.id_sv);
         for (int i = 0; i < netClassifys.size(); i++) {
             Image3DView image3DView = new Image3DView(this);
-            bitmapUtils.display(image3DView, netClassifys.get(i).getImage());
+            System.out.println("---图片地址 ：" + netClassifys.get(i).getBig_logo());
+            bitmapUtils.display(image3DView, netClassifys.get(i).getBig_logo());
             image3DView.setLayoutParams(params);
             final String channel_id = netClassifys.get(i).getChannel_id();
             image3DView.setOnClickListener(new View.OnClickListener() {
@@ -144,7 +145,7 @@ public class LandscapeActivity extends BaseActivity implements View.OnClickListe
         img3D.addView(image3DView1);
         for (int i = 0; i < netClassifys.size(); i++) {
             Image3DView image3DView = new Image3DView(this);
-            bitmapUtils.display(image3DView, netClassifys.get(i).getImage());
+            bitmapUtils.display(image3DView, netClassifys.get(i).getBig_logo());
             image3DView.setLayoutParams(params);
             final String channel_id = netClassifys.get(i).getChannel_id();
             image3DView.setOnClickListener(new View.OnClickListener() {
