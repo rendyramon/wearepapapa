@@ -139,16 +139,9 @@ public class LandscapeActivity extends BaseActivity implements View.OnClickListe
                     //显示小菊花
                     view1.showOrHideProgressBar(true);
                     view2.showOrHideProgressBar(true);
-                    mHandler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            view1.showOrHideProgressBar(false);
-                            view2.showOrHideProgressBar(false);
-                            cacheIntent = new Intent(LandscapeActivity.this, LocalCachelActivity.class);
-                            cacheIntent.putExtra("dbList", (Serializable) dbList);
-                            startActivity(cacheIntent);
-                        }
-                    }, 5000);
+                    Message msg = Message.obtain();
+                    msg.what = 100;
+                    mHandler.sendMessageDelayed(msg,1000);
                 }
             }
         });
@@ -167,16 +160,9 @@ public class LandscapeActivity extends BaseActivity implements View.OnClickListe
                     //显示小菊花
                     view1.showOrHideProgressBar(true);
                     view2.showOrHideProgressBar(true);
-                    mHandler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            view1.showOrHideProgressBar(false);
-                            view2.showOrHideProgressBar(false);
-                            cacheIntent = new Intent(LandscapeActivity.this, LocalCachelActivity.class);
-                            cacheIntent.putExtra("dbList", (Serializable) dbList);
-                            startActivity(cacheIntent);
-                        }
-                    }, 3000);
+                    Message msg = Message.obtain();
+                    msg.what = 100;
+                    mHandler.sendMessageDelayed(msg,1000);
                 }
             }
         });
@@ -264,6 +250,20 @@ public class LandscapeActivity extends BaseActivity implements View.OnClickListe
                     break;
                 case INSTALL_TOKEN:
                     installApp();
+                    break;
+                case 100:
+                    if (dataCacheOk) {
+                        cacheIntent = new Intent(LandscapeActivity.this, LocalCachelActivity.class);
+                        cacheIntent.putExtra("dbList", (Serializable) dbList);
+                        startActivity(cacheIntent);
+                    } else {
+                        //显示小菊花
+                        view1.showOrHideProgressBar(true);
+                        view2.showOrHideProgressBar(true);
+                        Message msg1 = Message.obtain();
+                        msg1.what = 100;
+                        mHandler.sendMessageDelayed(msg1,1000);
+                    }
                     break;
 //                case STOP:
 
@@ -508,6 +508,8 @@ public class LandscapeActivity extends BaseActivity implements View.OnClickListe
         task.execute();
         Intent intent = new Intent(LandscapeActivity.this, DownLoadingService.class);
         LandscapeActivity.this.startService(intent);
+        view1.showOrHideProgressBar(false);
+        view2.showOrHideProgressBar(false);
     }
 
     List<VrPlay> vrPlays;
