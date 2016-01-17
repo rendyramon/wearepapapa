@@ -100,23 +100,33 @@ public class LandscapeActivity extends BaseActivity implements View.OnClickListe
         img3D = (com.hotcast.vr.imageView.Image3DSwitchView) view1.getRootView().findViewById(R.id.id_sv);
         img3D2 = (com.hotcast.vr.imageView.Image3DSwitchView) view2.getRootView().findViewById(R.id.id_sv);
         for (int i = 0; i < netClassifys.size(); i++) {
-            Image3DView image3DView = new Image3DView(this);
+            Image3DView image3DView1 = new Image3DView(this);
             System.out.println("---图片地址 ：" + netClassifys.get(i).getBig_logo());
-            bitmapUtils.display(image3DView, netClassifys.get(i).getBig_logo());
-            image3DView.setLayoutParams(params);
+            bitmapUtils.display(image3DView1, netClassifys.get(i).getBig_logo());
+            image3DView1.setLayoutParams(params);
             final String channel_id = netClassifys.get(i).getChannel_id();
-            image3DView.setOnClickListener(new View.OnClickListener() {
+            image3DView1.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     getNetData(channel_id);
                     System.out.println("***你点击了item，准备播放**");
                 }
             });
-
-            img3D.addView(image3DView);
+            img3D.addView(image3DView1);
+            Image3DView image3DView2 = new Image3DView(this);
+            bitmapUtils.display(image3DView2, netClassifys.get(i).getBig_logo());
+            image3DView2.setLayoutParams(params);
+            image3DView2.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    getNetData(channel_id);
+                    System.out.println("***你点击了item，准备播放**");
+                }
+            });
+            img3D2.addView(image3DView2);
         }
         Image3DView image3DView1 = new Image3DView(this);
-        image3DView1.setImageResource(R.drawable.icon_4);
+        image3DView1.setImageResource(R.mipmap.cache_icon);
         image3DView1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -143,22 +153,8 @@ public class LandscapeActivity extends BaseActivity implements View.OnClickListe
             }
         });
         img3D.addView(image3DView1);
-        for (int i = 0; i < netClassifys.size(); i++) {
-            Image3DView image3DView = new Image3DView(this);
-            bitmapUtils.display(image3DView, netClassifys.get(i).getBig_logo());
-            image3DView.setLayoutParams(params);
-            final String channel_id = netClassifys.get(i).getChannel_id();
-            image3DView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    getNetData(channel_id);
-                    System.out.println("***你点击了item，准备播放**");
-                }
-            });
-            img3D2.addView(image3DView);
-        }
         Image3DView image3DView2 = new Image3DView(this);
-        image3DView2.setImageResource(R.drawable.icon_4);
+        image3DView2.setImageResource(R.mipmap.cache_icon);
         image3DView2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -589,10 +585,10 @@ public class LandscapeActivity extends BaseActivity implements View.OnClickListe
                     LocalBean localBean = new LocalBean();
                     localBean.setLocalurl(BaseApplication.VedioCacheUrl + localNames[i]);
                     localBean.setCurState(3);
-//                            localBean.setLocalBitmap(VedioBitmapUtils.getMiniVedioBitmap(BaseApplication.VedioCacheUrl + localNames[i]));
                     SaveBitmapUtils.saveMyBitmap(title.replace(".mp4", ""), VedioBitmapUtils.getMiniVedioBitmap(BaseApplication.VedioCacheUrl + localNames[i]));
                     System.out.println("---本地bitmap：" + VedioBitmapUtils.getMiniVedioBitmap(BaseApplication.VedioCacheUrl + localNames[i]));
                     localBean.setImage(BaseApplication.ImgCacheUrl + title.replace(".mp4", "") + ".jpg");
+                    localBean.setUrl("");
                     localBean.setTitle(localNames[i].replace(".mp4", ""));
                     dbList.add(localBean);
                 } else {

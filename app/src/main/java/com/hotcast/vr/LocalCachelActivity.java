@@ -14,6 +14,7 @@ import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -71,6 +72,12 @@ public class LocalCachelActivity extends BaseActivity {
     private DetailReceiver receiver;
     //db原始尺寸
     private int trueSize;
+    private List<LocalBean> Truelist;
+    int mCurrentImg;
+    Button bt_delete1;
+    Button bt_delete2;
+    Button bt_zanting1;
+    Button bt_zanting2;
 
     @Override
     public int getLayoutId() {
@@ -88,18 +95,35 @@ public class LocalCachelActivity extends BaseActivity {
         registerReceiver(receiver, filter);
         speeds = new HashMap<>();
         db = DbUtils.create(this);
+        workForList();
+    }
 
-        if (dbList.size() > 0 && dbList.size() < 5) {
-            trueSize = dbList.size();
+    public void workForList() {
+        index = 1;
+        if (dbList == null) {
+            dbList = new ArrayList<>();
+        } else {
+            dbList.clear();
+        }
+        trueSize = Truelist.size();
+        if (Truelist.size() > 0 && Truelist.size() < 5) {
             addSelfToFive();
         }
         BaseApplication.size = dbList == null ? 0 : dbList.size();
     }
 
     public void addSelfToFive() {
-        dbList.addAll(dbList);
+        dbList.addAll(Truelist);
         if (dbList.size() < 5) {
             addSelfToFive();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (receiver != null) {
+            unregisterReceiver(receiver);
         }
     }
 
@@ -122,7 +146,6 @@ public class LocalCachelActivity extends BaseActivity {
 
     public void init3DView() {
         bitmapUtils = new BitmapUtils(this);
-        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         img3D = (Image3DSwitchView) view1.getRootView().findViewById(R.id.id_sv);
         img3D2 = (Image3DSwitchView) view2.getRootView().findViewById(R.id.id_sv);
         tv_page1 = (TextView) view1.getRootView().findViewById(R.id.tv_page);
@@ -130,39 +153,47 @@ public class LocalCachelActivity extends BaseActivity {
 
         tv_title1 = (TextView) view1.getRootView().findViewById(R.id.tv_title);
         tv_title2 = (TextView) view2.getRootView().findViewById(R.id.tv_title);
+        bt_delete1 = (Button) view1.getRootView().findViewById(R.id.bt_delete);
+        bt_delete1.setOnClickListener(this);
+        bt_delete2 = (Button) view2.getRootView().findViewById(R.id.bt_delete);
+        bt_delete2.setOnClickListener(this);
+
+        bt_zanting1 = (Button) view1.getRootView().findViewById(R.id.bt_zanting);
+        bt_zanting1.setOnClickListener(this);
+        bt_zanting2 = (Button) view2.getRootView().findViewById(R.id.bt_zanting);
+        bt_zanting2.setOnClickListener(this);
+
 //        tv_desc1 = (TextView) view1.getRootView().findViewById(R.id.tv_desc);
 //        tv_desc2 = (TextView) view2.getRootView().findViewById(R.id.tv_desc);
+        initPagerView();
+        allChange();
+    }
+
+    public void initPagerView() {
+        img3D.removeAllViews();
+        img3D2.removeAllViews();
+//        ((ViewGroup) view1.getRootView().getParent()).removeView(view1.getRootView());
+        container1.removeView(view1.getRootView());
+        container2.removeView(view2.getRootView());
+        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         page = index + "/" + trueSize;
         span = new SpannableString(page);
         span.setSpan(new ForegroundColorSpan(LocalCachelActivity.this.getResources().getColor(R.color.material_blue_500)),
                 0, page.length() - 1 - ("" + trueSize).length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         tv_page1.setText(span);
         tv_page2.setText(span);
-        tv_title1.setText(dbList.get(index - 1).getTitle());
-        tv_title2.setText(dbList.get(index - 1).getTitle());
-        if (dbList.get(index - 1).getCurState() == 3) {
-            view1.hideOrShowLoading(false);
-            view2.hideOrShowLoading(false);
-        } else {
-            view1.hideOrShowLoading(true);
-            view2.hideOrShowLoading(true);
-        }
         for (int i = 0; i < dbList.size(); i++) {
             final int index = i;
             Image3DView image3DView = new Image3DView(this);
             image3DView.setScaleType(ImageView.ScaleType.CENTER_CROP);
             String imgurl = dbList.get(i).getImage();
-//            if (imgurl == null || imgurl.equals("")) {
-////                dbList.get(i).setLocalBitmap(VedioBitmapUtils.getMicroVedioBitmap(dbList.get(i).getLocalurl()));
-////                image3DView.setImageBitmap(VedioBitmapUtils.getMicroVedioBitmap(dbList.get(i).getLocalurl()));
-//                bitmapUtils.display(image3DView, imgurl);
-//            } else {
             bitmapUtils.display(image3DView, imgurl);
-//            }
             image3DView.setLayoutParams(params);
             image3DView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    String localurl = dbList.get(index).getLocalurl();
+                    System.out.print("---点击播放了：" + localurl + "state:" + dbList.get(index).getCurState());
                     clickVedio(index);
                 }
             });
@@ -173,28 +204,82 @@ public class LocalCachelActivity extends BaseActivity {
             Image3DView image3DView = new Image3DView(this);
             image3DView.setScaleType(ImageView.ScaleType.CENTER_CROP);
             String imgurl = dbList.get(i).getImage();
-//            if (imgurl == null || imgurl.equals("")) {
-////                dbList.get(i).setLocalBitmap(VedioBitmapUtils.getMicroVedioBitmap(dbList.get(i).getLocalurl()));
-////                image3DView.setImageBitmap(VedioBitmapUtils.getMicroVedioBitmap(dbList.get(i).getLocalurl()));
-//                image3DView.setImageResource(R.drawable.ic_launcher);
-//            } else {
             bitmapUtils.display(image3DView, imgurl);
-//            }
             image3DView.setLayoutParams(params);
             image3DView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    String localurl = dbList.get(index).getLocalurl();
+                    System.out.print("---点击播放了：" + localurl + "state:" + dbList.get(index).getCurState());
                     clickVedio(index);
                 }
             });
             img3D2.addView(image3DView);
         }
-        allChange();
+        mCurrentImg = img3D.getImgIndex() - 1;
+        if (mCurrentImg < 0) {
+            mCurrentImg = dbList.size() - 1;
+        }
+        tv_title1.setText(dbList.get(mCurrentImg).getTitle());
+        tv_title2.setText(dbList.get(mCurrentImg).getTitle());
+        if (dbList.get(mCurrentImg).getCurState() == 3) {
+            view1.hideOrShowLoading(false);
+            view2.hideOrShowLoading(false);
+        } else {
+            view1.hideOrShowLoading(true);
+            view2.hideOrShowLoading(true);
+        }
         container1.addView(view1.getRootView(), ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         container2.addView(view2.getRootView(), ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
     }
 
-    private boolean editor = false;
+    @Override
+    public void onClick(View v) {
+        mCurrentImg = img3D.getImgIndex() - 1;
+        if (mCurrentImg < 0) {
+            mCurrentImg = dbList.size() - 1;
+        }
+        switch (v.getId()) {
+            case R.id.bt_delete:
+                try {
+                    if (dbList.get(mCurrentImg).getLocalurl() != null) {
+                        db.delete(dbList.get(mCurrentImg));
+                        delete(dbList.get(mCurrentImg).getLocalurl());
+                        for (int i = 0; i < Truelist.size(); i++) {
+                            if (Truelist.get(i).getLocalurl().equals(dbList.get(mCurrentImg).getLocalurl())) {
+                                System.out.println("---删除：" + Truelist.get(i).getLocalurl());
+                                Truelist.remove(i);
+                                System.out.println("---真实1：" + Truelist.size());
+                                workForList();
+                                System.out.println("---真实2：" + Truelist.size());
+                                view1 = new LocalListView(this);
+                                view2 = new LocalListView(this);
+                                if (dbList.size() <= 0) {
+                                    view1.hideOrShowCache_no(true);
+                                    view2.hideOrShowCache_no(true);
+                                } else {
+                                    //显示逻辑
+                                    view1.hideOrShowCache_no(false);
+                                    view2.hideOrShowCache_no(false);
+                                    System.out.println("---点击后——dblist：" + dbList.size());
+                                    init3DView();
+                                }
+                            }
+                        }
+
+                    }
+                } catch (DbException e) {
+                    e.printStackTrace();
+                }
+                break;
+            case R.id.bt_zanting:
+//                Intent intent = new Intent(PAUSE);
+//                intent.putExtra("index", mCurrentImg);
+//                sendBroadcast(intent);
+                break;
+        }
+    }
+
     final String START = "START";
     final String DOWNLOADING = "DOWNLOADING";
     final String FINISH = "FINISH";
@@ -202,74 +287,53 @@ public class LocalCachelActivity extends BaseActivity {
 
     public void clickVedio(int i) {
         String localurl = dbList.get(i).getLocalurl();
+        System.out.print("---点击播放了：" + localurl + "state:" + dbList.get(i).getCurState());
         File file;
         if (localurl != null) {
             file = new File(localurl);
         } else {
             file = new File(" ");
         }
-        if (!editor) {
-            if (localurl != null && file.exists()) {
+        if (localurl != null && file.exists()) {
 //                        System.out.println("---本地地址：" + localurl + "---url:" + list.get(i).getUrl());
-                Intent intent = new Intent(LocalCachelActivity.this, PlayerVRActivityNew.class);
-                intent.putExtra("play_url", localurl);
-                intent.putExtra("title", dbList.get(i).getTitle());
-                intent.putExtra("splite_screen", false);
-                LocalCachelActivity.this.startActivity(intent);
-            } else if (localurl == null) {
-                if (dbList.get(i).getCurState() == -1) {
-                    System.out.print("---重新下载");
-                    Intent intent = new Intent(START);
-                    LocalCachelActivity.this.sendBroadcast(intent);
-                    try {
-                        db.delete(dbList.get(i));
-                        dbList.get(i).setCurState(0);
-                        db.save(dbList.get(i));
-                    } catch (DbException e) {
-                        e.printStackTrace();
-                    }
-                } else if (dbList.get(i).getCurState() == 0) {
-                    System.out.print("---暂停");
-                    try {
-                        db.delete(dbList.get(i));
-                        dbList.get(i).setCurState(-1);
-                        db.save(dbList.get(i));
-                    } catch (DbException e) {
-                        e.printStackTrace();
-                    }
-                    Intent intent = new Intent(PAUSE);
-                    intent.putExtra("index", i);
-                    sendBroadcast(intent);
+            Intent intent = new Intent(LocalCachelActivity.this, PlayerVRActivityNew.class);
+            intent.putExtra("play_url", localurl);
+            intent.putExtra("title", dbList.get(i).getTitle());
+            intent.putExtra("splite_screen", false);
+            LocalCachelActivity.this.startActivity(intent);
+        } else if (localurl == null) {
+            if (dbList.get(i).getCurState() == -1) {
+                System.out.print("---重新下载");
+                Intent intent = new Intent(START);
+                LocalCachelActivity.this.sendBroadcast(intent);
+                try {
+                    db.delete(dbList.get(i));
+                    dbList.get(i).setCurState(0);
+                    db.save(dbList.get(i));
+                } catch (DbException e) {
+                    e.printStackTrace();
                 }
+            } else if (dbList.get(i).getCurState() == 0) {
+                System.out.print("---暂停");
+                try {
+                    db.delete(dbList.get(i));
+                    dbList.get(i).setCurState(-1);
+                    db.save(dbList.get(i));
+                } catch (DbException e) {
+                    e.printStackTrace();
+                }
+                Intent intent = new Intent(PAUSE);
+                intent.putExtra("index", i);
+                sendBroadcast(intent);
             }
-        } else {
-//            try {
-//                if (list.get(i).getLocalurl() != null) {
-//                    delete(list.get(i).getLocalurl());
-//                }
-//                db.delete(list.get(i));
-//                list = db.findAll(LocalBean.class);
-//
-//            } catch (DbException e) {
-//                e.printStackTrace();
-//            }
-//            if (list != null) {
-//                adapter = new HuancunAdapter();
-//                lv.setAdapter(adapter);
-//            } else {
-//                bt_editor.setVisibility(View.GONE);
-//                cache_no.setVisibility(View.VISIBLE);
-//                startRefreshList();
-//            }
-//            System.out.println("****显示差号****删除一个item");
         }
     }
 
     @Override
     public void getIntentData(Intent intent) {
-        dbList = (ArrayList<LocalBean>) getIntent().getSerializableExtra("dbList");
-        if (dbList== null){
-            dbList = new ArrayList<>();
+        Truelist = (ArrayList<LocalBean>) getIntent().getSerializableExtra("dbList");
+        if (Truelist == null) {
+            Truelist = new ArrayList<>();
         }
     }
 
@@ -280,33 +344,33 @@ public class LocalCachelActivity extends BaseActivity {
                 System.out.println("-----1執行");
                 img3D2.scrollBy(dix, 0);
                 img3D2.refreshImageShowing();
-                if (index <= trueSize) {
-                    page = index + "/" + trueSize;
-                    span = new SpannableString(page);
-                    span.setSpan(new ForegroundColorSpan(LocalCachelActivity.this.getResources().getColor(R.color.material_blue_500)),
-                            0, page.length() - 1 - ("" + trueSize).length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    tv_page1.setText(span);
-                    tv_page2.setText(span);
-                    tv_title1.setText(dbList.get(index - 1).getTitle());
-                    tv_title2.setText(dbList.get(index - 1).getTitle());
-                } else {
-                    index = 1;
-                    page = index + "/" + trueSize;
-                    span = new SpannableString(page);
-                    span.setSpan(new ForegroundColorSpan(LocalCachelActivity.this.getResources().getColor(R.color.material_blue_500)),
-                            0, page.length() - 1 - ("" + trueSize).length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    tv_page1.setText(span);
-                    tv_page2.setText(span);
-                    tv_title1.setText(dbList.get(index - 1).getTitle());
-                    tv_title2.setText(dbList.get(index - 1).getTitle());
-                }
-                if (dbList.get(index - 1).getCurState() == 3) {
-                    view1.hideOrShowLoading(false);
-                    view2.hideOrShowLoading(false);
-                } else {
-                    view1.hideOrShowLoading(true);
-                    view2.hideOrShowLoading(true);
-                }
+//                if (index <= trueSize) {
+//                    page = index + "/" + trueSize;
+//                    span = new SpannableString(page);
+//                    span.setSpan(new ForegroundColorSpan(LocalCachelActivity.this.getResources().getColor(R.color.material_blue_500)),
+//                            0, page.length() - 1 - ("" + trueSize).length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+//                    tv_page1.setText(span);
+//                    tv_page2.setText(span);
+//                    tv_title1.setText(dbList.get(mCurrentImg).getTitle());
+//                    tv_title2.setText(dbList.get(mCurrentImg).getTitle());
+//                } else {
+//                    index = 1;
+//                    page = index + "/" + trueSize;
+//                    span = new SpannableString(page);
+//                    span.setSpan(new ForegroundColorSpan(LocalCachelActivity.this.getResources().getColor(R.color.material_blue_500)),
+//                            0, page.length() - 1 - ("" + trueSize).length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+//                    tv_page1.setText(span);
+//                    tv_page2.setText(span);
+//                    tv_title1.setText(dbList.get(index - 1).getTitle());
+//                    tv_title2.setText(dbList.get(index - 1).getTitle());
+//                }
+//                if (dbList.get(index - 1).getCurState() == 3) {
+//                    view1.hideOrShowLoading(false);
+//                    view2.hideOrShowLoading(false);
+//                } else {
+//                    view1.hideOrShowLoading(true);
+//                    view2.hideOrShowLoading(true);
+//                }
             }
 
             @Override
@@ -314,6 +378,10 @@ public class LocalCachelActivity extends BaseActivity {
                 System.out.println("-----2執行");
                 img3D2.scrollToNext();
                 ++index;
+                mCurrentImg = img3D.getImgIndex() - 1;
+                if (mCurrentImg < 0) {
+                    mCurrentImg = dbList.size() - 1;
+                }
                 if (index <= trueSize) {
                     page = index + "/" + trueSize;
                     span = new SpannableString(page);
@@ -321,8 +389,8 @@ public class LocalCachelActivity extends BaseActivity {
                             0, page.length() - 1 - ("" + trueSize).length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                     tv_page1.setText(span);
                     tv_page2.setText(span);
-                    tv_title1.setText(dbList.get(index - 1).getTitle());
-                    tv_title2.setText(dbList.get(index - 1).getTitle());
+                    tv_title1.setText(dbList.get(mCurrentImg).getTitle());
+                    tv_title2.setText(dbList.get(mCurrentImg).getTitle());
                 } else {
                     index = 1;
                     page = index + "/" + trueSize;
@@ -331,16 +399,17 @@ public class LocalCachelActivity extends BaseActivity {
                             0, page.length() - 1 - ("" + trueSize).length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                     tv_page1.setText(span);
                     tv_page2.setText(span);
-                    tv_title1.setText(dbList.get(index - 1).getTitle());
-                    tv_title2.setText(dbList.get(index - 1).getTitle());
+                    tv_title1.setText(dbList.get(mCurrentImg).getTitle());
+                    tv_title2.setText(dbList.get(mCurrentImg).getTitle());
                 }
-                if (dbList.get(index - 1).getCurState() == 3) {
+                if (dbList.get(mCurrentImg).getCurState() == 3) {
                     view1.hideOrShowLoading(false);
                     view2.hideOrShowLoading(false);
                 } else {
                     view1.hideOrShowLoading(true);
                     view2.hideOrShowLoading(true);
                 }
+                System.out.println("---滑动：" + mCurrentImg + "--url:" + dbList.get(mCurrentImg).getUrl() + "--title:" + dbList.get(mCurrentImg).getTitle());
             }
 
             @Override
@@ -348,6 +417,10 @@ public class LocalCachelActivity extends BaseActivity {
                 System.out.println("-----3執行");
                 img3D2.scrollToPrevious();
                 --index;
+                mCurrentImg = img3D.getImgIndex() - 1;
+                if (mCurrentImg < 0) {
+                    mCurrentImg = dbList.size() - 1;
+                }
                 if (index > 0) {
                     page = index + "/" + trueSize;
                     span = new SpannableString(page);
@@ -355,8 +428,8 @@ public class LocalCachelActivity extends BaseActivity {
                             0, page.length() - 1 - ("" + trueSize).length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                     tv_page1.setText(span);
                     tv_page2.setText(span);
-                    tv_title1.setText(dbList.get(index - 1).getTitle());
-                    tv_title2.setText(dbList.get(index - 1).getTitle());
+                    tv_title1.setText(dbList.get(mCurrentImg).getTitle());
+                    tv_title2.setText(dbList.get(mCurrentImg).getTitle());
                 } else {
                     index = trueSize;
                     page = index + "/" + trueSize;
@@ -365,16 +438,17 @@ public class LocalCachelActivity extends BaseActivity {
                             0, page.length() - 1 - ("" + trueSize).length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                     tv_page1.setText(span);
                     tv_page2.setText(span);
-                    tv_title1.setText(dbList.get(index - 1).getTitle());
-                    tv_title2.setText(dbList.get(index - 1).getTitle());
+                    tv_title1.setText(dbList.get(mCurrentImg).getTitle());
+                    tv_title2.setText(dbList.get(mCurrentImg).getTitle());
                 }
-                if (dbList.get(index - 1).getCurState() == 3) {
+                if (dbList.get(mCurrentImg).getCurState() == 3) {
                     view1.hideOrShowLoading(false);
                     view2.hideOrShowLoading(false);
                 } else {
                     view1.hideOrShowLoading(true);
                     view2.hideOrShowLoading(true);
                 }
+                System.out.println("---滑动：" + mCurrentImg + "--url:" + dbList.get(mCurrentImg).getUrl() + "--title:" + dbList.get(mCurrentImg).getTitle());
             }
 
             @Override
@@ -383,33 +457,33 @@ public class LocalCachelActivity extends BaseActivity {
                 img3D2.scrollBack();
 //                tv_page1.setText(index+"/"+vrPlays.size());
 //                tv_page2.setText(index + "/" + vrPlays.size());
-                if (index > 0) {
-                    page = index + "/" + trueSize;
-                    span = new SpannableString(page);
-                    span.setSpan(new ForegroundColorSpan(LocalCachelActivity.this.getResources().getColor(R.color.material_blue_500)),
-                            0, page.length() - 1 - ("" + trueSize).length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    tv_page1.setText(span);
-                    tv_page2.setText(span);
-                    tv_title1.setText(dbList.get(index - 1).getTitle());
-                    tv_title2.setText(dbList.get(index - 1).getTitle());
-                } else {
-                    index = trueSize;
-                    page = index + "/" + trueSize;
-                    span = new SpannableString(page);
-                    span.setSpan(new ForegroundColorSpan(LocalCachelActivity.this.getResources().getColor(R.color.material_blue_500)),
-                            0, page.length() - 1 - ("" + trueSize).length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    tv_page1.setText(span);
-                    tv_page2.setText(span);
-                    tv_title1.setText(dbList.get(index - 1).getTitle());
-                    tv_title2.setText(dbList.get(index - 1).getTitle());
-                }
-                if (dbList.get(index - 1).getCurState() == 3) {
-                    view1.hideOrShowLoading(false);
-                    view2.hideOrShowLoading(false);
-                } else {
-                    view1.hideOrShowLoading(true);
-                    view2.hideOrShowLoading(true);
-                }
+//                if (index > 0) {
+//                    page = index + "/" + trueSize;
+//                    span = new SpannableString(page);
+//                    span.setSpan(new ForegroundColorSpan(LocalCachelActivity.this.getResources().getColor(R.color.material_blue_500)),
+//                            0, page.length() - 1 - ("" + trueSize).length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+//                    tv_page1.setText(span);
+//                    tv_page2.setText(span);
+//                    tv_title1.setText(dbList.get(index - 1).getTitle());
+//                    tv_title2.setText(dbList.get(index - 1).getTitle());
+//                } else {
+//                    index = trueSize;
+//                    page = index + "/" + trueSize;
+//                    span = new SpannableString(page);
+//                    span.setSpan(new ForegroundColorSpan(LocalCachelActivity.this.getResources().getColor(R.color.material_blue_500)),
+//                            0, page.length() - 1 - ("" + trueSize).length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+//                    tv_page1.setText(span);
+//                    tv_page2.setText(span);
+//                    tv_title1.setText(dbList.get(index - 1).getTitle());
+//                    tv_title2.setText(dbList.get(index - 1).getTitle());
+//                }
+//                if (dbList.get(index - 1).getCurState() == 3) {
+//                    view1.hideOrShowLoading(false);
+//                    view2.hideOrShowLoading(false);
+//                } else {
+//                    view1.hideOrShowLoading(true);
+//                    view2.hideOrShowLoading(true);
+//                }
             }
         });
         img3D2.setOnMovechangeListener(new Image3DSwitchView.OnMovechangeListener() {
@@ -418,33 +492,33 @@ public class LocalCachelActivity extends BaseActivity {
                 System.out.println("-----1執行");
                 img3D.scrollBy(dix, 0);
                 img3D.refreshImageShowing();
-                if (index <= trueSize) {
-                    page = index + "/" + trueSize;
-                    span = new SpannableString(page);
-                    span.setSpan(new ForegroundColorSpan(LocalCachelActivity.this.getResources().getColor(R.color.material_blue_500)),
-                            0, page.length() - 1 - ("" + trueSize).length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    tv_page1.setText(span);
-                    tv_page2.setText(span);
-                    tv_title1.setText(dbList.get(index - 1).getTitle());
-                    tv_title2.setText(dbList.get(index - 1).getTitle());
-                } else {
-                    index = 1;
-                    page = index + "/" + trueSize;
-                    span = new SpannableString(page);
-                    span.setSpan(new ForegroundColorSpan(LocalCachelActivity.this.getResources().getColor(R.color.material_blue_500)),
-                            0, page.length() - 1 - ("" + trueSize).length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    tv_page1.setText(span);
-                    tv_page2.setText(span);
-                    tv_title1.setText(dbList.get(index - 1).getTitle());
-                    tv_title2.setText(dbList.get(index - 1).getTitle());
-                }
-                if (dbList.get(index - 1).getCurState() == 3) {
-                    view1.hideOrShowLoading(false);
-                    view2.hideOrShowLoading(false);
-                } else {
-                    view1.hideOrShowLoading(true);
-                    view2.hideOrShowLoading(true);
-                }
+//                if (index <= trueSize) {
+//                    page = index + "/" + trueSize;
+//                    span = new SpannableString(page);
+//                    span.setSpan(new ForegroundColorSpan(LocalCachelActivity.this.getResources().getColor(R.color.material_blue_500)),
+//                            0, page.length() - 1 - ("" + trueSize).length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+//                    tv_page1.setText(span);
+//                    tv_page2.setText(span);
+//                    tv_title1.setText(dbList.get(index - 1).getTitle());
+//                    tv_title2.setText(dbList.get(index - 1).getTitle());
+//                } else {
+//                    index = 1;
+//                    page = index + "/" + trueSize;
+//                    span = new SpannableString(page);
+//                    span.setSpan(new ForegroundColorSpan(LocalCachelActivity.this.getResources().getColor(R.color.material_blue_500)),
+//                            0, page.length() - 1 - ("" + trueSize).length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+//                    tv_page1.setText(span);
+//                    tv_page2.setText(span);
+//                    tv_title1.setText(dbList.get(index - 1).getTitle());
+//                    tv_title2.setText(dbList.get(index - 1).getTitle());
+//                }
+//                if (dbList.get(index - 1).getCurState() == 3) {
+//                    view1.hideOrShowLoading(false);
+//                    view2.hideOrShowLoading(false);
+//                } else {
+//                    view1.hideOrShowLoading(true);
+//                    view2.hideOrShowLoading(true);
+//                }
             }
 
             @Override
@@ -452,6 +526,10 @@ public class LocalCachelActivity extends BaseActivity {
                 System.out.println("-----2執行");
                 img3D.scrollToNext();
                 ++index;
+                mCurrentImg = img3D.getImgIndex() - 1;
+                if (mCurrentImg < 0) {
+                    mCurrentImg = dbList.size() - 1;
+                }
                 if (index <= trueSize) {
                     page = index + "/" + trueSize;
                     span = new SpannableString(page);
@@ -459,8 +537,8 @@ public class LocalCachelActivity extends BaseActivity {
                             0, page.length() - 1 - ("" + trueSize).length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                     tv_page1.setText(span);
                     tv_page2.setText(span);
-                    tv_title1.setText(dbList.get(index - 1).getTitle());
-                    tv_title2.setText(dbList.get(index - 1).getTitle());
+                    tv_title1.setText(dbList.get(mCurrentImg).getTitle());
+                    tv_title2.setText(dbList.get(mCurrentImg).getTitle());
                 } else {
                     index = 1;
                     page = index + "/" + trueSize;
@@ -469,16 +547,17 @@ public class LocalCachelActivity extends BaseActivity {
                             0, page.length() - 1 - ("" + trueSize).length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                     tv_page1.setText(span);
                     tv_page2.setText(span);
-                    tv_title1.setText(dbList.get(index - 1).getTitle());
-                    tv_title2.setText(dbList.get(index - 1).getTitle());
+                    tv_title1.setText(dbList.get(mCurrentImg).getTitle());
+                    tv_title2.setText(dbList.get(mCurrentImg).getTitle());
                 }
-                if (dbList.get(index - 1).getCurState() == 3) {
+                if (dbList.get(mCurrentImg).getCurState() == 3) {
                     view1.hideOrShowLoading(false);
                     view2.hideOrShowLoading(false);
                 } else {
                     view1.hideOrShowLoading(true);
                     view2.hideOrShowLoading(true);
                 }
+                System.out.println("---滑动：" + mCurrentImg + "--url:" + dbList.get(mCurrentImg).getUrl() + "--title:" + dbList.get(mCurrentImg).getTitle());
             }
 
             @Override
@@ -486,6 +565,10 @@ public class LocalCachelActivity extends BaseActivity {
                 System.out.println("-----3執行");
                 img3D.scrollToPrevious();
                 --index;
+                mCurrentImg = img3D.getImgIndex() - 1;
+                if (mCurrentImg < 0) {
+                    mCurrentImg = dbList.size() - 1;
+                }
                 if (index > 0) {
                     page = index + "/" + trueSize;
                     span = new SpannableString(page);
@@ -493,8 +576,8 @@ public class LocalCachelActivity extends BaseActivity {
                             0, page.length() - 1 - ("" + trueSize).length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                     tv_page1.setText(span);
                     tv_page2.setText(span);
-                    tv_title1.setText(dbList.get(index - 1).getTitle());
-                    tv_title2.setText(dbList.get(index - 1).getTitle());
+                    tv_title1.setText(dbList.get(mCurrentImg).getTitle());
+                    tv_title2.setText(dbList.get(mCurrentImg).getTitle());
                 } else {
                     index = trueSize;
                     page = index + "/" + trueSize;
@@ -503,16 +586,17 @@ public class LocalCachelActivity extends BaseActivity {
                             0, page.length() - 1 - ("" + trueSize).length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                     tv_page1.setText(span);
                     tv_page2.setText(span);
-                    tv_title1.setText(dbList.get(index - 1).getTitle());
-                    tv_title2.setText(dbList.get(index - 1).getTitle());
+                    tv_title1.setText(dbList.get(mCurrentImg).getTitle());
+                    tv_title2.setText(dbList.get(mCurrentImg).getTitle());
                 }
-                if (dbList.get(index - 1).getCurState() == 3) {
+                if (dbList.get(mCurrentImg).getCurState() == 3) {
                     view1.hideOrShowLoading(false);
                     view2.hideOrShowLoading(false);
                 } else {
                     view1.hideOrShowLoading(true);
                     view2.hideOrShowLoading(true);
                 }
+                System.out.println("---滑动：" + mCurrentImg + "--url:" + dbList.get(mCurrentImg).getUrl() + "--title:" + dbList.get(mCurrentImg).getTitle());
             }
 
             @Override
@@ -521,33 +605,33 @@ public class LocalCachelActivity extends BaseActivity {
                 img3D.scrollBack();
 //                tv_page1.setText(index+"/"+vrPlays.size());
 //                tv_page2.setText(index + "/" + vrPlays.size());
-                if (index > 0) {
-                    page = index + "/" + trueSize;
-                    span = new SpannableString(page);
-                    span.setSpan(new ForegroundColorSpan(LocalCachelActivity.this.getResources().getColor(R.color.material_blue_500)),
-                            0, page.length() - 1 - ("" + trueSize).length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    tv_page1.setText(span);
-                    tv_page2.setText(span);
-                    tv_title1.setText(dbList.get(index - 1).getTitle());
-                    tv_title2.setText(dbList.get(index - 1).getTitle());
-                } else {
-                    index = trueSize;
-                    page = index + "/" + trueSize;
-                    span = new SpannableString(page);
-                    span.setSpan(new ForegroundColorSpan(LocalCachelActivity.this.getResources().getColor(R.color.material_blue_500)),
-                            0, page.length() - 1 - ("" + trueSize).length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    tv_page1.setText(span);
-                    tv_page2.setText(span);
-                    tv_title1.setText(dbList.get(index - 1).getTitle());
-                    tv_title2.setText(dbList.get(index - 1).getTitle());
-                }
-                if (dbList.get(index - 1).getCurState() == 3) {
-                    view1.hideOrShowLoading(false);
-                    view2.hideOrShowLoading(false);
-                } else {
-                    view1.hideOrShowLoading(true);
-                    view2.hideOrShowLoading(true);
-                }
+//                if (index > 0) {
+//                    page = index + "/" + trueSize;
+//                    span = new SpannableString(page);
+//                    span.setSpan(new ForegroundColorSpan(LocalCachelActivity.this.getResources().getColor(R.color.material_blue_500)),
+//                            0, page.length() - 1 - ("" + trueSize).length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+//                    tv_page1.setText(span);
+//                    tv_page2.setText(span);
+//                    tv_title1.setText(dbList.get(index - 1).getTitle());
+//                    tv_title2.setText(dbList.get(index - 1).getTitle());
+//                } else {
+//                    index = trueSize;
+//                    page = index + "/" + trueSize;
+//                    span = new SpannableString(page);
+//                    span.setSpan(new ForegroundColorSpan(LocalCachelActivity.this.getResources().getColor(R.color.material_blue_500)),
+//                            0, page.length() - 1 - ("" + trueSize).length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+//                    tv_page1.setText(span);
+//                    tv_page2.setText(span);
+//                    tv_title1.setText(dbList.get(index - 1).getTitle());
+//                    tv_title2.setText(dbList.get(index - 1).getTitle());
+//                }
+//                if (dbList.get(index - 1).getCurState() == 3) {
+//                    view1.hideOrShowLoading(false);
+//                    view2.hideOrShowLoading(false);
+//                } else {
+//                    view1.hideOrShowLoading(true);
+//                    view2.hideOrShowLoading(true);
+//                }
             }
         });
     }
@@ -555,10 +639,24 @@ public class LocalCachelActivity extends BaseActivity {
     Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
+            mCurrentImg = img3D.getImgIndex() - 1;
+            if (mCurrentImg < 0) {
+                mCurrentImg = dbList.size() - 1;
+            }
             switch (msg.what) {
                 case 100:
                     //刷新电影下载状况
                     RefreshDownLoading();
+                    break;
+                case 101:
+                    //刷新电影下载状况
+                    if (dbList.get(mCurrentImg).getCurState() == 3) {
+                        view1.hideOrShowLoading(false);
+                        view2.hideOrShowLoading(false);
+                    } else {
+                        view1.hideOrShowLoading(true);
+                        view2.hideOrShowLoading(true);
+                    }
                     break;
             }
         }
@@ -568,11 +666,17 @@ public class LocalCachelActivity extends BaseActivity {
     String action;
 
     public void RefreshDownLoading() {
+        mCurrentImg = img3D.getImgIndex() - 1;
+        if (mCurrentImg < 0) {
+            mCurrentImg = dbList.size() - 1;
+        }
+        String indexSpeed = speeds.get(dbList.get(mCurrentImg).getUrl());
+        if (dbList.get(mCurrentImg).getCurState() == 1 || indexSpeed != null) {
+            view1.RefreshTextView(indexSpeed);
+            view2.RefreshTextView(indexSpeed);
+        }
 
-//        String indexSpeed = speeds.get(dbList.get(index-1).getUrl());
-//        view1.RefreshTextView(indexSpeed);
-//        view2.RefreshTextView(indexSpeed);
-
+        System.out.println("---RefreshDownLoading信息：" + indexSpeed + "--url:" + dbList.get(mCurrentImg).getUrl() + "--title:" + dbList.get(mCurrentImg).getTitle());
     }
 
     /**
@@ -597,7 +701,7 @@ public class LocalCachelActivity extends BaseActivity {
                     speeds.put(play_url, speed);
                     mHandler.sendEmptyMessage(100);
                 }
-                System.out.println("---接收到的信息：" + speed);
+                System.out.println("---接收到的信息：" + speed + "--url" + play_url);
 //
             } else if ("FINISH".equals(action)) {
 //                下載完畢，執行下載完畢的邏輯
@@ -605,15 +709,15 @@ public class LocalCachelActivity extends BaseActivity {
                 String localurl = intent.getStringExtra("localurl");
                 System.out.println("----接受到的網絡地址:" + play_url);
                 for (int i = 0; i < dbList.size(); i++) {
-                    System.out.println("----集合中的網絡地址:" + dbList.get(i).getUrl());
-                    if (dbList.get(i).getUrl().equals(play_url)) {
+//                    System.out.println("----集合中的網絡地址:" + dbList.get(i).getUrl());
+                    if (dbList.get(i).getUrl() != null && dbList.get(i).getUrl().equals(play_url)) {
                         try {
                             db.delete(dbList.get(i));
                         } catch (DbException e) {
                             e.printStackTrace();
                         }
                         dbList.get(i).setLocalurl(localurl);
-                        dbList.get(i).setCurState(2);//下载完成
+                        dbList.get(i).setCurState(3);//下载完成
                         System.out.println("----接收到信息地址:" + localurl);
 
                         try {
@@ -623,13 +727,7 @@ public class LocalCachelActivity extends BaseActivity {
                         }
                     }
                 }
-//                System.out.println("---接收到的信息：" + "FINISH");
-//                if (adapter != null) {
-//                    adapter.notifyDataSetInvalidated();
-//                } else {
-//                    adapter = new HuancunAdapter();
-//                    lv.setAdapter(adapter);
-//                }
+                mHandler.sendEmptyMessage(101);
             } else if ("PAUSE".equals(action)) {
 //                String speed = speeds.get(play_url);
 //                intent.getIntExtra("index", -1);
@@ -642,7 +740,23 @@ public class LocalCachelActivity extends BaseActivity {
 //                    lv.setAdapter(adapter);
 //                }
 
+            } else if ("STARTLocalCache".equals(action)) {
+                String localurl = intent.getStringExtra("localurl");
+                System.out.println("----接收到STARTLocalCache:" + localurl);
             }
         }
+    }
+
+    public boolean delete(String fileName) {
+
+        //SDPATH目录路径，fileName文件名
+
+        File file = new File(fileName);
+        if (file == null || !file.exists() || file.isDirectory()) {
+            return false;
+        }
+        file.delete();
+
+        return true;
     }
 }

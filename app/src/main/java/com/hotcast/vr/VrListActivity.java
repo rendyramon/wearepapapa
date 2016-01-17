@@ -1,6 +1,9 @@
 package com.hotcast.vr;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -40,7 +43,6 @@ public class VrListActivity extends BaseActivity {
     RelativeLayout container1;
     @InjectView(R.id.container2)
     RelativeLayout container2;
-
     private VrListView view1, view2;
     private String requestUrl;
     private int type;
@@ -164,9 +166,9 @@ public class VrListActivity extends BaseActivity {
 
             img3D2.addView(image3DView);
         }
-        mCurrentImg = img3D.getImgIndex()-1;
-        if (mCurrentImg<0){
-            mCurrentImg = titles.size()-1;
+        mCurrentImg = img3D.getImgIndex() - 1;
+        if (mCurrentImg < 0) {
+            mCurrentImg = titles.size() - 1;
         }
         tv_title1.setText(titles.get(mCurrentImg));
         tv_title2.setText(titles.get(mCurrentImg));
@@ -218,9 +220,9 @@ public class VrListActivity extends BaseActivity {
                 System.out.println("-----2執行");
                 img3D2.scrollToNext();
                 ++index;
-                mCurrentImg = img3D.getImgIndex()-1;
-                if (mCurrentImg<0){
-                    mCurrentImg = titles.size()-1;
+                mCurrentImg = img3D.getImgIndex() - 1;
+                if (mCurrentImg < 0) {
+                    mCurrentImg = titles.size() - 1;
                 }
                 if (index <= vrPlays.size()) {
                     page = index + "/" + vrPlays.size();
@@ -236,6 +238,9 @@ public class VrListActivity extends BaseActivity {
                     if (localUrlList.contains(vrPlays.get(mCurrentImg).getVideo_url())) {
                         bt_ceach2.setText("已下载");
                         bt_ceach1.setText("已下载");
+                    }else{
+                        bt_ceach2.setText("下载");
+                        bt_ceach1.setText("下载");
                     }
                 } else {
                     index = 1;
@@ -252,6 +257,9 @@ public class VrListActivity extends BaseActivity {
                     if (localUrlList.contains(vrPlays.get(mCurrentImg).getVideo_url())) {
                         bt_ceach2.setText("已下载");
                         bt_ceach1.setText("已下载");
+                    }else{
+                        bt_ceach2.setText("下载");
+                        bt_ceach1.setText("下载");
                     }
                 }
                 System.out.println("-----mcurrentIndex1：" + img3D.getImgIndex());
@@ -262,9 +270,9 @@ public class VrListActivity extends BaseActivity {
                 System.out.println("-----3執行");
                 img3D2.scrollToPrevious();
                 --index;
-                mCurrentImg = img3D.getImgIndex()-1;
-                if (mCurrentImg<0){
-                    mCurrentImg = titles.size()-1;
+                mCurrentImg = img3D.getImgIndex() - 1;
+                if (mCurrentImg < 0) {
+                    mCurrentImg = titles.size() - 1;
                 }
                 if (index >= 0) {
                     page = index + "/" + vrPlays.size();
@@ -281,6 +289,9 @@ public class VrListActivity extends BaseActivity {
                     if (localUrlList.contains(vrPlays.get(mCurrentImg).getVideo_url())) {
                         bt_ceach2.setText("已下载");
                         bt_ceach1.setText("已下载");
+                    }else{
+                        bt_ceach2.setText("下载");
+                        bt_ceach1.setText("下载");
                     }
                 } else {
                     index = vrPlays.size();
@@ -297,6 +308,9 @@ public class VrListActivity extends BaseActivity {
                     if (localUrlList.contains(vrPlays.get(mCurrentImg).getVideo_url())) {
                         bt_ceach2.setText("已下载");
                         bt_ceach1.setText("已下载");
+                    }else{
+                        bt_ceach2.setText("下载");
+                        bt_ceach1.setText("下载");
                     }
                 }
                 System.out.println("-----mcurrentIndex1：" + img3D.getImgIndex());
@@ -380,9 +394,9 @@ public class VrListActivity extends BaseActivity {
                 System.out.println("-----2執行");
                 img3D.scrollToNext();
                 ++index;
-                mCurrentImg = img3D.getImgIndex()-1;
-                if (mCurrentImg<0){
-                    mCurrentImg = titles.size()-1;
+                mCurrentImg = img3D.getImgIndex() - 1;
+                if (mCurrentImg < 0) {
+                    mCurrentImg = titles.size() - 1;
                 }
                 if (index <= vrPlays.size()) {
                     page = index + "/" + vrPlays.size();
@@ -398,6 +412,9 @@ public class VrListActivity extends BaseActivity {
                     if (localUrlList.contains(vrPlays.get(mCurrentImg).getVideo_url())) {
                         bt_ceach2.setText("已下载");
                         bt_ceach1.setText("已下载");
+                    }else{
+                        bt_ceach2.setText("下载");
+                        bt_ceach1.setText("下载");
                     }
                 } else {
                     index = 1;
@@ -414,6 +431,9 @@ public class VrListActivity extends BaseActivity {
                     if (localUrlList.contains(vrPlays.get(mCurrentImg).getVideo_url())) {
                         bt_ceach2.setText("已下载");
                         bt_ceach1.setText("已下载");
+                    }else{
+                        bt_ceach2.setText("下载");
+                        bt_ceach1.setText("下载");
                     }
                 }
                 System.out.println("-----mcurrentIndex2：" + img3D2.getImgIndex());
@@ -424,9 +444,9 @@ public class VrListActivity extends BaseActivity {
                 System.out.println("-----3執行");
                 img3D.scrollToPrevious();
                 --index;
-                mCurrentImg = img3D.getImgIndex()-1;
-                if (mCurrentImg<0){
-                    mCurrentImg = titles.size()-1;
+                mCurrentImg = img3D.getImgIndex() - 1;
+                if (mCurrentImg < 0) {
+                    mCurrentImg = titles.size() - 1;
                 }
                 if (index >= 0) {
                     page = index + "/" + vrPlays.size();
@@ -442,6 +462,9 @@ public class VrListActivity extends BaseActivity {
                     if (localUrlList.contains(vrPlays.get(mCurrentImg).getVideo_url())) {
                         bt_ceach2.setText("已下载");
                         bt_ceach1.setText("已下载");
+                    }else{
+                        bt_ceach2.setText("下载");
+                        bt_ceach1.setText("下载");
                     }
                 } else {
                     index = vrPlays.size();
@@ -458,6 +481,9 @@ public class VrListActivity extends BaseActivity {
                     if (localUrlList.contains(vrPlays.get(mCurrentImg).getVideo_url())) {
                         bt_ceach2.setText("已下载");
                         bt_ceach1.setText("已下载");
+                    }else{
+                        bt_ceach2.setText("下载");
+                        bt_ceach1.setText("下载");
                     }
                 }
                 System.out.println("-----mcurrentIndex2：" + img3D2.getImgIndex());
@@ -537,25 +563,30 @@ public class VrListActivity extends BaseActivity {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.bt_ceach:
-                if (!localUrlList.contains(vrPlays.get(index - 1).getVideo_url())) {
-                    System.out.println("---下载：" + vrPlays.get(index - 1).getTitle());
+                mCurrentImg = img3D.getImgIndex() - 1;
+                if (mCurrentImg < 0) {
+                    mCurrentImg = titles.size() - 1;
+                }
+                if (!localUrlList.contains(vrPlays.get(mCurrentImg).getVideo_url())) {
+                    System.out.println("---点击了：" + vrPlays.get(mCurrentImg).getTitle() + "--url:" + vrPlays.get(mCurrentImg).getVideo_url());
+//                    System.out.println("---下载：" + vrPlays.get(mCurrentImg).getTitle());
                     Intent intent = new Intent(START);
                     Details details = new Details();
-                    details.setTitle(vrPlays.get(index - 1).getTitle());
-                    System.out.println("---开始下载" + vrPlays.get(index - 1).getTitle());
-                    details.setImage(vrPlays.get(index - 1).getImage());
-                    details.setDesc(vrPlays.get(index - 1).getDesc());
-
+                    details.setTitle(vrPlays.get(mCurrentImg).getTitle());
+                    System.out.println("---开始下载" + vrPlays.get(mCurrentImg).getTitle());
+                    details.setImage(vrPlays.get(mCurrentImg).getImage());
+                    details.setDesc(vrPlays.get(mCurrentImg).getDesc());
+//
                     BaseApplication.detailsList.add(details);
-                    BaseApplication.playUrls.add(vrPlays.get(index - 1).getVideo_url());
+                    BaseApplication.playUrls.add(vrPlays.get(mCurrentImg).getVideo_url());
                     VrListActivity.this.sendBroadcast(intent);
                     BaseApplication.isDownLoad = true;
                     DbUtils db = DbUtils.create(VrListActivity.this);
                     LocalBean localBean = new LocalBean();
                     localBean.setTitle(details.getTitle());
                     localBean.setImage(details.getImage());
-                    localBean.setId("");
-                    localBean.setUrl(vrPlays.get(index - 1).getVideo_url());
+                    localBean.setId(vrPlays.get(mCurrentImg).getVideo_url());
+                    localBean.setUrl(vrPlays.get(mCurrentImg).getVideo_url());
                     localBean.setCurState(0);//還沒下載，準備下載
                     try {
                         db.delete(localBean);
@@ -563,7 +594,7 @@ public class VrListActivity extends BaseActivity {
                     } catch (DbException e) {
                         e.printStackTrace();
                     }
-                    localUrlList.add(vrPlays.get(index - 1).getVideo_url());
+                    localUrlList.add(vrPlays.get(mCurrentImg).getVideo_url());
                     bt_ceach2.setText("已下载");
                     bt_ceach1.setText("已下载");
                 }
@@ -753,4 +784,5 @@ public class VrListActivity extends BaseActivity {
     private boolean shouldScrollToNext(int velocityX) {
         return velocityX < -SNAP_VELOCITY || img3D.getScrollX() > mImageWidth / 2;
     }
+
 }
