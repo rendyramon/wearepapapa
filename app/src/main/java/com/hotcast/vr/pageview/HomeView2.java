@@ -9,6 +9,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,6 +36,8 @@ import com.melnykov.fab.FloatingActionButton;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.InjectView;
+
 
 /**
  * Created by lostnote on 15/11/17.
@@ -49,7 +52,9 @@ public class HomeView2 extends BaseView {
     @ViewInject(R.id.iv_noNet)
     ImageView iv_noNet;
 
+
     private FloatingActionButton fab_home;
+    private ProgressBar progressBar4;
     private MyBaseAdapter myBaseAdapter;
     //    需要传递给ViewPager去显示的图片关联文字说明
     private List<String> titleList = new ArrayList<String>();
@@ -83,6 +88,7 @@ public class HomeView2 extends BaseView {
         rootView = View.inflate(activity, R.layout.frag_item_news, null);
         ViewUtils.inject(this, rootView);
         fab_home = (FloatingActionButton) rootView.findViewById(R.id.fab_home);
+        progressBar4 = (ProgressBar) rootView.findViewById(R.id.progressBar4);
         fab_home.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -198,6 +204,7 @@ public class HomeView2 extends BaseView {
             try {
                 homeBean = new Gson().fromJson(json, HomeBean.class);
                 homeRolls = homeBean.getHome_roll();
+
             } catch (IllegalStateException e) {
                 activity.showToast("解析出现错误，请刷新数据");
             }
@@ -261,6 +268,7 @@ public class HomeView2 extends BaseView {
                 myBaseAdapter.notifyDataSetChanged();
             }
         }
+        progressBar4.setVisibility(View.GONE);
     }
 
     class MyBaseAdapter extends BaseAdapter {
