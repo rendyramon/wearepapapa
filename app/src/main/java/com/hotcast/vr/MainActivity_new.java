@@ -16,6 +16,7 @@ import com.hotcast.vr.pageview.ClassifyView;
 import com.hotcast.vr.pageview.HomeView2;
 
 import com.hotcast.vr.pageview.MineView;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
@@ -57,6 +58,7 @@ public class MainActivity_new extends BaseActivity {
     private int[] checkedId = {R.id.page_home, R.id.page_classify, R.id.page_mine};
     private UpdateAppManager updateAppManager;
     String newFeatures;
+
     @Override
     public int getLayoutId() {
         return R.layout.layout_main;
@@ -67,15 +69,15 @@ public class MainActivity_new extends BaseActivity {
         if (isNetworkConnected(this) || isWifiConnected(this) || isMobileConnected(this)) {
             nonet.setVisibility(View.GONE);
             content.setVisibility(View.VISIBLE);
-        if(!TextUtils.isEmpty(spec)){
-            updateAppManager = new UpdateAppManager(this,spec,force,newFeatures);
-            updateAppManager.checkUpdateInfo();
-        }
-        if (isFrist1){
-            System.out.println("***显示免责声明同时提示用户操作帮助");
-            rl_agreement.setVisibility(View.VISIBLE);
+            if (!TextUtils.isEmpty(spec)) {
+                updateAppManager = new UpdateAppManager(this, spec, force, newFeatures);
+                updateAppManager.checkUpdateInfo();
+            }
+            if (isFrist1) {
+                System.out.println("***显示免责声明同时提示用户操作帮助");
+                rl_agreement.setVisibility(View.VISIBLE);
 
-        }
+            }
             view0 = new HomeView2(this);
             view1 = new ClassifyView(this);
             view2 = new MineView(this);
@@ -92,7 +94,6 @@ public class MainActivity_new extends BaseActivity {
             titles.add("热播");
             titles.add("分类");
             titles.add("我的");
-
             radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
@@ -142,7 +143,7 @@ public class MainActivity_new extends BaseActivity {
                     rl_agreement.setVisibility(View.GONE);
                 }
             });
-        }else {
+        } else {
             nonet.setVisibility(View.VISIBLE);
             content.setVisibility(View.GONE);
             nonet.setOnClickListener(new View.OnClickListener() {
@@ -167,11 +168,13 @@ public class MainActivity_new extends BaseActivity {
     private void changeViewIndex(int index) {
         views[index].init();
     }
+
     //下载路径
-    private String spec ;
+    private String spec;
     //是否强制更新
     private int force;
     private boolean isFrist1;
+
     @Override
     public void getIntentData(Intent intent) {
         spec = getIntent().getStringExtra("spec");
@@ -188,7 +191,9 @@ public class MainActivity_new extends BaseActivity {
     protected void onStart() {
         super.onStart();
     }
+
     private boolean bExitting;
+
     @Override
     public void onBackPressed() {
         if (!bExitting) {
@@ -205,6 +210,7 @@ public class MainActivity_new extends BaseActivity {
 
         }
     }
+
     @Override
     protected void onStop() {
         super.onStop();

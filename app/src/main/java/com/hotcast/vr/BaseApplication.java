@@ -22,6 +22,7 @@ public class BaseApplication extends Application {
     public static int size;
     public static boolean isDownLoad = false;
     public static boolean isUpdate = false;
+    public static List<Classify> netClassifys;
     public static final String TAG = BaseApplication.class.getSimpleName();
     //    public static BitmapUtils mFinalBitmap;
     private static BaseApplication instance;

@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.hotcast.vr.BaseActivity;
 import com.hotcast.vr.DetailActivity;
+import com.hotcast.vr.ListLocalActivity;
 import com.hotcast.vr.R;
 import com.hotcast.vr.bean.HomeBean;
 import com.hotcast.vr.bean.HomeRoll;

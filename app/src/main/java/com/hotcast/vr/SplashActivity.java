@@ -16,6 +16,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.hotcast.vr.bean.Classify;
 import com.hotcast.vr.bean.Update;
 import com.hotcast.vr.services.DownLoadingService;
 import com.hotcast.vr.tools.Constants;
@@ -27,6 +29,7 @@ import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.umeng.analytics.AnalyticsConfig;
 
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -82,9 +85,33 @@ public class SplashActivity extends BaseActivity {
 //        System.out.println("***SplashActivity info.versionCode:" +info.versionCode +"**info.versionName:" + info.versionName +
 //                "*** info.packageName:" +  info.packageName + " info.signatures:" +  info.signatures);
         getNetDate();
+        getNetDate2();
             System.out.println("***sp=" + sp);
 
     }
+
+    private void getNetDate2() {
+        RequestParams params = new RequestParams();
+        params.addBodyParameter("token", "123");
+        this.httpPost(Constants.URL_CLASSIFY_TITLTE, params, new RequestCallBack<String>() {
+            @Override
+            public void onStart() {
+                super.onStart();
+            }
+
+            @Override
+            public void onSuccess(ResponseInfo<String> responseInfo) {
+                L.e("ClassifyView  responseInfo:" + responseInfo.result);
+                BaseApplication.netClassifys = new Gson().fromJson(responseInfo.result, new TypeToken<List<Classify>>() {
+                }.getType());
+            }
+
+            @Override
+            public void onFailure(HttpException e, String s) {
+            }
+        });
+    }
+
 
     private void getNetDate() {
         System.out.println("---"+getAppMetaData(SplashActivity.this,"UMENG_CHANNEL"));

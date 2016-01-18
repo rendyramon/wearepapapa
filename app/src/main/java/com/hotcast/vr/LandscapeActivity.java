@@ -325,7 +325,9 @@ public class LandscapeActivity extends BaseActivity implements View.OnClickListe
         force = getIntent().getIntExtra("force", 0);
         newFeatures = getIntent().getStringExtra("newFeatures");
         netClassifys = (List<Classify>) getIntent().getSerializableExtra("classifies");
-        BaseApplication.size = netClassifys.size() + 1;
+        if (netClassifys != null) {
+            BaseApplication.size = netClassifys.size() + 1;
+        }
         System.out.println("---netClassifys:" + netClassifys.size());
     }
 

@@ -97,7 +97,7 @@
             android:launchMode="singleTask" />
         <activity
             android:name=".DetailActivity"
-            android:launchMode="singleTask"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait" />
         <activity
             android:name=".AboutActivity"

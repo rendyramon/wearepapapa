@@ -90,7 +90,7 @@ public class PlayerVRActivityNew extends BaseLanActivity implements PFAssetObser
         _pfview = PFObjectFactory.view(this);
         _pfview.setMode(curMode, 0);
 
-        _pfview.setFieldOfView(150);
+//        _pfview.setFieldOfView(150);
 
         _pfasset = PFObjectFactory.assetFromUri(this, Uri.parse(filename), this);
 
@@ -113,6 +113,8 @@ public class PlayerVRActivityNew extends BaseLanActivity implements PFAssetObser
      * @param asset  The asset who is calling the function
      * @param status The current status of the asset.
      */
+    float oldTime = 0;
+    boolean isplaying;
     public void onStatusMessage(final PFAsset asset, PFAssetStatus status) {
         switch (status) {
             case LOADED:
@@ -140,18 +142,39 @@ public class PlayerVRActivityNew extends BaseLanActivity implements PFAssetObser
 //				_scrubber.setEnabled(true);
 //				_playButton.setText("pause");
                 _scrubberMonitorTimer = new Timer();
+
                 final TimerTask task = new TimerTask() {
                     public void run() {
                         if (_updateThumb) {
+                            int playbackTime = (int) asset.getPlaybackTime();
+                            L.e("playbackTime = " + playbackTime);
                             if (totalDuration <= 0) {
                                 mPlayerContralView.setMin(0);
                                 totalDuration = (int) asset.getDuration();
                                 mPlayerContralView.setMax(totalDuration);
                                 mPlayerContralView.setTotalDuration(totalDuration);
+
                             }
                             mPlayerContralView.setCurTime((int) asset.getPlaybackTime());
+                            if (oldTime == asset.getPlaybackTime() && !isPause){
+                                showLoading("正在缓冲");
+                                System.out.println("----显示loading");
+                            } else if (oldTime>asset.getPlaybackTime()){
+                                oldTime = asset.getPlaybackTime();
+                                hideLoading();
+                                System.out.println("----隐藏loading1");
+
+                            }else if (oldTime<asset.getPlaybackTime()){
+                                oldTime = asset.getPlaybackTime();
+                                hideLoading();
+                                System.out.println("----隐藏loading2");
+                            }else{
+                                hideLoading();
+                                System.out.println("----隐藏loading3");
+                            }
+                            L.e("asset.getPlaybackTime() = "+ asset.getPlaybackTime());
 //                            if (asset.getPlaybackTime() == asset.getPlaybackTime() && !isPause){
-//                                showLoading("正在缓冲缓冲");
+//                                showLoading("正在缓冲");
 //
 //                            }else {
 //                                hideLoading();
@@ -186,6 +209,7 @@ public class PlayerVRActivityNew extends BaseLanActivity implements PFAssetObser
                     _scrubberMonitorTimer.cancel();
                     _scrubberMonitorTimer = null;
                 }
+                finish();
 //		        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
                 break;
             case ERROR:
@@ -214,6 +238,7 @@ public class PlayerVRActivityNew extends BaseLanActivity implements PFAssetObser
                 if (null != _pfasset) {
                     _pfasset.play();
                     System.out.println("---205--开始播放了");
+                    isPause = false;
                 }
             }
 

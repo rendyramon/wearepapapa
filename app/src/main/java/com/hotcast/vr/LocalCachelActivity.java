@@ -247,12 +247,12 @@ public class LocalCachelActivity extends BaseActivity {
 
     @Override
     public void onClick(View v) {
-        mCurrentImg = img3D.getImgIndex() - 1;
-        if (mCurrentImg < 0) {
-            mCurrentImg = dbList.size() - 1;
-        }
         switch (v.getId()) {
             case R.id.bt_delete:
+                mCurrentImg = img3D.getImgIndex() - 1;
+                if (mCurrentImg < 0) {
+                    mCurrentImg = dbList.size() - 1;
+                }
                 System.out.println("---点击了删除");
                 try {
                     if (dbList.get(mCurrentImg).getLocalurl() != null) {

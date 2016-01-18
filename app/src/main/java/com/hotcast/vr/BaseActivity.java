@@ -96,11 +96,16 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
      *
      * @param message 显示文案
      */
+    boolean isShowing = false;
     public void showLoading(String message) {
-        Message msg = new Message();
-        msg.obj = message;
-        msg.what = MESSAGE_SHOWLOADING;
-        messageHandler.sendMessage(msg);
+        if (!isShowing) {
+            Message msg = new Message();
+            msg.obj = message;
+            msg.what = MESSAGE_SHOWLOADING;
+            isShowing = true;
+            messageHandler.sendMessage(msg);
+        }
+
     }
 
     /**
@@ -108,7 +113,10 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
      */
     public void hideLoading() {
 //        System.out.println("---隐藏加载对话框的时间 = " + System.currentTimeMillis());
-        messageHandler.sendEmptyMessage(MESSAGE_CLOSINGLOADING);
+        if (isShowing) {
+            isShowing = false;
+            messageHandler.sendEmptyMessage(MESSAGE_CLOSINGLOADING);
+        }
     }
 
     /**
@@ -135,7 +143,6 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
         // 5.获取页面传入数据
         getIntentData(getIntent());
         // 6.初始化
-        getNetDate();
 
 
         init();
@@ -364,31 +371,9 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
 
     public void clickVrMode() {
         Intent intent = new Intent(this, LandscapeActivity.class);
-        intent.putExtra("classifies", (Serializable) classifies);
+        intent.putExtra("classifies", (Serializable) BaseApplication.netClassifys);
 
         startActivity(intent);
-    }
-    private List<Classify> classifies;
-    private void getNetDate() {
-        RequestParams params = new RequestParams();
-        params.addBodyParameter("token", "123");
-        this.httpPost(Constants.URL_CLASSIFY_TITLTE, params, new RequestCallBack<String>() {
-            @Override
-            public void onStart() {
-                super.onStart();
-            }
-
-            @Override
-            public void onSuccess(ResponseInfo<String> responseInfo) {
-                L.e("ClassifyView  responseInfo:" + responseInfo.result);
-                classifies = new Gson().fromJson(responseInfo.result, new TypeToken<List<Classify>>() {
-                }.getType());
-            }
-
-            @Override
-            public void onFailure(HttpException e, String s) {
-            }
-        });
     }
 
     //    判断是否有个网络连接
