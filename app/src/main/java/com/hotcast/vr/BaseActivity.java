@@ -20,16 +20,23 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.hotcast.vr.bean.Classify;
+import com.hotcast.vr.pageview.LandscapeView;
+import com.hotcast.vr.tools.Constants;
 import com.hotcast.vr.tools.L;
 import com.hotcast.vr.tools.SharedPreUtil;
 import com.hotcast.vr.tools.Utils;
 import com.lidroid.xutils.HttpUtils;
+import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.RequestParams;
+import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 import com.umeng.analytics.MobclickAgent;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -128,6 +135,8 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
         // 5.获取页面传入数据
         getIntentData(getIntent());
         // 6.初始化
+        getNetDate();
+
 
         init();
     }
@@ -354,8 +363,32 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
 
 
     public void clickVrMode() {
+        Intent intent = new Intent(this, LandscapeActivity.class);
+        intent.putExtra("classifies", (Serializable) classifies);
 
-        startActivity(new Intent(this, VRcateActivity.class));
+        startActivity(intent);
+    }
+    private List<Classify> classifies;
+    private void getNetDate() {
+        RequestParams params = new RequestParams();
+        params.addBodyParameter("token", "123");
+        this.httpPost(Constants.URL_CLASSIFY_TITLTE, params, new RequestCallBack<String>() {
+            @Override
+            public void onStart() {
+                super.onStart();
+            }
+
+            @Override
+            public void onSuccess(ResponseInfo<String> responseInfo) {
+                L.e("ClassifyView  responseInfo:" + responseInfo.result);
+                classifies = new Gson().fromJson(responseInfo.result, new TypeToken<List<Classify>>() {
+                }.getType());
+            }
+
+            @Override
+            public void onFailure(HttpException e, String s) {
+            }
+        });
     }
 
     //    判断是否有个网络连接

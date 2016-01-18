@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -44,6 +45,8 @@ public class ClassifyGridView extends BaseView {
     PullToRefreshGridView grid;
     @InjectView(R.id.fab)
     FloatingActionButton fab;
+    @InjectView(R.id.progressBar2)
+    ProgressBar progressBar2;
 
     private QuickAdapter adapter;
     private String requestUrl;
@@ -180,6 +183,7 @@ public class ClassifyGridView extends BaseView {
         if (Utils.textIsNull(json)) {
             return;
         }
+        progressBar2.setVisibility(View.GONE);
         try {
             tmpList = new Gson().fromJson(json, new TypeToken<List<HomeRoll>>() {
             }.getType());

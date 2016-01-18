@@ -3,6 +3,7 @@ package com.hotcast.vr.pageview;
 
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -39,6 +40,7 @@ public class HomeView extends BaseView {
     PullToRefreshListView pulltofresh;
     @InjectView(R.id.fab_home)
     FloatingActionButton fab;
+
 
     @OnClick(R.id.fab_home)
     void clickfab(){
@@ -158,6 +160,7 @@ public class HomeView extends BaseView {
         if (Utils.textIsNull(json)) {
             return;
         }
+
 
 //        List<ListBean> tmpList = new Gson().fromJson(json, new TypeToken<List<ListBean>>() {
 //        }.getType());

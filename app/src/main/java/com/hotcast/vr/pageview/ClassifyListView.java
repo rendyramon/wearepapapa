@@ -9,6 +9,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -52,6 +53,8 @@ public class ClassifyListView extends BaseView {
     PullToRefreshListView list;
     @InjectView(R.id.fab)
     FloatingActionButton fab;
+    @InjectView(R.id.progressBar3)
+    ProgressBar progressBar3;
 
     @OnClick(R.id.fab)
     void clickfab(){
@@ -190,6 +193,7 @@ public class ClassifyListView extends BaseView {
         if (Utils.textIsNull(json)) {
             return;
         }
+        progressBar3.setVisibility(View.GONE);
         try {
             tmpList = new Gson().fromJson(json, new TypeToken<List<HomeRoll>>() {
             }.getType());
