@@ -20,9 +20,8 @@ import butterknife.OnClick;
 public class LocalListView extends BaseView {
     @InjectView(R.id.id_sv)
     Image3DSwitchView id_sv;
-    ImageView cache_no;
     LinearLayout ll_downloading;
-    TextView tv_pecent;
+    TextView tv_pecent, tv_title;
     TextView tv_speed;
     final String START = "START";
     final String DOWNLOADING = "DOWNLOADING";
@@ -32,6 +31,7 @@ public class LocalListView extends BaseView {
     String title;
     String media_id;
     private Details details;
+    Button bt_delete;
 
     @OnClick(R.id.ivBack)
     void clickBack() {
@@ -48,10 +48,15 @@ public class LocalListView extends BaseView {
      */
     public void hideOrShowCache_no(boolean flag) {
         if (flag) {
-            cache_no.setVisibility(View.VISIBLE);
+            tv_title.setVisibility(View.VISIBLE);
+            bt_delete.setVisibility(View.VISIBLE);
+            System.out.println("---显示"+flag);
         } else {
-            cache_no.setVisibility(View.GONE);
+            System.out.println("---显示"+flag);
+            tv_title.setVisibility(View.GONE);
+            bt_delete.setVisibility(View.GONE);
         }
+        hideOrShowLoading(flag);
     }
 
     public void hideOrShowLoading(boolean flag) {
@@ -69,9 +74,10 @@ public class LocalListView extends BaseView {
     }
 
     public void initView() {
-        cache_no = (ImageView) getRootView().findViewById(R.id.cache_no);
         ll_downloading = (LinearLayout) getRootView().findViewById(R.id.ll_downloading);
         tv_pecent = (TextView) getRootView().findViewById(R.id.tv_pecent);
         tv_speed = (TextView) getRootView().findViewById(R.id.tv_speed);
+        tv_title = (TextView) getRootView().findViewById(R.id.tv_title);
+        bt_delete = (Button) getRootView().findViewById(R.id.bt_delete);
     }
 }

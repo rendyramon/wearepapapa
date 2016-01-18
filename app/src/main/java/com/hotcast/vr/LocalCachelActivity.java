@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -78,7 +79,10 @@ public class LocalCachelActivity extends BaseActivity {
     Button bt_delete2;
     Button bt_zanting1;
     Button bt_zanting2;
-
+    ImageView cache_no1;
+    ImageView cache_no2;
+    LinearLayout ivBack1;
+    LinearLayout ivBack2;
     @Override
     public int getLayoutId() {
         return R.layout.activity_vr_list;
@@ -132,13 +136,21 @@ public class LocalCachelActivity extends BaseActivity {
         super.onStart();
         view1 = new LocalListView(this);
         view2 = new LocalListView(this);
+        cache_no1 = (ImageView) findViewById(R.id.cache_no1);
+        cache_no2 = (ImageView) findViewById(R.id.cache_no2);
+        ivBack1 = (LinearLayout) findViewById(R.id.ivBack1);
+        ivBack1.setOnClickListener(this);
+        ivBack2 = (LinearLayout) findViewById(R.id.ivBack2);
+        ivBack1.setOnClickListener(this);
         if (dbList.size() <= 0) {
-            view1.hideOrShowCache_no(true);
-            view2.hideOrShowCache_no(true);
+            System.out.println("---数据库没有数据");
+//            view1.hideOrShowCache_no(true);
+//            view2.hideOrShowCache_no(true);
+            hideCache(true);
         } else {
             //显示逻辑
-            view1.hideOrShowCache_no(false);
-            view2.hideOrShowCache_no(false);
+//            view1.hideOrShowCache_no(false);
+//            view2.hideOrShowCache_no(false);
             System.out.println("---数据库：" + dbList.size());
             init3DView();
         }
@@ -241,6 +253,7 @@ public class LocalCachelActivity extends BaseActivity {
         }
         switch (v.getId()) {
             case R.id.bt_delete:
+                System.out.println("---点击了删除");
                 try {
                     if (dbList.get(mCurrentImg).getLocalurl() != null) {
                         db.delete(dbList.get(mCurrentImg));
@@ -255,12 +268,14 @@ public class LocalCachelActivity extends BaseActivity {
                                 view1 = new LocalListView(this);
                                 view2 = new LocalListView(this);
                                 if (dbList.size() <= 0) {
-                                    view1.hideOrShowCache_no(true);
-                                    view2.hideOrShowCache_no(true);
+//                                    view1.hideOrShowCache_no(true);
+//                                    view2.hideOrShowCache_no(true);
+                                    hideCache(true);
                                 } else {
                                     //显示逻辑
-                                    view1.hideOrShowCache_no(false);
-                                    view2.hideOrShowCache_no(false);
+//                                    view1.hideOrShowCache_no(false);
+//                                    view2.hideOrShowCache_no(false);
+                                    hideCache(false);
                                     System.out.println("---点击后——dblist：" + dbList.size());
                                     init3DView();
                                 }
@@ -276,6 +291,10 @@ public class LocalCachelActivity extends BaseActivity {
 //                Intent intent = new Intent(PAUSE);
 //                intent.putExtra("index", mCurrentImg);
 //                sendBroadcast(intent);
+                break;
+            case R.id.ivBack2:
+            case R.id.ivBack1:
+                LocalCachelActivity.this.finish();
                 break;
         }
     }
@@ -758,5 +777,14 @@ public class LocalCachelActivity extends BaseActivity {
         file.delete();
 
         return true;
+    }
+    public void hideCache(boolean flag){
+        if (flag){
+            cache_no1.setVisibility(View.VISIBLE);
+            cache_no1.setVisibility(View.VISIBLE);
+        }else{
+            cache_no1.setVisibility(View.GONE);
+            cache_no1.setVisibility(View.GONE);
+        }
     }
 }
