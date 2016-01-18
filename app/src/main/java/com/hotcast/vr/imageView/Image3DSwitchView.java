@@ -111,7 +111,7 @@ public class Image3DSwitchView extends ViewGroup {
 			mWidth = getMeasuredWidth();
 			mHeight = getMeasuredHeight();
 			// 每张图片的宽度设定为控件宽度的百分之六十
-			mImageWidth = (int) (mWidth * 0.6);
+			mImageWidth = (int) (mWidth * 0.7);
 			if (mCurrentImage >= 0 && mCurrentImage < mCount) {
 				mScroller.abortAnimation();
 				setScrollX(0);
@@ -404,6 +404,9 @@ public class Image3DSwitchView extends ViewGroup {
 		return velocityX > SNAP_VELOCITY || getScrollX() < -mImageWidth / 2;
 	}
 
+	public int getImgIndex(){
+		return mCurrentImage;
+	}
 	/**
 	 * 图片滚动的监听器
 	 */

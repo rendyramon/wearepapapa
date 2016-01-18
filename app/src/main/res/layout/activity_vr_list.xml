@@ -26,5 +26,9 @@
             android:gravity="center" />
 
     </LinearLayout>
-
+    <View
+        android:layout_width="3dp"
+        android:layout_height="match_parent"
+        android:layout_centerHorizontal="true"
+        android:background="#99ffffff" />
 </RelativeLayout>

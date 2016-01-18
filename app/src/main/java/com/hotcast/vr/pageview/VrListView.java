@@ -60,43 +60,43 @@ public class VrListView extends BaseView implements GestureDetector.OnGestureLis
         activity.finish();
     }
 
-    @OnClick(R.id.bt_ceach)
-    void bt_ceach() {
-        if (!BaseApplication.isDownLoad) {
-            activity.showDialog(null, "是否下载影片?", null, null, new BaseActivity.OnAlertSureClickListener() {
-                @Override
-                public void onclick() {
-                    Intent intent = new Intent(START);
-//                        intent.putExtra("Details",details);
-//                        intent.putExtra("play_url",play_url);
-                    BaseApplication.detailsList.add(details);
-                    BaseApplication.playUrls.add(play_url);
-                    activity.sendBroadcast(intent);
-                    activity.showToast("已经加入下载列表");
-//                    tv_cache.setText("已缓存");
-                    BaseApplication.isDownLoad = true;
-                    bt_ceach.setFocusable(false);
-                    DbUtils db = DbUtils.create(activity);
-                    LocalBean localBean = new LocalBean();
-                    localBean.setTitle(title);
-                    localBean.setImage(details.getImage());
-                    localBean.setId(media_id);
-                    localBean.setUrl(play_url);
-                    localBean.setCurState(0);//還沒下載，準備下載
-//                        localBean.setLocalurl(localUrl);
-                    try {
-                        db.delete(localBean);
-                        db.save(localBean);
-                    } catch (DbException e) {
-                        e.printStackTrace();
-                    }
-
-                }
-            });
-        } else {
-            activity.showToast("亲，您已经缓存了");
-        }
-    }
+//    @OnClick(R.id.bt_ceach)
+//    void bt_ceach() {
+//        if (!BaseApplication.isDownLoad) {
+//            activity.showDialog(null, "是否下载影片?", null, null, new BaseActivity.OnAlertSureClickListener() {
+//                @Override
+//                public void onclick() {
+//                    Intent intent = new Intent(START);
+////                        intent.putExtra("Details",details);
+////                        intent.putExtra("play_url",play_url);
+//                    BaseApplication.detailsList.add(details);
+//                    BaseApplication.playUrls.add(play_url);
+//                    activity.sendBroadcast(intent);
+//                    activity.showToast("已经加入下载列表");
+////                    tv_cache.setText("已缓存");
+//                    BaseApplication.isDownLoad = true;
+//                    bt_ceach.setFocusable(false);
+//                    DbUtils db = DbUtils.create(activity);
+//                    LocalBean localBean = new LocalBean();
+//                    localBean.setTitle(title);
+//                    localBean.setImage(details.getImage());
+//                    localBean.setId(media_id);
+//                    localBean.setUrl(play_url);
+//                    localBean.setCurState(0);//還沒下載，準備下載
+////                        localBean.setLocalurl(localUrl);
+//                    try {
+//                        db.delete(localBean);
+//                        db.save(localBean);
+//                    } catch (DbException e) {
+//                        e.printStackTrace();
+//                    }
+//
+//                }
+//            });
+//        } else {
+//            activity.showToast("亲，您已经缓存了");
+//        }
+//    }
 
     private QuickAdapter adapter;
 
@@ -232,7 +232,7 @@ public class VrListView extends BaseView implements GestureDetector.OnGestureLis
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) id_sv.getLayoutParams();
         params.height = RelativeLayout.LayoutParams.MATCH_PARENT;
         params.width = RelativeLayout.LayoutParams.MATCH_PARENT;
-        params.setMargins(0, 0, 0, DensityUtils.dp2px(activity, 20));
+        params.setMargins(0, 0, 0, DensityUtils.dp2px(activity, 100));
         id_sv.setLayoutParams(params);
         ImageView iv_cancel = (ImageView) this.getRootView().findViewById(R.id.iv_cancel);
         LinearLayout.LayoutParams params1 = (LinearLayout.LayoutParams) iv_cancel.getLayoutParams();

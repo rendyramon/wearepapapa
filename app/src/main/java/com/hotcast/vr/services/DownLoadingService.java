@@ -12,8 +12,10 @@ import android.widget.Toast;
 
 import com.hotcast.vr.BaseApplication;
 import com.hotcast.vr.bean.Details;
+import com.hotcast.vr.bean.LocalBean;
 import com.lidroid.xutils.DbUtils;
 import com.lidroid.xutils.HttpUtils;
+import com.lidroid.xutils.exception.DbException;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.HttpHandler;
 import com.lidroid.xutils.http.ResponseInfo;
@@ -30,6 +32,8 @@ public class DownLoadingService extends Service {
     final String FINISH = "FINISH";
     final String PAUSE = "PAUSE";
     Map<String, HttpHandler> handlers;
+    private DbUtils db;
+    DownLoadingReceiver receiver;
 
     public DownLoadingService() {
     }
@@ -37,7 +41,7 @@ public class DownLoadingService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        DownLoadingReceiver receiver = new DownLoadingReceiver();
+        receiver = new DownLoadingReceiver();
         IntentFilter filter = new IntentFilter();
         filter.addAction(START);
         filter.addAction(DOWNLOADING);
@@ -46,6 +50,7 @@ public class DownLoadingService extends Service {
         registerReceiver(receiver, filter);
         httpUtils = new HttpUtils();
         handlers = new HashMap<>();
+        db = DbUtils.create(this);
     }
 
     @Override
@@ -72,6 +77,7 @@ public class DownLoadingService extends Service {
                 final String localUrl = Environment.getExternalStorageDirectory().getAbsolutePath() + "/hostcast/vr/" + details.getTitle() + ".mp4";
 //                final String play_url = intent.getStringExtra("play_url");
                 final String play_url = BaseApplication.playUrls.get(0);
+                System.out.println("---服务广播下载" + play_url);
                 handler = httpUtils.download(play_url, localUrl, true, true, new RequestCallBack<File>() {
                     String nowurl = play_url;
                     String localurl = localUrl;
@@ -87,17 +93,50 @@ public class DownLoadingService extends Service {
                         sendBroadcast(intent);
                         Intent intent2 = new Intent(START);
                         sendBroadcast(intent2);
+                        try {
+                            LocalBean localBean = db.findById(LocalBean.class, nowurl);
+                            if (localBean != null) {
+                                //状态更新
+                                db.delete(localBean);
+                                localBean.setCurState(3);
+                                localBean.setLocalurl(localurl);
+                                db.save(localBean);
+                            }
+                        } catch (DbException e) {
+                            e.printStackTrace();
+                        }
 
                     }
 
                     @Override
                     public void onFailure(HttpException error, String msg) {
                         Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
+                        BaseApplication.playUrls.remove(nowurl);
+                        BaseApplication.detailsList.remove(nowDetali);
                     }
 
                     @Override
                     public void onStart() {
-                        Toast.makeText(context, "开始下载", Toast.LENGTH_SHORT).show();
+                        System.out.print("---开始下载，本地地址为：" + localurl);
+                        Intent intent = new Intent(START+"LocalCache");
+                        intent.putExtra("play_url", nowurl);
+                        intent.putExtra("localurl", localurl);
+                        sendBroadcast(intent);
+                        LocalBean localBean = null;
+                        try {
+                            localBean = db.findById(LocalBean.class, nowurl);
+                            System.out.print("---数据库更新localBean：" + localBean);
+                            if (localBean != null) {
+                                //状态更新
+                                db.delete(localBean);
+                                localBean.setLocalurl(localurl);
+                                localBean.setCurState(1);
+                                db.save(localBean);
+                            }
+                        } catch (DbException e) {
+                            System.out.print("---数据库更新失败localBean：" + localBean);
+                            e.printStackTrace();
+                        }
                         super.onStart();
                     }
 
@@ -116,10 +155,25 @@ public class DownLoadingService extends Service {
 //                    String play_url = intent.getStringExtra("play_url");
 //                    HttpHandler handler = handlers.get(play_url);
                 //停止下載
-                if (handler!=null){
+                if (handler != null) {
                     handler.cancel();
                 }
             }
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (receiver != null) {
+            unregisterReceiver(receiver);
+        }
+    }
+
+    class DownThread extends Thread {
+        @Override
+        public void run() {
+
         }
     }
 }

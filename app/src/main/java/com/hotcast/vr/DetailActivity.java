@@ -363,7 +363,7 @@ public class DetailActivity extends BaseActivity {
                             localBean.setId(media_id);
                             localBean.setUrl(play_url);
                             localBean.setCurState(0);//還沒下載，準備下載
-//                        localBean.setLocalurl(localUrl);
+//                          localBean.setLocalurl(localUrl);
                             try {
                                 db.delete(localBean);
                                 db.save(localBean);

@@ -11,6 +11,7 @@ import com.google.gson.reflect.TypeToken;
 import com.hotcast.vr.bean.Classify;
 import com.hotcast.vr.bean.Update;
 import com.hotcast.vr.pageview.SplashView;
+import com.hotcast.vr.services.DownLoadingService;
 import com.hotcast.vr.tools.Constants;
 import com.hotcast.vr.tools.L;
 import com.hotcast.vr.tools.Utils;
@@ -55,6 +56,8 @@ public class SplashScapeActivity extends BaseActivity {
 
     @Override
     public void init() {
+        Intent intent = new Intent(SplashScapeActivity.this, DownLoadingService.class);
+        SplashScapeActivity.this.startService(intent);
         getUpDate();
         getNetDate();
 

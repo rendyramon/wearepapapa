@@ -14,6 +14,7 @@ import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -27,6 +28,7 @@ import com.hotcast.vr.bean.VrPlay;
 import com.hotcast.vr.image3D.Image3DSwitchView;
 import com.hotcast.vr.imageView.Image3DView;
 import com.hotcast.vr.pageview.VrListView;
+import com.hotcast.vr.services.DownLoadingService;
 import com.hotcast.vr.tools.Constants;
 import com.hotcast.vr.tools.DensityUtils;
 import com.hotcast.vr.tools.HotVedioCacheUtils;
@@ -98,23 +100,33 @@ public class LandscapeActivity extends BaseActivity implements View.OnClickListe
         img3D = (com.hotcast.vr.imageView.Image3DSwitchView) view1.getRootView().findViewById(R.id.id_sv);
         img3D2 = (com.hotcast.vr.imageView.Image3DSwitchView) view2.getRootView().findViewById(R.id.id_sv);
         for (int i = 0; i < netClassifys.size(); i++) {
-            Image3DView image3DView = new Image3DView(this);
+            Image3DView image3DView1 = new Image3DView(this);
             System.out.println("---图片地址 ：" + netClassifys.get(i).getBig_logo());
-            bitmapUtils.display(image3DView, netClassifys.get(i).getBig_logo());
-            image3DView.setLayoutParams(params);
+            bitmapUtils.display(image3DView1, netClassifys.get(i).getBig_logo());
+            image3DView1.setLayoutParams(params);
             final String channel_id = netClassifys.get(i).getChannel_id();
-            image3DView.setOnClickListener(new View.OnClickListener() {
+            image3DView1.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     getNetData(channel_id);
                     System.out.println("***你点击了item，准备播放**");
                 }
             });
-
-            img3D.addView(image3DView);
+            img3D.addView(image3DView1);
+            Image3DView image3DView2 = new Image3DView(this);
+            bitmapUtils.display(image3DView2, netClassifys.get(i).getBig_logo());
+            image3DView2.setLayoutParams(params);
+            image3DView2.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    getNetData(channel_id);
+                    System.out.println("***你点击了item，准备播放**");
+                }
+            });
+            img3D2.addView(image3DView2);
         }
         Image3DView image3DView1 = new Image3DView(this);
-        image3DView1.setImageResource(R.drawable.icon_4);
+        image3DView1.setImageResource(R.mipmap.cache_icon);
         image3DView1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -127,36 +139,15 @@ public class LandscapeActivity extends BaseActivity implements View.OnClickListe
                     //显示小菊花
                     view1.showOrHideProgressBar(true);
                     view2.showOrHideProgressBar(true);
-                    mHandler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            view1.showOrHideProgressBar(false);
-                            view2.showOrHideProgressBar(false);
-                            cacheIntent = new Intent(LandscapeActivity.this, LocalCachelActivity.class);
-                            cacheIntent.putExtra("dbList", (Serializable) dbList);
-                            startActivity(cacheIntent);
-                        }
-                    }, 5000);
+                    Message msg = Message.obtain();
+                    msg.what = 100;
+                    mHandler.sendMessageDelayed(msg,1000);
                 }
             }
         });
         img3D.addView(image3DView1);
-        for (int i = 0; i < netClassifys.size(); i++) {
-            Image3DView image3DView = new Image3DView(this);
-            bitmapUtils.display(image3DView, netClassifys.get(i).getBig_logo());
-            image3DView.setLayoutParams(params);
-            final String channel_id = netClassifys.get(i).getChannel_id();
-            image3DView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    getNetData(channel_id);
-                    System.out.println("***你点击了item，准备播放**");
-                }
-            });
-            img3D2.addView(image3DView);
-        }
         Image3DView image3DView2 = new Image3DView(this);
-        image3DView2.setImageResource(R.drawable.icon_4);
+        image3DView2.setImageResource(R.mipmap.cache_icon);
         image3DView2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -169,16 +160,9 @@ public class LandscapeActivity extends BaseActivity implements View.OnClickListe
                     //显示小菊花
                     view1.showOrHideProgressBar(true);
                     view2.showOrHideProgressBar(true);
-                    mHandler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            view1.showOrHideProgressBar(false);
-                            view2.showOrHideProgressBar(false);
-                            cacheIntent = new Intent(LandscapeActivity.this, LocalCachelActivity.class);
-                            cacheIntent.putExtra("dbList", (Serializable) dbList);
-                            startActivity(cacheIntent);
-                        }
-                    }, 3000);
+                    Message msg = Message.obtain();
+                    msg.what = 100;
+                    mHandler.sendMessageDelayed(msg,1000);
                 }
             }
         });
@@ -266,6 +250,20 @@ public class LandscapeActivity extends BaseActivity implements View.OnClickListe
                     break;
                 case INSTALL_TOKEN:
                     installApp();
+                    break;
+                case 100:
+                    if (dataCacheOk) {
+                        cacheIntent = new Intent(LandscapeActivity.this, LocalCachelActivity.class);
+                        cacheIntent.putExtra("dbList", (Serializable) dbList);
+                        startActivity(cacheIntent);
+                    } else {
+                        //显示小菊花
+                        view1.showOrHideProgressBar(true);
+                        view2.showOrHideProgressBar(true);
+                        Message msg1 = Message.obtain();
+                        msg1.what = 100;
+                        mHandler.sendMessageDelayed(msg1,1000);
+                    }
                     break;
 //                case STOP:
 
@@ -508,6 +506,10 @@ public class LandscapeActivity extends BaseActivity implements View.OnClickListe
         dbList = new ArrayList<>();
         MyAsyncTask task = new MyAsyncTask();
         task.execute();
+        Intent intent = new Intent(LandscapeActivity.this, DownLoadingService.class);
+        LandscapeActivity.this.startService(intent);
+        view1.showOrHideProgressBar(false);
+        view2.showOrHideProgressBar(false);
     }
 
     List<VrPlay> vrPlays;
@@ -574,26 +576,28 @@ public class LandscapeActivity extends BaseActivity implements View.OnClickListe
             if (dbList == null) {
                 dbList = new ArrayList<>();
             }
-
+            if (dbList!=null) {
+                System.out.println("---数据库原始尺寸："+dbList.size());
+            }
             String[] localNames = HotVedioCacheUtils.getVedioCache(BaseApplication.VedioCacheUrl);
             int size = dbList.size();
             for (int i = 0; i < localNames.length; i++) {
                 String title = localNames[i];
-                System.out.println("---本地title：" + title);
                 if (size == 0) {
                     LocalBean localBean = new LocalBean();
                     localBean.setLocalurl(BaseApplication.VedioCacheUrl + localNames[i]);
                     localBean.setCurState(3);
-//                            localBean.setLocalBitmap(VedioBitmapUtils.getMiniVedioBitmap(BaseApplication.VedioCacheUrl + localNames[i]));
                     SaveBitmapUtils.saveMyBitmap(title.replace(".mp4", ""), VedioBitmapUtils.getMiniVedioBitmap(BaseApplication.VedioCacheUrl + localNames[i]));
                     System.out.println("---本地bitmap：" + VedioBitmapUtils.getMiniVedioBitmap(BaseApplication.VedioCacheUrl + localNames[i]));
                     localBean.setImage(BaseApplication.ImgCacheUrl + title.replace(".mp4", "") + ".jpg");
+                    localBean.setUrl("");
                     localBean.setTitle(localNames[i].replace(".mp4", ""));
                     dbList.add(localBean);
                 } else {
                     for (int j = 0; j < size; j++) {
                         if (dbList.get(j).getTitle().equals(title.replace(".mp4", ""))) {
                             //相同不添加
+                            System.out.println("---dbList.get(j).getTitle()"+dbList.get(j).getTitle());
                         } else {
                             LocalBean localBean = new LocalBean();
                             localBean.setLocalurl(BaseApplication.VedioCacheUrl + localNames[i]);
@@ -603,6 +607,7 @@ public class LandscapeActivity extends BaseActivity implements View.OnClickListe
                             localBean.setImage(BaseApplication.ImgCacheUrl + title.replace(".mp4", "") + ".jpg");
                             localBean.setTitle(localNames[i].replace(".mp4", ""));
                             dbList.add(localBean);
+                            System.out.println("---不相同"+localNames[i].replace(".mp4", ""));
                         }
                     }
                 }
