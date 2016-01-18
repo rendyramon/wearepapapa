@@ -104,6 +104,7 @@ public class SplashActivity extends BaseActivity {
                 L.e("ClassifyView  responseInfo:" + responseInfo.result);
                 BaseApplication.netClassifys = new Gson().fromJson(responseInfo.result, new TypeToken<List<Classify>>() {
                 }.getType());
+
             }
 
             @Override
@@ -209,6 +210,7 @@ public class SplashActivity extends BaseActivity {
             L.e("***不是第一次运行" + isFrist + "不显示");
            isFrist1 = false;
             if (!info.versionName.equals(current)) {
+
                 BaseApplication.isUpdate = true;
                 intent.putExtra("spec", spec);
                 intent.putExtra("force", force);
