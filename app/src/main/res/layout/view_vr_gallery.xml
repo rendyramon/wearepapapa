@@ -10,7 +10,7 @@
         android:id="@+id/id_sv"
         android:layout_width="match_parent"
         android:layout_height="150dp"
-        android:layout_marginTop="55dp">
+        android:layout_marginTop="50dp">
 
     </com.hotcast.vr.imageView.Image3DSwitchView>
 
@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/id_sv"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="0dp"
+        android:layout_marginTop="8dp"
         android:ellipsize="end"
         android:singleLine="true"
         android:text="影片标题"
@@ -40,21 +40,24 @@
         android:textColor="#ffffff"
         android:textSize="13sp" />
 
-    <Button
+    <TextView
         android:id="@+id/bt_ceach"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tv_desc"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
-        android:text="下载" />
+        android:layout_marginTop="6dp"
+        android:background="#00000000"
+        android:textColor="#ff22ff"
+        android:text="未下载" />
 
     <TextView
         android:id="@+id/tv_page"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_below="@+id/bt_ceach"
+        android:layout_below="@+id/tv_desc"
+        android:layout_marginTop="6dp"
         android:layout_marginRight="30dp"
         android:text="1/5"
         android:textColor="#ffffff"
@@ -62,6 +65,7 @@
 
     <LinearLayout
         android:id="@+id/ivBack"
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -105,7 +109,7 @@
         android:rotation="180"
         android:scaleType="fitXY"
         android:visibility="gone"
-        android:src="@drawable/right" />s
+        android:src="@drawable/right" />
 
     <RelativeLayout
         android:id="@+id/rl_update"
@@ -120,7 +124,7 @@
             android:layout_height="10dp"
             android:layout_centerInParent="true" />
 
-        <Button
+        <TextView
             android:id="@+id/bt_cancel_progressbar"
             android:layout_width="wrap_content"
             android:layout_height="40dp"

@@ -53,6 +53,7 @@
         <Button
             android:id="@+id/bt_delete"
             android:layout_width="60dp"
+            android:visibility="gone"
             android:layout_height="35dp"
             android:layout_alignParentRight="true"
             android:layout_below="@+id/tv_title"
@@ -75,8 +76,9 @@
             android:id="@+id/tv_page"
             android:layout_width="35dp"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/bt_zanting"
-            android:layout_marginLeft="40dp"
+            android:layout_below="@+id/tv_title"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="40dp"
             android:layout_marginTop="10dp"
             android:text="1/5"
             android:textColor="#ffffff"
@@ -85,6 +87,7 @@
 
     <LinearLayout
         android:id="@+id/ivBack"
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
