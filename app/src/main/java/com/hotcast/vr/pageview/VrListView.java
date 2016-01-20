@@ -43,7 +43,7 @@ public class VrListView extends BaseView implements GestureDetector.OnGestureLis
     @InjectView(R.id.id_sv)
     Image3DSwitchView id_sv;
     @InjectView(R.id.bt_ceach)
-    Button bt_ceach;
+    TextView bt_ceach;
     View loadingBar;
 
     final String START = "START";

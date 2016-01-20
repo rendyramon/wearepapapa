@@ -59,7 +59,9 @@ public class DownLoadingService extends Service {
 
 
     }
-
+    Details details;
+    String localUrl;
+    String play_url;
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
@@ -67,18 +69,17 @@ public class DownLoadingService extends Service {
     }
 
     class DownLoadingReceiver extends BroadcastReceiver {
-        HttpHandler handler;
-
         @Override
         public void onReceive(final Context context, final Intent intent) {
             if (intent.getAction().equals(START) && BaseApplication.detailsList.size() > 0) {
 //                    Details details = (Details) intent.getSerializableExtra("Details");
-                final Details details = BaseApplication.detailsList.get(0);
-                final String localUrl = Environment.getExternalStorageDirectory().getAbsolutePath() + "/hostcast/vr/" + details.getTitle() + ".mp4";
+                details = BaseApplication.detailsList.get(0);
+                localUrl = Environment.getExternalStorageDirectory().getAbsolutePath() + "/hostcast/vr/" + details.getTitle() + ".mp4";
 //                final String play_url = intent.getStringExtra("play_url");
-                final String play_url = BaseApplication.playUrls.get(0);
+                play_url = BaseApplication.playUrls.get(0);
                 System.out.println("---服务广播下载" + play_url);
-                handler = httpUtils.download(play_url, localUrl, true, true, new RequestCallBack<File>() {
+                HttpUtils httpUtils = new HttpUtils();
+                HttpHandler handler = httpUtils.download(play_url, localUrl, true, true, new RequestCallBack<File>() {
                     String nowurl = play_url;
                     String localurl = localUrl;
                     Details nowDetali = details;
@@ -97,10 +98,11 @@ public class DownLoadingService extends Service {
                             LocalBean localBean = db.findById(LocalBean.class, nowurl);
                             if (localBean != null) {
                                 //状态更新
-                                db.delete(localBean);
+//                                db.delete(localBean);
                                 localBean.setCurState(3);
                                 localBean.setLocalurl(localurl);
-                                db.save(localBean);
+                                db.saveOrUpdate(localBean);
+//                                db.save(localBean);
                             }
                         } catch (DbException e) {
                             e.printStackTrace();
@@ -128,10 +130,11 @@ public class DownLoadingService extends Service {
                             System.out.print("---数据库更新localBean：" + localBean);
                             if (localBean != null) {
                                 //状态更新
-                                db.delete(localBean);
+//                                db.delete(localBean);
                                 localBean.setLocalurl(localurl);
                                 localBean.setCurState(1);
-                                db.save(localBean);
+                                db.saveOrUpdate(localBean);
+//                                db.save(localBean);
                             }
                         } catch (DbException e) {
                             System.out.print("---数据库更新失败localBean：" + localBean);
@@ -146,14 +149,15 @@ public class DownLoadingService extends Service {
                         intent.putExtra("total", total);
                         intent.putExtra("current", current);
                         intent.putExtra("play_url", play_url);
+                        System.out.println("---服务广播下载---" + localUrl);
                         sendBroadcast(intent);
 //                            Toast.makeText(context,current+"/"+total,Toast.LENGTH_SHORT).show();
                     }
                 });
                 handlers.put(play_url, handler);
             } else if (intent.getAction().equals(PAUSE)) {
-//                    String play_url = intent.getStringExtra("play_url");
-//                    HttpHandler handler = handlers.get(play_url);
+                    String play_url = intent.getStringExtra("play_url");
+                    HttpHandler handler = handlers.get(play_url);
                 //停止下載
                 if (handler != null) {
                     handler.cancel();

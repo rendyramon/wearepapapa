@@ -1,5 +1,6 @@
 package com.hotcast.vr;
 
+import android.app.usage.UsageEvents;
 import android.content.Intent;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
@@ -18,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -47,6 +49,7 @@ import com.lidroid.xutils.http.callback.RequestCallBack;
 
 import java.io.File;
 import java.io.Serializable;
+import java.text.BreakIterator;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -66,13 +69,14 @@ public class LandscapeActivity extends BaseActivity implements View.OnClickListe
     private View updateV1, updateV2;
     private com.hotcast.vr.imageView.Image3DSwitchView img3D, img3D2;
     private ProgressBar progressBar_update1, progressBar_update2;
-    private Button bt_cancel_progressbar1, bt_cancel_progressbar2;
+    private TextView bt_cancel_progressbar1, bt_cancel_progressbar2;
     private RelativeLayout rl_update1, rl_update2;
     UpdateAppManager updateAppManager;
     List<Classify> netClassifys;
     private HttpHandler httphandler;
     BitmapUtils bitmapUtils;
     private Intent cacheIntent;
+    int mCurrentImg;
 
     @Override
     public int getLayoutId() {
@@ -91,9 +95,9 @@ public class LandscapeActivity extends BaseActivity implements View.OnClickListe
         ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         progressBar_update1 = (ProgressBar) view1.getRootView().findViewById(R.id.progressBar_update);
         progressBar_update2 = (ProgressBar) view2.getRootView().findViewById(R.id.progressBar_update);
-        bt_cancel_progressbar1 = (Button) view1.getRootView().findViewById(R.id.bt_cancel_progressbar);
+        bt_cancel_progressbar1 = (TextView) view1.getRootView().findViewById(R.id.bt_cancel_progressbar);
         bt_cancel_progressbar1.setOnClickListener(this);
-        bt_cancel_progressbar2 = (Button) view2.getRootView().findViewById(R.id.bt_cancel_progressbar);
+        bt_cancel_progressbar2 = (TextView) view2.getRootView().findViewById(R.id.bt_cancel_progressbar);
         bt_cancel_progressbar2.setOnClickListener(this);
         rl_update1 = (RelativeLayout) view1.getRootView().findViewById(R.id.rl_update);
         rl_update2 = (RelativeLayout) view2.getRootView().findViewById(R.id.rl_update);
@@ -108,6 +112,8 @@ public class LandscapeActivity extends BaseActivity implements View.OnClickListe
             image3DView1.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    view1.showOrHideProgressBar(true);
+                    view2.showOrHideProgressBar(true);
                     getNetData(channel_id);
                     System.out.println("***你点击了item，准备播放**");
                 }
@@ -119,6 +125,8 @@ public class LandscapeActivity extends BaseActivity implements View.OnClickListe
             image3DView2.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    view1.showOrHideProgressBar(true);
+                    view2.showOrHideProgressBar(true);
                     getNetData(channel_id);
                     System.out.println("***你点击了item，准备播放**");
                 }
@@ -134,6 +142,7 @@ public class LandscapeActivity extends BaseActivity implements View.OnClickListe
                 if (dataCacheOk) {
                     cacheIntent = new Intent(LandscapeActivity.this, LocalCachelActivity.class);
                     cacheIntent.putExtra("dbList", (Serializable) dbList);
+                    System.out.println("---传递数据的尺寸：" + dbList.size());
                     startActivity(cacheIntent);
                 } else {
                     //显示小菊花
@@ -227,6 +236,8 @@ public class LandscapeActivity extends BaseActivity implements View.OnClickListe
         if (BaseApplication.isUpdate) {
             showUpdate();
         }
+//        container2.setOnClickListener(this);
+//        container1.setOnClickListener(this);
     }
 
     // 更新应用版本标记
@@ -370,10 +381,35 @@ public class LandscapeActivity extends BaseActivity implements View.OnClickListe
     private VelocityTracker mVelocityTracker;
     public com.hotcast.vr.imageView.Image3DSwitchView.OnMovechangeListener changeLisener;
 
+
+    int downX, downY;
+    int upX, upY;
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
 //        getParent().requestDisallowInterceptTouchEvent(true);
-
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                downX = (int) event.getX();
+                downY = (int) event.getY();
+                break;
+            case MotionEvent.ACTION_UP:
+                upX = (int) event.getX();
+                upY = (int) event.getY();
+                break;
+        }
+        int xlen = Math.abs(downX - upX);
+        int ylen = Math.abs(downY - upY);
+        int length = (int) Math.sqrt((double) xlen * xlen + (double) ylen * ylen);
+        if (length < 10) {
+            //执行点击事件
+            mCurrentImg = img3D.getImgIndex() - 1;
+            if (mCurrentImg < 0) {
+                mCurrentImg = netClassifys.size();
+            }
+            clickItem(mCurrentImg);
+            return true;
+        }
         if (img3D.getmScroller().isFinished()) {
             if (mVelocityTracker == null) {
                 mVelocityTracker = VelocityTracker.obtain();
@@ -430,6 +466,30 @@ public class LandscapeActivity extends BaseActivity implements View.OnClickListe
             }
         }
         return true;
+    }
+
+    public void clickItem(int i) {
+//        System.out.println("---clickItem"+i);
+        if(i<netClassifys.size()){
+            view1.showOrHideProgressBar(true);
+            view2.showOrHideProgressBar(true);
+            getNetData(netClassifys.get(i).getChannel_id());
+        }else if(i == netClassifys.size()){
+            //查询本地指定的缓存文件夹
+            if (dataCacheOk) {
+                cacheIntent = new Intent(LandscapeActivity.this, LocalCachelActivity.class);
+                cacheIntent.putExtra("dbList", (Serializable) dbList);
+                System.out.println("---传递数据的尺寸：" + dbList.size());
+                startActivity(cacheIntent);
+            } else {
+                //显示小菊花
+                view1.showOrHideProgressBar(true);
+                view2.showOrHideProgressBar(true);
+                Message msg = Message.obtain();
+                msg.what = 100;
+                mHandler.sendMessageDelayed(msg, 1000);
+            }
+        }
     }
 
     /**
@@ -534,6 +594,8 @@ public class LandscapeActivity extends BaseActivity implements View.OnClickListe
 
             @Override
             public void onSuccess(ResponseInfo<String> responseInfo) {
+                view1.showOrHideProgressBar(false);
+                view2.showOrHideProgressBar(false);
                 System.out.println("***VrListActivity *** onSuccess()" + responseInfo.result);
                 if (Utils.textIsNull(responseInfo.result)) {
                     return;
@@ -553,6 +615,9 @@ public class LandscapeActivity extends BaseActivity implements View.OnClickListe
 
             @Override
             public void onFailure(HttpException e, String s) {
+                view1.showOrHideProgressBar(false);
+                view2.showOrHideProgressBar(false);
+                Toast.makeText(LandscapeActivity.this, "网络连接异常", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -591,7 +656,7 @@ public class LandscapeActivity extends BaseActivity implements View.OnClickListe
                         localBean.setLocalurl(BaseApplication.VedioCacheUrl + localNames[i]);
                         localBean.setCurState(3);
                         SaveBitmapUtils.saveMyBitmap(title.replace(".mp4", ""), VedioBitmapUtils.getMiniVedioBitmap(BaseApplication.VedioCacheUrl + localNames[i]));
-                        System.out.println("---本地bitmap：" + VedioBitmapUtils.getMiniVedioBitmap(BaseApplication.VedioCacheUrl + localNames[i]));
+                        System.out.println("---数据库没有数据。添加本地bitmap：" + VedioBitmapUtils.getMiniVedioBitmap(BaseApplication.VedioCacheUrl + localNames[i]));
                         localBean.setImage(BaseApplication.ImgCacheUrl + title.replace(".mp4", "") + ".jpg");
                         localBean.setUrl("");
                         localBean.setTitle(localNames[i].replace(".mp4", ""));
@@ -600,8 +665,9 @@ public class LandscapeActivity extends BaseActivity implements View.OnClickListe
                         for (int j = 0; j < size; j++) {
                             if (dbList.get(j).getTitle().equals(title.replace(".mp4", ""))) {
                                 //相同不添加
-                                System.out.println("---dbList.get(j).getTitle()" + dbList.get(j).getTitle());
-                            } else {
+                                System.out.println(i + "---相同" + dbList.get(j).getTitle());
+                                continue;
+                            } else if (!dbList.get(j).getTitle().equals(title.replace(".mp4", ""))) {
                                 LocalBean localBean = new LocalBean();
                                 localBean.setLocalurl(BaseApplication.VedioCacheUrl + localNames[i]);
                                 localBean.setCurState(3);
@@ -610,7 +676,7 @@ public class LandscapeActivity extends BaseActivity implements View.OnClickListe
                                 localBean.setImage(BaseApplication.ImgCacheUrl + title.replace(".mp4", "") + ".jpg");
                                 localBean.setTitle(localNames[i].replace(".mp4", ""));
                                 dbList.add(localBean);
-                                System.out.println("---不相同" + localNames[i].replace(".mp4", ""));
+                                System.out.println(i + "---不相同：" + localNames[i]);
                             }
                         }
                     }

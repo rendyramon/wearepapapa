@@ -152,6 +152,7 @@ public class Image3DSwitchView extends ViewGroup {
 
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
+		System.out.println("---viewde onTouchEvent");
 		getParent().requestDisallowInterceptTouchEvent(true);
 		if (mScroller.isFinished()) {
 			if (mVelocityTracker == null) {

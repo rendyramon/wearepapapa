@@ -68,9 +68,11 @@ public class LocalListView extends BaseView {
     }
 
     public void RefreshTextView(String text) {
-        String[] texts = text.split(" ");
-        tv_pecent.setText(texts[0]);
-        tv_speed.setText(texts[1]);
+        if (!text.contains("FINISH")) {
+            String[] texts = text.split(" ");
+            tv_pecent.setText(texts[0]);
+            tv_speed.setText(texts[1]);
+        }
     }
 
     public void initView() {
