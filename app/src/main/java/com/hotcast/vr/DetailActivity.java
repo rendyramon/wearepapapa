@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -63,6 +64,8 @@ public class DetailActivity extends BaseActivity {
     LinearLayout ll_correlation;
     @InjectView(R.id.ll_download)
     LinearLayout ll_download;
+    @InjectView(R.id.progressBar5)
+    ProgressBar progressBar5;
 
     private Play play;
     private Details details;
@@ -315,6 +318,7 @@ public class DetailActivity extends BaseActivity {
         } catch (DbException e) {
             e.printStackTrace();
         }
+        progressBar5.setVisibility(View.GONE);
     }
 
     private String action;

@@ -13,6 +13,7 @@ import com.google.gson.reflect.TypeToken;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshGridView;
 import com.hotcast.vr.BaseActivity;
+import com.hotcast.vr.BaseApplication;
 import com.hotcast.vr.DetailActivity;
 import com.hotcast.vr.R;
 import com.hotcast.vr.adapter.BaseAdapterHelper;
@@ -29,6 +30,7 @@ import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.RequestParams;
 import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
+import com.lidroid.xutils.view.annotation.ViewInject;
 import com.melnykov.fab.FloatingActionButton;
 
 import java.util.List;
@@ -47,6 +49,8 @@ public class ClassifyGridView extends BaseView {
     FloatingActionButton fab;
     @InjectView(R.id.progressBar2)
     ProgressBar progressBar2;
+    @ViewInject(R.id.iv_noNet)
+    ImageView iv_noNet;
 
     private QuickAdapter adapter;
     private String requestUrl;
@@ -58,7 +62,9 @@ public class ClassifyGridView extends BaseView {
     private Intent intent;
     @OnClick(R.id.fab)
     void clickfab(){
-        activity.clickVrMode();
+        if (BaseApplication.classifies != null){
+            activity.clickVrMode();
+        }
     }
     BitmapUtils bitmapUtils;
     public ClassifyGridView(BaseActivity activity,String channel_id){
@@ -170,6 +176,7 @@ public class ClassifyGridView extends BaseView {
 
             @Override
             public void onFailure(HttpException e, String s) {
+                iv_noNet.setVisibility(View.VISIBLE);
                 bDataProcessed = false;
                 bProcessing = false;
                 grid.onRefreshComplete();

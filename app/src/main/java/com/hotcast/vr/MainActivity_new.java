@@ -16,6 +16,7 @@ import com.hotcast.vr.pageview.ClassifyView;
 import com.hotcast.vr.pageview.HomeView2;
 
 import com.hotcast.vr.pageview.MineView;
+import com.hotcast.vr.tools.L;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,7 +67,8 @@ public class MainActivity_new extends BaseActivity {
 
     @Override
     public void init() {
-        if (isNetworkConnected(this) || isWifiConnected(this) || isMobileConnected(this)) {
+        L.e("是否有网络" + isNetworkConnected(this) + "---" + isWifiConnected(this) + "---" + isMobileConnected(this));
+        if ((isWifiConnected(this) || isMobileConnected(this)) && isNetworkConnected(this)) {
             nonet.setVisibility(View.GONE);
             content.setVisibility(View.VISIBLE);
             if (!TextUtils.isEmpty(spec)) {

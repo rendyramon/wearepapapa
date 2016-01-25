@@ -10,6 +10,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.hotcast.vr.BaseActivity;
+import com.hotcast.vr.BaseApplication;
 import com.hotcast.vr.R;
 import com.hotcast.vr.adapter.BaseAdapterHelper;
 import com.hotcast.vr.adapter.QuickAdapter;
@@ -44,7 +45,9 @@ public class HomeView extends BaseView {
 
     @OnClick(R.id.fab_home)
     void clickfab(){
-        activity.clickVrMode();
+        if (BaseApplication.classifies != null){
+            activity.clickVrMode();
+        }
     }
 
     //    需要传递给ViewPager去显示的图片关联文字说明

@@ -9,6 +9,7 @@ import com.google.gson.reflect.TypeToken;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshGridView;
 import com.hotcast.vr.BaseActivity;
+import com.hotcast.vr.BaseApplication;
 import com.hotcast.vr.R;
 import com.hotcast.vr.adapter.BaseAdapterHelper;
 import com.hotcast.vr.adapter.QuickAdapter;
@@ -42,7 +43,9 @@ public class Grid3dView extends BaseView {
 
     @OnClick(R.id.fab)
     void clickfab(){
-        activity.clickVrMode();
+        if (BaseApplication.classifies != null){
+            activity.clickVrMode();
+        }
     }
 
     public Grid3dView(BaseActivity activity, int type) {
