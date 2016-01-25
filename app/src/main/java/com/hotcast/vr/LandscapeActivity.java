@@ -103,6 +103,8 @@ public class LandscapeActivity extends BaseActivity implements View.OnClickListe
         rl_update2 = (RelativeLayout) view2.getRootView().findViewById(R.id.rl_update);
         img3D = (com.hotcast.vr.imageView.Image3DSwitchView) view1.getRootView().findViewById(R.id.id_sv);
         img3D2 = (com.hotcast.vr.imageView.Image3DSwitchView) view2.getRootView().findViewById(R.id.id_sv);
+        img3D.setimgWidthp(0.4);
+        img3D2.setimgWidthp(0.4);
         for (int i = 0; i < netClassifys.size(); i++) {
             Image3DView image3DView1 = new Image3DView(this);
             System.out.println("---图片地址 ：" + netClassifys.get(i).getBig_logo());

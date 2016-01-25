@@ -225,18 +225,20 @@ public class VrListView extends BaseView implements GestureDetector.OnGestureLis
         this.getRootView().findViewById(R.id.tv_title).setVisibility(View.GONE);
         this.getRootView().findViewById(R.id.tv_desc).setVisibility(View.GONE);
         bt_ceach.setVisibility(View.GONE);
-        this.getRootView().findViewById(R.id.tv_fanhui).setVisibility(View.GONE);
     }
 
+    /**
+     * 一级频道，居中。
+     */
     public void setPageCenter() {
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) id_sv.getLayoutParams();
         params.height = RelativeLayout.LayoutParams.MATCH_PARENT;
         params.width = RelativeLayout.LayoutParams.MATCH_PARENT;
-        params.setMargins(0, 0, 0, DensityUtils.dp2px(activity, 100));
+        params.setMargins(0, DensityUtils.dp2px(activity, 60), 0,0);
         id_sv.setLayoutParams(params);
-        ImageView iv_cancel = (ImageView) this.getRootView().findViewById(R.id.iv_cancel);
-        LinearLayout.LayoutParams params1 = (LinearLayout.LayoutParams) iv_cancel.getLayoutParams();
-        params1.setMargins(0, 0, 0, 0);
+//        ImageView iv_cancel = (ImageView) this.getRootView().findViewById(R.id.iv_cancel);
+//        LinearLayout.LayoutParams params1 = (LinearLayout.LayoutParams) iv_cancel.getLayoutParams();
+//        params1.setMargins(0, 0, 0, 0);
     }
 
 }

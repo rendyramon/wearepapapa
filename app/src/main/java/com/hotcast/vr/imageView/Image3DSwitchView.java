@@ -89,6 +89,8 @@ public class Image3DSwitchView extends ViewGroup {
 	/**
 	 * 是否强制重新布局
 	 */
+
+	private double imgWidthp = 0.7;
 	private boolean forceToRelayout;
 	private int[] mItems;
 
@@ -111,7 +113,7 @@ public class Image3DSwitchView extends ViewGroup {
 			mWidth = getMeasuredWidth();
 			mHeight = getMeasuredHeight();
 			// 每张图片的宽度设定为控件宽度的百分之六十
-			mImageWidth = (int) (mWidth * 0.7);
+			mImageWidth = (int) (mWidth * 0.4);
 			if (mCurrentImage >= 0 && mCurrentImage < mCount) {
 				mScroller.abortAnimation();
 				setScrollX(0);
@@ -420,6 +422,14 @@ public class Image3DSwitchView extends ViewGroup {
 		 *            当前图片的坐标
 		 */
 		void onImageSwitch(int currentImage);
+
+	}
+
+	/**
+	 * 设置图片占父空间的百分比
+	 * @param imgWidthp 默认0.7
+     */
+	public void setimgWidthp(double imgWidthp){
 
 	}
 }
