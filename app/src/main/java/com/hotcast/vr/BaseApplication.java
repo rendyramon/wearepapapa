@@ -9,6 +9,7 @@ import android.util.DisplayMetrics;
 import com.hotcast.vr.bean.Classify;
 import com.hotcast.vr.bean.Details;
 import com.hotcast.vr.bean.HomeRoll;
+import com.hotcast.vr.download.DownLoadManager;
 import com.hotcast.vr.tools.L;
 import com.lidroid.xutils.BitmapUtils;
 
@@ -26,6 +27,7 @@ public class BaseApplication extends Application {
     public static final String TAG = BaseApplication.class.getSimpleName();
     //    public static BitmapUtils mFinalBitmap;
     private static BaseApplication instance;
+    public static DownLoadManager downLoadManager;
 
     public static BaseApplication getInstance() {
         return instance;
