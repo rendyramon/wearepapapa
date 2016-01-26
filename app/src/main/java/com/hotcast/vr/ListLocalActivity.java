@@ -316,13 +316,6 @@ public class ListLocalActivity extends BaseActivity {
             holder.iv_huancun_sd.setBackgroundResource(R.mipmap.huancun_img);
             holder.tv_huancun_downspeed.setVisibility(View.VISIBLE);
             holder.tv_huancun_downpecent.setVisibility(View.VISIBLE);
-            if (bean.getCurState() == 3) {
-                holder.iv_huancun_sd.setVisibility(View.GONE);
-                holder.tv_huancun_downspeed.setVisibility(View.GONE);
-                holder.tv_huancun_downpecent.setVisibility(View.GONE);
-            } else if (bean.getCurState() == 4 || bean.getCurState() == 2) {
-                holder.iv_huancun_sd.setBackgroundResource(R.mipmap.huancun_sb);
-            }
             System.out.println("---adapter：" + speed);
             if (speed != null) {
                 if ("FINISH".equals(speed)) {
@@ -345,9 +338,18 @@ public class ListLocalActivity extends BaseActivity {
                 holder.tv_huancun_downspeed.setVisibility(View.GONE);
                 holder.tv_huancun_downpecent.setVisibility(View.GONE);
             }
+            if (bean.getCurState() == 3) {
+                holder.iv_huancun_sd.setVisibility(View.GONE);
+                holder.tv_huancun_downspeed.setVisibility(View.GONE);
+                holder.tv_huancun_downpecent.setVisibility(View.GONE);
+            } else if (bean.getCurState() == 4 || bean.getCurState() == 2) {
+                holder.iv_huancun_sd.setVisibility(View.VISIBLE);
+                holder.tv_huancun_downspeed.setVisibility(View.VISIBLE);
+                holder.tv_huancun_downpecent.setVisibility(View.VISIBLE);
+                holder.iv_huancun_sd.setBackgroundResource(R.mipmap.huancun_sb);
+            }
             if (editor) {
                 holder.ib_delete.setVisibility(View.VISIBLE);
-
             } else {
                 holder.ib_delete.setVisibility(View.GONE);
             }

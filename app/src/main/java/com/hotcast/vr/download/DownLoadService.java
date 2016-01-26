@@ -54,6 +54,7 @@ public class DownLoadService extends Service {
         if (downLoadManager == null) {
             downLoadManager = new DownLoadManager(DownLoadService.this);
         }
+        downLoadManager.setSupportBreakpoint(true);
         downLoadManager.setAllTaskListener(new DownloadManagerListener());
     }
 
