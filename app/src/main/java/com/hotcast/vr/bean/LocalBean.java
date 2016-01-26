@@ -91,7 +91,7 @@ public class LocalBean implements Serializable {
     }
 
     String id;
-    public static final int STATE_NONE = 0, STATE_DOWNLOADING = 1, STATE_FAILED = 2, STATE_SUCCESS = 3;
+    public static final int STATE_NONE = 0, STATE_DOWNLOADING = 1, STATE_FAILED = 2, STATE_SUCCESS = 3,STATE_PAUSE = 4;
     private int curState = STATE_NONE;
     private long downloadId;
     private long total, current;

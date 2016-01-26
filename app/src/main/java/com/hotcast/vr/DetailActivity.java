@@ -82,7 +82,6 @@ public class DetailActivity extends BaseActivity {
     private List<String> playTitle = new ArrayList<>();
 
 
-
     final String START = "START";
     final String DOWNLOADING = "DOWNLOADING";
     final String FINISH = "FINISH";
@@ -285,7 +284,7 @@ public class DetailActivity extends BaseActivity {
                 play_url = playUrl.get(0).getShd();
                 System.out.println("***play_url:" + play_url);
                 title = playTitle.get(0);
-              initCatch(play_url);
+                initCatch(play_url);
             }
 
             @Override
@@ -296,6 +295,7 @@ public class DetailActivity extends BaseActivity {
 
 
     }
+
     //初始化下载按钮
     private void initCatch(String play_url) {
         DbUtils db = DbUtils.create(DetailActivity.this);
@@ -346,42 +346,32 @@ public class DetailActivity extends BaseActivity {
         ll_download.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!BaseApplication.isDownLoad) {
-                    DetailActivity.this.showDialog(null, "是否下载影片?", null, null, new BaseActivity.OnAlertSureClickListener() {
-                        @Override
-                        public void onclick() {
-                            Intent intent = new Intent(START);
-//                        intent.putExtra("Details",details);
-//                        intent.putExtra("play_url",play_url);
-                            BaseApplication.detailsList.add(details);
-                            BaseApplication.playUrls.add(play_url);
-//                            DetailActivity.this.sendBroadcast(intent);
-                            showToast("已经加入下载列表");
-                            tv_cache.setText("已缓存");
-                            BaseApplication.isDownLoad = true;
-                            ll_download.setFocusable(false);
-                            DbUtils db = DbUtils.create(DetailActivity.this);
-                            LocalBean localBean = new LocalBean();
-                            localBean.setTitle(title);
-                            localBean.setImage(details.getImage());
-                            localBean.setId(play_url);
-                            localBean.setUrl(play_url);
-                            localBean.setCurState(0);//還沒下載，準備下載
-//                          localBean.setLocalurl(localUrl);
-                            try {
-                                db.delete(localBean);
-                                db.save(localBean);
-                            } catch (DbException e) {
-                                e.printStackTrace();
-                            }
-                            BaseApplication.downLoadManager.addTask(play_url,play_url,title+".mp4",BaseApplication.VedioCacheUrl+title+".mp4");
-
-
+                DetailActivity.this.showDialog(null, "是否下载影片?", null, null, new BaseActivity.OnAlertSureClickListener() {
+                    @Override
+                    public void onclick() {
+                        BaseApplication.detailsList.add(details);
+                        BaseApplication.playUrls.add(play_url);
+                        showToast("已经加入下载列表");
+                        tv_cache.setText("已缓存");
+                        ll_download.setFocusable(false);
+                        DbUtils db = DbUtils.create(DetailActivity.this);
+                        LocalBean localBean = new LocalBean();
+                        localBean.setTitle(title);
+                        localBean.setImage(details.getImage());
+                        localBean.setId(play_url);
+                        localBean.setUrl(play_url);
+                        localBean.setCurState(0);//還沒下載，準備下載
+                        try {
+                            db.delete(localBean);
+                            db.save(localBean);
+                        } catch (DbException e) {
+                            e.printStackTrace();
                         }
-                    });
-                }else {
-                    DetailActivity.this.showToast("亲，您已经缓存了");
-                }
+                        int i = BaseApplication.downLoadManager.addTask(play_url, play_url, title + ".mp4", BaseApplication.VedioCacheUrl + title + ".mp4");
+                        System.out.println("---加入任务返回值：" + i);
+                        System.out.println("---详情下载的信息：" + play_url + "---本地：" + BaseApplication.VedioCacheUrl + title + ".mp4");
+                    }
+                });
             }
         });
     }
@@ -403,8 +393,8 @@ public class DetailActivity extends BaseActivity {
             movietime.setText("片长：" + details.getVideo_length());
         }
         if (details.getUpdate_at() != null) {
-           long datetime = Long.parseLong(details.getUpdate_at())*1000l;
-            System.out.println("***datetime = "+new Date(datetime));
+            long datetime = Long.parseLong(details.getUpdate_at()) * 1000l;
+            System.out.println("***datetime = " + new Date(datetime));
             String date = new SimpleDateFormat("yyyy年MM月dd日").format(new Date(datetime));
 //            Date d = new Date(Integer.parseInt(details.getUpdate_at()));
 //            SimpleDateFormat sf = new SimpleDateFormat("yyyy年MM月dd日");
@@ -546,7 +536,7 @@ public class DetailActivity extends BaseActivity {
                     intent.putExtra("play_url", relation.getHd_url());
                     intent.putExtra("title", relation.getVname());
                     intent.putExtra("splite_screen", false);
-                    MobclickAgent.onEvent(DetailActivity.this,"play_start");
+                    MobclickAgent.onEvent(DetailActivity.this, "play_start");
                     context.startActivity(intent);
 //                    System.out.println("---ItemView 条目被点击了---");
                 }

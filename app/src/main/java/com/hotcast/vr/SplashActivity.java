@@ -70,8 +70,8 @@ public class SplashActivity extends BaseActivity {
     @Override
     public void init() {
         AnalyticsConfig.enableEncrypt(true);
-        Intent intent = new Intent(SplashActivity.this, DownLoadingService.class);
-        SplashActivity.this.startService(intent);
+//        Intent intent = new Intent(SplashActivity.this, DownLoadingService.class);
+//        SplashActivity.this.startService(intent);
 
         requestUrl = Constants.URL_UPDATE;
         packageManager = this.getPackageManager();

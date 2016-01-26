@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Size;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -60,12 +61,12 @@ public class ListLocalActivity extends BaseActivity {
 
     @OnClick(R.id.bt_editor)
     void clickEditor() {
-        if (edit % 2 == 0){
+        if (edit % 2 == 0) {
             editor = false;
-        }else {
+        } else {
             editor = true;
         }
-        edit ++;
+        edit++;
 //        adapter.notify();
         lv.setAdapter(new HuancunAdapter());
         adapter.notifyDataSetChanged();
@@ -154,12 +155,11 @@ public class ListLocalActivity extends BaseActivity {
 
 
         }
-
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
                 String localurl = list.get(i).getLocalurl();
+                int state = list.get(i).getCurState();
                 File file;
                 if (localurl != null) {
                     file = new File(localurl);
@@ -167,64 +167,74 @@ public class ListLocalActivity extends BaseActivity {
                     file = new File(" ");
                 }
                 if (!editor) {
-                    if (localurl != null && file.exists()) {
-//                        System.out.println("---本地地址：" + localurl + "---url:" + list.get(i).getUrl());
+                    if (state == 3 && file.exists()) {
                         Intent intent = new Intent(ListLocalActivity.this, PlayerVRActivityNew.class);
                         intent.putExtra("play_url", localurl);
-                        intent.putExtra("title",list.get(i).getTitle());
+                        intent.putExtra("title", list.get(i).getTitle());
                         intent.putExtra("splite_screen", false);
                         ListLocalActivity.this.startActivity(intent);
-                    } else if (localurl == null) {
-                        if (list.get(i).getCurState() == -1) {
-                            System.out.print("---重新下载");
-                            index = -1;
-                            Intent intent = new Intent(START);
-                            ListLocalActivity.this.sendBroadcast(intent);
-                            try {
-                                db.delete(list.get(i));
-                                list.get(i).setCurState(0);
-                                db.save(list.get(i));
-                            } catch (DbException e) {
-                                e.printStackTrace();
-                            }
-                        } else if (list.get(i).getCurState() == 0) {
-                            System.out.print("---暂停");
-                            try {
-                                db.delete(list.get(i));
-                                list.get(i).setCurState(-1);
-                                db.save(list.get(i));
-                            } catch (DbException e) {
-                                e.printStackTrace();
-                            }
-                            Intent intent = new Intent(PAUSE);
-                            intent.putExtra("index", i);
-                            index = i;
-                            sendBroadcast(intent);
-                            if (adapter != null) {
-                                adapter.notifyDataSetInvalidated();
-                                adapter.notifyDataSetChanged();
-                            } else {
-                                adapter = new HuancunAdapter();
-                                lv.setAdapter(adapter);
-                            }
-
+                    } else if (state == 2) {
+                        LocalBean localBean = list.get(i);
+                        BaseApplication.downLoadManager.addTask(localBean.getUrl(), localBean.getUrl(), localBean.getTitle() + ".mp4", BaseApplication.VedioCacheUrl + localBean.getTitle() + ".mp4");
+                        list.get(i).setCurState(1);
+                        try {
+                            db.saveOrUpdate(localBean);
+                        } catch (DbException e) {
+                            e.printStackTrace();
+                        }
+                        if (adapter != null) {
+//                            adapter.notifyDataSetInvalidated();
+                            adapter.notifyDataSetChanged();
+                        } else {
+                            adapter = new HuancunAdapter();
+                            lv.setAdapter(adapter);
+                        }
+                    } else if (state == 1) {
+                        BaseApplication.downLoadManager.stopTask(list.get(i).getUrl());
+                        list.get(i).setCurState(4);
+                        try {
+                            db.saveOrUpdate(list.get(i));
+                        } catch (DbException e) {
+                            e.printStackTrace();
+                        }
+                        if (adapter != null) {
+//                            adapter.notifyDataSetInvalidated();
+                            adapter.notifyDataSetChanged();
+                        } else {
+                            adapter = new HuancunAdapter();
+                            lv.setAdapter(adapter);
+                        }
+                    } else if (state == 4) {
+                        BaseApplication.downLoadManager.startTask(list.get(i).getUrl());
+                        list.get(i).setCurState(1);
+                        try {
+                            db.saveOrUpdate(list.get(i));
+                        } catch (DbException e) {
+                            e.printStackTrace();
+                        }
+                        if (adapter != null) {
+//                            adapter.notifyDataSetInvalidated();
+                            adapter.notifyDataSetChanged();
+                        } else {
+                            adapter = new HuancunAdapter();
+                            lv.setAdapter(adapter);
                         }
                     }
-                }else {
+                } else {
                     try {
-                        if (list.get(i).getLocalurl() != null){
+                        if (list.get(i).getLocalurl() != null) {
                             delete(list.get(i).getLocalurl());
                         }
                         db.delete(list.get(i));
-                       list = db.findAll(LocalBean.class);
+                        list = db.findAll(LocalBean.class);
 
                     } catch (DbException e) {
                         e.printStackTrace();
                     }
-                    if (list != null){
+                    if (list != null) {
                         adapter = new HuancunAdapter();
                         lv.setAdapter(adapter);
-                    }else {
+                    } else {
                         bt_editor.setVisibility(View.GONE);
                         cache_no.setVisibility(View.VISIBLE);
                         startRefreshList();
@@ -233,12 +243,9 @@ public class ListLocalActivity extends BaseActivity {
                 }
             }
         });
-
-
-//        fab.attachToListView(lv);
-
         startRefreshList();
     }
+
 
     private Handler handler = new Handler() {
         @Override
@@ -301,14 +308,21 @@ public class ListLocalActivity extends BaseActivity {
                 holder = (ViewHolder) convertView.getTag();
             }
 
-            bu.display(holder.iv_huancun_img, list.get(position).getImage());
-            holder.tv_huancun_moviename.setText(list.get(position).getTitle());
-            String speed = speeds.get(list.get(position).getUrl());
+            bu.display(holder.iv_huancun_img, bean.getImage());
+            holder.tv_huancun_moviename.setText(bean.getTitle());
+            String speed = speeds.get(bean.getUrl());
 
             holder.iv_huancun_sd.setVisibility(View.VISIBLE);
             holder.iv_huancun_sd.setBackgroundResource(R.mipmap.huancun_img);
             holder.tv_huancun_downspeed.setVisibility(View.VISIBLE);
             holder.tv_huancun_downpecent.setVisibility(View.VISIBLE);
+            if (bean.getCurState() == 3) {
+                holder.iv_huancun_sd.setVisibility(View.GONE);
+                holder.tv_huancun_downspeed.setVisibility(View.GONE);
+                holder.tv_huancun_downpecent.setVisibility(View.GONE);
+            } else if (bean.getCurState() == 4 || bean.getCurState() == 2) {
+                holder.iv_huancun_sd.setBackgroundResource(R.mipmap.huancun_sb);
+            }
             System.out.println("---adapter：" + speed);
             if (speed != null) {
                 if ("FINISH".equals(speed)) {
@@ -331,18 +345,10 @@ public class ListLocalActivity extends BaseActivity {
                 holder.tv_huancun_downspeed.setVisibility(View.GONE);
                 holder.tv_huancun_downpecent.setVisibility(View.GONE);
             }
-//            if (index != -1) {
-                if (index != -1 && position == index){
-                    holder.iv_huancun_sd.setVisibility(View.VISIBLE);
-                    holder.iv_huancun_sd.setBackgroundResource(R.mipmap.huancun_sb);
-                    holder.tv_huancun_downspeed.setText("0KB/S");
-                }
-//            }
-
             if (editor) {
                 holder.ib_delete.setVisibility(View.VISIBLE);
 
-            }else {
+            } else {
                 holder.ib_delete.setVisibility(View.GONE);
             }
             return convertView;
@@ -365,78 +371,90 @@ public class ListLocalActivity extends BaseActivity {
             action = intent.getAction();
             String play_url = intent.getStringExtra("play_url");//電影的下載地址，作為電影的唯一标识
             if ("DOWNLOADING".equals(action)) {
-                index = -1;
                 //执行相应操作
                 long total = intent.getLongExtra("total", -1);//电影总大小
                 long current = intent.getLongExtra("current", -1);//电影当前进度
                 if (pecent == 0) {
                     pecent = current;
                 } else {
-                    speed = (current - pecent) / 1024 + "KB/S" + " 已下载" + (current * 100) / total + "%";
+                    speed = (Math.abs((current - pecent))) / 1024 + "KB/S" + " 已下载" + (current * 100) / total + "%";
                     pecent = current;
                     speeds.put(play_url, speed);
                 }
                 System.out.println("---接收到的信息：" + speed);
                 if (adapter != null) {
-                    adapter.notifyDataSetInvalidated();
+//                    adapter.notifyDataSetInvalidated();
                     adapter.notifyDataSetChanged();
                 } else {
                     adapter = new HuancunAdapter();
                     lv.setAdapter(adapter);
                 }
             } else if ("FINISH".equals(action)) {
-                index = -1;
-//                下載完畢，執行下載完畢的邏輯
+//              下載完畢，執行下載完畢的邏輯
                 speeds.put(play_url, "FINISH");
                 String localurl = intent.getStringExtra("localurl");
-                System.out.println("----接受到的網絡地址:" + play_url);
+                System.out.println("----FINISH接收到广播:" + play_url);
                 for (int i = 0; i < list.size(); i++) {
                     System.out.println("----集合中的網絡地址:" + list.get(i).getUrl());
                     if (list.get(i).getUrl().equals(play_url)) {
                         try {
-                            db.delete(list.get(i));
+                            LocalBean localBean = db.findById(LocalBean.class, play_url);
+                            if (localBean != null) {
+                                localBean.setCurState(3);
+                                localBean.setLocalurl(localurl);
+                                db.saveOrUpdate(localBean);
+                            }
                         } catch (DbException e) {
                             e.printStackTrace();
                         }
-                        list.get(i).setLocalurl(localurl);
-                        list.get(i).setCurState(2);//下载完成
-                        System.out.println("----接收到信息地址:" + localurl);
 
-                        try {
-                            db.save(list.get(i));
-                        } catch (DbException e) {
-                            e.printStackTrace();
-                        }
+                        list.get(i).setLocalurl(localurl);
+                        list.get(i).setCurState(3);//下载完成
+                        System.out.println("----接收到信息地址:" + localurl);
                     }
                 }
                 System.out.println("---接收到的信息：" + "FINISH");
                 if (adapter != null) {
-                    adapter.notifyDataSetInvalidated();
+//                    adapter.notifyDataSetInvalidated();
+                    adapter.notifyDataSetChanged();
                 } else {
                     adapter = new HuancunAdapter();
                     lv.setAdapter(adapter);
                 }
             } else if ("PAUSE".equals(action)) {
-//                String speed = speeds.get(play_url);
-//                intent.getIntExtra("index", -1);
-//                speeds.put(play_url, "PAUSE " + speed);
-//                if (adapter != null) {
+                String speed = speeds.get(play_url);
+                speeds.put(play_url, "PAUSE " + speed);
+                if (adapter != null) {
 //                    adapter.notifyDataSetInvalidated();
-//                    adapter.notifyDataSetChanged();
-//                } else {
-//                    adapter = new HuancunAdapter();
-//                    lv.setAdapter(adapter);
-//                }
-
+                    adapter.notifyDataSetChanged();
+                } else {
+                    adapter = new HuancunAdapter();
+                    lv.setAdapter(adapter);
+                }
+            } else if ("START".equals(action)) {
+                for (int i = 0; i < list.size(); i++) {
+                    if (list.get(i).getUrl().equals(play_url)) {
+                        list.get(i).setCurState(1);
+                    }
+                }
+                if (adapter != null) {
+//                    adapter.notifyDataSetInvalidated();
+                    adapter.notifyDataSetChanged();
+                } else {
+                    adapter = new HuancunAdapter();
+                    lv.setAdapter(adapter);
+                }
             }
         }
+
     }
+
     public boolean delete(String fileName) {
 
         //SDPATH目录路径，fileName文件名
 
         File file = new File(fileName);
-        if (file == null || !file.exists() || file.isDirectory()){
+        if (file == null || !file.exists() || file.isDirectory()) {
             return false;
         }
         file.delete();

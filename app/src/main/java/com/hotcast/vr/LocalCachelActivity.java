@@ -85,6 +85,7 @@ public class LocalCachelActivity extends BaseActivity {
     ImageView cache_no2;
     LinearLayout ivBack1;
     LinearLayout ivBack2;
+
     @Override
     public int getLayoutId() {
         return R.layout.activity_vr_list;
@@ -114,7 +115,7 @@ public class LocalCachelActivity extends BaseActivity {
         trueSize = Truelist.size();
         if (Truelist.size() > 0 && Truelist.size() < 5) {
             addSelfToFive();
-        }else{
+        } else {
             dbList.addAll(Truelist);
         }
         BaseApplication.size = dbList == null ? 0 : dbList.size();
@@ -363,7 +364,7 @@ public class LocalCachelActivity extends BaseActivity {
     @Override
     public void getIntentData(Intent intent) {
         Truelist = (ArrayList<LocalBean>) getIntent().getSerializableExtra("dbList");
-        System.out.println("---传递数据的尺寸2："+Truelist.size());
+        System.out.println("---传递数据的尺寸2：" + Truelist.size());
         if (Truelist == null) {
             Truelist = new ArrayList<>();
         }
@@ -795,11 +796,12 @@ public class LocalCachelActivity extends BaseActivity {
 
         return true;
     }
-    public void hideCache(boolean flag){
-        if (flag){
+
+    public void hideCache(boolean flag) {
+        if (flag) {
             cache_no1.setVisibility(View.VISIBLE);
             cache_no1.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             cache_no1.setVisibility(View.GONE);
             cache_no1.setVisibility(View.GONE);
         }
@@ -815,6 +817,7 @@ public class LocalCachelActivity extends BaseActivity {
 
     int downX, downY;
     int upX, upY;
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
 //        getParent().requestDisallowInterceptTouchEvent(true);
@@ -833,71 +836,75 @@ public class LocalCachelActivity extends BaseActivity {
         int xlen = Math.abs(downX - upX);
         int ylen = Math.abs(downY - upY);
         int length = (int) Math.sqrt((double) xlen * xlen + (double) ylen * ylen);
-        if (length < 8) {
-            //执行点击事件
-            mCurrentImg = img3D.getImgIndex() - 1;
-            if (mCurrentImg < 0) {
-                mCurrentImg = dbList.size() - 1;
+        if (img3D != null) {
+            if (length < 8) {
+                //执行点击事件
+                mCurrentImg = img3D.getImgIndex() - 1;
+                if (mCurrentImg < 0) {
+                    mCurrentImg = dbList.size() - 1;
+                }
+                clickVedio(mCurrentImg);
+                return true;
             }
-            clickVedio(mCurrentImg);
+
+            if (img3D.getmScroller().isFinished()) {
+                if (mVelocityTracker == null) {
+                    mVelocityTracker = VelocityTracker.obtain();
+                }
+                mVelocityTracker.addMovement(event);
+                int action = event.getAction();
+                float x = event.getX();
+                switch (action) {
+                    case MotionEvent.ACTION_DOWN:
+                        changeLisener = img3D.getChangeLisener();
+                        // 记录按下时的横坐标
+                        mLastMotionX = x;
+                        break;
+                    case MotionEvent.ACTION_MOVE:
+                        int disX = (int) (mLastMotionX - x);
+                        mLastMotionX = x;
+                        // 当发生移动时刷新图片的显示状态
+                        img3D.scrollBy(disX, 0);
+                        img3D.refreshImageShowing();
+                        if (changeLisener != null) {
+                            changeLisener.OnMovechange(disX);
+
+                        }
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        mVelocityTracker.computeCurrentVelocity(1000);
+                        int velocityX = (int) mVelocityTracker.getXVelocity();
+                        if (shouldScrollToNext(velocityX)) {
+                            // 滚动到下一张图
+                            img3D.scrollToNext();
+                            if (changeLisener != null) {
+                                changeLisener.Next();
+
+                            }
+                        } else if (shouldScrollToPrevious(velocityX)) {
+                            // 滚动到上一张图
+                            img3D.scrollToPrevious();
+                            if (changeLisener != null) {
+                                changeLisener.Previous();
+                            }
+                        } else {
+                            // 滚动回当前图片
+                            img3D.scrollBack();
+                            if (changeLisener != null) {
+                                changeLisener.Back();
+
+                            }
+                        }
+                        if (mVelocityTracker != null) {
+                            mVelocityTracker.recycle();
+                            mVelocityTracker = null;
+                        }
+                        break;
+                }
+            }
             return true;
         }
-        if (img3D.getmScroller().isFinished()) {
-            if (mVelocityTracker == null) {
-                mVelocityTracker = VelocityTracker.obtain();
-            }
-            mVelocityTracker.addMovement(event);
-            int action = event.getAction();
-            float x = event.getX();
-            switch (action) {
-                case MotionEvent.ACTION_DOWN:
-                    changeLisener = img3D.getChangeLisener();
-                    // 记录按下时的横坐标
-                    mLastMotionX = x;
-                    break;
-                case MotionEvent.ACTION_MOVE:
-                    int disX = (int) (mLastMotionX - x);
-                    mLastMotionX = x;
-                    // 当发生移动时刷新图片的显示状态
-                    img3D.scrollBy(disX, 0);
-                    img3D.refreshImageShowing();
-                    if (changeLisener != null) {
-                        changeLisener.OnMovechange(disX);
-
-                    }
-                    break;
-                case MotionEvent.ACTION_UP:
-                    mVelocityTracker.computeCurrentVelocity(1000);
-                    int velocityX = (int) mVelocityTracker.getXVelocity();
-                    if (shouldScrollToNext(velocityX)) {
-                        // 滚动到下一张图
-                        img3D.scrollToNext();
-                        if (changeLisener != null) {
-                            changeLisener.Next();
-
-                        }
-                    } else if (shouldScrollToPrevious(velocityX)) {
-                        // 滚动到上一张图
-                        img3D.scrollToPrevious();
-                        if (changeLisener != null) {
-                            changeLisener.Previous();
-                        }
-                    } else {
-                        // 滚动回当前图片
-                        img3D.scrollBack();
-                        if (changeLisener != null) {
-                            changeLisener.Back();
-
-                        }
-                    }
-                    if (mVelocityTracker != null) {
-                        mVelocityTracker.recycle();
-                        mVelocityTracker = null;
-                    }
-                    break;
-            }
-        }
-        return true;
+        return false;
     }
 
     private static final int SNAP_VELOCITY = 600;
@@ -905,6 +912,7 @@ public class LocalCachelActivity extends BaseActivity {
      * 记录每张图片的宽度
      */
     private int mImageWidth;
+
     /**
      * 判断是否应该滚动到上一张图片。
      */

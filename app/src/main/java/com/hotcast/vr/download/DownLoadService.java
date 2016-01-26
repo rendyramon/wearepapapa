@@ -71,29 +71,47 @@ public class DownLoadService extends Service {
                 if (localBean != null){
                     localBean.setCurState(1);
                     localBean.setLocalurl(BaseApplication.VedioCacheUrl+localBean.getTitle()+".mp4");
-                    localBean.setDownloading(true);
                     db.saveOrUpdate(localBean);
                 }
             } catch (DbException e) {
                 e.printStackTrace();
             }
+            Intent intent = new Intent(START);
+            intent.putExtra("play_url",sqlDownLoadInfo.getTaskID());
+            intent.putExtra("current",sqlDownLoadInfo.getDownloadSize());
+            intent.putExtra("total",sqlDownLoadInfo.getFileSize());
+            sendBroadcast(intent);
         }
 
         @Override
         public void onProgress(SQLDownLoadInfo sqlDownLoadInfo, boolean isSupportBreakpoint) {
             //根据监听到的信息查找列表相对应的任务，更新相应任务的进度
-            System.out.println("---onProgress");
+            System.out.println("---onProgress:"+sqlDownLoadInfo.getDownloadSize());
             Intent intent = new Intent(DOWNLOADING);
             intent.putExtra("play_url",sqlDownLoadInfo.getTaskID());
             intent.putExtra("current",sqlDownLoadInfo.getDownloadSize());
             intent.putExtra("total",sqlDownLoadInfo.getFileSize());
             sendBroadcast(intent);
-
         }
 
         @Override
         public void onStop(SQLDownLoadInfo sqlDownLoadInfo, boolean isSupportBreakpoint) {
-
+            System.out.println("---onStop");
+            try {
+                LocalBean localBean = db.findById(LocalBean.class,sqlDownLoadInfo.getTaskID());
+                if (localBean != null){
+                    localBean.setCurState(4);
+                    localBean.setLocalurl(BaseApplication.VedioCacheUrl+localBean.getTitle()+".mp4");
+                    db.saveOrUpdate(localBean);
+                }
+            } catch (DbException e) {
+                e.printStackTrace();
+            }
+            Intent intent = new Intent(PAUSE);
+            intent.putExtra("play_url",sqlDownLoadInfo.getTaskID());
+            intent.putExtra("current",sqlDownLoadInfo.getDownloadSize());
+            intent.putExtra("total",sqlDownLoadInfo.getFileSize());
+            sendBroadcast(intent);
         }
 
         @Override
@@ -108,6 +126,10 @@ public class DownLoadService extends Service {
             } catch (DbException e) {
                 e.printStackTrace();
             }
+            Intent intent = new Intent(FINISH);
+            intent.putExtra("play_url", sqlDownLoadInfo.getTaskID());
+            intent.putExtra("localurl", sqlDownLoadInfo.getFilePath());
+            sendBroadcast(intent);
         }
 
         @Override
@@ -123,6 +145,9 @@ public class DownLoadService extends Service {
             } catch (DbException e) {
                 e.printStackTrace();
             }
+            Intent intent = new Intent(PAUSE);
+            intent.putExtra("play_url",sqlDownLoadInfo.getTaskID());
+            sendBroadcast(intent);
         }
     }
 
