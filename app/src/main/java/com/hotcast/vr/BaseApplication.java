@@ -2,6 +2,8 @@ package com.hotcast.vr;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Environment;
 import android.util.DisplayMetrics;
@@ -10,6 +12,8 @@ import com.hotcast.vr.bean.Classify;
 import com.hotcast.vr.bean.Details;
 import com.hotcast.vr.bean.HomeRoll;
 import com.hotcast.vr.download.DownLoadManager;
+import com.hotcast.vr.download.DownLoadService;
+import com.hotcast.vr.services.FileCacheService;
 import com.hotcast.vr.tools.L;
 import com.lidroid.xutils.BitmapUtils;
 
@@ -37,10 +41,11 @@ public class BaseApplication extends Application {
     public static final String VedioCacheUrl = Environment.getExternalStorageDirectory().getAbsolutePath() + "/hostcast/vr/";
     public static final String ImgCacheUrl = Environment.getExternalStorageDirectory().getAbsolutePath() + "/hostcast/vr/vedioImg/";
     public static boolean pagerf = false;
+    public static boolean cacheFileChange = false;
     public static List<Classify> classifies = new ArrayList<>();
     public static List<String> playUrls = new ArrayList<>();//需要下載的電影地址
     public static List<Details> detailsList = new ArrayList<>();//需要下載的電影地址
-
+    SharedPreferences sp ;
     public static BitmapUtils getDisplay(Context context, int failedImgId) {
         BitmapUtils mFinalBitmap = new BitmapUtils(context, IMG_DISCCACHE_DIR);
         mFinalBitmap.configDefaultLoadFailedImage(failedImgId);
@@ -55,8 +60,11 @@ public class BaseApplication extends Application {
         super.onCreate();
 
         instance = this;
-
+        this.startService(new Intent(this, DownLoadService.class));
+        this.startService(new Intent(this, FileCacheService.class));
         initMeta();
+        sp= getSharedPreferences("cache_config",Context.MODE_PRIVATE);
+        BaseApplication.cacheFileChange = sp.getBoolean("cacheFileCache",false);
     }
 
     private class MyExecptionHandler implements Thread.UncaughtExceptionHandler {

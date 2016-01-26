@@ -68,10 +68,12 @@ public class DownLoadService extends Service {
             String taskID = sqlDownLoadInfo.getTaskID();//taskID是网络地址
             try {
                 LocalBean localBean = db.findById(LocalBean.class,taskID);
-                localBean.setCurState(1);
-                localBean.setLocalurl(BaseApplication.VedioCacheUrl+localBean.getTitle()+".mp4");
-                localBean.setDownloading(true);
-                db.saveOrUpdate(localBean);
+                if (localBean != null){
+                    localBean.setCurState(1);
+                    localBean.setLocalurl(BaseApplication.VedioCacheUrl+localBean.getTitle()+".mp4");
+                    localBean.setDownloading(true);
+                    db.saveOrUpdate(localBean);
+                }
             } catch (DbException e) {
                 e.printStackTrace();
             }

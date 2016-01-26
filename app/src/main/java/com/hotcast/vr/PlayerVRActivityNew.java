@@ -153,7 +153,6 @@ public class PlayerVRActivityNew extends BaseLanActivity implements PFAssetObser
                                 totalDuration = (int) asset.getDuration();
                                 mPlayerContralView.setMax(totalDuration);
                                 mPlayerContralView.setTotalDuration(totalDuration);
-
                             }
                             mPlayerContralView.setCurTime((int) asset.getPlaybackTime());
                             if (oldTime == asset.getPlaybackTime() && !isPause){

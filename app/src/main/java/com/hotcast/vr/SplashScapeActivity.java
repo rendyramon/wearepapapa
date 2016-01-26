@@ -163,6 +163,5 @@ public class SplashScapeActivity extends BaseActivity {
 
     @Override
     public void getIntentData(Intent intent) {
-
     }
 }

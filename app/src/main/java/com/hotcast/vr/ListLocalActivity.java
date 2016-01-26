@@ -171,6 +171,7 @@ public class ListLocalActivity extends BaseActivity {
 //                        System.out.println("---本地地址：" + localurl + "---url:" + list.get(i).getUrl());
                         Intent intent = new Intent(ListLocalActivity.this, PlayerVRActivityNew.class);
                         intent.putExtra("play_url", localurl);
+                        intent.putExtra("title",list.get(i).getTitle());
                         intent.putExtra("splite_screen", false);
                         ListLocalActivity.this.startActivity(intent);
                     } else if (localurl == null) {

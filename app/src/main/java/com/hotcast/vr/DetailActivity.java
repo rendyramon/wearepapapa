@@ -355,7 +355,7 @@ public class DetailActivity extends BaseActivity {
 //                        intent.putExtra("play_url",play_url);
                             BaseApplication.detailsList.add(details);
                             BaseApplication.playUrls.add(play_url);
-                            DetailActivity.this.sendBroadcast(intent);
+//                            DetailActivity.this.sendBroadcast(intent);
                             showToast("已经加入下载列表");
                             tv_cache.setText("已缓存");
                             BaseApplication.isDownLoad = true;
@@ -364,7 +364,7 @@ public class DetailActivity extends BaseActivity {
                             LocalBean localBean = new LocalBean();
                             localBean.setTitle(title);
                             localBean.setImage(details.getImage());
-                            localBean.setId(media_id);
+                            localBean.setId(play_url);
                             localBean.setUrl(play_url);
                             localBean.setCurState(0);//還沒下載，準備下載
 //                          localBean.setLocalurl(localUrl);
@@ -374,6 +374,8 @@ public class DetailActivity extends BaseActivity {
                             } catch (DbException e) {
                                 e.printStackTrace();
                             }
+                            BaseApplication.downLoadManager.addTask(play_url,play_url,title+".mp4",BaseApplication.VedioCacheUrl+title+".mp4");
+
 
                         }
                     });

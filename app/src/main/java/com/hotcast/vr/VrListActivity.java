@@ -136,17 +136,17 @@ public class VrListActivity extends BaseActivity {
             final String url = vrPlays.get(i).getVideo_url();
             final String title = vrPlays.get(i).getTitle();
             //for jiuyou change
-//            image3DView.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    intent = new Intent(VrListActivity.this, PlayerVRActivityNew.class);
-//                    intent.putExtra("play_url", url);
-//                    intent.putExtra("title", title);
-//                    intent.putExtra("splite_screen", true);
-//                    VrListActivity.this.startActivity(intent);
-//                    System.out.println("***你点击了item，准备播放**");
-//                }
-//            });
+            image3DView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    intent = new Intent(VrListActivity.this, PlayerVRActivityNew.class);
+                    intent.putExtra("play_url", url);
+                    intent.putExtra("title", title);
+                    intent.putExtra("splite_screen", true);
+                    VrListActivity.this.startActivity(intent);
+                    System.out.println("***你点击了item，准备播放**");
+                }
+            });
 
             img3D.addView(image3DView);
         }
@@ -157,13 +157,13 @@ public class VrListActivity extends BaseActivity {
             image3DView.setLayoutParams(params);
             final String url = vrPlays.get(i).getVideo_url();
             final String title = vrPlays.get(i).getTitle();
-//            image3DView.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    play(url, title);
-//                    System.out.println("***你点击了item，准备播放**");
-//                }
-//            });
+            image3DView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    play(url, title);
+                    System.out.println("***你点击了item，准备播放**");
+                }
+            });
 
             img3D2.addView(image3DView);
         }
