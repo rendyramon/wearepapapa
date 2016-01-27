@@ -70,9 +70,6 @@ public class SplashActivity extends BaseActivity {
     @Override
     public void init() {
         AnalyticsConfig.enableEncrypt(true);
-//        Intent intent = new Intent(SplashActivity.this, DownLoadingService.class);
-//        SplashActivity.this.startService(intent);
-
         requestUrl = Constants.URL_UPDATE;
         packageManager = this.getPackageManager();
         try {
@@ -82,8 +79,6 @@ public class SplashActivity extends BaseActivity {
             e.printStackTrace();
         }
         L.e("PackageName:" + getPackageName());
-//        System.out.println("***SplashActivity info.versionCode:" +info.versionCode +"**info.versionName:" + info.versionName +
-//                "*** info.packageName:" +  info.packageName + " info.signatures:" +  info.signatures);
         getNetDate();
         getNetDate2();
             System.out.println("***sp=" + sp);
@@ -109,6 +104,7 @@ public class SplashActivity extends BaseActivity {
 
             @Override
             public void onFailure(HttpException e, String s) {
+
             }
         });
     }

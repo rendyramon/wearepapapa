@@ -298,6 +298,10 @@ public class DetailActivity extends BaseActivity {
 
     //初始化下载按钮
     private void initCatch(String play_url) {
+
+
+
+
         DbUtils db = DbUtils.create(DetailActivity.this);
         boolean isdownLoad = false;
         try {
@@ -306,7 +310,7 @@ public class DetailActivity extends BaseActivity {
                 for (int i = 0; i < list.size(); i++) {
                     if (!TextUtils.isEmpty(play_url)) {
                         System.out.println("***play_url:" + play_url + "***list.get(i).getUrl():" + list.get(i).getUrl());
-                        isdownLoad = play_url.equals(list.get(i).getUrl());
+                        isdownLoad = play_url.equals(list.get(i).getId());
                     }
                 }
                 if (isdownLoad) {
