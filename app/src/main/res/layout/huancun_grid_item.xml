@@ -42,8 +42,8 @@
                 android:ellipsize="end"
                 android:gravity="center"
                 android:singleLine="true"
-                android:text="已下載70％"
-                android:textColor="#88fa0000"
+                android:text="已下载0％"
+                android:textColor="#ffffff"
                 android:textSize="12sp" />
 
             <TextView
@@ -55,7 +55,7 @@
                 android:gravity="center"
                 android:singleLine="true"
                 android:text="120kb/s"
-                android:textColor="#88fa0000"
+                android:textColor="#ffffff"
                 android:textSize="12sp" />
         </LinearLayout>
         <ImageView

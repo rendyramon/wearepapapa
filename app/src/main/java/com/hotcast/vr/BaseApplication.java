@@ -36,6 +36,9 @@ public class BaseApplication extends Application {
     public static BaseApplication getInstance() {
         return instance;
     }
+    public static String version;//版本号
+    public static String platform;//平台号
+
 
     public static final String IMG_DISCCACHE_DIR = "/mnt/sdcard/jarvis/imgcache";
     public static final String VedioCacheUrl = Environment.getExternalStorageDirectory().getAbsolutePath() + "/hostcast/vr/";

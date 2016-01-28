@@ -74,6 +74,8 @@ public class SplashActivity extends BaseActivity {
         packageManager = this.getPackageManager();
         try {
             info = packageManager.getPackageInfo(this.getPackageName(), 0);
+            BaseApplication.version = info.versionName;
+            BaseApplication.platform = getAppMetaData(SplashActivity.this,"UMENG_CHANNEL");
 
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
@@ -114,7 +116,7 @@ public class SplashActivity extends BaseActivity {
         System.out.println("---"+getAppMetaData(SplashActivity.this,"UMENG_CHANNEL"));
         RequestParams params = new RequestParams();
         params.addBodyParameter("token", "123");
-        params.addBodyParameter("version", info.versionName);
+        params.addBodyParameter("version", BaseApplication.version);
         params.addBodyParameter("platform", getAppMetaData(SplashActivity.this,"UMENG_CHANNEL"));
         this.httpPost(requestUrl, params, new RequestCallBack<String>() {
             @Override
@@ -195,7 +197,7 @@ public class SplashActivity extends BaseActivity {
             L.e("***第一次运行" + isFrist + "显示声明");
             sp.add("isFrist", false);
             isFrist1 = true;
-            if (!info.versionName.equals(current)) {
+            if (!BaseApplication.version.equals(current)) {
                 BaseApplication.isUpdate = true;
                 intent.putExtra("spec", spec);
                 intent.putExtra("force", force);
@@ -205,7 +207,7 @@ public class SplashActivity extends BaseActivity {
         } else {
             L.e("***不是第一次运行" + isFrist + "不显示");
            isFrist1 = false;
-            if (!info.versionName.equals(current)) {
+            if (!BaseApplication.version.equals(current)) {
 
                 BaseApplication.isUpdate = true;
                 intent.putExtra("spec", spec);

@@ -1,6 +1,22 @@
 package com.hotcast.vr.tools;
 
 public class Constants {
+//    地址前缀
+    public static final String SERVER_URL = "http://api2.hotcast.cn/index.php?r=";
+//    频道列表
+    public static final String CHANNEL_LIST = SERVER_URL + "/app/channel/get-list";
+//    频道下节目集列表
+    public static final String PROGRAM_LIST = SERVER_URL + "/app/channel/get-video";
+//    节目详情
+    public static final String DETAIL = SERVER_URL + "/app/videoset/get-detail";
+//    播放地址
+    public static final String PLAY_URL = SERVER_URL + "/app/videoset/play";
+//    轮播推荐位
+    public static final String ROLL = SERVER_URL + "/app/recommend/get-roll";
+//    专题推荐位
+    public static final String SPECIAL = SERVER_URL + "/app/recommend/get-subjects";
+
+
 
     //    public static final String SERVER = "http://101.200.231.61:9900";
 //    地址前缀

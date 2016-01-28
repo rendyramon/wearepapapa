@@ -15,9 +15,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.hotcast.vr.BaseActivity;
-import com.hotcast.vr.BaseApplication;
 import com.hotcast.vr.DetailActivity;
-import com.hotcast.vr.ListLocalActivity;
 import com.hotcast.vr.R;
 import com.hotcast.vr.bean.HomeBean;
 import com.hotcast.vr.bean.HomeRoll;
@@ -38,8 +36,6 @@ import com.melnykov.fab.FloatingActionButton;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.InjectView;
-
 
 /**
  * Created by lostnote on 15/11/17.
@@ -51,9 +47,7 @@ public class HomeView2 extends BaseView {
 
     @ViewInject(R.id.dots_ll)
     private LinearLayout dots_ll;
-//    @ViewInject(R.id.iv_noNet)
-//    ImageView iv_noNet;
-    @InjectView(R.id.iv_noNet)
+    @ViewInject(R.id.iv_noNet)
     ImageView iv_noNet;
 
 
@@ -96,9 +90,7 @@ public class HomeView2 extends BaseView {
         fab_home.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (BaseApplication.classifies != null){
-                    activity.clickVrMode();
-                }
+                activity.clickVrMode();
             }
         });
         ptrlv_lv_item_news = (PullToRefreshListView) rootView.findViewById(R.id.lv_item_news);
@@ -304,7 +296,6 @@ public class HomeView2 extends BaseView {
             return convertView;
         }
     }
-
     private void initDot() {
         dots_ll.removeAllViews();
         viewList.clear();
