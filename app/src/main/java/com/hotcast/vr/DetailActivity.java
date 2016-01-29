@@ -266,6 +266,7 @@ public class DetailActivity extends BaseActivity {
             @Override
             public void onStart() {
                 super.onStart();
+
                 L.e("DetailActivity onStart ");
             }
 
