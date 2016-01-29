@@ -14,18 +14,24 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.hotcast.vr.BaseActivity;
+import com.hotcast.vr.BaseApplication;
 import com.hotcast.vr.DetailActivity;
 import com.hotcast.vr.R;
+import com.hotcast.vr.bean.Datas;
 import com.hotcast.vr.bean.HomeBean;
 import com.hotcast.vr.bean.HomeRoll;
 import com.hotcast.vr.bean.HomeSubject;
+import com.hotcast.vr.bean.RollBean;
 import com.hotcast.vr.pullrefreshview.PullToRefreshBase;
 import com.hotcast.vr.pullrefreshview.PullToRefreshListView;
 import com.hotcast.vr.tools.Constants;
 import com.hotcast.vr.tools.L;
 import com.hotcast.vr.tools.Utils;
+import com.lidroid.xutils.DbUtils;
 import com.lidroid.xutils.ViewUtils;
+import com.lidroid.xutils.exception.DbException;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.RequestParams;
 import com.lidroid.xutils.http.ResponseInfo;
@@ -33,6 +39,7 @@ import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.view.annotation.ViewInject;
 import com.melnykov.fab.FloatingActionButton;
 
+import java.lang.reflect.TypeVariable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,8 +68,8 @@ public class HomeView2 extends BaseView {
     private List<String> urlImgList = new ArrayList<String>();
     //    放置点得集合
     private List<View> viewList = new ArrayList<View>();
-    //    放置底部item条目数据的集合
-    private List<HomeSubject> subjects;
+
+//    private List<HomeSubject> subjects;
 
     private View layout_roll_view;
     private LinearLayout ll_top_news_viewpager;
@@ -71,10 +78,13 @@ public class HomeView2 extends BaseView {
     private String requestUrl;
     //    private boolean bPullDown = true;
     List<ItemView> itemViews;
+    DbUtils db ;
 
     public HomeView2(BaseActivity activity) {
         super(activity, R.layout.layout_home);//根布局
-        requestUrl = Constants.URL_HOME;
+//        requestUrl = Constants.URL_HOME;
+        requestUrl = Constants.ROLL;
+        db = DbUtils.create(activity);
         init();
     }
 
@@ -109,6 +119,7 @@ public class HomeView2 extends BaseView {
                 urlImgList.clear();
                 titleList.clear();
                 getNetData();
+                getSubject();
 
             }
 
@@ -129,6 +140,7 @@ public class HomeView2 extends BaseView {
         });
         hideRefreshView();
         getNetData();
+        getSubject();
 
     }
 
@@ -148,9 +160,87 @@ public class HomeView2 extends BaseView {
 
         if (checkRequest()) {
             getNetData();
+            getSubject();
         }
         super.init();
     }
+
+    private void getSubject() {
+        if (Utils.textIsNull(requestUrl)) {
+            hideRefreshView();
+            return;
+        }
+        String url = Constants.SPECIAL;
+        RequestParams params = new RequestParams();
+        params.addBodyParameter("token", "123");
+        params.addBodyParameter("version", BaseApplication.version);
+        params.addBodyParameter("platform", BaseApplication.platform);
+        activity.httpPost(url, params, new RequestCallBack<String>() {
+            @Override
+            public void onStart() {
+                super.onStart();
+                bProcessing = true;
+            }
+
+            @Override
+            public void onSuccess(ResponseInfo<String> responseInfo) {
+                bDataProcessed = true;
+                bProcessing = false;
+                //隐藏底部加载更多 、顶部刷新的ui；
+                hideRefreshView();
+                L.e("HomeView2 responseInfo:" + responseInfo.result);
+                setViewSubject(responseInfo.result);
+            }
+
+            @Override
+            public void onFailure(HttpException e, String s) {
+                bDataProcessed = false;
+                bProcessing = false;
+                //隐藏底部加载更多 、顶部刷新的ui；
+                iv_noNet.setVisibility(View.VISIBLE);
+                activity.showToast("网络连接异常");
+                hideRefreshView();
+
+            }
+        });
+
+    }
+    //    放置底部item条目数据的集合
+    List<RollBean> rollBeans;
+
+    private void setViewSubject(String json) {
+
+        //填充listView
+        if (itemViews == null) {
+            itemViews = new ArrayList<>();
+        } else {
+            itemViews.clear();
+        }
+        rollBeans = new Gson().fromJson(json, new TypeToken<List<RollBean>>() {
+        }.getType());
+
+        for (int i = 0; i < rollBeans.size(); i++) {
+            ItemView itemView = new ItemView(activity);
+
+            itemView.setItemList(activity, rollBeans.get(i));
+            itemViews.add(itemView);
+        }
+
+        if (myBaseAdapter == null) {
+            if (rollBeans != null) {
+                myBaseAdapter = new MyBaseAdapter();
+            }
+            ptrlv_lv_item_news.getRefreshableView().setAdapter(myBaseAdapter);
+        } else
+
+        {
+            myBaseAdapter.notifyDataSetChanged();
+        }
+
+        progressBar4.setVisibility(View.GONE);
+
+    }
+
 
     private void getNetData() {
         if (Utils.textIsNull(requestUrl)) {
@@ -160,6 +250,8 @@ public class HomeView2 extends BaseView {
         String url = requestUrl;
         RequestParams params = new RequestParams();
         params.addBodyParameter("token", "123");
+        params.addBodyParameter("version", BaseApplication.version);
+        params.addBodyParameter("platform", BaseApplication.platform);
         activity.httpPost(url, params, new RequestCallBack<String>() {
             @Override
             public void onStart() {
@@ -191,8 +283,10 @@ public class HomeView2 extends BaseView {
 
     }
 
-    List<HomeRoll> homeRolls;
-    HomeBean homeBean;
+    //    List<HomeRoll> homeRolls;
+//    HomeBean homeBean;
+    RollBean roll;
+    List<Datas> datasList;
 
     private void setViewData(String json) {
         if (Utils.textIsNull(json)) {
@@ -200,24 +294,21 @@ public class HomeView2 extends BaseView {
 //            return;
         } else {
             try {
-                homeBean = new Gson().fromJson(json, HomeBean.class);
-                homeRolls = homeBean.getHome_roll();
+                roll = new Gson().fromJson(json, RollBean.class);
+//                homeRolls = homeBean.getHome_roll();
+                datasList = roll.getData();
 
             } catch (IllegalStateException e) {
                 activity.showToast("解析出现错误，请刷新数据");
             }
+//            try {
+//                db.save(roll);
+//            } catch (DbException e) {
+//                e.printStackTrace();
+//            }
             //初始化viewpager
-            L.e("HomeView2 viewList.sixe() = " + viewList.size());
-            RollViewPager rollViewPager = new RollViewPager(activity, viewList, new RollViewPager.onPageClick() {
-                @Override
-                public void onclick(int i) {
-                    Intent intent = new Intent(activity, DetailActivity.class);
-                    intent.putExtra("action", homeRolls.get(i).getAction());
-                    intent.putExtra("resource", homeRolls.get(i).getResource());
-                    activity.startActivity(intent);
-//                Toast.makeText(activity, "position = " + i, Toast.LENGTH_SHORT).show();
-                }
-            });
+//            L.e("HomeView2 viewList.sixe() = " + viewList.size());
+
 
 //        HomeSubject的集合
 //        if (subjects == null){
@@ -225,59 +316,60 @@ public class HomeView2 extends BaseView {
 //        }else{
 //            subjects.clear();
 //        }
-            System.out.println("HomeView2 subjects = " + subjects);
-            subjects = homeBean.getHome_subject();
-//        subjects.addAll(homeBean.getHome_subject());
-            urlImgList.clear();
-            titleList.clear();
-            for (int i = 0; i < homeRolls.size(); i++) {
-                HomeRoll homeRoll = homeRolls.get(i);
-                urlImgList.add(homeRoll.getImage());
-                titleList.add(homeRoll.getTitle());
-            }
-            initDot();
-            rollViewPager.initTitleList(top_news_title, titleList);
-            rollViewPager.initImgUrlList(urlImgList);
-            rollViewPager.startRoll();
-            ll_top_news_viewpager.removeAllViews();
-            ll_top_news_viewpager.addView(rollViewPager);
-            //就是个listView
-            if (ptrlv_lv_item_news.getRefreshableView().getHeaderViewsCount() < 1) {
-                ptrlv_lv_item_news.getRefreshableView().addHeaderView(layout_roll_view);
-            }
-
-            //填充listView
-            if (itemViews == null) {
-                itemViews = new ArrayList<>();
-            } else {
-                itemViews.clear();
-            }
-            for (int i = 0; i < subjects.size(); i++) {
-                ItemView itemView = new ItemView(activity);
-                itemView.setItemList(activity, subjects.get(i));
-                itemViews.add(itemView);
-            }
-            if (myBaseAdapter == null) {
-                if (subjects != null) {
-                    myBaseAdapter = new MyBaseAdapter();
-                }
-                ptrlv_lv_item_news.getRefreshableView().setAdapter(myBaseAdapter);
-            } else {
-                myBaseAdapter.notifyDataSetChanged();
-            }
         }
-        progressBar4.setVisibility(View.GONE);
-    }
 
+        RollViewPager rollViewPager = new RollViewPager(activity, viewList, new RollViewPager.onPageClick() {
+            @Override
+            public void onclick(int i) {
+                Intent intent = new Intent(activity, DetailActivity.class);
+                intent.putExtra("videoset_id", datasList.get(i).getMedia_id());
+//                    intent.putExtra("resource", datasList.get(i).getResource());
+                activity.startActivity(intent);
+//                Toast.makeText(activity, "position = " + i, Toast.LENGTH_SHORT).show();
+            }
+        });
+        System.out.println("HomeView2 subjects = " + datasList);
+//    subjects=homeBean.getHome_subject();
+//        subjects.addAll(homeBean.getHome_subject());
+        urlImgList.clear();
+        titleList.clear();
+        for (int i = 0; i < datasList.size(); i++) {
+//            RollBean homeRoll = datasList.get(i);
+            Datas datas = datasList.get(i);
+//            for (int j = 0; j < datas.getData().size(); j++) {
+//                Datas subject = datas.getData().get(j);
+
+            urlImgList.add(datas.getImage());
+            titleList.add(datas.getTitle());
+            System.out.println("---urlImg = " + datas.getImage());
+            System.out.println("---title = " + datas.getTitle());
+//            }
+        }
+        System.out.println("---urlImgList = " + urlImgList.size());
+        System.out.println("---titleList = " + titleList.size());
+
+
+        initDot();
+
+        rollViewPager.initTitleList(top_news_title, titleList);
+        rollViewPager.initImgUrlList(urlImgList);
+        rollViewPager.startRoll();
+        ll_top_news_viewpager.removeAllViews();
+        ll_top_news_viewpager.addView(rollViewPager);
+        //就是个listView
+        if (ptrlv_lv_item_news.getRefreshableView().getHeaderViewsCount() < 1) {
+            ptrlv_lv_item_news.getRefreshableView().addHeaderView(layout_roll_view);
+        }
+    }
     class MyBaseAdapter extends BaseAdapter {
         @Override
         public int getCount() {
-            return subjects.size();
+            return rollBeans.size();
         }
 
         @Override
         public Object getItem(int i) {
-            return subjects.get(i);
+            return rollBeans.get(i);
         }
 
         @Override
@@ -296,6 +388,9 @@ public class HomeView2 extends BaseView {
             return convertView;
         }
     }
+
+
+
     private void initDot() {
         dots_ll.removeAllViews();
         viewList.clear();

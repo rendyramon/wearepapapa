@@ -577,7 +577,7 @@ public class VrListActivity extends BaseActivity {
                     Details details = new Details();
                     details.setTitle(vrPlays.get(mCurrentImg).getTitle());
                     System.out.println("---开始下载" + vrPlays.get(mCurrentImg).getTitle());
-                    details.setImage(vrPlays.get(mCurrentImg).getImage());
+//                    details.setImage(vrPlays.get(mCurrentImg).getImage());
                     details.setDesc(vrPlays.get(mCurrentImg).getDesc());
 //
                     BaseApplication.detailsList.add(details);
@@ -587,7 +587,7 @@ public class VrListActivity extends BaseActivity {
                     DbUtils db = DbUtils.create(VrListActivity.this);
                     LocalBean localBean = new LocalBean();
                     localBean.setTitle(details.getTitle());
-                    localBean.setImage(details.getImage());
+//                    localBean.setImage(details.getImage());
                     localBean.setId(vrPlays.get(mCurrentImg).getVideo_url());
                     localBean.setUrl(vrPlays.get(mCurrentImg).getVideo_url());
                     localBean.setCurState(0);//還沒下載，準備下載
@@ -621,7 +621,7 @@ public class VrListActivity extends BaseActivity {
             Details details = new Details();
             details.setTitle(vrPlays.get(mCurrentImg).getTitle());
             System.out.println("---开始下载" + vrPlays.get(mCurrentImg).getTitle());
-            details.setImage(vrPlays.get(mCurrentImg).getImage());
+//            details.setImage(vrPlays.get(mCurrentImg).getImage());
             details.setDesc(vrPlays.get(mCurrentImg).getDesc());
 //
             BaseApplication.detailsList.add(details);
@@ -631,7 +631,7 @@ public class VrListActivity extends BaseActivity {
             DbUtils db = DbUtils.create(VrListActivity.this);
             LocalBean localBean = new LocalBean();
             localBean.setTitle(details.getTitle());
-            localBean.setImage(details.getImage());
+//            localBean.setImage(details.getImage());
             localBean.setId(vrPlays.get(mCurrentImg).getVideo_url());
             localBean.setUrl(vrPlays.get(mCurrentImg).getVideo_url());
             localBean.setCurState(0);//還沒下載，準備下載

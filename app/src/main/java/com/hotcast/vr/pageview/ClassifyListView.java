@@ -23,6 +23,7 @@ import com.hotcast.vr.DetailActivity;
 import com.hotcast.vr.R;
 import com.hotcast.vr.adapter.BaseAdapterHelper;
 import com.hotcast.vr.adapter.QuickAdapter;
+import com.hotcast.vr.bean.ChannelList;
 import com.hotcast.vr.bean.HomeRoll;
 import com.hotcast.vr.tools.Constants;
 import com.hotcast.vr.tools.L;
@@ -78,7 +79,8 @@ public class ClassifyListView extends BaseView {
     public ClassifyListView(BaseActivity activity,String channel_id) {
         super(activity, R.layout.layout_classify_list);
         this.channel_id = channel_id;
-        requestUrl = Constants.URL_CLASSIFY_LIST;
+        System.out.println("---channel_id = " + channel_id);
+        requestUrl = Constants.PROGRAM_LIST;
     }
 
     private void initListView(){
@@ -99,17 +101,17 @@ public class ClassifyListView extends BaseView {
             }
         });
 
-        adapter = new QuickAdapter<HomeRoll>(activity, R.layout.item_list) {
+        adapter = new QuickAdapter<ChannelList>(activity, R.layout.item_list) {
             @Override
-            protected void convert(BaseAdapterHelper helper, final HomeRoll item) {
+            protected void convert(BaseAdapterHelper helper, final ChannelList item) {
 //                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
 
                 LinearLayout iv = ButterKnife.findById(helper.getView(), R.id.iv_list);
-                bitmapUtils.display(iv, item.getImage());
+                bitmapUtils.display(iv, item.getImage().get(0));
 //                ViewUtils.setViewHeight(iv, ScreenUtils.getScreenWidth(activity) / 2);
 //                helper.setImageUrl(R.id.iv_list, item.getImage());
                 helper.setText(R.id.tv, item.getTitle());
-                helper.setText(R.id.show_time, item.getShow_times()+"已看");
+//                helper.setText(R.id.show_time, item.getShow_times()+"已看");
                 helper.setText(R.id.desc, item.getDesc());
             }
         };
@@ -119,25 +121,25 @@ public class ClassifyListView extends BaseView {
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                HomeRoll item = (HomeRoll) adapter.getItem(i - 1);
-                switch (item.getAction()){
-                    case "web":
-                        break;
-                    case "one":
-                        intent = new Intent(activity,DetailActivity.class);
-                        intent.putExtra("action","one");
-                        intent.putExtra("resource",item.getResource());
-                        L.e("ClassifyListView " + item.getResource());
-                        activity.startActivity(intent);
-                        break;
-                    case "many":
-                        intent = new Intent(activity,DetailActivity.class);
-                        intent.putExtra("action","many");
-                        intent.putExtra("resource",item.getResource());
-                        L.e("ClassifyListView " + item.getResource());
-                        activity.startActivity(intent);
-                        break;
-                }
+                ChannelList item = (ChannelList) adapter.getItem(i - 1);
+//                switch (item.getAction()){
+//                    case "web":
+//                        break;
+//                    case "one":
+//                        intent = new Intent(activity,DetailActivity.class);
+//                        intent.putExtra("action","one");
+//                        intent.putExtra("resource",item.getResource());
+//                        L.e("ClassifyListView " + item.getResource());
+//                        activity.startActivity(intent);
+//                        break;
+//                    case "many":
+                intent = new Intent(activity, DetailActivity.class);
+//                        intent.putExtra("action","many");
+                intent.putExtra("videoset_id", item.getId());
+//                        L.e("ClassifyListView " + item.getResource());
+                activity.startActivity(intent);
+//                        break;
+//                }
 
             }
         });
@@ -165,6 +167,9 @@ public class ClassifyListView extends BaseView {
         params = new RequestParams();
         params.addBodyParameter("token", "123");
         params.addBodyParameter("channel_id", channel_id);
+        params.addBodyParameter("version", BaseApplication.version);
+        params.addBodyParameter("platform", BaseApplication.platform);
+        params.addBodyParameter("page_size", String.valueOf(10));
         if(!bPullDown){
             params.addBodyParameter("page", String.valueOf(page));
         }
@@ -194,7 +199,7 @@ public class ClassifyListView extends BaseView {
             }
         });
     }
-    List<HomeRoll> tmpList;
+    List<ChannelList> tmpList;
 
     private void setViewData(String json) {
         if (Utils.textIsNull(json)) {
@@ -202,33 +207,33 @@ public class ClassifyListView extends BaseView {
         }
         progressBar3.setVisibility(View.GONE);
         try {
-            tmpList = new Gson().fromJson(json, new TypeToken<List<HomeRoll>>() {
+            tmpList = new Gson().fromJson(json, new TypeToken<List<ChannelList>>() {
             }.getType());
         }catch (IllegalStateException e){
             activity.showToast("解析出现错误，请刷新数据");
         }
 
         DbUtils db = DbUtils.create(activity);
-        try {
-            db.delete(HomeRoll.class, WhereBuilder.b("channel_id", "==", channel_id));
-        } catch (DbException e) {
-            e.printStackTrace();
-        }
-        for (int i = 0; i < tmpList.size(); i ++){
-            HomeRoll homeRoll = tmpList.get(i);
-            homeRoll.setChannel_id(channel_id);
-            try {
-                db.save(homeRoll);
-            } catch (DbException e) {
-                e.printStackTrace();
-            }
-        }
-        if(bPullDown){
-            adapter.addNewAll(tmpList);
-        }else{
-
-            adapter.addAll(tmpList);
-        }
+//        try {
+//            db.delete(ChannelList.class, WhereBuilder.b("id", "==", channel_id));
+//        } catch (DbException e) {
+//            e.printStackTrace();
+//        }
+//        for (int i = 0; i < tmpList.size(); i ++){
+//            ChannelList channelList = tmpList.get(i);
+////            channelList.setChannel_id(channel_id);
+//            try {
+//                db.save(channelList);
+//            } catch (DbException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//        if(bPullDown){
+//            adapter.addNewAll(tmpList);
+//        }else{
+//
+//            adapter.addAll(tmpList);
+//        }
 
         L.e("adapter size=" + adapter.getCount());
     }

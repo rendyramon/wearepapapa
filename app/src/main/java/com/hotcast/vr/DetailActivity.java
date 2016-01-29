@@ -21,6 +21,7 @@ import com.hotcast.vr.bean.Play;
 import com.hotcast.vr.bean.Relation;
 import com.hotcast.vr.bean.Urls;
 import com.hotcast.vr.bean.Videos;
+import com.hotcast.vr.bean.VideosNew;
 import com.hotcast.vr.receiver.DownloadReceiver;
 import com.hotcast.vr.tools.Constants;
 import com.hotcast.vr.tools.L;
@@ -325,8 +326,8 @@ public class DetailActivity extends BaseActivity {
         progressBar5.setVisibility(View.GONE);
     }
 
-    private String action;
-    private String resource;
+    private String videoset_id;
+//    private String resource;
     private String requestUrl;
     DownloadReceiver receiver;
     IntentFilter filter;
@@ -338,7 +339,7 @@ public class DetailActivity extends BaseActivity {
 
     @Override
     public void init() {
-        requestUrl = Constants.URL_DETAIL;
+        requestUrl = Constants.DETAIL;
         receiver = new DownloadReceiver();
         filter = new IntentFilter();
         filter.addAction(START);
@@ -361,7 +362,7 @@ public class DetailActivity extends BaseActivity {
                         DbUtils db = DbUtils.create(DetailActivity.this);
                         LocalBean localBean = new LocalBean();
                         localBean.setTitle(title);
-                        localBean.setImage(details.getImage());
+                        localBean.setImage(details.getImage().get(0));
                         localBean.setId(play_url);
                         localBean.setUrl(play_url);
                         localBean.setCurState(0);//還沒下載，準備下載
@@ -382,22 +383,22 @@ public class DetailActivity extends BaseActivity {
 
 
     private void initView() {
-        L.e("***填充数据***" + details.getVideo_length());
+        L.e("***填充数据***" + details.getId());
         bitmapUtils = new BitmapUtils(this);
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
 //        img_movie.setLayoutParams(params);
 //        bitmapUtils.
         if (details.getImage() != null) {
-            bitmapUtils.display(rl_movieimg, details.getImage());
+            bitmapUtils.display(rl_movieimg, details.getImage().get(0));
         }
         if (details.getTitle() != null) {
             movie_name.setText(details.getTitle());
         }
-        if (details.getVideo_length() != null) {
-            movietime.setText("片长：" + details.getVideo_length());
-        }
-        if (details.getUpdate_at() != null) {
-            long datetime = Long.parseLong(details.getUpdate_at()) * 1000l;
+//        if (details.getId() != null) {
+//            movietime.setText("片长：" + details.getVideo_length());
+//        }
+        if (details.getUpdate_time() != null) {
+            long datetime = Long.parseLong(details.getUpdate_time()) * 1000l;
             System.out.println("***datetime = " + new Date(datetime));
             String date = new SimpleDateFormat("yyyy年MM月dd日").format(new Date(datetime));
 //            Date d = new Date(Integer.parseInt(details.getUpdate_at()));
@@ -407,7 +408,7 @@ public class DetailActivity extends BaseActivity {
             tv_datetime.setText("更新时间：" + date);
         }
         introduced.setText(details.getDesc());
-        System.out.println("---" + details.getUpdate_at() + "**" + details.getVideo_length() + "**" + Integer.parseInt(details.getUpdate_at()));
+        System.out.println("---" + details.getUpdate_time() + "**" + details.getId() + "**" + Integer.parseInt(details.getUpdate_time()));
 //        Integer.parseInt(details.getUpdate_at());
 
 
@@ -417,8 +418,9 @@ public class DetailActivity extends BaseActivity {
         L.e("DetailActivity getNetDate()");
         RequestParams params = new RequestParams();
         params.addBodyParameter("token", "123");
-        params.addBodyParameter("resource", resource);
-        params.addBodyParameter("action", action);
+        params.addBodyParameter("version", BaseApplication.version);
+        params.addBodyParameter("platform", BaseApplication.platform);
+        params.addBodyParameter("videoset_id", videoset_id);
         this.httpPost(requestUrl, params, new RequestCallBack<String>() {
             @Override
             public void onStart() {
@@ -437,7 +439,7 @@ public class DetailActivity extends BaseActivity {
         });
     }
 
-    ArrayList<Videos> videoses;
+    ArrayList<VideosNew> videoses;
 
     private void setViewData(String json) {
         L.e("DetailActivity setViewData()");
@@ -449,12 +451,12 @@ public class DetailActivity extends BaseActivity {
         details = new Gson().fromJson(json, Details.class);
 //        size = detailses.size();
 //        Details details = new Gson().fromJson(json,new );
-        videoses = details.getVideo();
-        L.e("DetailActivity details.getVideo() =" + details.getVideo());
+        videoses = (ArrayList<VideosNew>) details.getVideos();
+        L.e("DetailActivity details.getVideo() =" + details.getVideos());
         L.e("DetailActivity videoses =" + videoses);
         if (videoses != null) {
             for (int i = 0; i < videoses.size(); i++) {
-                video_ids.add(videoses.get(i).getVideo_id());
+                video_ids.add(videoses.get(i).getVid());
             }
             L.e("DetailActivity detailses = " + details + videoses.size());
             L.e("DetailActivity video_ids = " + video_ids);
@@ -462,15 +464,15 @@ public class DetailActivity extends BaseActivity {
         } else {
             finish();
         }
-        getplayUrl();
-        getRelationDate();
+//        getplayUrl();
+//        getRelationDate();
     }
 
     @Override
     public void getIntentData(Intent intent) {
-        action = intent.getStringExtra("action");
-        resource = intent.getStringExtra("resource");
-        L.e("DetailActivity responseInfo:" + action + "***" + resource);
+        videoset_id = intent.getStringExtra("videoset_id");
+//        resource = intent.getStringExtra("resource");
+        L.e("---DetailActivity responseInfo:" + videoset_id );
     }
 
     List<Relation> relations;

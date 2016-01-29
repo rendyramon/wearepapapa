@@ -7,8 +7,11 @@ import android.widget.ImageView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.hotcast.vr.BaseActivity;
+import com.hotcast.vr.BaseApplication;
 import com.hotcast.vr.R;
 import com.hotcast.vr.adapter.MyPagerAdapter;
+import com.hotcast.vr.bean.ChanelData;
+import com.hotcast.vr.bean.Channel;
 import com.hotcast.vr.bean.Classify;
 import com.hotcast.vr.bean.HomeRoll;
 import com.hotcast.vr.pagerindicator.TabPageIndicator;
@@ -45,7 +48,7 @@ public class ClassifyView extends BaseView {
     private int curTabIndex = -1;
 
 
-    private List<Classify> classifies;
+    private List<ChanelData> classifies;
     private int size;
     private BaseView[] views;
     private List<View> vs;
@@ -55,7 +58,7 @@ public class ClassifyView extends BaseView {
 
     public ClassifyView(BaseActivity activity){
         super(activity, R.layout.layout_classify);
-        requestUrl = Constants.URL_CLASSIFY_TITLTE;
+        requestUrl = Constants.CHANNEL_LIST;
         init();
     }
     @Override
@@ -70,9 +73,9 @@ public class ClassifyView extends BaseView {
         DbUtils db = DbUtils.create(activity);
 
         for (int i = 0 ; i < size; i++){
-            Classify classify = classifies.get(i);
+            ChanelData classify = classifies.get(i);
             try {
-                db.delete(Classify.class, WhereBuilder.b("channel_id", "==", classifies.get(i).getChannel_id()));
+                db.delete(Classify.class, WhereBuilder.b("id", "==", classifies.get(i).getId()));
                 db.save(classify);
             } catch (DbException e) {
                 e.printStackTrace();
@@ -85,12 +88,12 @@ public class ClassifyView extends BaseView {
         vs = new ArrayList<>();
         for (int i = 0;i < size; i++){
             titles.add(classifies.get(i).getTitle());
-            switch (classifies.get(i).getShow_type()){
+            switch (classifies.get(i).getType()){
                 case "big":
-                    views[i] = new ClassifyListView(activity,classifies.get(i).getChannel_id());
+                    views[i] = new ClassifyListView(activity,classifies.get(i).getId());
                     break;
                 case "small":
-                    views[i] = new ClassifyGridView(activity,classifies.get(i).getChannel_id());
+                    views[i] = new ClassifyGridView(activity,classifies.get(i).getId());
                     break;
             }
             vs.add(views[i].getRootView());
@@ -150,6 +153,8 @@ public class ClassifyView extends BaseView {
     private void getNetData() {
         RequestParams params = new RequestParams();
         params.addBodyParameter("token", "123");
+        params.addBodyParameter("version", BaseApplication.version);
+        params.addBodyParameter("platform", BaseApplication.platform);
         activity.httpPost(requestUrl, params, new RequestCallBack<String>() {
             @Override
             public void onStart() {
@@ -172,14 +177,15 @@ public class ClassifyView extends BaseView {
             }
         });
     }
+    Channel channel;
 
 
     private void setViewData(String json) {
         if (Utils.textIsNull(json)) {
             iv_noNet.setVisibility(View.VISIBLE);
         }else {
-            classifies = new Gson().fromJson(json, new TypeToken<List<Classify>>() {
-            }.getType());
+            channel = new Gson().fromJson(json,Channel.class);
+            classifies = channel.getData();
             size = classifies.size();
             L.e("adapter size=" + classifies.size());
             initListView();

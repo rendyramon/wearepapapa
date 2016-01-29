@@ -28,7 +28,7 @@ public class Classify extends BaseView {
 
 
 
-    private BaseView view0, view1, view2, view3, view4;
+//    private BaseView view0, view1, view2, view3, view4;
     private BaseView[] views = new BaseView[5];
     private List<View> vs;
     private List<String> titles;

@@ -1,13 +1,11 @@
 package com.hotcast.vr.bean;
 
-import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by lostnote on 15/11/29.
+ * Created by lostnote on 16/1/28.
  */
-public class Details implements Serializable {
+public class ChannelList {
     //节目集ID（字符串）
     String id;
     //标题
@@ -100,7 +98,7 @@ public class Details implements Serializable {
 
     @Override
     public String toString() {
-        return "Details{" +
+        return "ChannelList{" +
                 "id='" + id + '\'' +
                 ", title='" + title + '\'' +
                 ", image=" + image +

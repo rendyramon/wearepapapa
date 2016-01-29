@@ -18,6 +18,7 @@ import com.hotcast.vr.DetailActivity;
 import com.hotcast.vr.R;
 import com.hotcast.vr.adapter.BaseAdapterHelper;
 import com.hotcast.vr.adapter.QuickAdapter;
+import com.hotcast.vr.bean.ChannelList;
 import com.hotcast.vr.bean.HomeRoll;
 import com.hotcast.vr.tools.Constants;
 import com.hotcast.vr.tools.L;
@@ -70,7 +71,7 @@ public class ClassifyGridView extends BaseView {
     public ClassifyGridView(BaseActivity activity,String channel_id){
         super(activity, R.layout.layout_classify_grid);
         this.channel_id = channel_id;
-        requestUrl = Constants.URL_CLASSIFY_LIST;
+        requestUrl = Constants.PROGRAM_LIST;
     }
     private void initListView(){
         grid.setMode(PullToRefreshBase.Mode.BOTH);
@@ -90,13 +91,13 @@ public class ClassifyGridView extends BaseView {
         });
 
 
-        adapter = new QuickAdapter<HomeRoll>(activity, R.layout.item_grid) {
+        adapter = new QuickAdapter<ChannelList>(activity, R.layout.item_grid) {
             @Override
-            protected void convert(BaseAdapterHelper helper, HomeRoll item) {
+            protected void convert(BaseAdapterHelper helper, ChannelList item) {
                 bitmapUtils = new BitmapUtils(activity);
                 ImageView iv = ButterKnife.findById(helper.getView(), R.id.iv_grid);
 //                ViewUtils.setViewHeight(iv, ScreenUtils.getScreenWidth(activity) / 2);
-                bitmapUtils.display(iv,item.getImage());
+                bitmapUtils.display(iv,item.getImage().get(0));
 //                helper.setImageUrl(R.id.iv_grid, item.getImage());
                 helper.setText(R.id.tv_grid, item.getTitle());
                 helper.setText(R.id.desc, item.getDesc());
@@ -108,25 +109,25 @@ public class ClassifyGridView extends BaseView {
         grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                HomeRoll item = (HomeRoll) adapter.getItem(i);
-                switch (item.getAction()){
-                    case "web":
-                        break;
-                    case "one":
-                        intent = new Intent(activity,DetailActivity.class);
-                        intent.putExtra("action","one");
-                        intent.putExtra("resource",item.getResource());
-                        L.e("ClassifyGridView " + item.getResource());
-                        activity.startActivity(intent);
-                        break;
-                    case "many":
-                        intent = new Intent(activity,DetailActivity.class);
-                        intent.putExtra("action","many");
-                        intent.putExtra("resource",item.getResource());
-                        L.e("ClassifyGridView " + item.getResource());
-                        activity.startActivity(intent);
-                        break;
-                }
+                ChannelList item = (ChannelList) adapter.getItem(i);
+//                switch (item.getAction()){
+//                    case "web":
+//                        break;
+//                    case "one":
+//                        intent = new Intent(activity,DetailActivity.class);
+//                        intent.putExtra("action","one");
+//                        intent.putExtra("resource",item.getResource());
+//                        L.e("ClassifyGridView " + item.getResource());
+//                        activity.startActivity(intent);
+//                        break;
+//                    case "many":
+                intent = new Intent(activity, DetailActivity.class);
+//                        intent.putExtra("action","many");
+                intent.putExtra("videoset_id", item.getId());
+//                L.e("ClassifyGridView " + item.getResource());
+                activity.startActivity(intent);
+//                        break;
+//                }
             }
         });
 
@@ -154,7 +155,9 @@ public class ClassifyGridView extends BaseView {
         params = new RequestParams();
         params.addBodyParameter("token", "123");
         params.addBodyParameter("channel_id", channel_id);
-        params.addBodyParameter("page", "1");
+        params.addBodyParameter("version", BaseApplication.version);
+        params.addBodyParameter("platform", BaseApplication.platform);
+        params.addBodyParameter("page_size", String.valueOf(10));
         if(!bPullDown){
             params.addBodyParameter("page", String.valueOf(page));
         }
@@ -185,28 +188,28 @@ public class ClassifyGridView extends BaseView {
         });
     }
 
-    List<HomeRoll> tmpList;
+    List<ChannelList> tmpList;
     private void setViewData(String json) {
         if (Utils.textIsNull(json)) {
             return;
         }
         progressBar2.setVisibility(View.GONE);
         try {
-            tmpList = new Gson().fromJson(json, new TypeToken<List<HomeRoll>>() {
+            tmpList = new Gson().fromJson(json, new TypeToken<List<ChannelList>>() {
             }.getType());
         }catch (IllegalStateException e){
             activity.showToast("解析出现错误，请刷新数据");
         }
 
         DbUtils db = DbUtils.create(activity);
-        try {
-            db.delete(HomeRoll.class, WhereBuilder.b("channel_id", "==", channel_id));
-        } catch (DbException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            db.delete(HomeRoll.class, WhereBuilder.b("channel_id", "==", channel_id));
+//        } catch (DbException e) {
+//            e.printStackTrace();
+//        }
         for (int i = 0; i < tmpList.size(); i ++){
-            HomeRoll homeRoll = tmpList.get(i);
-            homeRoll.setChannel_id(channel_id);
+            ChannelList homeRoll = tmpList.get(i);
+//            homeRoll.setChannel_id(channel_id);
             try {
                 db.save(homeRoll);
             } catch (DbException e) {

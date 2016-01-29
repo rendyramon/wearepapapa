@@ -2,8 +2,10 @@ package com.hotcast.vr.pageview;
 
 
 import com.hotcast.vr.DetailActivity;
+import com.hotcast.vr.bean.Datas;
 import com.hotcast.vr.bean.HomeRoll;
 import com.hotcast.vr.bean.HomeSubject;
+import com.hotcast.vr.bean.RollBean;
 import com.lidroid.xutils.BitmapUtils;
 
 import com.hotcast.vr.R;
@@ -76,24 +78,24 @@ public class ItemView extends LinearLayout {
 //        });
     }
 
-    public void setItemList(Context context, HomeSubject item) {
-        String titleurl = item.getHead().getImage();
-        String titleText = item.getHead().getTitle();
+    public void setItemList(Context context, RollBean item) {
+        String titleurl = item.getLogo();
+        String titleText = item.getTitle();
 //        初始化条目头信息
         title.setText(titleText);
         bu.display(titleimg, titleurl);
 
 //        初始化下面的横向滑动条目
-        setItemMovies(context, item.getBody());
+        setItemMovies(context, item.getData());
     }
 
-    public void setItemMovies(final Context context, List<HomeRoll> rolls) {
+    public void setItemMovies(final Context context, List<Datas> rolls) {
         ll_img.removeAllViews();
         LayoutParams params = new LayoutParams(
                 LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
         params.setMargins(0, 0, 30, 0);
         for (int i = 0; i < rolls.size(); i++) {
-            final HomeRoll roll = rolls.get(i);
+            final Datas roll = rolls.get(i);
             System.out.println("---ItemView  roll---" + roll);
 
             LinearLayout contentView = (LinearLayout) View.inflate(context,
@@ -113,8 +115,8 @@ public class ItemView extends LinearLayout {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(context, DetailActivity.class);
-                    intent.putExtra("action",roll.getAction());
-                    intent.putExtra("resource",roll.getResource());
+                    intent.putExtra("videoset_id",roll.getMedia_id());
+//                    intent.putExtra("resource",roll.getResource());
                     context.startActivity(intent);
                     System.out.println("---ItemView 条目被点击了---");
                 }
