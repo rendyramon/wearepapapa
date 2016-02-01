@@ -68,7 +68,7 @@ public class DetailActivity extends BaseActivity {
     @InjectView(R.id.progressBar5)
     ProgressBar progressBar5;
 
-    private Play play;
+//    private Play play;
     private Details details;
     //    可以播放的URL集合大小
     private int size;
@@ -80,7 +80,7 @@ public class DetailActivity extends BaseActivity {
     //    视频id集合
     private List<String> video_ids = new ArrayList<>();
     //    播放视频的标题
-    private List<String> playTitle = new ArrayList<>();
+//    private List<String> playTitle = new ArrayList<>();
 
 
     final String START = "START";
@@ -105,138 +105,7 @@ public class DetailActivity extends BaseActivity {
                 intent.putExtra("title", title);
                 intent.putExtra("splite_screen", false);
                 DetailActivity.this.startActivity(intent);
-//                }else {
-//                    System.out.println("***DetailAcrtivity 播放路径为空无法播放");
-//                }
                 break;
-//            case R.id.ll_download:
-//                this.showDialog(null, "是否下载影片?", null, null, new BaseActivity.OnAlertSureClickListener() {
-//                    @Override
-//                    public void onclick() {
-//                        Intent intent = new Intent(START);
-////                        intent.putExtra("Details",details);
-////                        intent.putExtra("play_url",play_url);
-//                        BaseApplication.detailsList.add(details);
-//                        BaseApplication.playUrls.add(play_url);
-//                        DetailActivity.this.sendBroadcast(intent);
-//                        showToast("已经加入下载列表");
-//                        tv_cache.setText("已缓存");
-//                        ll_download.setFocusable(false);
-//                        DbUtils db = DbUtils.create(DetailActivity.this);
-//                        LocalBean localBean = new LocalBean();
-//                        localBean.setTitle(title);
-//                        localBean.setImage(details.getImage());
-//                        localBean.setId(media_id);
-//                        localBean.setUrl(play_url);
-//                        localBean.setCurState(0);//還沒下載，準備下載
-////                        localBean.setLocalurl(localUrl);
-//                        try {
-//                            db.delete(localBean);
-//                            db.save(localBean);
-//                        } catch (DbException e) {
-//                            e.printStackTrace();
-//                        }
-//
-//                    }
-//                });
-//                if ("one".equals(action)) {
-//
-//                } else {
-//                    translucentview.setVisibility(View.VISIBLE);
-//                    final View popupView = View.inflate(DetailActivity.this,R.layout.layout_popup,null);
-//                    popupGrid = (GridView) popupView.findViewById(R.id.popup_gd);
-//                    ImageView iv_poor = (ImageView) popupView.findViewById(R.id.iv_poor);
-//                    Button bt_catcheAll = (Button) popupView.findViewById(R.id.bt_catcheAll);
-//                    Button bt_check = (Button) popupView.findViewById(R.id.bt_check);
-//                    if (popupWindow == null){
-//                        popupWindow = new PopupWindow(popupView,-2,-2);
-//                    }else {
-//                        int[] location = new int[2];
-////                        view.getLocationInWindow(location);
-//                        int dip = 60;
-//                        int px = DensityUtil.dip2px(getApplicationContext(), dip);
-//                        popupWindow.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-//                        popupWindow.showAtLocation((View) popupView.getParent(), Gravity.LEFT+Gravity.TOP,px,location[1]);
-//                        ScaleAnimation sa = new ScaleAnimation(0.5f, 1.0f, 0.5f,
-//                                1.0f, Animation.RELATIVE_TO_SELF, 0,
-//                                Animation.RELATIVE_TO_SELF, 0.5f);
-//                        sa.setDuration(200);
-//                        AlphaAnimation aa = new AlphaAnimation(0.5f, 1.0f);
-//                        aa.setDuration(200);
-//                        AnimationSet set = new AnimationSet(false);
-//                        set.addAnimation(aa);
-//                        set.addAnimation(sa);
-//                        popupView.startAnimation(set);
-//                    }
-//                    iv_poor.setOnClickListener(new View.OnClickListener() {
-//                        @Override
-//                        public void onClick(View v) {
-//                            translucentview.setVisibility(View.GONE);
-//                            popupWindow.dismiss();
-//                        }
-//                    });
-//                    bt_catcheAll.setOnClickListener(new View.OnClickListener() {
-//                        @Override
-//                        public void onClick(View v) {
-//
-//                        }
-//                    });
-//                    bt_check.setOnClickListener(new View.OnClickListener() {
-//                        @Override
-//                        public void onClick(View v) {
-//                            Intent intent = new Intent(DetailActivity.this,List.class);
-//                            DetailActivity.this.startActivity(intent);
-//
-//                        }
-//                    });
-//
-//                    popupGrid.setAdapter(new BaseAdapter() {
-//                        @Override
-//                        public int getCount() {
-//                            return videoses.size();
-//                        }
-//
-//                        @Override
-//                        public Object getItem(int position) {
-//                            return videoses.get(position);
-//                        }
-//
-//                        @Override
-//                        public long getItemId(int position) {
-//                            return position;
-//                        }
-//
-//                        @Override
-//                        public View getView(int position, View convertView, ViewGroup parent) {
-//
-//                            if (convertView == null){
-//                                holder = new ViewHolder();
-//                                convertView = View.inflate(DetailActivity.this,R.layout.popup_item,null);
-//                                holder.bt_number = (Button) convertView.findViewById(R.id.bt_number);
-//                                convertView.setTag(holder);
-//                            }else{
-//                                holder = (ViewHolder)convertView.getTag();
-//                            }
-//                            holder.bt_number.setText(videoses.get(position).getVideo_id());
-//                            return convertView;
-//                        }
-//                    });
-//                    popupGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//                        @Override
-//                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                            holder.bt_number.setBackgroundResource(R.mipmap.huancun);
-//                            new Thread() {
-//                                @Override
-//                                public void run() {
-//                                    downloadMedia(play_url);
-//                                    super.run();
-//                                }
-//                            }.start();
-//                        }
-//                    });
-//                }
-
-//                break;
             case R.id.ll_share:
 //                TODO 弹出一个框放第三方的图标
                 break;
@@ -250,18 +119,25 @@ public class DetailActivity extends BaseActivity {
     String play_url;
     String title;
     String media_id;
-
+    Play play;
     public void getplayUrl() {
-        mUrl = Constants.URL_PLAY;
+        mUrl = Constants.PLAY_URL;
         RequestParams params = new RequestParams();
         params.addBodyParameter("token", "123");
-        if (video_ids.size() > 0) {
-            media_id = video_ids.get(0);
-            params.addBodyParameter("media_id", media_id);
-            L.e("DetailActivity media_id = " + video_ids.get(0));
-        } else {
-            finish();
-        }
+        params.addBodyParameter("version", BaseApplication.version);
+        params.addBodyParameter("platform", BaseApplication.platform);
+        params.addBodyParameter("vid", details.getVideos().get(0).getVid());
+        params.addBodyParameter("package", BaseApplication.packagename);
+        params.addBodyParameter("app_version", BaseApplication.version);
+        params.addBodyParameter("device", BaseApplication.device);
+
+//        if (video_ids.size() > 0) {
+//            media_id = video_ids.get(0);
+//
+//            L.e("DetailActivity media_id = " + video_ids.get(0));
+//        } else {
+//            finish();
+//        }
         this.httpPost(mUrl, params, new RequestCallBack<String>() {
             @Override
             public void onStart() {
@@ -274,18 +150,28 @@ public class DetailActivity extends BaseActivity {
             public void onSuccess(ResponseInfo<String> responseInfo) {
                 L.e("---DetailActivity responseInfo:" + responseInfo.result);
 
-                List<Play> playUrls = new Gson().fromJson(responseInfo.result, new TypeToken<List<Play>>() {
-                }.getType());
-                size = playUrls.size();
-                L.e("DetailActivity playUrls:" + playUrls + "***size = " + size);
+//                               List<Play> playUrls = new Gson().fromJson(responseInfo.result, new TypeToken<List<Play>>() {
+//                }.getType());
+//                size = playUrls.size();
+//                L.e("DetailActivity playUrls:" + playUrls + "***size = " + size);
 
-                for (int i = 0; i < size; i++) {
-                    playUrl.add(playUrls.get(i).getUrls());
-                    playTitle.add(playUrls.get(i).getTitle());
+
+//                for (int i = 0; i < size; i++) {
+//                    playUrl.add(playUrls.get(i).getUrls());
+//                    playTitle.add(playUrls.get(i).getTitle());
+//                }
+                play = new Gson().fromJson(responseInfo.result, Play.class);
+
+
+                if (! TextUtils.isEmpty(play.getSd_url())){
+                    play_url = play.getSd_url();
+                }else if (! TextUtils.isEmpty(play.getHd_url())){
+                    play_url = play.getHd_url();
+                }else if (! TextUtils.isEmpty(play.getUhd_url())){
+                    play_url = play.getUhd_url();
                 }
-                play_url = playUrl.get(0).getShd();
-                System.out.println("***play_url:" + play_url);
-                title = playTitle.get(0);
+                System.out.println("---play_url:" + play_url);
+                title = play.getTitle();
                 initCatch(play_url);
             }
 
@@ -300,10 +186,6 @@ public class DetailActivity extends BaseActivity {
 
     //初始化下载按钮
     private void initCatch(String play_url) {
-
-
-
-
         DbUtils db = DbUtils.create(DetailActivity.this);
         boolean isdownLoad = false;
         try {
@@ -465,7 +347,7 @@ public class DetailActivity extends BaseActivity {
         } else {
             finish();
         }
-//        getplayUrl();
+        getplayUrl();
 //        getRelationDate();
     }
 

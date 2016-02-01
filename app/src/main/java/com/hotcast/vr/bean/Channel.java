@@ -1,11 +1,12 @@
 package com.hotcast.vr.bean;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by lostnote on 16/1/28.
  */
-public class Channel {
+public class Channel implements Serializable {
     //频道数量
     int count;
     List<ChanelData> data;

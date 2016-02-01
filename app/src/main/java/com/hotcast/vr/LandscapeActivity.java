@@ -24,7 +24,11 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.hotcast.vr.bean.ChanelData;
+import com.hotcast.vr.bean.Channel;
+import com.hotcast.vr.bean.ChannelList;
 import com.hotcast.vr.bean.Classify;
+import com.hotcast.vr.bean.Datas;
 import com.hotcast.vr.bean.LocalBean;
 import com.hotcast.vr.bean.VrPlay;
 import com.hotcast.vr.image3D.Image3DSwitchView;
@@ -72,7 +76,7 @@ public class LandscapeActivity extends BaseActivity implements View.OnClickListe
     private TextView bt_cancel_progressbar1, bt_cancel_progressbar2;
     private RelativeLayout rl_update1, rl_update2;
     UpdateAppManager updateAppManager;
-    List<Classify> netClassifys;
+    List<ChanelData> netClassifys;
     private HttpHandler httphandler;
     BitmapUtils bitmapUtils;
     private Intent cacheIntent;
@@ -107,10 +111,10 @@ public class LandscapeActivity extends BaseActivity implements View.OnClickListe
         img3D2.setimgWidthp(0.4);
         for (int i = 0; i < netClassifys.size(); i++) {
             Image3DView image3DView1 = new Image3DView(this);
-            System.out.println("---图片地址 ：" + netClassifys.get(i).getBig_logo());
-            bitmapUtils.display(image3DView1, netClassifys.get(i).getBig_logo());
+            System.out.println("---图片地址 ：" + netClassifys.get(i).getImg_big());
+            bitmapUtils.display(image3DView1, netClassifys.get(i).getImg_big());
             image3DView1.setLayoutParams(params);
-            final String channel_id = netClassifys.get(i).getChannel_id();
+            final String channel_id = netClassifys.get(i).getId();
             image3DView1.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -122,7 +126,7 @@ public class LandscapeActivity extends BaseActivity implements View.OnClickListe
             });
             img3D.addView(image3DView1);
             Image3DView image3DView2 = new Image3DView(this);
-            bitmapUtils.display(image3DView2, netClassifys.get(i).getBig_logo());
+            bitmapUtils.display(image3DView2, netClassifys.get(i).getImg_big());
             image3DView2.setLayoutParams(params);
             image3DView2.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -337,7 +341,8 @@ public class LandscapeActivity extends BaseActivity implements View.OnClickListe
 
         force = getIntent().getIntExtra("force", 0);
         newFeatures = getIntent().getStringExtra("newFeatures");
-        netClassifys = (List<Classify>) getIntent().getSerializableExtra("classifies");
+        Channel channel = (Channel) getIntent().getSerializableExtra("classifies");
+        netClassifys = channel.getData();
         if (netClassifys != null) {
             BaseApplication.size = netClassifys.size() + 1;
         }
@@ -475,7 +480,7 @@ public class LandscapeActivity extends BaseActivity implements View.OnClickListe
         if(i<netClassifys.size()){
             view1.showOrHideProgressBar(true);
             view2.showOrHideProgressBar(true);
-            getNetData(netClassifys.get(i).getChannel_id());
+            getNetData(netClassifys.get(i).getId());
         }else if(i == netClassifys.size()){
             //查询本地指定的缓存文件夹
             if (dataCacheOk) {
@@ -576,16 +581,19 @@ public class LandscapeActivity extends BaseActivity implements View.OnClickListe
         view2.showOrHideProgressBar(false);
     }
 
-    List<VrPlay> vrPlays;
+    List<ChannelList> tmpList;
 
     public void getNetData(final String channel_id) {
-        String mUlr = Constants.URL_VR_PLAY;
+        String mUlr = Constants.PROGRAM_LIST;
         System.out.println("***VrListActivity *** getNetData()" + mUlr);
         L.e("播放路径 mUrl=" + mUlr);
         RequestParams params = new RequestParams();
         System.out.println("***VrListActivity *** getNetData()" + params);
         params.addBodyParameter("token", "123");
         params.addBodyParameter("channel_id", channel_id);
+        params.addBodyParameter("version", BaseApplication.version);
+        params.addBodyParameter("platform", BaseApplication.platform);
+        params.addBodyParameter("page_size", String.valueOf(10));
         System.out.println("***VrListActivity *** getNetData()" + channel_id);
         this.httpPost(mUlr, params, new RequestCallBack<String>() {
             @Override
@@ -602,17 +610,17 @@ public class LandscapeActivity extends BaseActivity implements View.OnClickListe
                 if (Utils.textIsNull(responseInfo.result)) {
                     return;
                 }
-                vrPlays = new Gson().fromJson(responseInfo.result, new TypeToken<List<VrPlay>>() {
+                tmpList = new Gson().fromJson(responseInfo.result, new TypeToken<List<ChannelList>>() {
                 }.getType());
-                System.out.println("***VrListActivity *** onSuccess()" + vrPlays);
-                System.out.println("***VrListActivity *** onSuccess()" + vrPlays.size());
+                System.out.println("***VrListActivity *** onSuccess()" + tmpList);
+                System.out.println("***VrListActivity *** onSuccess()" + tmpList.size());
 
                 Intent intent = new Intent(LandscapeActivity.this, VrListActivity.class);
                 intent.putExtra("channel_id", channel_id);
-                intent.putExtra("vrPlays", (Serializable) vrPlays);
-                System.out.println("跳转到VrListActivity vrPlays" + vrPlays);
+                intent.putExtra("vrPlays", (Serializable) tmpList);
+                System.out.println("跳转到VrListActivity vrPlays" + tmpList);
                 LandscapeActivity.this.startActivity(intent);
-                BaseApplication.size = vrPlays.size();
+                BaseApplication.size = tmpList.size();
             }
 
             @Override

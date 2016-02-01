@@ -1,11 +1,12 @@
 package com.hotcast.vr.bean;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by lostnote on 16/1/28.
  */
-public class ChannelList {
+public class ChannelList implements Serializable {
     //节目集ID（字符串）
     String id;
     //标题

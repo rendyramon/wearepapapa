@@ -109,7 +109,7 @@ public class ClassifyListView extends BaseView {
                 LinearLayout iv = ButterKnife.findById(helper.getView(), R.id.iv_list);
                 bitmapUtils.display(iv, item.getImage().get(0));
 //                ViewUtils.setViewHeight(iv, ScreenUtils.getScreenWidth(activity) / 2);
-//                helper.setImageUrl(R.id.iv_list, item.getImage());
+//                helper.setImageUrl(R.id.iv_list, item.getImage().get(0));
                 helper.setText(R.id.tv, item.getTitle());
 //                helper.setText(R.id.show_time, item.getShow_times()+"已看");
                 helper.setText(R.id.desc, item.getDesc());
@@ -205,7 +205,7 @@ public class ClassifyListView extends BaseView {
         if (Utils.textIsNull(json)) {
             return;
         }
-        progressBar3.setVisibility(View.GONE);
+
         try {
             tmpList = new Gson().fromJson(json, new TypeToken<List<ChannelList>>() {
             }.getType());
@@ -214,27 +214,28 @@ public class ClassifyListView extends BaseView {
         }
 
         DbUtils db = DbUtils.create(activity);
-//        try {
-//            db.delete(ChannelList.class, WhereBuilder.b("id", "==", channel_id));
-//        } catch (DbException e) {
-//            e.printStackTrace();
-//        }
-//        for (int i = 0; i < tmpList.size(); i ++){
-//            ChannelList channelList = tmpList.get(i);
-////            channelList.setChannel_id(channel_id);
-//            try {
-//                db.save(channelList);
-//            } catch (DbException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//        if(bPullDown){
-//            adapter.addNewAll(tmpList);
-//        }else{
-//
-//            adapter.addAll(tmpList);
-//        }
+        try {
+            db.delete(ChannelList.class, WhereBuilder.b("id", "==", channel_id));
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
+        for (int i = 0; i < tmpList.size(); i ++){
+            ChannelList channelList = tmpList.get(i);
+//            channelList.setChannel_id(channel_id);
+            try {
+                db.save(channelList);
+            } catch (DbException e) {
+                e.printStackTrace();
+            }
+        }
+        if(bPullDown){
+            adapter.addNewAll(tmpList);
+        }else{
+
+            adapter.addAll(tmpList);
+        }
 
         L.e("adapter size=" + adapter.getCount());
+        progressBar3.setVisibility(View.GONE);
     }
 }

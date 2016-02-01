@@ -202,11 +202,11 @@ public class ClassifyGridView extends BaseView {
         }
 
         DbUtils db = DbUtils.create(activity);
-//        try {
-//            db.delete(HomeRoll.class, WhereBuilder.b("channel_id", "==", channel_id));
-//        } catch (DbException e) {
-//            e.printStackTrace();
-//        }
+        try {
+            db.delete(HomeRoll.class, WhereBuilder.b("channel_id", "==", channel_id));
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
         for (int i = 0; i < tmpList.size(); i ++){
             ChannelList homeRoll = tmpList.get(i);
 //            homeRoll.setChannel_id(channel_id);

@@ -6,8 +6,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Environment;
+import android.telephony.TelephonyManager;
 import android.util.DisplayMetrics;
 
+import com.hotcast.vr.bean.Channel;
 import com.hotcast.vr.bean.Classify;
 import com.hotcast.vr.bean.Details;
 import com.hotcast.vr.bean.HomeRoll;
@@ -27,7 +29,8 @@ public class BaseApplication extends Application {
     public static int size;
     public static boolean isDownLoad = false;
     public static boolean isUpdate = false;
-    public static List<Classify> netClassifys;
+//    public static List<Classify> netClassifys;
+    public static Channel channel;
     public static final String TAG = BaseApplication.class.getSimpleName();
     //    public static BitmapUtils mFinalBitmap;
     private static BaseApplication instance;
@@ -38,6 +41,8 @@ public class BaseApplication extends Application {
     }
     public static String version;//版本号
     public static String platform;//平台号
+    public static String device = "weihuoqu";//设备号
+    public static String packagename ;//包名
 
 
     public static final String IMG_DISCCACHE_DIR = "/mnt/sdcard/jarvis/imgcache";
@@ -66,6 +71,7 @@ public class BaseApplication extends Application {
         this.startService(new Intent(this, DownLoadService.class));
         this.startService(new Intent(this, FileCacheService.class));
         initMeta();
+        getIMEI(this);
         sp= getSharedPreferences("cache_config",Context.MODE_PRIVATE);
         BaseApplication.cacheFileChange = sp.getBoolean("cacheFileCache",false);
     }
@@ -84,6 +90,11 @@ public class BaseApplication extends Application {
             ex.printStackTrace();
             android.os.Process.killProcess(android.os.Process.myPid());
         }
+    }
+    public static void getIMEI(Context context) {
+        TelephonyManager tm  = (TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE);
+        device = tm.getDeviceId();
+
     }
 
     private void initMeta() {
