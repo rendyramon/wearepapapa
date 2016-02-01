@@ -289,8 +289,8 @@ public class LandscapeActivity extends BaseActivity implements View.OnClickListe
     };
 
     private void showUpdate() {
-        if (force == 1) {
-            updateAppManager = new UpdateAppManager(this, spec, force, newFeatures);
+        if ("1".equals(is_force)) {
+            updateAppManager = new UpdateAppManager(this, spec, is_force, newFeatures);
             httphandler = updateAppManager.downloadAppInlandscape(mHandler);
             // TODO 显示进度条
             rl_update1.setVisibility(View.VISIBLE);
@@ -322,7 +322,7 @@ public class LandscapeActivity extends BaseActivity implements View.OnClickListe
     //下载路径
     private String spec;
     //是否强制更新
-    private int force;
+    private String is_force;
     //更新日志
     String newFeatures;
 
@@ -339,7 +339,7 @@ public class LandscapeActivity extends BaseActivity implements View.OnClickListe
     public void getIntentData(Intent intent) {
         spec = getIntent().getStringExtra("spec");
 
-        force = getIntent().getIntExtra("force", 0);
+        is_force = getIntent().getStringExtra("is_force");
         newFeatures = getIntent().getStringExtra("newFeatures");
         Channel channel = (Channel) getIntent().getSerializableExtra("classifies");
         netClassifys = channel.getData();
@@ -527,7 +527,7 @@ public class LandscapeActivity extends BaseActivity implements View.OnClickListe
                 container2.removeView(updateV2);
                 if (isNetworkConnected(this) || isWifiConnected(this) || isMobileConnected(this)) {
                     if (!TextUtils.isEmpty(spec)) {
-                        updateAppManager = new UpdateAppManager(this, spec, force, newFeatures);
+                        updateAppManager = new UpdateAppManager(this, spec, is_force, newFeatures);
                         httphandler = updateAppManager.downloadAppInlandscape(mHandler);
                         rl_update1.setVisibility(View.VISIBLE);
                         rl_update2.setVisibility(View.VISIBLE);

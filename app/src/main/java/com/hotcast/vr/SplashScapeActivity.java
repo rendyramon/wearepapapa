@@ -41,7 +41,7 @@ public class SplashScapeActivity extends BaseActivity {
     private String spec ;
     private String newFeatures;
     //是否强制更新
-    private int force;
+    private String is_force;
     private PackageInfo info;
     @Override
     public int getLayoutId() {
@@ -118,18 +118,18 @@ public class SplashScapeActivity extends BaseActivity {
             }
         });
     }
-    private String current;
+    private String version;
     private void setViewData(String json){
         if (Utils.textIsNull(json)) {
             return;
         }
         Update update = new Gson().fromJson(json, Update.class);
         spec = update.getUrl();
-        force = update.getForce();
-        current = update.getCurrent();
-        System.out.println("--current = " + current);
+        is_force = update.getIs_force();
+        version = update.getVersion();
+        System.out.println("--current = " + version);
         newFeatures = update.getLog();
-        System.out.println("----SplashActivity spec:" + spec + ",force:" + force);
+        System.out.println("----SplashActivity spec:" + spec + ",force:" + is_force);
     }
     @Override
     protected void onResume() {
@@ -150,10 +150,10 @@ public class SplashScapeActivity extends BaseActivity {
 
     private void pageJump() {
         Intent intent = new Intent(this,LandscapeActivity.class);
-        if (!info.versionName.equals(current)) {
+        if (!info.versionName.equals(version)) {
             BaseApplication.isUpdate = true;
             intent.putExtra("spec", spec);
-            intent.putExtra("force", force);
+            intent.putExtra("is_force", is_force);
             intent.putExtra("newFeatures",newFeatures);
         }
         intent.putExtra("classifies", (Serializable) classifies);

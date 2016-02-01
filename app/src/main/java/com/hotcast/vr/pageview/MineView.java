@@ -30,7 +30,7 @@ public class MineView extends BaseView implements View.OnClickListener{
     RelativeLayout rl_help;
     private UpdateAppManager updateAppManager;
     String spec;
-    int force;
+    String is_force;
     String newFeatures;
     public MineView(BaseActivity activity){
         super(activity, R.layout.layout_mine);
@@ -39,7 +39,7 @@ public class MineView extends BaseView implements View.OnClickListener{
     @Override
     public void init() {
         spec = activity.sp.select("spec","");
-        force = activity.sp.select("force",0);
+        is_force = activity.sp.select("is_force","");
         newFeatures = activity.sp.select("newFeatures","");
         if (bFirstInit){
             initListView();
@@ -69,7 +69,7 @@ public class MineView extends BaseView implements View.OnClickListener{
                 break;
             case R.id.rl_version:
                 if (BaseApplication.isUpdate) {
-                    updateAppManager = new UpdateAppManager(activity, spec, force,newFeatures);
+                    updateAppManager = new UpdateAppManager(activity, spec, is_force,newFeatures);
                     updateAppManager.checkUpdateInfo();
                 }else {
                     activity.showToast("您已经是最新版本");
