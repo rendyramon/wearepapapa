@@ -371,7 +371,7 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
 
     public void clickVrMode() {
         Intent intent = new Intent(this, LandscapeActivity.class);
-        intent.putExtra("classifies", (Serializable) BaseApplication.netClassifys);
+        intent.putExtra("classifies", BaseApplication.channel);
 
         startActivity(intent);
     }

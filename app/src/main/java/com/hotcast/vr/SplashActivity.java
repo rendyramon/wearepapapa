@@ -76,13 +76,15 @@ public class SplashActivity extends BaseActivity {
             info = packageManager.getPackageInfo(this.getPackageName(), 0);
             BaseApplication.version = info.versionName;
             BaseApplication.platform = getAppMetaData(SplashActivity.this,"UMENG_CHANNEL");
+            BaseApplication.packagename = info.packageName;
+            System.out.println("---packagename" + info.packageName);
 
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
         L.e("PackageName:" + getPackageName());
         getNetDate();
-        getNetDate2();
+//        getNetDate2();
             System.out.println("***sp=" + sp);
 
     }
@@ -99,8 +101,8 @@ public class SplashActivity extends BaseActivity {
             @Override
             public void onSuccess(ResponseInfo<String> responseInfo) {
                 L.e("ClassifyView  responseInfo:" + responseInfo.result);
-                BaseApplication.netClassifys = new Gson().fromJson(responseInfo.result, new TypeToken<List<Classify>>() {
-                }.getType());
+//                BaseApplication.netClassifys = new Gson().fromJson(responseInfo.result, new TypeToken<List<Classify>>() {
+//                }.getType());
 
             }
 

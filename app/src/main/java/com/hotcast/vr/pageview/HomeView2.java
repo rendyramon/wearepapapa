@@ -139,8 +139,8 @@ public class HomeView2 extends BaseView {
             }
         });
         hideRefreshView();
-        getNetData();
-        getSubject();
+//        getNetData();
+//        getSubject();
 
     }
 
@@ -153,6 +153,8 @@ public class HomeView2 extends BaseView {
     @Override
     public void init() {
 //        initListView();
+        getNetData();
+        getSubject();
         if (bFirstInit) {
             //第一次打开，则初始化view，后续只要刷新数据就行
             initListView();
@@ -297,25 +299,26 @@ public class HomeView2 extends BaseView {
                 roll = new Gson().fromJson(json, RollBean.class);
 //                homeRolls = homeBean.getHome_roll();
                 datasList = roll.getData();
+                System.out.println("---datasList = " + datasList);
 
             } catch (IllegalStateException e) {
                 activity.showToast("解析出现错误，请刷新数据");
             }
-//            try {
-//                db.save(roll);
-//            } catch (DbException e) {
-//                e.printStackTrace();
-//            }
+            try {
+                db.save(roll);
+            } catch (DbException e) {
+                e.printStackTrace();
+            }
             //初始化viewpager
 //            L.e("HomeView2 viewList.sixe() = " + viewList.size());
 
 
 //        HomeSubject的集合
-//        if (subjects == null){
-//            subjects = new ArrayList<>();
-//        }else{
-//            subjects.clear();
-//        }
+        if (datasList == null){
+            datasList = new ArrayList<>();
+        }else{
+            datasList.clear();
+        }
         }
 
         RollViewPager rollViewPager = new RollViewPager(activity, viewList, new RollViewPager.onPageClick() {

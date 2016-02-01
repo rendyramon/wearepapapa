@@ -13,9 +13,16 @@ package com.hotcast.vr;
 import java.util.*;
 
 
+import com.google.gson.Gson;
+import com.hotcast.vr.bean.Play;
 import com.hotcast.vr.pageview.ChangeModeListener;
 import com.hotcast.vr.pageview.PlayerContralView;
+import com.hotcast.vr.tools.Constants;
 import com.hotcast.vr.tools.L;
+import com.lidroid.xutils.exception.HttpException;
+import com.lidroid.xutils.http.RequestParams;
+import com.lidroid.xutils.http.ResponseInfo;
+import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.panframe.android.lib.*;
 
 import android.app.AlertDialog;
@@ -29,6 +36,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.SystemClock;
+import android.text.TextUtils;
 import android.util.FloatMath;
 import android.util.Log;
 import android.view.*;
@@ -76,7 +84,54 @@ public class PlayerVRActivityNew extends BaseLanActivity implements PFAssetObser
         }
     };
 //    double nLenStart = 0;
+String play_url;
+    Play play;
 
+    public void getplayUrl(String vid) {
+        String mUrl = Constants.PLAY_URL;
+        RequestParams params = new RequestParams();
+        params.addBodyParameter("token", "123");
+        params.addBodyParameter("version", BaseApplication.version);
+        params.addBodyParameter("platform", BaseApplication.platform);
+        params.addBodyParameter("vid", vid);
+        params.addBodyParameter("package", BaseApplication.packagename);
+        params.addBodyParameter("app_version", BaseApplication.version);
+        params.addBodyParameter("device", BaseApplication.device);
+        this.httpPost(mUrl, params, new RequestCallBack<String>() {
+            @Override
+            public void onStart() {
+                super.onStart();
+
+                L.e("DetailActivity onStart ");
+            }
+
+            @Override
+            public void onSuccess(ResponseInfo<String> responseInfo) {
+                L.e("---DetailActivity responseInfo:" + responseInfo.result);
+
+                play = new Gson().fromJson(responseInfo.result, Play.class);
+
+
+                if (!TextUtils.isEmpty(play.getSd_url())) {
+                    play_url = play.getSd_url();
+                } else if (!TextUtils.isEmpty(play.getHd_url())) {
+                    play_url = play.getHd_url();
+                } else if (!TextUtils.isEmpty(play.getUhd_url())) {
+                    play_url = play.getUhd_url();
+                }
+                System.out.println("---play_url:" + play_url);
+                title = play.getTitle();
+                initView();
+            }
+
+            @Override
+            public void onFailure(HttpException e, String s) {
+                L.e("DetailActivity onFailure ");
+            }
+        });
+
+
+    }
 
     /**
      * Start the video with a local file path
@@ -102,8 +157,6 @@ public class PlayerVRActivityNew extends BaseLanActivity implements PFAssetObser
 
         _pfasset.play();
 
-        System.out.println("---104--开始加载的时间 = " + System.currentTimeMillis());
-        showLoading("正在加载...");
     }
 
     /**
@@ -317,8 +370,19 @@ public class PlayerVRActivityNew extends BaseLanActivity implements PFAssetObser
 //            title = getIntent().getStringExtra("title").substring(0,4);
 //            System.out.println("---length = " + title.length());
 //        }else {
-            title =  getIntent().getStringExtra("title");
+
 //        }
+        System.out.println("---104--开始加载的时间 = " + System.currentTimeMillis());
+        showLoading("正在加载...");
+        if (TextUtils.isEmpty(vid) && TextUtils.isEmpty(play_url)){
+            initView();
+        }else {
+            getplayUrl(vid);
+        }
+
+    }
+
+    private void initView() {
         mPlayerContralView1 = new PlayerContralView(this, PlayerContralView.TYPE_360);
         mPlayerContralView2 = new PlayerContralView(this, PlayerContralView.TYPE_360);
         mPlayerContralView = new PlayerCtrMnger(mPlayerContralView1, mPlayerContralView2);
@@ -396,7 +460,7 @@ public class PlayerVRActivityNew extends BaseLanActivity implements PFAssetObser
             }
         });
         if (getIntent().getData() == null) {
-            loadVideo(getIntent().getStringExtra("play_url"));
+            loadVideo(play_url);
             System.out.println("---337--PlayerVRActivity***filename " + getIntent().getStringExtra("play_url"));
         } else {
             loadVideo(getIntent().getData().getPath());
@@ -408,8 +472,12 @@ public class PlayerVRActivityNew extends BaseLanActivity implements PFAssetObser
 
     }
 
+    String vid;
     @Override
     public void getIntentData(Intent intent) {
+        vid = intent.getStringExtra("vid");
+        title =  getIntent().getStringExtra("title");
+        play_url = getIntent().getStringExtra("play_url");
         boolean b = intent.getBooleanExtra("splite_screen", false);
         if (b) {
             curMode = MODE_SPLIT_SCREEN;

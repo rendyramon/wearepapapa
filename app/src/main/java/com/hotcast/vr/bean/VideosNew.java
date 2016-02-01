@@ -1,9 +1,11 @@
 package com.hotcast.vr.bean;
 
+import java.io.Serializable;
+
 /**
  * Created by lostnote on 16/1/28.
  */
-public class VideosNew {
+public class VideosNew implements Serializable{
     //视频ID（字符串）
     String vid;
     //视频名称

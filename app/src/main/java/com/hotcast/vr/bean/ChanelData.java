@@ -1,9 +1,11 @@
 package com.hotcast.vr.bean;
 
+import java.io.Serializable;
+
 /**
  * Created by lostnote on 16/1/28.
  */
-public class ChanelData {
+public class ChanelData implements Serializable{
     //频道ID（字符类型）
     String id;
     //频道标题

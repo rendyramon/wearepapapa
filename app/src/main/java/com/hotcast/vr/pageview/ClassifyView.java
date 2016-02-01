@@ -168,6 +168,7 @@ public class ClassifyView extends BaseView {
                 bProcessing = false;
                 L.e("ClassifyView  responseInfo:" + responseInfo.result);
                 setViewData(responseInfo.result);
+
             }
 
             @Override
@@ -184,8 +185,9 @@ public class ClassifyView extends BaseView {
         if (Utils.textIsNull(json)) {
             iv_noNet.setVisibility(View.VISIBLE);
         }else {
-            channel = new Gson().fromJson(json,Channel.class);
+            channel = new Gson().fromJson(json, Channel.class);
             classifies = channel.getData();
+            BaseApplication.channel = channel;
             size = classifies.size();
             L.e("adapter size=" + classifies.size());
             initListView();
