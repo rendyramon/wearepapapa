@@ -304,6 +304,7 @@ public class DetailActivity extends BaseActivity {
         params.addBodyParameter("version", BaseApplication.version);
         params.addBodyParameter("platform", BaseApplication.platform);
         params.addBodyParameter("videoset_id", videoset_id);
+        System.out.println("---videoset_id = " + videoset_id);
         this.httpPost(requestUrl, params, new RequestCallBack<String>() {
             @Override
             public void onStart() {

@@ -4,9 +4,12 @@ import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Environment;
 import android.telephony.TelephonyManager;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 
 import com.hotcast.vr.bean.Channel;
@@ -60,7 +63,8 @@ public class BaseApplication extends Application {
         mFinalBitmap.configDefaultLoadingImage(failedImgId);
         return mFinalBitmap;
     }
-
+    private PackageInfo info;
+    private PackageManager packageManager;
 
     @Override
     public void onCreate() {
@@ -72,8 +76,18 @@ public class BaseApplication extends Application {
         this.startService(new Intent(this, FileCacheService.class));
         initMeta();
         getIMEI(this);
+        packageManager = this.getPackageManager();
+        try {
+            info = packageManager.getPackageInfo(this.getPackageName(), 0);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
         sp= getSharedPreferences("cache_config",Context.MODE_PRIVATE);
-        BaseApplication.cacheFileChange = sp.getBoolean("cacheFileCache",false);
+        BaseApplication.cacheFileChange = sp.getBoolean("cacheFileCache", false);
+        BaseApplication.version = info.versionName;
+        BaseApplication.platform = getAppMetaData(this, "UMENG_CHANNEL");
+        BaseApplication.packagename = info.packageName;
+        System.out.println("---"+getAppMetaData(this,"UMENG_CHANNEL"));
     }
 
     private class MyExecptionHandler implements Thread.UncaughtExceptionHandler {
@@ -118,5 +132,31 @@ public class BaseApplication extends Application {
         return outMetrics;
     }
 
+    /**
+     * 获取application中指定的meta-data----UMENG_CHANNEL
+     * @return 如果没有获取成功(没有对应值，或者异常)，则返回值为空
+     */
+    public static String getAppMetaData(Context ctx, String key) {
+        if (ctx == null || TextUtils.isEmpty(key)) {
+            return null;
+        }
+        String resultData = null;
+        try {
+            PackageManager packageManager = ctx.getPackageManager();
+            if (packageManager != null) {
 
+                ApplicationInfo applicationInfo = packageManager.getApplicationInfo(ctx.getPackageName(), PackageManager.GET_META_DATA);
+                if (applicationInfo != null) {
+                    if (applicationInfo.metaData != null) {
+                        resultData = applicationInfo.metaData.getString(key);
+                    }
+                }
+
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return resultData;
+    }
 }

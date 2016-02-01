@@ -96,11 +96,11 @@ public class SplashScapeActivity extends BaseActivity {
     }
 
     private void getUpDate() {
-        System.out.println("---"+SplashActivity.getAppMetaData(this, "UMENG_CHANNEL"));
+//        System.out.println("---"+SplashActivity.getAppMetaData(this, "UMENG_CHANNEL"));
         RequestParams params = new RequestParams();
         params.addBodyParameter("token", "123");
-        params.addBodyParameter("version", info.versionName);
-        params.addBodyParameter("platform", SplashActivity.getAppMetaData(this, "UMENG_CHANNEL"));
+        params.addBodyParameter("version", BaseApplication.version);
+        params.addBodyParameter("platform",BaseApplication.platform);
         this.httpPost(Constants.URL_UPDATE, params, new RequestCallBack<String>() {
             @Override
             public void onStart() {

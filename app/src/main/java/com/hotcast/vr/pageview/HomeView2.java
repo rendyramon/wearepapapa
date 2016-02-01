@@ -177,6 +177,7 @@ public class HomeView2 extends BaseView {
         params.addBodyParameter("token", "123");
         params.addBodyParameter("version", BaseApplication.version);
         params.addBodyParameter("platform", BaseApplication.platform);
+        System.out.println("---version = " + BaseApplication.version + " --platform = " + BaseApplication.platform);
         activity.httpPost(url, params, new RequestCallBack<String>() {
             @Override
             public void onStart() {

@@ -74,10 +74,6 @@ public class SplashActivity extends BaseActivity {
         packageManager = this.getPackageManager();
         try {
             info = packageManager.getPackageInfo(this.getPackageName(), 0);
-            BaseApplication.version = info.versionName;
-            BaseApplication.platform = getAppMetaData(SplashActivity.this,"UMENG_CHANNEL");
-            BaseApplication.packagename = info.packageName;
-            System.out.println("---packagename" + info.packageName);
 
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
@@ -91,7 +87,6 @@ public class SplashActivity extends BaseActivity {
 
 
     private void getNetDate() {
-        System.out.println("---"+getAppMetaData(SplashActivity.this,"UMENG_CHANNEL"));
         RequestParams params = new RequestParams();
         params.addBodyParameter("token", "123");
         params.addBodyParameter("version", BaseApplication.version);
@@ -233,31 +228,5 @@ public class SplashActivity extends BaseActivity {
 
         }
     }
-    /**
-     * 获取application中指定的meta-data----UMENG_CHANNEL
-     * @return 如果没有获取成功(没有对应值，或者异常)，则返回值为空
-     */
-    public static String getAppMetaData(Context ctx, String key) {
-        if (ctx == null || TextUtils.isEmpty(key)) {
-            return null;
-        }
-        String resultData = null;
-        try {
-            PackageManager packageManager = ctx.getPackageManager();
-            if (packageManager != null) {
 
-                ApplicationInfo applicationInfo = packageManager.getApplicationInfo(ctx.getPackageName(), PackageManager.GET_META_DATA);
-                if (applicationInfo != null) {
-                    if (applicationInfo.metaData != null) {
-                        resultData = applicationInfo.metaData.getString(key);
-                    }
-                }
-
-            }
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        return resultData;
-    }
 }
