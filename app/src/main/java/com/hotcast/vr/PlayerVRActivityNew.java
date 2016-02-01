@@ -26,11 +26,13 @@ import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.panframe.android.lib.*;
 
 import android.app.AlertDialog;
+import android.app.Service;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Matrix;
 import android.graphics.Point;
 import android.graphics.PointF;
+import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -77,14 +79,14 @@ public class PlayerVRActivityNew extends BaseLanActivity implements PFAssetObser
 
         public void handleMessage(Message message) {
             getWindow().getDecorView().setSystemUiVisibility(1542);
-            if(null != playerContralView){
+            if (null != playerContralView) {
 //                playerContralView.hide();
                 linCtr.setVisibility(View.GONE);
             }
         }
     };
-//    double nLenStart = 0;
-String play_url;
+    //    double nLenStart = 0;
+    String play_url;
     Play play;
 
     public void getplayUrl(String vid) {
@@ -168,6 +170,7 @@ String play_url;
      */
     float oldTime = 0;
     boolean isplaying;
+
     public void onStatusMessage(final PFAsset asset, PFAssetStatus status) {
         switch (status) {
             case LOADED:
@@ -176,7 +179,8 @@ String play_url;
                 break;
             case DOWNLOADING:
                 Log.d("SimplePlayer", "Downloading 360� movie: " + _pfasset.getDownloadProgress() + " percent complete");
-                System.out.println("---123--Downloading 360� movie: " + _pfasset.getDownloadProgress() + " percent complete");;
+                System.out.println("---123--Downloading 360� movie: " + _pfasset.getDownloadProgress() + " percent complete");
+                ;
                 break;
             case DOWNLOADED:
                 System.out.println("---126--Downloaded to " + asset.getUrl());
@@ -208,23 +212,23 @@ String play_url;
                                 mPlayerContralView.setTotalDuration(totalDuration);
                             }
                             mPlayerContralView.setCurTime((int) asset.getPlaybackTime());
-                            if (oldTime == asset.getPlaybackTime() && !isPause){
+                            if (oldTime == asset.getPlaybackTime() && !isPause) {
                                 showLoading("正在缓冲");
-                                System.out.println("----显示loading");
-                            } else if (oldTime>asset.getPlaybackTime()){
+//                                System.out.println("----显示loading");
+                            } else if (oldTime > asset.getPlaybackTime()) {
                                 oldTime = asset.getPlaybackTime();
                                 hideLoading();
-                                System.out.println("----隐藏loading1");
+//                                System.out.println("----隐藏loading1");
 
-                            }else if (oldTime<asset.getPlaybackTime()){
+                            } else if (oldTime < asset.getPlaybackTime()) {
                                 oldTime = asset.getPlaybackTime();
                                 hideLoading();
-                                System.out.println("----隐藏loading2");
-                            }else{
+//                                System.out.println("----隐藏loading2");
+                            } else {
                                 hideLoading();
-                                System.out.println("----隐藏loading3");
+//                                System.out.println("----隐藏loading3");
                             }
-                            L.e("asset.getPlaybackTime() = "+ asset.getPlaybackTime());
+                            L.e("asset.getPlaybackTime() = " + asset.getPlaybackTime());
 //                            if (asset.getPlaybackTime() == asset.getPlaybackTime() && !isPause){
 //                                showLoading("正在缓冲");
 //
@@ -329,7 +333,6 @@ String play_url;
     };
 
 
-
     /**
      * Called when pausing the app.
      * This function pauses the playback of the asset when it is playing.
@@ -363,7 +366,7 @@ String play_url;
 
     private String title;
     private String titleSplitScreen;
-
+    private AudioManager audioManager; //音频
     @Override
     public void init() {
 //        if (getIntent().getStringExtra("title").length() > 4){
@@ -372,11 +375,15 @@ String play_url;
 //        }else {
 
 //        }
+        audioManager=(AudioManager)getSystemService(Service.AUDIO_SERVICE);
+
         System.out.println("---104--开始加载的时间 = " + System.currentTimeMillis());
         showLoading("正在加载...");
-        if (TextUtils.isEmpty(vid) && TextUtils.isEmpty(play_url)){
+        System.out.println("---" + vid + "---");
+        if (vid == null || TextUtils.isEmpty(vid)) {
             initView();
-        }else {
+        } else {
+            System.out.println("---是网络数据播放");
             getplayUrl(vid);
         }
 
@@ -402,11 +409,11 @@ String play_url;
             mPlayerContralView2.setSplitScreen(true);
             controller2.setVisibility(View.GONE);
         } else {
-            if (title.length() > 4){
+            if (title.length() > 4) {
                 titleSplitScreen = title.substring(0, 4);
                 System.out.println("---length = " + titleSplitScreen.length());
-            }else {
-                titleSplitScreen =  title;
+            } else {
+                titleSplitScreen = title;
             }
             mPlayerContralView1.setSplitScreen(false);
             mPlayerContralView2.setSplitScreen(false);
@@ -434,11 +441,11 @@ String play_url;
             public void clickSplitScreen() {
                 System.out.println("***PlayerVRActivity***clickSplitScreen()");
                 if (curMode == MODE_NORMAL) {
-                    if (title.length() > 4){
+                    if (title.length() > 4) {
                         titleSplitScreen = title.substring(0, 4);
                         System.out.println("---length = " + titleSplitScreen.length());
-                    }else {
-                        titleSplitScreen =  title;
+                    } else {
+                        titleSplitScreen = title;
                     }
                     mPlayerContralView1.setTitle(titleSplitScreen);
                     mPlayerContralView2.setTitle(titleSplitScreen);
@@ -473,10 +480,11 @@ String play_url;
     }
 
     String vid;
+
     @Override
     public void getIntentData(Intent intent) {
         vid = intent.getStringExtra("vid");
-        title =  getIntent().getStringExtra("title");
+        title = getIntent().getStringExtra("title");
         play_url = getIntent().getStringExtra("play_url");
         boolean b = intent.getBooleanExtra("splite_screen", false);
         if (b) {
@@ -596,12 +604,12 @@ String play_url;
             return true;
         } else {
             System.out.println("单手指触碰");
-            if(!ctr_vist && linCtr != null){
+            if (!ctr_vist && linCtr != null) {
 //            playerContralView.show();
                 ctr_vist = true;
                 linCtr.setVisibility(View.VISIBLE);
                 System.out.println("显示进度条");
-            }else {
+            } else {
                 ctr_vist = false;
                 linCtr.setVisibility(View.GONE);
                 System.out.println("隐藏进度条");
@@ -611,6 +619,7 @@ String play_url;
             return super.dispatchTouchEvent(event);
         }
     }
+
     private void delayedHide(int i) {
         mHideSystemUIHandler.removeMessages(0);
         mHideSystemUIHandler.sendEmptyMessageDelayed(0, i);
@@ -619,8 +628,18 @@ String play_url;
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        L.e("---keycode = "+keyCode);
-        switch (keyCode){
+        L.e("---keycode = " + keyCode);
+        switch (keyCode) {
+            case KeyEvent.KEYCODE_VOLUME_DOWN:
+                audioManager.adjustStreamVolume(AudioManager.STREAM_MUSIC,
+                        AudioManager.ADJUST_LOWER,
+                        AudioManager.FLAG_SHOW_UI);//调低声音
+                break;
+            case KeyEvent.KEYCODE_VOLUME_UP:
+                audioManager.adjustStreamVolume(AudioManager.STREAM_MUSIC,
+                        AudioManager.ADJUST_RAISE,
+                        AudioManager.FLAG_SHOW_UI);
+                break;
             case KeyEvent.KEYCODE_BACK:
             case KeyEvent.KEYCODE_BUTTON_B:
                 finish();

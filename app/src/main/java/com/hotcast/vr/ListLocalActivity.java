@@ -159,6 +159,7 @@ public class ListLocalActivity extends BaseActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 String localurl = list.get(i).getLocalurl();
+                System.out.println("---点击的本地地址：" + localurl);
                 int state = list.get(i).getCurState();
                 File file;
                 if (localurl != null) {
@@ -173,6 +174,7 @@ public class ListLocalActivity extends BaseActivity {
                         intent.putExtra("title", list.get(i).getTitle());
                         intent.putExtra("splite_screen", false);
                         ListLocalActivity.this.startActivity(intent);
+                        System.out.println("---点击的本地地址：" + localurl);
                     } else if (state == 2) {
                         LocalBean localBean = list.get(i);
                         BaseApplication.downLoadManager.addTask(localBean.getUrl(), localBean.getUrl(), localBean.getTitle() + ".mp4", BaseApplication.VedioCacheUrl + localBean.getTitle() + ".mp4");
