@@ -53,13 +53,13 @@ public class UpdateAppManager {
     private int curProgress;
     // 用户是否取消下载
     private boolean isCancel;
-    private int force;
+    private String is_force;
     private String newFeatures;
 
-    public UpdateAppManager(Context context, String spec, int force,String newFeatures) {
+    public UpdateAppManager(Context context, String spec, String is_force,String newFeatures) {
         this.context = context;
         this.spec = spec;
-        this.force = force;
+        this.is_force = is_force;
         this.newFeatures = newFeatures;
     }
 
@@ -85,11 +85,11 @@ public class UpdateAppManager {
      * 检测应用更新信息
      */
     public void checkUpdateInfo() {
-        switch (force) {
-            case 0://不强制更新
+        switch (is_force) {
+            case "0"://不强制更新
                 showNoticeDialog(newFeatures);
                 break;
-            case 1://强制更新
+            case "1"://强制更新
                 showDownloadDialog();
                 break;
         }

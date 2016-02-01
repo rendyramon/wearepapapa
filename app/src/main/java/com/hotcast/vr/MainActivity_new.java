@@ -72,7 +72,7 @@ public class MainActivity_new extends BaseActivity {
             nonet.setVisibility(View.GONE);
             content.setVisibility(View.VISIBLE);
             if (!TextUtils.isEmpty(spec)) {
-                updateAppManager = new UpdateAppManager(this, spec, force, newFeatures);
+                updateAppManager = new UpdateAppManager(this, spec, is_force, newFeatures);
                 updateAppManager.checkUpdateInfo();
             }
             if (isFrist1) {
@@ -174,19 +174,19 @@ public class MainActivity_new extends BaseActivity {
     //下载路径
     private String spec;
     //是否强制更新
-    private int force;
+    private String is_force;
     private boolean isFrist1;
 
     @Override
     public void getIntentData(Intent intent) {
         spec = getIntent().getStringExtra("spec");
-        force = getIntent().getIntExtra("force", 0);
+        is_force = getIntent().getStringExtra("is_force");
         newFeatures = getIntent().getStringExtra("newFeatures");
         isFrist1 = getIntent().getBooleanExtra("isFrist1", isFrist1);
         System.out.println("***isFrist = " + isFrist1);
         sp.add("spec", spec);
-        sp.add("force", force);
-        System.out.println("---spec = " + spec + "force = " + force);
+        sp.add("is_force", is_force);
+        System.out.println("---spec = " + spec + "is_force = " + is_force);
     }
 
     @Override

@@ -57,7 +57,7 @@ public class SplashActivity extends BaseActivity {
     //更新日志
     private String newFeatures;
     //是否强制更新
-    private int force;
+    private String is_force;
     private int[] images = {R.mipmap.guide_1,R.mipmap.guide_2,R.mipmap.guide_3,R.mipmap.guide_4};
 
     private Timer timer;
@@ -89,37 +89,13 @@ public class SplashActivity extends BaseActivity {
 
     }
 
-    private void getNetDate2() {
-        RequestParams params = new RequestParams();
-        params.addBodyParameter("token", "123");
-        this.httpPost(Constants.URL_CLASSIFY_TITLTE, params, new RequestCallBack<String>() {
-            @Override
-            public void onStart() {
-                super.onStart();
-            }
-
-            @Override
-            public void onSuccess(ResponseInfo<String> responseInfo) {
-                L.e("ClassifyView  responseInfo:" + responseInfo.result);
-//                BaseApplication.netClassifys = new Gson().fromJson(responseInfo.result, new TypeToken<List<Classify>>() {
-//                }.getType());
-
-            }
-
-            @Override
-            public void onFailure(HttpException e, String s) {
-
-            }
-        });
-    }
-
 
     private void getNetDate() {
         System.out.println("---"+getAppMetaData(SplashActivity.this,"UMENG_CHANNEL"));
         RequestParams params = new RequestParams();
         params.addBodyParameter("token", "123");
         params.addBodyParameter("version", BaseApplication.version);
-        params.addBodyParameter("platform", getAppMetaData(SplashActivity.this,"UMENG_CHANNEL"));
+        params.addBodyParameter("platform", BaseApplication.platform);
         this.httpPost(requestUrl, params, new RequestCallBack<String>() {
             @Override
             public void onStart() {
@@ -137,16 +113,16 @@ public class SplashActivity extends BaseActivity {
             }
         });
     }
-   private String current;
+   private String version;
     private void setViewData(String json){
         if (Utils.textIsNull(json)) {
             return;
         }
         Update update = new Gson().fromJson(json, Update.class);
         spec = update.getUrl();
-        force = update.getForce();
-        current = update.getCurrent();
-        System.out.println("--current = " + current);
+        is_force = update.getIs_force();
+        version = update.getVersion();
+        System.out.println("--version = " + version);
         newFeatures = update.getLog();
 //        System.out.println("***SplashActivity spec:" + spec + ",force:" + force);
     }
@@ -199,21 +175,21 @@ public class SplashActivity extends BaseActivity {
             L.e("***第一次运行" + isFrist + "显示声明");
             sp.add("isFrist", false);
             isFrist1 = true;
-            if (!BaseApplication.version.equals(current)) {
+            if (!BaseApplication.version.equals(version)) {
                 BaseApplication.isUpdate = true;
                 intent.putExtra("spec", spec);
-                intent.putExtra("force", force);
+                intent.putExtra("is_force", is_force);
                 intent.putExtra("newFeatures",newFeatures);
             }
 
         } else {
             L.e("***不是第一次运行" + isFrist + "不显示");
            isFrist1 = false;
-            if (!BaseApplication.version.equals(current)) {
+            if (!BaseApplication.version.equals(version)) {
 
                 BaseApplication.isUpdate = true;
                 intent.putExtra("spec", spec);
-                intent.putExtra("force", force);
+                intent.putExtra("is_force", is_force);
                 intent.putExtra("newFeatures",newFeatures);
             }
         }

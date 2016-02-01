@@ -15,6 +15,8 @@ public class Constants {
     public static final String ROLL = SERVER_URL + "/app/recommend/get-roll";
 //    专题推荐位
     public static final String SPECIAL = SERVER_URL + "/app/recommend/get-subjects";
+    //    版本更新接口
+    public static final String URL_UPDATE = SERVER_URL + "/app/info/update";
 
 
 
@@ -36,7 +38,7 @@ public class Constants {
 //    关于我们接口
     public static final String URL_ABOUT = SERVER + "/info/about-us";
 //    版本更新接口
-    public static final String URL_UPDATE = SERVER + "/info/update";
+//    public static final String URL_UPDATE = SERVER + "/info/update";
 //    帮助接口
     public static final String URL_HELP = SERVER + "/info/help";
 //    统计设备接口
