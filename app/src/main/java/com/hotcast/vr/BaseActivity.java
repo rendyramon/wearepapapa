@@ -370,7 +370,16 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
 
 
     public void clickVrMode() {
+//        spec = activity.sp.select("spec","");
+//        is_force = activity.sp.select("is_force","");
+//        newFeatures = activity.sp.select("newFeatures","");
         Intent intent = new Intent(this, LandscapeActivity.class);
+        if (!BaseApplication.info.versionName.equals(BaseApplication.version)) {
+            BaseApplication.isUpdate = true;
+            intent.putExtra("spec", this.sp.select("spec",""));
+            intent.putExtra("is_force", this.sp.select("is_force",""));
+            intent.putExtra("newFeatures",this.sp.select("newFeatures",""));
+        }
         intent.putExtra("classifies", BaseApplication.channel);
 
         startActivity(intent);

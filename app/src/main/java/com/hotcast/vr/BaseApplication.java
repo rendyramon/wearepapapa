@@ -63,7 +63,7 @@ public class BaseApplication extends Application {
         mFinalBitmap.configDefaultLoadingImage(failedImgId);
         return mFinalBitmap;
     }
-    private PackageInfo info;
+    public static PackageInfo info;
     private PackageManager packageManager;
 
     @Override
