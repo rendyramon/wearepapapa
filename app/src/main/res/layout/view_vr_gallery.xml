@@ -42,13 +42,14 @@
 
     <TextView
         android:id="@+id/bt_ceach"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="30dp"
+        android:layout_height="15dp"
+        android:gravity="center"
         android:layout_below="@+id/tv_desc"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="6dp"
-        android:background="#00000000"
-        android:textColor="#ff22ff"
+        android:background="@drawable/download_button_selector"
+        android:textColor="@color/downloadtext1"
         android:textSize="8sp"
         android:text="未下载" />
 

@@ -88,8 +88,8 @@ public class VrListActivity extends BaseActivity {
             dbList = new ArrayList<>();
         } else {
             for (LocalBean localBean : dbList) {
-                System.out.println("---localBean_url:" + localBean.getUrl());
-                localUrlList.add(localBean.getUrl());
+                System.out.println("---localBean_title:" + localBean.getTitle());
+                localUrlList.add(localBean.getTitle());
             }
         }
         BitmapUtils bitmapUtils = new BitmapUtils(this);
@@ -168,10 +168,9 @@ public class VrListActivity extends BaseActivity {
         tv_title2.setText(titles.get(mCurrentImg));
         tv_desc1.setText(descs.get(mCurrentImg));
         tv_desc2.setText(descs.get(mCurrentImg));
-//        if (localUrlList.contains(vrPlays.get(mCurrentImg).getVideo_url())) {
-//            bt_ceach2.setText("已下载");
-//            bt_ceach1.setText("已下载");
-//        }
+        if (localUrlList.contains(vrPlays.get(mCurrentImg).getVideos().get(0).getVname())) {
+            setDownloadText(true);
+        }
         img3D.setOnMovechangeListener(new Image3DSwitchView.OnMovechangeListener() {
             @Override
             public void OnMovechange(int dix) {
@@ -200,32 +199,28 @@ public class VrListActivity extends BaseActivity {
                     tv_title2.setText(titles.get(mCurrentImg));
                     tv_desc1.setText(descs.get(mCurrentImg));
                     tv_desc2.setText(descs.get(mCurrentImg));
-//                    if (localUrlList.contains(vrPlays.get(mCurrentImg).getVideo_url())) {
-//                        bt_ceach2.setText("已下载");
-//                        bt_ceach1.setText("已下载");
-//                    } else {
-//                        bt_ceach2.setText("未下载");
-//                        bt_ceach1.setText("未下载");
-//                    }
-//                } else {
-//                    index = 1;
-//                    page = index + "/" + vrPlays.size();
-//                    span = new SpannableString(page);
-//                    span.setSpan(new ForegroundColorSpan(VrListActivity.this.getResources().getColor(R.color.material_blue_500)),
-//                            0, page.length() - 1 - ("" + vrPlays.size()).length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-//                    tv_page1.setText(span);
-//                    tv_page2.setText(span);
-//                    tv_title1.setText(titles.get(mCurrentImg));
-//                    tv_title2.setText(titles.get(mCurrentImg));
-//                    tv_desc1.setText(descs.get(mCurrentImg));
-//                    tv_desc2.setText(descs.get(mCurrentImg));
-//                    if (localUrlList.contains(vrPlays.get(mCurrentImg).getVideo_url())) {
-//                        bt_ceach2.setText("已下载");
-//                        bt_ceach1.setText("已下载");
-//                    } else {
-//                        bt_ceach2.setText("未下载");
-//                        bt_ceach1.setText("未下载");
-//                    }
+                    if (localUrlList.contains(vrPlays.get(mCurrentImg).getVideos().get(0).getVname())) {
+                        setDownloadText(true);
+                    } else {
+                        setDownloadText(false);
+                    }
+                } else {
+                    index = 1;
+                    page = index + "/" + vrPlays.size();
+                    span = new SpannableString(page);
+                    span.setSpan(new ForegroundColorSpan(VrListActivity.this.getResources().getColor(R.color.material_blue_500)),
+                            0, page.length() - 1 - ("" + vrPlays.size()).length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    tv_page1.setText(span);
+                    tv_page2.setText(span);
+                    tv_title1.setText(titles.get(mCurrentImg));
+                    tv_title2.setText(titles.get(mCurrentImg));
+                    tv_desc1.setText(descs.get(mCurrentImg));
+                    tv_desc2.setText(descs.get(mCurrentImg));
+                    if (localUrlList.contains(vrPlays.get(mCurrentImg).getVideos().get(0).getVname())) {
+                        setDownloadText(true);
+                    } else {
+                        setDownloadText(false);
+                    }
                 }
                 System.out.println("-----mcurrentIndex1：" + img3D.getImgIndex());
             }
@@ -251,32 +246,28 @@ public class VrListActivity extends BaseActivity {
                     tv_title2.setText(titles.get(mCurrentImg));
                     tv_desc1.setText(descs.get(mCurrentImg));
                     tv_desc2.setText(descs.get(mCurrentImg));
-//                    if (localUrlList.contains(vrPlays.get(mCurrentImg).getVideo_url())) {
-//                        bt_ceach2.setText("已下载");
-//                        bt_ceach1.setText("已下载");
-//                    } else {
-//                        bt_ceach2.setText("未下载");
-//                        bt_ceach1.setText("未下载");
-//                    }
-//                } else {
-//                    index = vrPlays.size();
-//                    page = index + "/" + vrPlays.size();
-//                    span = new SpannableString(page);
-//                    span.setSpan(new ForegroundColorSpan(VrListActivity.this.getResources().getColor(R.color.material_blue_500)),
-//                            0, page.length() - 1 - ("" + vrPlays.size()).length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-//                    tv_page1.setText(span);
-//                    tv_page2.setText(span);
-//                    tv_title1.setText(titles.get(mCurrentImg));
-//                    tv_title2.setText(titles.get(mCurrentImg));
-//                    tv_desc1.setText(descs.get(mCurrentImg));
-//                    tv_desc2.setText(descs.get(mCurrentImg));
-//                    if (localUrlList.contains(vrPlays.get(mCurrentImg).getVideo_url())) {
-//                        bt_ceach2.setText("已下载");
-//                        bt_ceach1.setText("已下载");
-//                    } else {
-//                        bt_ceach2.setText("未下载");
-//                        bt_ceach1.setText("未下载");
-//                    }
+                    if (localUrlList.contains(vrPlays.get(mCurrentImg).getVideos().get(0).getVname())) {
+                        setDownloadText(true);
+                    } else {
+                        setDownloadText(false);
+                    }
+                } else {
+                    index = vrPlays.size();
+                    page = index + "/" + vrPlays.size();
+                    span = new SpannableString(page);
+                    span.setSpan(new ForegroundColorSpan(VrListActivity.this.getResources().getColor(R.color.material_blue_500)),
+                            0, page.length() - 1 - ("" + vrPlays.size()).length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    tv_page1.setText(span);
+                    tv_page2.setText(span);
+                    tv_title1.setText(titles.get(mCurrentImg));
+                    tv_title2.setText(titles.get(mCurrentImg));
+                    tv_desc1.setText(descs.get(mCurrentImg));
+                    tv_desc2.setText(descs.get(mCurrentImg));
+                    if (localUrlList.contains(vrPlays.get(mCurrentImg).getVideos().get(0).getVname())) {
+                        setDownloadText(true);
+                    } else {
+                        setDownloadText(false);
+                    }
                 }
                 System.out.println("-----mcurrentIndex1：" + img3D.getImgIndex());
             }
@@ -316,32 +307,28 @@ public class VrListActivity extends BaseActivity {
                     tv_title2.setText(titles.get(mCurrentImg));
                     tv_desc1.setText(descs.get(mCurrentImg));
                     tv_desc2.setText(descs.get(mCurrentImg));
-//                    if (localUrlList.contains(vrPlays.get(mCurrentImg).getVideo_url())) {
-//                        bt_ceach2.setText("已下载");
-//                        bt_ceach1.setText("已下载");
-//                    } else {
-//                        bt_ceach2.setText("未下载");
-//                        bt_ceach1.setText("未下载");
-//                    }
-//                } else {
-//                    index = 1;
-//                    page = index + "/" + vrPlays.size();
-//                    span = new SpannableString(page);
-//                    span.setSpan(new ForegroundColorSpan(VrListActivity.this.getResources().getColor(R.color.material_blue_500)),
-//                            0, page.length() - 1 - ("" + vrPlays.size()).length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-//                    tv_page1.setText(span);
-//                    tv_page2.setText(span);
-//                    tv_title1.setText(titles.get(mCurrentImg));
-//                    tv_title2.setText(titles.get(mCurrentImg));
-//                    tv_desc1.setText(descs.get(mCurrentImg));
-//                    tv_desc2.setText(descs.get(mCurrentImg));
-//                    if (localUrlList.contains(vrPlays.get(mCurrentImg).getVideo_url())) {
-//                        bt_ceach2.setText("已下载");
-//                        bt_ceach1.setText("已下载");
-//                    } else {
-//                        bt_ceach2.setText("未下载");
-//                        bt_ceach1.setText("未下载");
-//                    }
+                    if (localUrlList.contains(vrPlays.get(mCurrentImg).getVideos().get(0).getVname())) {
+                        setDownloadText(true);
+                    } else {
+                        setDownloadText(false);
+                    }
+                } else {
+                    index = 1;
+                    page = index + "/" + vrPlays.size();
+                    span = new SpannableString(page);
+                    span.setSpan(new ForegroundColorSpan(VrListActivity.this.getResources().getColor(R.color.material_blue_500)),
+                            0, page.length() - 1 - ("" + vrPlays.size()).length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    tv_page1.setText(span);
+                    tv_page2.setText(span);
+                    tv_title1.setText(titles.get(mCurrentImg));
+                    tv_title2.setText(titles.get(mCurrentImg));
+                    tv_desc1.setText(descs.get(mCurrentImg));
+                    tv_desc2.setText(descs.get(mCurrentImg));
+                    if (localUrlList.contains(vrPlays.get(mCurrentImg).getVideos().get(0).getVname())) {
+                        setDownloadText(true);
+                    } else {
+                        setDownloadText(false);
+                    }
                 }
                 System.out.println("-----mcurrentIndex2：" + img3D2.getImgIndex());
             }
@@ -366,32 +353,28 @@ public class VrListActivity extends BaseActivity {
                     tv_title2.setText(titles.get(mCurrentImg));
                     tv_desc1.setText(descs.get(mCurrentImg));
                     tv_desc2.setText(descs.get(mCurrentImg));
-//                    if (localUrlList.contains(vrPlays.get(mCurrentImg).getVideo_url())) {
-//                        bt_ceach2.setText("已下载");
-//                        bt_ceach1.setText("已下载");
-//                    } else {
-//                        bt_ceach2.setText("未下载");
-//                        bt_ceach1.setText("未下载");
-//                    }
-//                } else {
-//                    index = vrPlays.size();
-//                    page = index + "/" + vrPlays.size();
-//                    span = new SpannableString(page);
-//                    span.setSpan(new ForegroundColorSpan(VrListActivity.this.getResources().getColor(R.color.material_blue_500)),
-//                            0, page.length() - 1 - ("" + vrPlays.size()).length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-//                    tv_page1.setText(span);
-//                    tv_page2.setText(span);
-//                    tv_title1.setText(titles.get(mCurrentImg));
-//                    tv_title2.setText(titles.get(mCurrentImg));
-//                    tv_desc1.setText(descs.get(mCurrentImg));
-//                    tv_desc2.setText(descs.get(mCurrentImg));
-//                    if (localUrlList.contains(vrPlays.get(mCurrentImg).getVideo_url())) {
-//                        bt_ceach2.setText("已下载");
-//                        bt_ceach1.setText("已下载");
-//                    } else {
-//                        bt_ceach2.setText("未下载");
-//                        bt_ceach1.setText("未下载");
-//                    }
+                    if (localUrlList.contains(vrPlays.get(mCurrentImg).getVideos().get(0).getVname())) {
+                        setDownloadText(true);
+                    } else {
+                        setDownloadText(false);
+                    }
+                } else {
+                    index = vrPlays.size();
+                    page = index + "/" + vrPlays.size();
+                    span = new SpannableString(page);
+                    span.setSpan(new ForegroundColorSpan(VrListActivity.this.getResources().getColor(R.color.material_blue_500)),
+                            0, page.length() - 1 - ("" + vrPlays.size()).length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    tv_page1.setText(span);
+                    tv_page2.setText(span);
+                    tv_title1.setText(titles.get(mCurrentImg));
+                    tv_title2.setText(titles.get(mCurrentImg));
+                    tv_desc1.setText(descs.get(mCurrentImg));
+                    tv_desc2.setText(descs.get(mCurrentImg));
+                    if (localUrlList.contains(vrPlays.get(mCurrentImg).getVideos().get(0).getVname())) {
+                        setDownloadText(true);
+                    } else {
+                        setDownloadText(false);
+                    }
                 }
                 System.out.println("-----mcurrentIndex2：" + img3D2.getImgIndex());
             }
@@ -447,19 +430,18 @@ public class VrListActivity extends BaseActivity {
 //                if (mCurrentImg < 0) {
 //                    mCurrentImg = titles.size() - 1;
 //                }
-//                if (!localUrlList.contains(vrPlays.get(mCurrentImg).getVideo_url())) {
-//                    System.out.println("---点击了：" + vrPlays.get(mCurrentImg).getTitle() + "--url:" + vrPlays.get(mCurrentImg).getVideo_url());
-////                    System.out.println("---下载：" + vrPlays.get(mCurrentImg).getTitle());
-//                    Intent intent = new Intent(START);
-//                    Details details = new Details();
-//                    details.setTitle(vrPlays.get(mCurrentImg).getTitle());
-//                    System.out.println("---开始下载" + vrPlays.get(mCurrentImg).getTitle());
-////                    details.setImage(vrPlays.get(mCurrentImg).getImage());
-//                    details.setDesc(vrPlays.get(mCurrentImg).getDesc());
-////
-//                    BaseApplication.detailsList.add(details);
-//                    BaseApplication.playUrls.add(vrPlays.get(mCurrentImg).getVideo_url());
-//                    VrListActivity.this.sendBroadcast(intent);
+//                if (!localUrlList.contains(vrPlays.get(mCurrentImg).getVideos().get(0).getVname())) {
+//                    System.out.println("---点击了：" + vrPlays.get(mCurrentImg).getTitle() + "--url:" + vrPlays.get(mCurrentImg).getVideos().get(0).getVname());
+////                    Intent intent = new Intent(START);
+////                    Details details = new Details();
+////                    details.setTitle(vrPlays.get(mCurrentImg).getTitle());
+////                    System.out.println("---开始下载" + vrPlays.get(mCurrentImg).getTitle());
+//////                    details.setImage(vrPlays.get(mCurrentImg).getImage());
+////                    details.setDesc(vrPlays.get(mCurrentImg).getDesc());
+//////
+////                    BaseApplication.detailsList.add(details);
+////                    BaseApplication.playUrls.add(vrPlays.get(mCurrentImg).getVideo_url());
+////                    VrListActivity.this.sendBroadcast(intent);
 //                    BaseApplication.isDownLoad = true;
 //                    DbUtils db = DbUtils.create(VrListActivity.this);
 //                    LocalBean localBean = new LocalBean();
@@ -486,8 +468,6 @@ public class VrListActivity extends BaseActivity {
 //                }
 //        }
 //    }
-
-
 
 
 //    public void downLoadMovie() {
@@ -642,24 +622,24 @@ public class VrListActivity extends BaseActivity {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
 //        getParent().requestDisallowInterceptTouchEvent(true);
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                downX = (int) event.getX();
-                downY = (int) event.getY();
-                break;
-            case MotionEvent.ACTION_UP:
-                upX = (int) event.getX();
-                upY = (int) event.getY();
-                break;
-        }
-        int xlen = Math.abs(downX - upX);
-        int ylen = Math.abs(downY - upY);
-        int length = (int) Math.sqrt((double) xlen * xlen + (double) ylen * ylen);
-        if (length < 8) {
-            //执行点击事件
-//            downLoadMovie();
-            return true;
-        }
+//        switch (event.getAction()) {
+//            case MotionEvent.ACTION_DOWN:
+//                downX = (int) event.getX();
+//                downY = (int) event.getY();
+//                break;
+//            case MotionEvent.ACTION_UP:
+//                upX = (int) event.getX();
+//                upY = (int) event.getY();
+//                break;
+//        }
+//        int xlen = Math.abs(downX - upX);
+//        int ylen = Math.abs(downY - upY);
+//        int length = (int) Math.sqrt((double) xlen * xlen + (double) ylen * ylen);
+//        if (length < 8) {
+//            //执行点击事件
+////            downLoadMovie();
+//            return true;
+//        }
         if (img3D.getmScroller().isFinished()) {
             if (mVelocityTracker == null) {
                 mVelocityTracker = VelocityTracker.obtain();
@@ -737,4 +717,18 @@ public class VrListActivity extends BaseActivity {
         return velocityX < -SNAP_VELOCITY || img3D.getScrollX() > mImageWidth / 2;
     }
 
+    public void setDownloadText(boolean flag){
+        if (flag) {
+            bt_ceach2.setText("已下载");
+            bt_ceach1.setText("已下载");
+            bt_ceach1.setTextColor(getResources().getColor(R.color.downloadtext2));
+            bt_ceach2.setTextColor(getResources().getColor(R.color.downloadtext2));
+        }else{
+            bt_ceach2.setText("未下载");
+            bt_ceach1.setText("未下载");
+            bt_ceach1.setTextColor(getResources().getColor(R.color.downloadtext1));
+            bt_ceach2.setTextColor(getResources().getColor(R.color.downloadtext1));
+        }
+
+    }
 }
