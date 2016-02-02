@@ -239,9 +239,9 @@ public class LandscapeActivity extends BaseActivity implements View.OnClickListe
         container1.addView(view1.getRootView(), ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         container2.addView(view2.getRootView(), ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         System.out.println("---是否更新" + BaseApplication.isUpdate);
-        if (BaseApplication.isUpdate) {
-            showUpdate();
-        }
+//        if (BaseApplication.isUpdate) { //主线版本不用这个
+//            showUpdate();
+//        }
 //        container2.setOnClickListener(this);
 //        container1.setOnClickListener(this);
     }

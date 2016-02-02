@@ -432,4 +432,8 @@ public class Image3DSwitchView extends ViewGroup {
 	public void setimgWidthp(double imgWidthp){
 
 	}
+
+	public boolean isFinishScroll(){
+		return mScroller.isFinished();
+	}
 }

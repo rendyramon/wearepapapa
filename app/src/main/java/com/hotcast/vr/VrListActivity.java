@@ -534,44 +534,96 @@ public class VrListActivity extends BaseActivity {
         switch (keyCode) {
 
             case KeyEvent.KEYCODE_DPAD_LEFT:
-                ++index;
-                if (index <= vrPlays.size()) {
-                    page = index + "/" + vrPlays.size();
-                    span = new SpannableString(page);
-                    span.setSpan(new ForegroundColorSpan(VrListActivity.this.getResources().getColor(R.color.material_blue_500)),
-                            0, page.length() - 1 - ("" + vrPlays.size()).length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    tv_page1.setText(span);
-                    tv_page2.setText(span);
-                    tv_title1.setText(titles.get(index));
-                    tv_title2.setText(titles.get(index));
-                    tv_desc1.setText(descs.get(index));
-                    tv_desc2.setText(descs.get(index));
-                } else {
-                    index = 1;
+                if (img3D.isFinishScroll()&&img3D2.isFinishScroll()){
+                    ++index;
+                    mCurrentImg = img3D.getImgIndex() - 1;
+                    if (mCurrentImg < 0) {
+                        mCurrentImg = titles.size() - 1;
+                    }
+                    if (index <= vrPlays.size()) {
+                        page = index + "/" + vrPlays.size();
+                        span = new SpannableString(page);
+                        span.setSpan(new ForegroundColorSpan(VrListActivity.this.getResources().getColor(R.color.material_blue_500)),
+                                0, page.length() - 1 - ("" + vrPlays.size()).length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        tv_page1.setText(span);
+                        tv_page2.setText(span);
+                        tv_title1.setText(titles.get(mCurrentImg));
+                        tv_title2.setText(titles.get(mCurrentImg));
+                        tv_desc1.setText(descs.get(mCurrentImg));
+                        tv_desc2.setText(descs.get(mCurrentImg));
+                        if (localUrlList.contains(vrPlays.get(mCurrentImg).getVideos().get(0).getVname())) {
+                            setDownloadText(true);
+                        } else {
+                            setDownloadText(false);
+                        }
+                    } else {
+                        index = 1;
+                        page = index + "/" + vrPlays.size();
+                        span = new SpannableString(page);
+                        span.setSpan(new ForegroundColorSpan(VrListActivity.this.getResources().getColor(R.color.material_blue_500)),
+                                0, page.length() - 1 - ("" + vrPlays.size()).length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        tv_page1.setText(span);
+                        tv_page2.setText(span);
+                        tv_title1.setText(titles.get(mCurrentImg));
+                        tv_title2.setText(titles.get(mCurrentImg));
+                        tv_desc1.setText(descs.get(mCurrentImg));
+                        tv_desc2.setText(descs.get(mCurrentImg));
+                        if (localUrlList.contains(vrPlays.get(mCurrentImg).getVideos().get(0).getVname())) {
+                            setDownloadText(true);
+                        } else {
+                            setDownloadText(false);
+                        }
+                    }
+                    img3D.scrollToNext();
+                    img3D2.scrollToNext();
+                    L.e("你点击了下一张");
                 }
-                img3D.scrollToNext();
-                img3D2.scrollToNext();
-                L.e("你点击了下一张");
                 break;
             case KeyEvent.KEYCODE_DPAD_RIGHT:
-                --index;
-                if (index > 0) {
-                    page = index + "/" + vrPlays.size();
-                    span = new SpannableString(page);
-                    span.setSpan(new ForegroundColorSpan(VrListActivity.this.getResources().getColor(R.color.material_blue_500)),
-                            0, page.length() - 1 - ("" + vrPlays.size()).length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    tv_page1.setText(span);
-                    tv_page2.setText(span);
-                    tv_title1.setText(titles.get(index));
-                    tv_title2.setText(titles.get(index));
-                    tv_desc1.setText(descs.get(index));
-                    tv_desc2.setText(descs.get(index));
-                } else {
-                    index = vrPlays.size();
+                if (img3D.isFinishScroll()&&img3D2.isFinishScroll()) {
+                    --index;
+                    mCurrentImg = img3D.getImgIndex() - 1;
+                    if (mCurrentImg < 0) {
+                        mCurrentImg = titles.size() - 1;
+                    }
+                    if (index >= 0) {
+                        page = index + "/" + vrPlays.size();
+                        span = new SpannableString(page);
+                        span.setSpan(new ForegroundColorSpan(VrListActivity.this.getResources().getColor(R.color.material_blue_500)),
+                                0, page.length() - 1 - ("" + vrPlays.size()).length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        tv_page1.setText(span);
+                        tv_page2.setText(span);
+                        tv_title1.setText(titles.get(mCurrentImg));
+                        tv_title2.setText(titles.get(mCurrentImg));
+                        tv_desc1.setText(descs.get(mCurrentImg));
+                        tv_desc2.setText(descs.get(mCurrentImg));
+                        if (localUrlList.contains(vrPlays.get(mCurrentImg).getVideos().get(0).getVname())) {
+                            setDownloadText(true);
+                        } else {
+                            setDownloadText(false);
+                        }
+                    } else {
+                        index = vrPlays.size();
+                        page = index + "/" + vrPlays.size();
+                        span = new SpannableString(page);
+                        span.setSpan(new ForegroundColorSpan(VrListActivity.this.getResources().getColor(R.color.material_blue_500)),
+                                0, page.length() - 1 - ("" + vrPlays.size()).length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        tv_page1.setText(span);
+                        tv_page2.setText(span);
+                        tv_title1.setText(titles.get(mCurrentImg));
+                        tv_title2.setText(titles.get(mCurrentImg));
+                        tv_desc1.setText(descs.get(mCurrentImg));
+                        tv_desc2.setText(descs.get(mCurrentImg));
+                        if (localUrlList.contains(vrPlays.get(mCurrentImg).getVideos().get(0).getVname())) {
+                            setDownloadText(true);
+                        } else {
+                            setDownloadText(false);
+                        }
+                    }
+                    img3D.scrollToPrevious();
+                    img3D2.scrollToPrevious();
+                    L.e("你点击了上一张");
                 }
-                img3D.scrollToPrevious();
-                img3D2.scrollToPrevious();
-                L.e("你点击了上一张");
                 break;
 
             case KeyEvent.KEYCODE_ENTER:
