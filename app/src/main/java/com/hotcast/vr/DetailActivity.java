@@ -349,7 +349,7 @@ public class DetailActivity extends BaseActivity {
             finish();
         }
         getplayUrl();
-//        getRelationDate();
+        getRelationDate();
     }
 
     @Override
@@ -365,17 +365,20 @@ public class DetailActivity extends BaseActivity {
         String url = Constants.RELATION;
         RequestParams params = new RequestParams();
         params.addBodyParameter("token", "123");
-        params.addBodyParameter("vid", video_ids.get(0));
-        System.out.println("***DetailActivity***getRelationDate() vid = " + video_ids.get(0));
+        params.addBodyParameter("version", BaseApplication.version);
+        params.addBodyParameter("platform", BaseApplication.platform);
+        params.addBodyParameter("videoset_id", videoset_id);
+        System.out.println("---getRelationDate videoset_id = " + videoset_id);
         this.httpPost(url, params, new RequestCallBack<String>() {
             @Override
             public void onStart() {
                 super.onStart();
+                L.e("---getRelationDate onStart:");
             }
 
             @Override
             public void onSuccess(ResponseInfo<String> responseInfo) {
-                L.e("****DetailActivity responseInfo:" + responseInfo.result);
+                L.e("---getRelationDate responseInfo:" + responseInfo.result);
                 if (Utils.textIsNull(responseInfo.result)) {
                     return;
                 }
@@ -393,6 +396,7 @@ public class DetailActivity extends BaseActivity {
 
             @Override
             public void onFailure(HttpException e, String s) {
+                L.e("---getRelationDate onFailure:" + s);
             }
         });
     }
@@ -412,19 +416,19 @@ public class DetailActivity extends BaseActivity {
                     .findViewById(R.id.iv_movie);
             BitmapUtils bitmapUtils = new BitmapUtils(DetailActivity.this);
 
-            if (relation.getPosturl() != null) {
-                bitmapUtils.display(iv_movie, relation.getPosturl());
+            if (relation.getImage().get(0) != null) {
+                bitmapUtils.display(iv_movie, relation.getImage().get(0));
             }
             TextView tv_movie = (TextView) contentView
                     .findViewById(R.id.tv_movie);
-            tv_movie.setText(relation.getVname());
+            tv_movie.setText(relation.getVideos().get(0).getVname());
             iv_movie.setFocusable(true);
             iv_movie.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(context, PlayerVRActivityNew.class);
-                    intent.putExtra("play_url", relation.getHd_url());
-                    intent.putExtra("title", relation.getVname());
+                    intent.putExtra("vid", relation.getVideos().get(0).getVid());
+//                    intent.putExtra("title", relation.getVname());
                     intent.putExtra("splite_screen", false);
                     MobclickAgent.onEvent(DetailActivity.this, "play_start");
                     context.startActivity(intent);

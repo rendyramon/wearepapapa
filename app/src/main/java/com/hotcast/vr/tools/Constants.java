@@ -17,6 +17,7 @@ public class Constants {
     public static final String SPECIAL = SERVER_URL + "/app/recommend/get-subjects";
     //    版本更新接口
     public static final String URL_UPDATE = SERVER_URL + "/app/info/update";
+    public static final String RELATION = SERVER_URL + "/app/videoset/get-relation";
 
 
 
@@ -43,7 +44,7 @@ public class Constants {
     public static final String URL_HELP = SERVER + "/info/help";
 //    统计设备接口
     public static final String URL_DEVICE = SERVER + "/count/device";
-    public static final String RELATION = SERVER + "/web/get-relation";
+
 //    统计播放接口
     public static final String URL_PLAY_count = SERVER + "/count/player";
 

@@ -1,79 +1,113 @@
 package com.hotcast.vr.bean;
 
+import java.util.List;
+
 /**
  * Created by lostnote on 15/12/14.
  */
 public class Relation {
-    String vid;
-    String uhd_url;
-    String hd_url;
-    String sd_url;
-    String vname;
-    String category;
-    String posturl;
-    String show_times;
+    //节目集ID（字符串）
+    String id;
+    //标题
+    String title;
+    //不同分辨率尺寸的海报图
+    List<String> image;
+    //简介（一句话）
+    String desc;
+    //更新时间（时间戳）
+    String update_time;
+    //导演
+    String director;
+    //演员（字符串）
+    String actors;
+    //详情
+    String description;
+    List<VideosNew> videos;
 
-    public String getVid() {
-        return vid;
+    public String getId() {
+        return id;
     }
 
-    public void setVid(String vid) {
-        this.vid = vid;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public String getUhd_url() {
-        return uhd_url;
+    public String getTitle() {
+        return title;
     }
 
-    public void setUhd_url(String uhd_url) {
-        this.uhd_url = uhd_url;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
-    public String getHd_url() {
-        return hd_url;
+    public List<String> getImage() {
+        return image;
     }
 
-    public void setHd_url(String hd_url) {
-        this.hd_url = hd_url;
+    public void setImage(List<String> image) {
+        this.image = image;
     }
 
-    public String getSd_url() {
-        return sd_url;
+    public String getDesc() {
+        return desc;
     }
 
-    public void setSd_url(String sd_url) {
-        this.sd_url = sd_url;
+    public void setDesc(String desc) {
+        this.desc = desc;
     }
 
-    public String getVname() {
-        return vname;
+    public String getUpdate_time() {
+        return update_time;
     }
 
-    public void setVname(String vname) {
-        this.vname = vname;
+    public void setUpdate_time(String update_time) {
+        this.update_time = update_time;
     }
 
-    public String getCategory() {
-        return category;
+    public String getDirector() {
+        return director;
     }
 
-    public void setCategory(String category) {
-        this.category = category;
+    public void setDirector(String director) {
+        this.director = director;
     }
 
-    public String getPosturl() {
-        return posturl;
+    public String getActors() {
+        return actors;
     }
 
-    public void setPosturl(String posturl) {
-        this.posturl = posturl;
+    public void setActors(String actors) {
+        this.actors = actors;
     }
 
-    public String getShow_times() {
-        return show_times;
+    public String getDescription() {
+        return description;
     }
 
-    public void setShow_times(String show_times) {
-        this.show_times = show_times;
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public List<VideosNew> getVideos() {
+        return videos;
+    }
+
+    public void setVideos(List<VideosNew> videos) {
+        this.videos = videos;
+    }
+
+    @Override
+    public String toString() {
+        return "Relation{" +
+                "id='" + id + '\'' +
+                ", title='" + title + '\'' +
+                ", image=" + image +
+                ", desc='" + desc + '\'' +
+                ", update_time='" + update_time + '\'' +
+                ", director='" + director + '\'' +
+                ", actors='" + actors + '\'' +
+                ", description='" + description + '\'' +
+                ", videos=" + videos +
+                '}';
     }
 }
