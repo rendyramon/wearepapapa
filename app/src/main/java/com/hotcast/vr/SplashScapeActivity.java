@@ -150,13 +150,13 @@ public class SplashScapeActivity extends BaseActivity {
 
     private void pageJump() {
         Intent intent = new Intent(this,LandscapeActivity.class);
-        if (!info.versionName.equals(version)) {
+        if (!info.versionName.equals(BaseApplication.version)) {
             BaseApplication.isUpdate = true;
             intent.putExtra("spec", spec);
             intent.putExtra("is_force", is_force);
             intent.putExtra("newFeatures",newFeatures);
         }
-        intent.putExtra("classifies", (Serializable) classifies);
+        intent.putExtra("classifies", BaseApplication.channel);
         startActivity(intent);
         finish();
     }
