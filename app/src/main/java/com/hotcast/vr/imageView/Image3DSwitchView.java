@@ -428,7 +428,7 @@ public class Image3DSwitchView extends ViewGroup {
 	/**
 	 * 设置图片占父空间的百分比
 	 * @param imgWidthp 默认0.7
-     */
+	 */
 	public void setimgWidthp(double imgWidthp){
 
 	}

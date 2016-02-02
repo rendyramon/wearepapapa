@@ -1,8 +1,10 @@
 package com.hotcast.vr;
 
+import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -15,6 +17,7 @@ import com.lidroid.xutils.view.annotation.event.OnClick;
 
 import java.io.File;
 import java.io.IOException;
+import java.security.KeyStore;
 
 import butterknife.InjectView;
 
@@ -42,6 +45,8 @@ public class AboutActivity extends BaseActivity {
     EditText et_advice;
     @InjectView(R.id.bt_advice)
     Button bt_advice;
+    @InjectView(R.id.bt_cancel)
+    Button bt_cancel;
     private boolean isEdet = false;
     private boolean isagreement = false;
 
@@ -58,6 +63,11 @@ public class AboutActivity extends BaseActivity {
                 advice.setVisibility(View.VISIBLE);
                 ll_advice.setVisibility(View.VISIBLE);
                 isEdet = true;
+                InputMethodManager inputMethodManager = (InputMethodManager)et_advice.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                inputMethodManager.toggleSoftInput(0,InputMethodManager.SHOW_FORCED);
+                et_advice.setFocusable(true);
+                et_advice.setFocusableInTouchMode(true);
+                et_advice.requestLayout();
                 break;
 //            case R.id.et_advice:
 //
@@ -95,7 +105,18 @@ public class AboutActivity extends BaseActivity {
                     et_advice.setText("");
 
                 }
+                advice.setVisibility(View.GONE);
+                ll_advice.setVisibility(View.GONE);
+                isEdet = false;
                 System.out.println("****你点击了发送信息");
+            }
+        });
+        bt_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                advice.setVisibility(View.GONE);
+                ll_advice.setVisibility(View.GONE);
+                isEdet = false;
             }
         });
     }
