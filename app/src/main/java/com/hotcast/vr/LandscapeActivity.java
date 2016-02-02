@@ -282,8 +282,25 @@ public class LandscapeActivity extends BaseActivity implements View.OnClickListe
                         mHandler.sendMessageDelayed(msg1, 1000);
                     }
                     break;
+                case 101:
+                    if (BaseApplication.doAsynctask) {
+                        DbUtils db = DbUtils.create(LandscapeActivity.this);
+                        try {
+                            dbList = db.findAll(LocalBean.class);
+                        } catch (DbException e) {
+                            e.printStackTrace();
+                        }
+                        if (dbList == null) {
+                            dbList = new ArrayList<>();
+                        }
+                        dataCacheOk = true;
+                    } else {
+                        Message msg1 = Message.obtain();
+                        msg1.what = 101;
+                        mHandler.sendMessageDelayed(msg1, 500);
+                    }
+                    break;
 //                case STOP:
-
             }
         }
     };
@@ -352,27 +369,33 @@ public class LandscapeActivity extends BaseActivity implements View.OnClickListe
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         System.out.println("---keyCode = " + keyCode);
-        switch (keyCode) {
-            case KeyEvent.KEYCODE_DPAD_LEFT:
-                img3D.scrollToNext();
-                img3D2.scrollToNext();
-                L.e("你点击了下一张");
-                break;
-            case KeyEvent.KEYCODE_DPAD_RIGHT:
-                img3D.scrollToPrevious();
-                img3D2.scrollToPrevious();
-                L.e("你点击了上一张");
-                break;
+            switch (keyCode) {
+                case KeyEvent.KEYCODE_DPAD_LEFT:
+                    img3D.scrollToNext();
+                    img3D2.scrollToNext();
+                    L.e("你点击了下一张");
+                    break;
+                case KeyEvent.KEYCODE_DPAD_RIGHT:
+                    img3D.scrollToPrevious();
+                    img3D2.scrollToPrevious();
+                    L.e("你点击了上一张");
+                    break;
 
-            case KeyEvent.KEYCODE_ENTER:
-                break;
-            case KeyEvent.KEYCODE_DPAD_CENTER:
-            case KeyEvent.KEYCODE_BUTTON_A:
-                L.e("你点击了进入播放页");
-            case KeyEvent.KEYCODE_BACK:
-            case KeyEvent.KEYCODE_BUTTON_B:
-                finish();
-                break;
+                case KeyEvent.KEYCODE_ENTER:
+                    break;
+                case KeyEvent.KEYCODE_DPAD_CENTER:
+                case KeyEvent.KEYCODE_BUTTON_A:
+                    L.e("你点击了进入播放页");
+                    mCurrentImg = img3D.getImgIndex() - 1;
+                    if (mCurrentImg < 0) {
+                        mCurrentImg = netClassifys.size();
+                    }
+                    clickItem(mCurrentImg);
+                    break;
+                case KeyEvent.KEYCODE_BACK:
+                case KeyEvent.KEYCODE_BUTTON_B:
+                    finish();
+                    break;
         }
         return true;
     }
@@ -573,8 +596,12 @@ public class LandscapeActivity extends BaseActivity implements View.OnClickListe
     protected void onStart() {
         super.onStart();
         dbList = new ArrayList<>();
-        MyAsyncTask task = new MyAsyncTask();
-        task.execute();
+        if (BaseApplication.doAsynctask){
+            MyAsyncTask task = new MyAsyncTask();
+            task.execute();
+        }else{
+            mHandler.sendEmptyMessage(101);
+        }
         Intent intent = new Intent(LandscapeActivity.this, DownLoadingService.class);
         LandscapeActivity.this.startService(intent);
         view1.showOrHideProgressBar(false);
@@ -627,7 +654,9 @@ public class LandscapeActivity extends BaseActivity implements View.OnClickListe
             public void onFailure(HttpException e, String s) {
                 view1.showOrHideProgressBar(false);
                 view2.showOrHideProgressBar(false);
-                Toast.makeText(LandscapeActivity.this, "网络连接异常", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(LandscapeActivity.this, "网络连接异常", Toast.LENGTH_SHORT).show();
+                view2.showNoInternetDialog();
+                view1.showNoInternetDialog();
             }
         });
     }

@@ -12,6 +12,7 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
@@ -28,6 +29,7 @@ import com.hotcast.vr.imageView.Image3DView;
 import com.hotcast.vr.pageview.LocalListView;
 import com.hotcast.vr.pageview.RefreshListView;
 import com.hotcast.vr.pageview.VrListView;
+import com.hotcast.vr.tools.L;
 import com.hotcast.vr.tools.VedioBitmapUtils;
 import com.lidroid.xutils.BitmapUtils;
 import com.lidroid.xutils.DbUtils;
@@ -488,35 +490,7 @@ public class LocalCachelActivity extends BaseActivity {
             public void Back() {
                 System.out.println("-----4執行");
                 img3D2.scrollBack();
-//                tv_page1.setText(index+"/"+vrPlays.size());
-//                tv_page2.setText(index + "/" + vrPlays.size());
-//                if (index > 0) {
-//                    page = index + "/" + trueSize;
-//                    span = new SpannableString(page);
-//                    span.setSpan(new ForegroundColorSpan(LocalCachelActivity.this.getResources().getColor(R.color.material_blue_500)),
-//                            0, page.length() - 1 - ("" + trueSize).length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-//                    tv_page1.setText(span);
-//                    tv_page2.setText(span);
-//                    tv_title1.setText(dbList.get(index - 1).getTitle());
-//                    tv_title2.setText(dbList.get(index - 1).getTitle());
-//                } else {
-//                    index = trueSize;
-//                    page = index + "/" + trueSize;
-//                    span = new SpannableString(page);
-//                    span.setSpan(new ForegroundColorSpan(LocalCachelActivity.this.getResources().getColor(R.color.material_blue_500)),
-//                            0, page.length() - 1 - ("" + trueSize).length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-//                    tv_page1.setText(span);
-//                    tv_page2.setText(span);
-//                    tv_title1.setText(dbList.get(index - 1).getTitle());
-//                    tv_title2.setText(dbList.get(index - 1).getTitle());
-//                }
-//                if (dbList.get(index - 1).getCurState() == 3) {
-//                    view1.hideOrShowLoading(false);
-//                    view2.hideOrShowLoading(false);
-//                } else {
-//                    view1.hideOrShowLoading(true);
-//                    view2.hideOrShowLoading(true);
-//                }
+//
             }
         });
         img3D2.setOnMovechangeListener(new Image3DSwitchView.OnMovechangeListener() {
@@ -525,33 +499,7 @@ public class LocalCachelActivity extends BaseActivity {
                 System.out.println("-----1執行");
                 img3D.scrollBy(dix, 0);
                 img3D.refreshImageShowing();
-//                if (index <= trueSize) {
-//                    page = index + "/" + trueSize;
-//                    span = new SpannableString(page);
-//                    span.setSpan(new ForegroundColorSpan(LocalCachelActivity.this.getResources().getColor(R.color.material_blue_500)),
-//                            0, page.length() - 1 - ("" + trueSize).length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-//                    tv_page1.setText(span);
-//                    tv_page2.setText(span);
-//                    tv_title1.setText(dbList.get(index - 1).getTitle());
-//                    tv_title2.setText(dbList.get(index - 1).getTitle());
-//                } else {
-//                    index = 1;
-//                    page = index + "/" + trueSize;
-//                    span = new SpannableString(page);
-//                    span.setSpan(new ForegroundColorSpan(LocalCachelActivity.this.getResources().getColor(R.color.material_blue_500)),
-//                            0, page.length() - 1 - ("" + trueSize).length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-//                    tv_page1.setText(span);
-//                    tv_page2.setText(span);
-//                    tv_title1.setText(dbList.get(index - 1).getTitle());
-//                    tv_title2.setText(dbList.get(index - 1).getTitle());
-//                }
-//                if (dbList.get(index - 1).getCurState() == 3) {
-//                    view1.hideOrShowLoading(false);
-//                    view2.hideOrShowLoading(false);
-//                } else {
-//                    view1.hideOrShowLoading(true);
-//                    view2.hideOrShowLoading(true);
-//                }
+//
             }
 
             @Override
@@ -636,35 +584,7 @@ public class LocalCachelActivity extends BaseActivity {
             public void Back() {
                 System.out.println("-----4執行");
                 img3D.scrollBack();
-//                tv_page1.setText(index+"/"+vrPlays.size());
-//                tv_page2.setText(index + "/" + vrPlays.size());
-//                if (index > 0) {
-//                    page = index + "/" + trueSize;
-//                    span = new SpannableString(page);
-//                    span.setSpan(new ForegroundColorSpan(LocalCachelActivity.this.getResources().getColor(R.color.material_blue_500)),
-//                            0, page.length() - 1 - ("" + trueSize).length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-//                    tv_page1.setText(span);
-//                    tv_page2.setText(span);
-//                    tv_title1.setText(dbList.get(index - 1).getTitle());
-//                    tv_title2.setText(dbList.get(index - 1).getTitle());
-//                } else {
-//                    index = trueSize;
-//                    page = index + "/" + trueSize;
-//                    span = new SpannableString(page);
-//                    span.setSpan(new ForegroundColorSpan(LocalCachelActivity.this.getResources().getColor(R.color.material_blue_500)),
-//                            0, page.length() - 1 - ("" + trueSize).length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-//                    tv_page1.setText(span);
-//                    tv_page2.setText(span);
-//                    tv_title1.setText(dbList.get(index - 1).getTitle());
-//                    tv_title2.setText(dbList.get(index - 1).getTitle());
-//                }
-//                if (dbList.get(index - 1).getCurState() == 3) {
-//                    view1.hideOrShowLoading(false);
-//                    view2.hideOrShowLoading(false);
-//                } else {
-//                    view1.hideOrShowLoading(true);
-//                    view2.hideOrShowLoading(true);
-//                }
+//
             }
         });
     }
@@ -805,6 +725,40 @@ public class LocalCachelActivity extends BaseActivity {
             cache_no1.setVisibility(View.GONE);
             cache_no1.setVisibility(View.GONE);
         }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        System.out.println("---keyCode = " + keyCode);
+        switch (keyCode) {
+            case KeyEvent.KEYCODE_DPAD_LEFT:
+                img3D.scrollToNext();
+                img3D2.scrollToNext();
+                L.e("你点击了下一张");
+                break;
+            case KeyEvent.KEYCODE_DPAD_RIGHT:
+                img3D.scrollToPrevious();
+                img3D2.scrollToPrevious();
+                L.e("你点击了上一张");
+                break;
+
+            case KeyEvent.KEYCODE_ENTER:
+                break;
+            case KeyEvent.KEYCODE_DPAD_CENTER:
+            case KeyEvent.KEYCODE_BUTTON_A:
+                L.e("你点击了进入播放页");
+                mCurrentImg = img3D.getImgIndex() - 1;
+                if (mCurrentImg < 0) {
+                    mCurrentImg = dbList.size() - 1;
+                }
+                clickVedio(mCurrentImg);
+                break;
+            case KeyEvent.KEYCODE_BACK:
+            case KeyEvent.KEYCODE_BUTTON_B:
+                finish();
+                break;
+        }
+        return true;
     }
 
     /**

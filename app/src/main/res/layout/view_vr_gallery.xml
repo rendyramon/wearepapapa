@@ -11,8 +11,7 @@
         android:id="@+id/id_sv"
         android:layout_width="match_parent"
         android:layout_height="80dp"
-        android:layout_marginTop="110dp">
-    </com.hotcast.vr.imageView.Image3DSwitchView>
+        android:layout_marginTop="110dp"></com.hotcast.vr.imageView.Image3DSwitchView>
 
     <TextView
         android:id="@+id/tv_title"
@@ -42,16 +41,16 @@
 
     <TextView
         android:id="@+id/bt_ceach"
-        android:layout_width="30dp"
-        android:layout_height="15dp"
-        android:gravity="center"
+        android:layout_width="35dp"
+        android:layout_height="18dp"
         android:layout_below="@+id/tv_desc"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="6dp"
         android:background="@drawable/download_button_selector"
+        android:gravity="center"
+        android:text="未下载"
         android:textColor="@color/downloadtext1"
-        android:textSize="8sp"
-        android:text="未下载" />
+        android:textSize="8sp" />
 
     <TextView
         android:id="@+id/tv_page"
@@ -66,14 +65,16 @@
 
     <LinearLayout
         android:id="@+id/ivBack"
+        android:focusable="true"
+        android:clickable="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:background="@drawable/buttom"
         android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
         android:layout_marginBottom="60dp"
-        android:gravity="center"
         android:layout_marginTop="10dp"
+        android:background="@drawable/buttom"
+        android:gravity="center"
         android:orientation="horizontal">
 
         <ImageView
@@ -86,11 +87,11 @@
 
     <ImageView
         android:layout_width="30dp"
-        android:visibility="gone"
         android:layout_height="match_parent"
         android:layout_above="@id/ivBack"
         android:scaleType="fitXY"
-        android:src="@drawable/left" />
+        android:src="@drawable/left"
+        android:visibility="gone" />
 
     <ImageView
         android:layout_width="30dp"
@@ -99,8 +100,8 @@
         android:layout_alignParentRight="true"
         android:rotation="180"
         android:scaleType="fitXY"
-        android:visibility="gone"
-        android:src="@drawable/right" />
+        android:src="@drawable/right"
+        android:visibility="gone" />
 
     <RelativeLayout
         android:id="@+id/rl_update"
@@ -124,7 +125,12 @@
             android:layout_marginTop="8dp"
             android:text="取消更新" />
     </RelativeLayout>
+
     <include
         android:id="@+id/loadingbar"
         layout="@layout/pagerchange_loading" />
+
+    <include
+        android:id="@+id/nointernet"
+        layout="@layout/nointernet_window"/>
 </RelativeLayout>

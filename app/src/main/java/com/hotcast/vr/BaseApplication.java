@@ -27,7 +27,7 @@ import java.util.List;
 
 
 public class BaseApplication extends Application {
-    //    public static List<HomeRoll> homes;
+    public static boolean doAsynctask = false;//本地视频同步数据库处理
     public static List<String> strs = new ArrayList<>();
     public static int size;
     public static boolean isDownLoad = false;

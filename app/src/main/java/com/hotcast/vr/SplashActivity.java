@@ -17,6 +17,7 @@ import android.widget.ImageView;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.hotcast.vr.asynctask.LocalVideosAsynctask;
 import com.hotcast.vr.bean.Classify;
 import com.hotcast.vr.bean.Update;
 import com.hotcast.vr.services.DownLoadingService;
@@ -78,6 +79,7 @@ public class SplashActivity extends BaseActivity {
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
+        new LocalVideosAsynctask(this).execute();
         L.e("PackageName:" + getPackageName());
         getNetDate();
 //        getNetDate2();

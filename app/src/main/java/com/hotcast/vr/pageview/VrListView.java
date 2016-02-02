@@ -1,6 +1,8 @@
 package com.hotcast.vr.pageview;
 
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Message;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -45,7 +47,7 @@ public class VrListView extends BaseView implements GestureDetector.OnGestureLis
     @InjectView(R.id.bt_ceach)
     TextView bt_ceach;
     View loadingBar;
-
+    public View nointernet;
     final String START = "START";
     final String DOWNLOADING = "DOWNLOADING";
     final String FINISH = "FINISH";
@@ -147,6 +149,8 @@ public class VrListView extends BaseView implements GestureDetector.OnGestureLis
 
     private void initListView() {
         loadingBar = this.getRootView().findViewById(R.id.loadingbar);
+        nointernet = this.getRootView().findViewById(R.id.nointernet);
+        nointernet.setVisibility(View.GONE);
         loadingBar.setVisibility(View.GONE);
 //        id_sv.setOnImageSwitchListener(new Image3DSwitchView.OnImageSwitchListener() {
 //            @Override
@@ -228,13 +232,30 @@ public class VrListView extends BaseView implements GestureDetector.OnGestureLis
     }
 
     /**
+     * 显示没有网络的提示，2秒后隐藏
+     */
+    public void showNoInternetDialog(){
+        nointernet.setVisibility(View.VISIBLE);
+        handler.sendEmptyMessageDelayed(0,2000);
+    }
+    Handler handler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what){
+                case 0:
+                    nointernet.setVisibility(View.GONE);
+                    break;
+            }
+        }
+    };
+    /**
      * 一级频道，居中。
      */
     public void setPageCenter() {
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) id_sv.getLayoutParams();
         params.height = RelativeLayout.LayoutParams.MATCH_PARENT;
         params.width = RelativeLayout.LayoutParams.MATCH_PARENT;
-        params.setMargins(0, DensityUtils.dp2px(activity, 60), 0,0);
+        params.setMargins(0, DensityUtils.dp2px(activity, 60), 0, 0);
         id_sv.setLayoutParams(params);
 //        ImageView iv_cancel = (ImageView) this.getRootView().findViewById(R.id.iv_cancel);
 //        LinearLayout.LayoutParams params1 = (LinearLayout.LayoutParams) iv_cancel.getLayoutParams();

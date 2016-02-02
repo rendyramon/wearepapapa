@@ -19,7 +19,7 @@ import butterknife.InjectView;
 /**
  * Created by lostnote on 15/11/17.
  */
-public class MineView extends BaseView implements View.OnClickListener{
+public class MineView extends BaseView implements View.OnClickListener {
     @InjectView(R.id.rl_cache)
     RelativeLayout rl_cache;
     @InjectView(R.id.rl_about)
@@ -32,16 +32,17 @@ public class MineView extends BaseView implements View.OnClickListener{
     String spec;
     String is_force;
     String newFeatures;
-    public MineView(BaseActivity activity){
+
+    public MineView(BaseActivity activity) {
         super(activity, R.layout.layout_mine);
     }
 
     @Override
     public void init() {
-        spec = activity.sp.select("spec","");
-        is_force = activity.sp.select("is_force","");
-        newFeatures = activity.sp.select("newFeatures","");
-        if (bFirstInit){
+        spec = activity.sp.select("spec", "");
+        is_force = activity.sp.select("is_force", "");
+        newFeatures = activity.sp.select("newFeatures", "");
+        if (bFirstInit) {
             initListView();
         }
         super.init();
@@ -57,9 +58,10 @@ public class MineView extends BaseView implements View.OnClickListener{
     @Override
     public void onClick(View view) {
         Intent intent;
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.rl_cache:
-               intent = new Intent(activity,ListLocalActivity.class);
+
+                intent = new Intent(activity, ListLocalActivity.class);
                 activity.startActivity(intent);
                 break;
             case R.id.rl_about:
@@ -69,9 +71,9 @@ public class MineView extends BaseView implements View.OnClickListener{
                 break;
             case R.id.rl_version:
                 if (BaseApplication.isUpdate) {
-                    updateAppManager = new UpdateAppManager(activity, spec, is_force,newFeatures);
+                    updateAppManager = new UpdateAppManager(activity, spec, is_force, newFeatures);
                     updateAppManager.checkUpdateInfo();
-                }else {
+                } else {
                     activity.showToast("您已经是最新版本");
                 }
                 break;
