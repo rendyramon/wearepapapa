@@ -83,6 +83,7 @@ public class ClassifyListView extends BaseView {
         requestUrl = Constants.PROGRAM_LIST;
     }
 
+
     private void initListView(){
         bitmapUtils = new BitmapUtils(activity);
         list.setMode(PullToRefreshBase.Mode.BOTH);
@@ -90,6 +91,7 @@ public class ClassifyListView extends BaseView {
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
                 bPullDown = true;
+                page = 1;
                 getNetData(page);
             }
 

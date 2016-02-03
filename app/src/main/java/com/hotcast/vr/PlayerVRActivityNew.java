@@ -609,11 +609,11 @@ public class PlayerVRActivityNew extends BaseLanActivity implements PFAssetObser
 //            playerContralView.show();
                 ctr_vist = true;
                 linCtr.setVisibility(View.VISIBLE);
-                System.out.println("显示进度条");
+                System.out.println("---显示进度条");
             } else {
                 ctr_vist = false;
                 linCtr.setVisibility(View.GONE);
-                System.out.println("隐藏进度条");
+                System.out.println("---隐藏进度条");
             }
             delayedHide(4000);
             ctr_vist = false;

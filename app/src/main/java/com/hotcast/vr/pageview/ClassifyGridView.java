@@ -79,6 +79,7 @@ public class ClassifyGridView extends BaseView {
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<GridView> refreshView) {
                 bPullDown = true;
+                page = 1;
                 getNetData(page);
             }
 

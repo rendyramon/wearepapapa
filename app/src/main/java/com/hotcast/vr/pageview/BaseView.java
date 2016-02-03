@@ -64,12 +64,6 @@ public class BaseView {
         bFirstInit = false;
     }
 
-    public void onResume() {
-    }
-
-    public void onPause() {
-    }
-
     public void visGone(View vis, View gone) {
         if (null != vis) {
             vis.setVisibility(View.VISIBLE);
