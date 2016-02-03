@@ -129,6 +129,7 @@ public class PlayerVRActivityNew extends BaseLanActivity implements PFAssetObser
             @Override
             public void onFailure(HttpException e, String s) {
                 L.e("DetailActivity onFailure ");
+                finish();
             }
         });
 

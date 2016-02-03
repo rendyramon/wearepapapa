@@ -234,20 +234,28 @@ public class VrListView extends BaseView implements GestureDetector.OnGestureLis
     /**
      * 显示没有网络的提示，2秒后隐藏
      */
-    public void showNoInternetDialog(){
+    public void showNoInternetDialog() {
         nointernet.setVisibility(View.VISIBLE);
-        handler.sendEmptyMessageDelayed(0,2000);
+        handler.sendEmptyMessageDelayed(0, 2000);
     }
-    Handler handler = new Handler(){
+
+    Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            switch (msg.what){
+            switch (msg.what) {
                 case 0:
                     nointernet.setVisibility(View.GONE);
                     break;
             }
         }
     };
+
+    public void showNoInternetDialog(String text) {
+        nointernet.setVisibility(View.VISIBLE);
+        ((TextView) nointernet.findViewById(R.id.tv_notice_content)).setText(text);
+        handler.sendEmptyMessageDelayed(0, 2000);
+    }
+
     /**
      * 一级频道，居中。
      */

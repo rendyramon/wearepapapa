@@ -8,6 +8,7 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.PowerManager;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -87,7 +88,8 @@ public class LocalCachelActivity extends BaseActivity {
     ImageView cache_no2;
     LinearLayout ivBack1;
     LinearLayout ivBack2;
-
+    PowerManager manager;
+    PowerManager.WakeLock wakeLock;
     @Override
     public int getLayoutId() {
         return R.layout.activity_vr_list;
@@ -95,6 +97,9 @@ public class LocalCachelActivity extends BaseActivity {
 
     @Override
     public void init() {
+        manager = ((PowerManager)getSystemService(POWER_SERVICE));
+        wakeLock = manager.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK| PowerManager.ON_AFTER_RELEASE, "ATAAW");
+        wakeLock.acquire();
         receiver = new DetailReceiver();
         IntentFilter filter = new IntentFilter();
         filter.addAction(START);
@@ -133,6 +138,7 @@ public class LocalCachelActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        wakeLock.release();
         if (receiver != null) {
             unregisterReceiver(receiver);
         }

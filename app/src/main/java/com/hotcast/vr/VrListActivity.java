@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -14,17 +15,24 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.hotcast.vr.bean.ChannelList;
 import com.hotcast.vr.bean.Details;
 import com.hotcast.vr.bean.LocalBean;
+import com.hotcast.vr.bean.Play;
 import com.hotcast.vr.bean.VideosNew;
 import com.hotcast.vr.imageView.Image3DSwitchView;
 import com.hotcast.vr.imageView.Image3DView;
 import com.hotcast.vr.pageview.VrListView;
+import com.hotcast.vr.tools.Constants;
 import com.hotcast.vr.tools.L;
 import com.lidroid.xutils.BitmapUtils;
 import com.lidroid.xutils.DbUtils;
 import com.lidroid.xutils.exception.DbException;
+import com.lidroid.xutils.exception.HttpException;
+import com.lidroid.xutils.http.RequestParams;
+import com.lidroid.xutils.http.ResponseInfo;
+import com.lidroid.xutils.http.callback.RequestCallBack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -404,8 +412,6 @@ public class VrListActivity extends BaseActivity {
         container2.removeAllViews();
         container1.addView(view1.getRootView(), ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         container2.addView(view2.getRootView(), ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-//        container1.setOnClickListener(this);
-//        container2.setOnClickListener(this);
     }
 
     @Override
@@ -420,93 +426,116 @@ public class VrListActivity extends BaseActivity {
     final String DOWNLOADING = "DOWNLOADING";
     final String FINISH = "FINISH";
     final String PAUSE = "PAUSE";
+    //true表示已经点击了下载，正在请求网络url
+    boolean doDownloadrequest = false;
 
-//    @Override
-//    public void onClick(View v) {
-//        switch (v.getId()) {
-//            case R.id.bt_ceach:
-//
-//                mCurrentImg = img3D.getImgIndex() - 1;
-//                if (mCurrentImg < 0) {
-//                    mCurrentImg = titles.size() - 1;
-//                }
-//                if (!localUrlList.contains(vrPlays.get(mCurrentImg).getVideos().get(0).getVname())) {
-//                    System.out.println("---点击了：" + vrPlays.get(mCurrentImg).getTitle() + "--url:" + vrPlays.get(mCurrentImg).getVideos().get(0).getVname());
-////                    Intent intent = new Intent(START);
-////                    Details details = new Details();
-////                    details.setTitle(vrPlays.get(mCurrentImg).getTitle());
-////                    System.out.println("---开始下载" + vrPlays.get(mCurrentImg).getTitle());
-//////                    details.setImage(vrPlays.get(mCurrentImg).getImage());
-////                    details.setDesc(vrPlays.get(mCurrentImg).getDesc());
-//////
-////                    BaseApplication.detailsList.add(details);
-////                    BaseApplication.playUrls.add(vrPlays.get(mCurrentImg).getVideo_url());
-////                    VrListActivity.this.sendBroadcast(intent);
-//                    BaseApplication.isDownLoad = true;
-//                    DbUtils db = DbUtils.create(VrListActivity.this);
-//                    LocalBean localBean = new LocalBean();
-//                    localBean.setTitle(details.getTitle());
-////                    localBean.setImage(details.getImage());
-//                    localBean.setId(vrPlays.get(mCurrentImg).getId());
-////                    localBean.setUrl(vrPlays.get(mCurrentImg).getVideo_url());
-//                    localBean.setCurState(0);//還沒下載，準備下載
-//                    try {
-//                        db.delete(localBean);
-//                        db.save(localBean);
-//                    } catch (DbException e) {
-//                        e.printStackTrace();
-//                    }
-//                    localUrlList.add(vrPlays.get(mCurrentImg).getVideo_url());
-//                    bt_ceach2.setText("已下载");
-//                    bt_ceach1.setText("已下载");
-////                }
-//                    break;
-////            case R.id.container1:
-////            case R.id.container2:
-////                downLoadMovie();
-////                break;
-//                }
-//        }
-//    }
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.bt_ceach:
+                if (!doDownloadrequest) {
+                    mCurrentImg = img3D.getImgIndex() - 1;
+                    if (mCurrentImg < 0) {
+                        mCurrentImg = titles.size() - 1;
+                    }
+                    if (!localUrlList.contains(vrPlays.get(mCurrentImg).getVideos().get(0).getVname())) {
+                        System.out.println("---点击了：" + vrPlays.get(mCurrentImg).getTitle() + "--url:" + vrPlays.get(mCurrentImg).getVideos().get(0).getVname());
+                        doDownloadrequest = true;
+                        setDownloadText(true);
+                        getplayUrl(mCurrentImg, vrPlays.get(mCurrentImg).getVideos().get(0).getVid(), vrPlays.get(mCurrentImg).getVideos().get(0).getVname());
+                    }
+                    break;
+//            case R.id.container1:
+//            case R.id.container2:
+//                downLoadMovie();
+//                break;
+                }
+        }
+    }
+
+    public void getplayUrl(final int mCurrent, String vid, final String name) {
+        String mUrl = Constants.PLAY_URL;
+        RequestParams params = new RequestParams();
+        params.addBodyParameter("token", "123");
+        params.addBodyParameter("version", BaseApplication.version);
+        params.addBodyParameter("platform", BaseApplication.platform);
+        params.addBodyParameter("vid", vid);
+        params.addBodyParameter("package", BaseApplication.packagename);
+        params.addBodyParameter("app_version", BaseApplication.version);
+        params.addBodyParameter("device", BaseApplication.device);
+        this.httpPost(mUrl, params, new RequestCallBack<String>() {
+            @Override
+            public void onStart() {
+                super.onStart();
+            }
+
+            @Override
+            public void onSuccess(ResponseInfo<String> responseInfo) {
+                Play play = new Gson().fromJson(responseInfo.result, Play.class);
+                String play_url = null;
+
+                if (!TextUtils.isEmpty(play.getSd_url())) {
+                    play_url = play.getSd_url();
+                } else if (!TextUtils.isEmpty(play.getHd_url())) {
+                    play_url = play.getHd_url();
+                } else if (!TextUtils.isEmpty(play.getUhd_url())) {
+                    play_url = play.getUhd_url();
+                }
+                if (play_url == null ||play_url == ""){
+                    mCurrentImg = img3D.getImgIndex() - 1;
+                    if (mCurrentImg < 0) {
+                        mCurrentImg = titles.size() - 1;
+                    }
+                    if (mCurrentImg == mCurrent) {
+                        setDownloadText(false);
+                    }
+                    view2.showNoInternetDialog("连接异常，" + name + "下载失败");
+                    view1.showNoInternetDialog("连接异常，" + name + "下载失败");
+                    doDownloadrequest = false;
+                }else {
+                    localUrlList.add(name);
+                    downLoadMovie(mCurrent, name, play_url);
+                    System.out.println("---play_url:" + play_url);
+                    doDownloadrequest = false;
+                }
+            }
+
+            @Override
+            public void onFailure(HttpException e, String s) {
+                L.e("DetailActivity onFailure ");
+                //下载失败
+                mCurrentImg = img3D.getImgIndex() - 1;
+                if (mCurrentImg < 0) {
+                    mCurrentImg = titles.size() - 1;
+                }
+                if (mCurrentImg == mCurrent) {
+                    setDownloadText(false);
+                }
+                view2.showNoInternetDialog("连接异常，" + name + "下载失败");
+                view1.showNoInternetDialog("连接异常，" + name + "下载失败");
+                doDownloadrequest = false;
+            }
+        });
 
 
-//    public void downLoadMovie() {
-//        mCurrentImg = img3D.getImgIndex() - 1;
-//        if (mCurrentImg < 0) {
-//            mCurrentImg = titles.size() - 1;
-//        }
-//        if (!localUrlList.contains(vrPlays.get(mCurrentImg).getVideo_url())) {
-//            System.out.println("---点击了：" + vrPlays.get(mCurrentImg).getTitle() + "--url:" + vrPlays.get(mCurrentImg).getVideo_url());
-////                    System.out.println("---下载：" + vrPlays.get(mCurrentImg).getTitle());
-//            Intent intent = new Intent(START);
-//            Details details = new Details();
-//            details.setTitle(vrPlays.get(mCurrentImg).getTitle());
-//            System.out.println("---开始下载" + vrPlays.get(mCurrentImg).getTitle());
-////            details.setImage(vrPlays.get(mCurrentImg).getImage());
-//            details.setDesc(vrPlays.get(mCurrentImg).getDesc());
-////
-//            BaseApplication.detailsList.add(details);
-//            BaseApplication.playUrls.add(vrPlays.get(mCurrentImg).getVideo_url());
-//            VrListActivity.this.sendBroadcast(intent);
-//            BaseApplication.isDownLoad = true;
-//            DbUtils db = DbUtils.create(VrListActivity.this);
-//            LocalBean localBean = new LocalBean();
-//            localBean.setTitle(details.getTitle());
-////            localBean.setImage(details.getImage());
-//            localBean.setId(vrPlays.get(mCurrentImg).getVideo_url());
-//            localBean.setUrl(vrPlays.get(mCurrentImg).getVideo_url());
-//            localBean.setCurState(0);//還沒下載，準備下載
-//            try {
-//                db.delete(localBean);
-//                db.save(localBean);
-//            } catch (DbException e) {
-//                e.printStackTrace();
-//            }
-//            localUrlList.add(vrPlays.get(mCurrentImg).getVideo_url());
-//            bt_ceach2.setText("已下载");
-//            bt_ceach1.setText("已下载");
-//        }
-//    }
+    }
+
+    public void downLoadMovie(int mCurrentImg, String vname, String play_url) {
+        LocalBean localBean = new LocalBean();
+        localBean.setTitle(vname);
+        localBean.setImage(vrPlays.get(mCurrentImg).getImage().get(0));
+        localBean.setId(play_url);
+        localBean.setUrl(play_url);
+        localBean.setCurState(0);//還沒下載，準備下載
+        try {
+            db.delete(localBean);
+            db.save(localBean);
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
+        int i = BaseApplication.downLoadManager.addTask(play_url, play_url, vname + ".mp4", BaseApplication.VedioCacheUrl + vname + ".mp4");
+        System.out.println("---加入任务返回值：" + i);
+    }
 
 //    List<VideosNew> videosNews = new ArrayList<>();
 
@@ -523,7 +552,6 @@ public class VrListActivity extends BaseActivity {
         System.out.println("*** VrListActivity ***vrPlays = " + vrPlays + "titles = " + titles + "descs = " + descs);
         System.out.println("-----titlessssss:" + titles.size());
         type = intent.getIntExtra("type", 0);
-
     }
 
     Intent intent;
@@ -534,7 +562,7 @@ public class VrListActivity extends BaseActivity {
         switch (keyCode) {
 
             case KeyEvent.KEYCODE_DPAD_LEFT:
-                if (img3D.isFinishScroll()&&img3D2.isFinishScroll()){
+                if (img3D.isFinishScroll() && img3D2.isFinishScroll()) {
                     ++index;
                     mCurrentImg = img3D.getImgIndex() - 1;
                     if (mCurrentImg < 0) {
@@ -580,7 +608,7 @@ public class VrListActivity extends BaseActivity {
                 }
                 break;
             case KeyEvent.KEYCODE_DPAD_RIGHT:
-                if (img3D.isFinishScroll()&&img3D2.isFinishScroll()) {
+                if (img3D.isFinishScroll() && img3D2.isFinishScroll()) {
                     --index;
                     mCurrentImg = img3D.getImgIndex() - 1;
                     if (mCurrentImg < 0) {
@@ -769,13 +797,13 @@ public class VrListActivity extends BaseActivity {
         return velocityX < -SNAP_VELOCITY || img3D.getScrollX() > mImageWidth / 2;
     }
 
-    public void setDownloadText(boolean flag){
+    public void setDownloadText(boolean flag) {
         if (flag) {
             bt_ceach2.setText("已下载");
             bt_ceach1.setText("已下载");
             bt_ceach1.setTextColor(getResources().getColor(R.color.downloadtext2));
             bt_ceach2.setTextColor(getResources().getColor(R.color.downloadtext2));
-        }else{
+        } else {
             bt_ceach2.setText("未下载");
             bt_ceach1.setText("未下载");
             bt_ceach1.setTextColor(getResources().getColor(R.color.downloadtext1));
