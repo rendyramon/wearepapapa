@@ -23,13 +23,13 @@
             android:src="@mipmap/about_log" />
 
         <TextView
-
+            android:id="@+id/tv_version"
             style="@style/about_text"
             android:text="版本号v1.0.1" />
 
         <TextView
             style="@style/about_text"
-            android:text="关注微信账号：VR" />
+            android:text="关注微信账号：VR热播" />
     </LinearLayout>
 
     <RelativeLayout

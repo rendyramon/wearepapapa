@@ -200,7 +200,12 @@ public class HomeView2 extends BaseView {
                 bDataProcessed = false;
                 bProcessing = false;
                 //隐藏底部加载更多 、顶部刷新的ui；
-                iv_noNet.setVisibility(View.VISIBLE);
+                if (iv_noNet == null) {
+                    iv_noNet = (ImageView) getRootView().findViewById(R.id.iv_noNet);
+                    iv_noNet.setVisibility(View.VISIBLE);
+                } else {
+                    iv_noNet.setVisibility(View.VISIBLE);
+                }
                 activity.showToast("网络连接异常");
                 hideRefreshView();
 
@@ -299,8 +304,14 @@ public class HomeView2 extends BaseView {
             try {
                 roll = new Gson().fromJson(json, RollBean.class);
 //                homeRolls = homeBean.getHome_roll();
+                //        HomeSubject的集合
+                if (datasList == null){
+                    datasList = new ArrayList<>();
+                }else{
+                    datasList.clear();
+                }
                 datasList = roll.getData();
-                System.out.println("---datasList = " + datasList);
+//                System.out.println("---datasList = " + datasList);
 
             } catch (IllegalStateException e) {
                 activity.showToast("解析出现错误，请刷新数据");
@@ -313,13 +324,6 @@ public class HomeView2 extends BaseView {
             //初始化viewpager
 //            L.e("HomeView2 viewList.sixe() = " + viewList.size());
 
-
-//        HomeSubject的集合
-        if (datasList == null){
-            datasList = new ArrayList<>();
-        }else{
-            datasList.clear();
-        }
         }
 
         RollViewPager rollViewPager = new RollViewPager(activity, viewList, new RollViewPager.onPageClick() {
@@ -332,7 +336,7 @@ public class HomeView2 extends BaseView {
 //                Toast.makeText(activity, "position = " + i, Toast.LENGTH_SHORT).show();
             }
         });
-        System.out.println("HomeView2 subjects = " + datasList);
+        System.out.println("---335 datasList = " + datasList);
 //    subjects=homeBean.getHome_subject();
 //        subjects.addAll(homeBean.getHome_subject());
         urlImgList.clear();
@@ -340,17 +344,18 @@ public class HomeView2 extends BaseView {
         for (int i = 0; i < datasList.size(); i++) {
 //            RollBean homeRoll = datasList.get(i);
             Datas datas = datasList.get(i);
+            System.out.println("---343 datas = " + datas);
 //            for (int j = 0; j < datas.getData().size(); j++) {
 //                Datas subject = datas.getData().get(j);
 
             urlImgList.add(datas.getImage());
             titleList.add(datas.getTitle());
-            System.out.println("---urlImg = " + datas.getImage());
-            System.out.println("---title = " + datas.getTitle());
+            System.out.println("---349 urlImg = " + datas.getImage());
+            System.out.println("---350 title = " + datas.getTitle());
 //            }
         }
-        System.out.println("---urlImgList = " + urlImgList.size());
-        System.out.println("---titleList = " + titleList.size());
+//        System.out.println("---urlImgList = " + urlImgList.size());
+//        System.out.println("---titleList = " + titleList.size());
 
 
         initDot();

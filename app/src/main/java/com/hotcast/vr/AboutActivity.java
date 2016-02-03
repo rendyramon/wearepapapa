@@ -47,6 +47,8 @@ public class AboutActivity extends BaseActivity {
     Button bt_advice;
     @InjectView(R.id.bt_cancel)
     Button bt_cancel;
+    @InjectView(R.id.tv_version)
+    TextView tv_version;
     private boolean isEdet = false;
     private boolean isagreement = false;
 
@@ -86,6 +88,7 @@ public class AboutActivity extends BaseActivity {
     @Override
     public void init() {
         tv_title.setText("关于");
+        tv_version.setText(BaseApplication.version);
         iv_return.setVisibility(View.VISIBLE);
         user_agreement.setOnClickListener(this);
         head.setOnClickListener(new View.OnClickListener() {
