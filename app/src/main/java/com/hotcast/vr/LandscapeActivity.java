@@ -418,28 +418,29 @@ public class LandscapeActivity extends BaseActivity implements View.OnClickListe
     @Override
     public boolean onTouchEvent(MotionEvent event) {
 //        getParent().requestDisallowInterceptTouchEvent(true);
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                downX = (int) event.getX();
-                downY = (int) event.getY();
-                break;
-            case MotionEvent.ACTION_UP:
-                upX = (int) event.getX();
-                upY = (int) event.getY();
-                break;
-        }
-        int xlen = Math.abs(downX - upX);
-        int ylen = Math.abs(downY - upY);
-        int length = (int) Math.sqrt((double) xlen * xlen + (double) ylen * ylen);
-        if (length < 10) {
-            //执行点击事件
-            mCurrentImg = img3D.getImgIndex() - 1;
-            if (mCurrentImg < 0) {
-                mCurrentImg = netClassifys.size();
-            }
-            clickItem(mCurrentImg);
-            return true;
-        }
+        //九又版本全屏捕捉点击事件
+//        switch (event.getAction()) {
+//            case MotionEvent.ACTION_DOWN:
+//                downX = (int) event.getX();
+//                downY = (int) event.getY();
+//                break;
+//            case MotionEvent.ACTION_UP:
+//                upX = (int) event.getX();
+//                upY = (int) event.getY();
+//                break;
+//        }
+//        int xlen = Math.abs(downX - upX);
+//        int ylen = Math.abs(downY - upY);
+//        int length = (int) Math.sqrt((double) xlen * xlen + (double) ylen * ylen);
+//        if (length < 10) {
+//            //执行点击事件
+//            mCurrentImg = img3D.getImgIndex() - 1;
+//            if (mCurrentImg < 0) {
+//                mCurrentImg = netClassifys.size();
+//            }
+//            clickItem(mCurrentImg);
+//            return true;
+//        }
         if (img3D.getmScroller().isFinished()) {
             if (mVelocityTracker == null) {
                 mVelocityTracker = VelocityTracker.obtain();
@@ -499,7 +500,7 @@ public class LandscapeActivity extends BaseActivity implements View.OnClickListe
     }
 
     public void clickItem(int i) {
-//        System.out.println("---clickItem"+i);
+        System.out.println("---clickItem:"+i);
         if(i<netClassifys.size()){
             view1.showOrHideProgressBar(true);
             view2.showOrHideProgressBar(true);
@@ -594,6 +595,7 @@ public class LandscapeActivity extends BaseActivity implements View.OnClickListe
 
     @Override
     protected void onStart() {
+        BaseApplication.scapePage = 1;
         super.onStart();
         dbList = new ArrayList<>();
         if (BaseApplication.doAsynctask){
@@ -620,7 +622,7 @@ public class LandscapeActivity extends BaseActivity implements View.OnClickListe
         params.addBodyParameter("channel_id", channel_id);
         params.addBodyParameter("version", BaseApplication.version);
         params.addBodyParameter("platform", BaseApplication.platform);
-        params.addBodyParameter("page_size", String.valueOf(10));
+        params.addBodyParameter("page_size", String.valueOf(8));
         System.out.println("***VrListActivity *** getNetData()" + channel_id);
         this.httpPost(mUlr, params, new RequestCallBack<String>() {
             @Override

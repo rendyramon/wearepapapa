@@ -90,6 +90,7 @@ public class LocalCachelActivity extends BaseActivity {
     LinearLayout ivBack2;
     PowerManager manager;
     PowerManager.WakeLock wakeLock;
+
     @Override
     public int getLayoutId() {
         return R.layout.activity_vr_list;
@@ -97,8 +98,8 @@ public class LocalCachelActivity extends BaseActivity {
 
     @Override
     public void init() {
-        manager = ((PowerManager)getSystemService(POWER_SERVICE));
-        wakeLock = manager.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK| PowerManager.ON_AFTER_RELEASE, "ATAAW");
+        manager = ((PowerManager) getSystemService(POWER_SERVICE));
+        wakeLock = manager.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK | PowerManager.ON_AFTER_RELEASE, "ATAAW");
         wakeLock.acquire();
         receiver = new DetailReceiver();
         IntentFilter filter = new IntentFilter();
@@ -797,15 +798,15 @@ public class LocalCachelActivity extends BaseActivity {
         int ylen = Math.abs(downY - upY);
         int length = (int) Math.sqrt((double) xlen * xlen + (double) ylen * ylen);
         if (img3D != null) {
-            if (length < 8) {
-                //执行点击事件
-                mCurrentImg = img3D.getImgIndex() - 1;
-                if (mCurrentImg < 0) {
-                    mCurrentImg = dbList.size() - 1;
-                }
-                clickVedio(mCurrentImg);
-                return true;
-            }
+//            if (length < 8) {
+//                //执行点击事件
+//                mCurrentImg = img3D.getImgIndex() - 1;
+//                if (mCurrentImg < 0) {
+//                    mCurrentImg = dbList.size() - 1;
+//                }
+//                clickVedio(mCurrentImg);
+//                return true;
+//            }
 
             if (img3D.getmScroller().isFinished()) {
                 if (mVelocityTracker == null) {

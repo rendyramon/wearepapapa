@@ -81,7 +81,10 @@ public class PlayerVRActivityNew extends BaseLanActivity implements PFAssetObser
             getWindow().getDecorView().setSystemUiVisibility(1542);
             if (null != playerContralView) {
 //                playerContralView.hide();
-                linCtr.setVisibility(View.GONE);
+                if (ctr_vist) {
+                    ctr_vist = false;
+                    linCtr.setVisibility(View.GONE);
+                }
             }
         }
     };
@@ -368,6 +371,7 @@ public class PlayerVRActivityNew extends BaseLanActivity implements PFAssetObser
     private String title;
     private String titleSplitScreen;
     private AudioManager audioManager; //音频
+
     @Override
     public void init() {
 //        if (getIntent().getStringExtra("title").length() > 4){
@@ -376,7 +380,7 @@ public class PlayerVRActivityNew extends BaseLanActivity implements PFAssetObser
 //        }else {
 
 //        }
-        audioManager=(AudioManager)getSystemService(Service.AUDIO_SERVICE);
+        audioManager = (AudioManager) getSystemService(Service.AUDIO_SERVICE);
 
         System.out.println("---104--开始加载的时间 = " + System.currentTimeMillis());
         showLoading("正在加载...");
@@ -605,18 +609,22 @@ public class PlayerVRActivityNew extends BaseLanActivity implements PFAssetObser
             return true;
         } else {
             System.out.println("单手指触碰");
-            if (!ctr_vist && linCtr != null) {
-//            playerContralView.show();
-                ctr_vist = true;
-                linCtr.setVisibility(View.VISIBLE);
-                System.out.println("---显示进度条");
-            } else {
-                ctr_vist = false;
-                linCtr.setVisibility(View.GONE);
-                System.out.println("---隐藏进度条");
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_UP:
+                    if (linCtr != null) {
+                        if (!ctr_vist) {
+                            ctr_vist = true;
+                            linCtr.setVisibility(View.VISIBLE);
+                            System.out.println("---显示进度条1");
+                            delayedHide(4000);
+                        } else {
+                            ctr_vist = false;
+                            linCtr.setVisibility(View.GONE);
+                            System.out.println("---隐藏进度条1");
+                        }
+                    }
+                    break;
             }
-            delayedHide(4000);
-            ctr_vist = false;
             return super.dispatchTouchEvent(event);
         }
     }

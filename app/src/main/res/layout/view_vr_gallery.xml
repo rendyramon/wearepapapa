@@ -84,6 +84,26 @@
             android:layout_marginTop="3dp"
             android:src="@mipmap/vr_back" />
     </LinearLayout>
+    <Button
+        android:id="@+id/bt_up"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="20dp"
+        android:layout_alignTop="@id/ivBack"
+        android:layout_toLeftOf="@id/ivBack"
+        android:textSize="8dp"
+        android:layout_width="50dp"
+        android:layout_height="30dp"
+        android:text="上一页"/>
+    <Button
+        android:id="@+id/bt_down"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="20dp"
+        android:layout_alignTop="@id/ivBack"
+        android:layout_toRightOf="@id/ivBack"
+        android:textSize="8dp"
+        android:layout_width="50dp"
+        android:layout_height="30dp"
+        android:text="下一页"/>
 
     <ImageView
         android:layout_width="30dp"

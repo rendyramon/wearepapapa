@@ -1,6 +1,7 @@
 package com.hotcast.vr.pageview;
 
 
+import com.hotcast.vr.BaseApplication;
 import com.hotcast.vr.DetailActivity;
 import com.hotcast.vr.bean.Datas;
 import com.hotcast.vr.bean.HomeRoll;
@@ -9,11 +10,14 @@ import com.hotcast.vr.bean.RollBean;
 import com.lidroid.xutils.BitmapUtils;
 
 import com.hotcast.vr.R;
+import com.lidroid.xutils.bitmap.BitmapDisplayConfig;
+import com.lidroid.xutils.bitmap.core.BitmapSize;
 
 import android.content.Context;
 import android.content.Intent;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
@@ -30,9 +34,9 @@ public class ItemView extends LinearLayout {
     private LinearLayout ll_img;
     private HorizontalScrollView hs_view;
     private Context context;
-
+    private int positon;
     private List<HomeRoll> homeRolls;
-    private BitmapUtils bu;
+    private static BitmapUtils bu;
 
     public interface MovieImgClickLisenter {
         public void movieImgClick();
@@ -56,13 +60,26 @@ public class ItemView extends LinearLayout {
         initView(context);
     }
 
+    public int getPositon() {
+        return positon;
+    }
+
+    public void setPositon(int positon) {
+        this.positon = positon;
+    }
+
     /**
      * ��ʼ��View�ķ���
      *
      * @param context
      */
     public void initView(Context context) {
-        bu = new BitmapUtils(context);
+        if (BaseApplication.bu == null) {
+            bu = new BitmapUtils(context);
+            BaseApplication.bu = bu;
+        } else {
+            bu = BaseApplication.bu;
+        }
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.item_view, this);
@@ -78,7 +95,12 @@ public class ItemView extends LinearLayout {
 //        });
     }
 
-    public void setItemList(Context context, RollBean item) {
+    public int getscrollL() {
+        return hs_view.getScrollX();
+    }
+
+    public void setItemList(Context context, RollBean item, int i) {
+        setPositon(i);
         String titleurl = item.getLogo();
         String titleText = item.getTitle();
 //        初始化条目头信息
@@ -87,6 +109,7 @@ public class ItemView extends LinearLayout {
 
 //        初始化下面的横向滑动条目
         setItemMovies(context, item.getData());
+
     }
 
     public void setItemMovies(final Context context, List<Datas> rolls) {
@@ -102,10 +125,9 @@ public class ItemView extends LinearLayout {
                     R.layout.item_item_img, null);
             ImageView iv_movie = (ImageView) contentView
                     .findViewById(R.id.iv_movie);
-            BitmapUtils bitmapUtils = new BitmapUtils(getContext());
 
             if (roll.getImage() != null) {
-                bitmapUtils.display(iv_movie, roll.getImage());
+                bu.display(iv_movie, roll.getImage());
             }
             TextView tv_movie = (TextView) contentView
                     .findViewById(R.id.tv_movie);
@@ -115,7 +137,7 @@ public class ItemView extends LinearLayout {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(context, DetailActivity.class);
-                    intent.putExtra("videoset_id",roll.getMedia_id());
+                    intent.putExtra("videoset_id", roll.getMedia_id());
 //                    intent.putExtra("resource",roll.getResource());
                     context.startActivity(intent);
                     System.out.println("---ItemView 条目被点击了---");
@@ -130,11 +152,7 @@ public class ItemView extends LinearLayout {
         movieClickLisenter.movieImgClick();
     }
 
-    /**
-     * ���ñ�����ߵ�ͼƬ
-     *
-     * @param id :��:R.drawable.ic_launcher
-     */
+
     public void setTitleImg(int id) {
         titleimg.setBackgroundResource(id);
     }

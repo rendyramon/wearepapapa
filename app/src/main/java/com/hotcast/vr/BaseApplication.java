@@ -30,6 +30,9 @@ public class BaseApplication extends Application {
     public static boolean doAsynctask = false;//本地视频同步数据库处理
     public static List<String> strs = new ArrayList<>();
     public static int size;
+
+    //横屏时的图片数量
+    public static int scapePage = 1;
     public static boolean isDownLoad = false;
     public static boolean isUpdate = false;
 //    public static List<Classify> netClassifys;
@@ -57,6 +60,7 @@ public class BaseApplication extends Application {
     public static List<String> playUrls = new ArrayList<>();//需要下載的電影地址
     public static List<Details> detailsList = new ArrayList<>();//需要下載的電影地址
     SharedPreferences sp ;
+    public static BitmapUtils bu;
     public static BitmapUtils getDisplay(Context context, int failedImgId) {
         BitmapUtils mFinalBitmap = new BitmapUtils(context, IMG_DISCCACHE_DIR);
         mFinalBitmap.configDefaultLoadFailedImage(failedImgId);
@@ -70,7 +74,7 @@ public class BaseApplication extends Application {
     public void onCreate() {
         Thread.currentThread().setUncaughtExceptionHandler(new MyExecptionHandler());
         super.onCreate();
-
+        bu = new BitmapUtils(this);
         instance = this;
         this.startService(new Intent(this, DownLoadService.class));
         this.startService(new Intent(this, FileCacheService.class));

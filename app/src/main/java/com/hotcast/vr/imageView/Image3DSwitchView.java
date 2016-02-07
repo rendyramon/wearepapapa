@@ -385,7 +385,7 @@ public class Image3DSwitchView extends ViewGroup {
 	/**
 	 * 检查图片的边界，防止图片的下标超出规定范围。
 	 */
-	private void checkImageSwitchBorder(int action) {
+	public void checkImageSwitchBorder(int action) {
 		if (action == SCROLL_NEXT && ++mCurrentImage >= mCount) {
 			mCurrentImage = 0;
 		} else if (action == SCROLL_PREVIOUS && --mCurrentImage < 0) {

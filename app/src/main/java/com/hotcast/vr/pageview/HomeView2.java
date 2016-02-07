@@ -31,6 +31,7 @@ import com.hotcast.vr.tools.L;
 import com.hotcast.vr.tools.Utils;
 import com.lidroid.xutils.DbUtils;
 import com.lidroid.xutils.ViewUtils;
+import com.lidroid.xutils.bitmap.PauseOnScrollListener;
 import com.lidroid.xutils.exception.DbException;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.RequestParams;
@@ -78,7 +79,7 @@ public class HomeView2 extends BaseView {
     private String requestUrl;
     //    private boolean bPullDown = true;
     List<ItemView> itemViews;
-    DbUtils db ;
+    DbUtils db;
 
     public HomeView2(BaseActivity activity) {
         super(activity, R.layout.layout_home);//根布局
@@ -213,6 +214,7 @@ public class HomeView2 extends BaseView {
         });
 
     }
+
     //    放置底部item条目数据的集合
     List<RollBean> rollBeans;
 
@@ -229,8 +231,7 @@ public class HomeView2 extends BaseView {
 
         for (int i = 0; i < rollBeans.size(); i++) {
             ItemView itemView = new ItemView(activity);
-
-            itemView.setItemList(activity, rollBeans.get(i));
+            itemView.setItemList(activity, rollBeans.get(i),i);
             itemViews.add(itemView);
         }
 
@@ -239,12 +240,10 @@ public class HomeView2 extends BaseView {
                 myBaseAdapter = new MyBaseAdapter();
             }
             ptrlv_lv_item_news.getRefreshableView().setAdapter(myBaseAdapter);
-        } else
-
-        {
+        } else {
             myBaseAdapter.notifyDataSetChanged();
         }
-
+//        ptrlv_lv_item_news.getRefreshableView().setOnScrollListener(new PauseOnScrollListener(BaseApplication.bu, false, true));
         progressBar4.setVisibility(View.GONE);
 
     }
@@ -305,9 +304,9 @@ public class HomeView2 extends BaseView {
                 roll = new Gson().fromJson(json, RollBean.class);
 //                homeRolls = homeBean.getHome_roll();
                 //        HomeSubject的集合
-                if (datasList == null){
+                if (datasList == null) {
                     datasList = new ArrayList<>();
-                }else{
+                } else {
                     datasList.clear();
                 }
                 datasList = roll.getData();
@@ -370,6 +369,7 @@ public class HomeView2 extends BaseView {
             ptrlv_lv_item_news.getRefreshableView().addHeaderView(layout_roll_view);
         }
     }
+
     class MyBaseAdapter extends BaseAdapter {
         @Override
         public int getCount() {
@@ -391,13 +391,15 @@ public class HomeView2 extends BaseView {
 //            if (convertView == null) {
 //                convertView = new ItemView(activity);
 //            }
-//            ((ItemView) convertView).setItemList(activity, subjects.get(position));
-            convertView = itemViews.get(position);
-            convertView.invalidate();
+//            ((ItemView) convertView).setItemList(activity, rollBeans.get(position));
+            System.out.println("---尺寸:"+itemViews.size());
+            if (convertView==null || ((ItemView)convertView).getPositon()!=position) {
+                convertView = itemViews.get(position);
+            }
+            ptrlv_lv_item_news.getRefreshableView().clearDisappearingChildren();
             return convertView;
         }
     }
-
 
 
     private void initDot() {
