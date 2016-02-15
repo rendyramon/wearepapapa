@@ -19,14 +19,13 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
             android:layout_weight="1"
-            android:paddingLeft="15dp"
+            android:layout_marginLeft="10dp"
             android:src="@mipmap/back" />
 
         <TextView
             android:id="@+id/tv_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="40dp"
             android:layout_weight="5"
             android:ellipsize="end"
             android:gravity="right"

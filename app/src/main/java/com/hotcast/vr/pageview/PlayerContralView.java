@@ -2,13 +2,16 @@ package com.hotcast.vr.pageview;
 
 import android.os.Handler;
 import android.os.Message;
+import android.transition.Slide;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.hotcast.vr.BaseActivity;
 import com.hotcast.vr.PlayerContrallerInterface;
 import com.hotcast.vr.R;
+import com.hotcast.vr.tools.DensityUtils;
 import com.hotcast.vr.tools.L;
 import com.hotcast.vr.tools.Utils;
 
@@ -50,11 +53,21 @@ public class PlayerContralView extends BaseView {
 
     }
     public void setSplitScreen(boolean isSplitScreen){
+        LinearLayout.LayoutParams params =(LinearLayout.LayoutParams) touchMode.getLayoutParams();
+        LinearLayout.LayoutParams params2 =(LinearLayout.LayoutParams) splitScreen.getLayoutParams();
+
         if (isSplitScreen){
             splitScreen.setImageResource(R.mipmap.screen);
+            params.setMargins(DensityUtils.dp2px(getActivity(),5),0,DensityUtils.dp2px(getActivity(),10),0);
+            params2.setMargins(0,0,DensityUtils.dp2px(getActivity(),10),0);
+
         }else {
             splitScreen.setImageResource(R.mipmap.split);
+            params.setMargins(DensityUtils.dp2px(getActivity(),25),0,DensityUtils.dp2px(getActivity(),40),0);
+            params2.setMargins(0,0,DensityUtils.dp2px(getActivity(),40),0);
         }
+        touchMode.setLayoutParams(params);
+        splitScreen.setLayoutParams(params2);
     }
     @OnClick(R.id.ivTouchMode)
     void clickTouchMode(){
