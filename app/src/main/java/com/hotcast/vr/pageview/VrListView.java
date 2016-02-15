@@ -224,11 +224,15 @@ public class VrListView extends BaseView implements GestureDetector.OnGestureLis
         return true;
     }
 
+    //隐藏若干不需要的组件
     public void hideTextView() {
         this.getRootView().findViewById(R.id.tv_page).setVisibility(View.GONE);
         this.getRootView().findViewById(R.id.tv_title).setVisibility(View.GONE);
         this.getRootView().findViewById(R.id.tv_desc).setVisibility(View.GONE);
         bt_ceach.setVisibility(View.GONE);
+        this.getRootView().findViewById(R.id.bt_up).setVisibility(View.GONE);
+        this.getRootView().findViewById(R.id.bt_down).setVisibility(View.GONE);
+
     }
 
     /**
