@@ -468,6 +468,7 @@ public class VrListActivity extends BaseActivity {
                 if (BaseApplication.scapePage > 0) {
                     getNetData(channel_id, BaseApplication.scapePage,0);
                 }else{
+                    BaseApplication.scapePage= 1;
                     view1.showOrHideProgressBar(false);
                     view2.showOrHideProgressBar(false);
                     view2.showNoInternetDialog("已经到第一页啦");
@@ -893,6 +894,7 @@ public class VrListActivity extends BaseActivity {
                 if (responseInfo.result.length() < 5) {
                     view2.showNoInternetDialog("已经到最后一页啦");
                     view1.showNoInternetDialog("已经到最后一页啦");
+                    BaseApplication.scapePage = BaseApplication.scapePage-1;
                     return;
                 }
                 tmpList = new Gson().fromJson(responseInfo.result, new TypeToken<List<ChannelList>>() {
