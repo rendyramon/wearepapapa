@@ -224,9 +224,10 @@ public class ClassifyGridView extends BaseView {
         if(bPullDown){
             adapter.addNewAll(tmpList);
         }else{
-            adapter.addAll(tmpList);
-            System.out.println("---Y距离"+grid.getScrollY());
-            grid.scrollBy(0,100);
+            if (tmpList.size()>0) {
+                adapter.addAll(tmpList,grid);
+                grid.smoothScrollBy(300,600);
+            }
         }
         L.e("adapter size=" + adapter.getCount());
     }

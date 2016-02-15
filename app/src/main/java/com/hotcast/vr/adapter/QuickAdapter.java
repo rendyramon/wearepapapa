@@ -6,7 +6,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
+import android.widget.GridView;
 import android.widget.ProgressBar;
+
+import com.handmark.pulltorefresh.library.PullToRefreshGridView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -119,6 +122,10 @@ public abstract class QuickAdapter<T> extends BaseAdapter {
     }
 
     public void addAll(List<T> elem) {
+        data.addAll(elem);
+        notifyDataSetChanged();
+    }
+    public void addAll(List<T> elem, PullToRefreshGridView gridView) {
         data.addAll(elem);
         notifyDataSetChanged();
     }
