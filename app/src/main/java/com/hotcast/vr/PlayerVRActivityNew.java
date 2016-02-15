@@ -444,7 +444,7 @@ public class PlayerVRActivityNew extends BaseLanActivity implements PFAssetObser
 
             @Override
             public void clickSplitScreen() {
-                System.out.println("***PlayerVRActivity***clickSplitScreen()");
+
                 if (curMode == MODE_NORMAL) {
                     if (title.length() > 4) {
                         titleSplitScreen = title.substring(0, 4);
@@ -452,6 +452,7 @@ public class PlayerVRActivityNew extends BaseLanActivity implements PFAssetObser
                     } else {
                         titleSplitScreen = title;
                     }
+                    System.out.println("111***PlayerVRActivity***clickSplitScreen()");
                     mPlayerContralView1.setTitle(titleSplitScreen);
                     mPlayerContralView2.setTitle(titleSplitScreen);
                     curMode = MODE_SPLIT_SCREEN;
@@ -464,9 +465,10 @@ public class PlayerVRActivityNew extends BaseLanActivity implements PFAssetObser
                     curMode = MODE_NORMAL;
                     mPlayerContralView1.setTitle(title);
                     mPlayerContralView2.setTitle(title);
+                    System.out.println("222***PlayerVRActivity***clickSplitScreen()");
 
                 }
-
+                linCtr.setVisibility(View.VISIBLE);
                 _pfview.setMode(curMode, 0);
 
             }
