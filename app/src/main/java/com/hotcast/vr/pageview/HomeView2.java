@@ -310,7 +310,6 @@ public class HomeView2 extends BaseView {
                     datasList.clear();
                 }
                 datasList = roll.getData();
-//                System.out.println("---datasList = " + datasList);
 
             } catch (IllegalStateException e) {
                 activity.showToast("解析出现错误，请刷新数据");
