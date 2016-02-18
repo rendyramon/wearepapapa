@@ -328,10 +328,12 @@ public class HomeView2 extends BaseView {
         RollViewPager rollViewPager = new RollViewPager(activity, viewList, new RollViewPager.onPageClick() {
             @Override
             public void onclick(int i) {
+                System.out.println("---跳转详情页 " );
                 Intent intent = new Intent(activity, DetailActivity.class);
                 intent.putExtra("videoset_id", datasList.get(i).getMedia_id());
 //                    intent.putExtra("resource", datasList.get(i).getResource());
                 activity.startActivity(intent);
+
 //                Toast.makeText(activity, "position = " + i, Toast.LENGTH_SHORT).show();
             }
         });
