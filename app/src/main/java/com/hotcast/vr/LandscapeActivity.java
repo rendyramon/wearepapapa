@@ -145,19 +145,28 @@ public class LandscapeActivity extends BaseActivity implements View.OnClickListe
             @Override
             public void onClick(View v) {
                 //查询本地指定的缓存文件夹
-                if (dataCacheOk) {
+                DbUtils db = DbUtils.create(LandscapeActivity.this);
+                try {
+                    dbList = db.findAll(LocalBean.class);
+                } catch (DbException e) {
+                    e.printStackTrace();
+                }
+                if (dbList == null) {
+                    dbList = new ArrayList<>();
+                }
+//                if (dataCacheOk) {
                     cacheIntent = new Intent(LandscapeActivity.this, LocalCachelActivity.class);
                     cacheIntent.putExtra("dbList", (Serializable) dbList);
                     System.out.println("---传递数据的尺寸：" + dbList.size());
                     startActivity(cacheIntent);
-                } else {
-                    //显示小菊花
-                    view1.showOrHideProgressBar(true);
-                    view2.showOrHideProgressBar(true);
-                    Message msg = Message.obtain();
-                    msg.what = 100;
-                    mHandler.sendMessageDelayed(msg, 1000);
-                }
+//                } else {
+//                    //显示小菊花
+//                    view1.showOrHideProgressBar(true);
+//                    view2.showOrHideProgressBar(true);
+//                    Message msg = Message.obtain();
+//                    msg.what = 100;
+//                    mHandler.sendMessageDelayed(msg, 1000);
+//                }
             }
         });
         img3D.addView(image3DView1);
@@ -167,18 +176,32 @@ public class LandscapeActivity extends BaseActivity implements View.OnClickListe
             @Override
             public void onClick(View v) {
                 //查询本地指定的缓存文件夹
-                if (dataCacheOk) {
-                    cacheIntent = new Intent(LandscapeActivity.this, LocalCachelActivity.class);
-                    cacheIntent.putExtra("dbList", (Serializable) dbList);
-                    startActivity(cacheIntent);
-                } else {
-                    //显示小菊花
-                    view1.showOrHideProgressBar(true);
-                    view2.showOrHideProgressBar(true);
-                    Message msg = Message.obtain();
-                    msg.what = 100;
-                    mHandler.sendMessageDelayed(msg, 1000);
+                DbUtils db = DbUtils.create(LandscapeActivity.this);
+                try {
+                    dbList = db.findAll(LocalBean.class);
+                } catch (DbException e) {
+                    e.printStackTrace();
                 }
+                if (dbList == null) {
+                    dbList = new ArrayList<>();
+                }
+//                if (dataCacheOk) {
+                cacheIntent = new Intent(LandscapeActivity.this, LocalCachelActivity.class);
+                cacheIntent.putExtra("dbList", (Serializable) dbList);
+                System.out.println("---传递数据的尺寸：" + dbList.size());
+                startActivity(cacheIntent);
+//                if (dataCacheOk) {
+//                    cacheIntent = new Intent(LandscapeActivity.this, LocalCachelActivity.class);
+//                    cacheIntent.putExtra("dbList", (Serializable) dbList);
+//                    startActivity(cacheIntent);
+//                } else {
+//                    //显示小菊花
+//                    view1.showOrHideProgressBar(true);
+//                    view2.showOrHideProgressBar(true);
+//                    Message msg = Message.obtain();
+//                    msg.what = 100;
+//                    mHandler.sendMessageDelayed(msg, 1000);
+//                }
             }
         });
         img3D2.addView(image3DView2);
@@ -597,13 +620,13 @@ public class LandscapeActivity extends BaseActivity implements View.OnClickListe
     protected void onStart() {
         BaseApplication.scapePage = 1;
         super.onStart();
-        dbList = new ArrayList<>();
-        if (BaseApplication.doAsynctask){
-            MyAsyncTask task = new MyAsyncTask();
-            task.execute();
-        }else{
-            mHandler.sendEmptyMessage(101);
-        }
+//        dbList = new ArrayList<>();
+//        if (BaseApplication.doAsynctask){
+//            MyAsyncTask task = new MyAsyncTask();
+//            task.execute();
+//        }else{
+//            mHandler.sendEmptyMessage(101);
+//        }
         Intent intent = new Intent(LandscapeActivity.this, DownLoadingService.class);
         LandscapeActivity.this.startService(intent);
         view1.showOrHideProgressBar(false);

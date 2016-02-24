@@ -281,6 +281,9 @@ public class HomeView2 extends BaseView {
                 bDataProcessed = false;
                 bProcessing = false;
                 //隐藏底部加载更多 、顶部刷新的ui；
+                if (iv_noNet == null){
+                    iv_noNet = (ImageView) getRootView().findViewById(R.id.iv_noNet);
+                }
                 iv_noNet.setVisibility(View.VISIBLE);
                 activity.showToast("网络连接异常");
                 hideRefreshView();
@@ -327,7 +330,7 @@ public class HomeView2 extends BaseView {
         RollViewPager rollViewPager = new RollViewPager(activity, viewList, new RollViewPager.onPageClick() {
             @Override
             public void onclick(int i) {
-                System.out.println("---跳转详情页 " );
+//                System.out.println("---跳转详情页 " );
                 Intent intent = new Intent(activity, DetailActivity.class);
                 intent.putExtra("videoset_id", datasList.get(i).getMedia_id());
 //                    intent.putExtra("resource", datasList.get(i).getResource());
@@ -336,7 +339,7 @@ public class HomeView2 extends BaseView {
 //                Toast.makeText(activity, "position = " + i, Toast.LENGTH_SHORT).show();
             }
         });
-        System.out.println("---335 datasList = " + datasList);
+//        System.out.println("---335 datasList = " + datasList);
 //    subjects=homeBean.getHome_subject();
 //        subjects.addAll(homeBean.getHome_subject());
         urlImgList.clear();
@@ -344,14 +347,14 @@ public class HomeView2 extends BaseView {
         for (int i = 0; i < datasList.size(); i++) {
 //            RollBean homeRoll = datasList.get(i);
             Datas datas = datasList.get(i);
-            System.out.println("---343 datas = " + datas);
+//            System.out.println("---343 datas = " + datas);
 //            for (int j = 0; j < datas.getData().size(); j++) {
 //                Datas subject = datas.getData().get(j);
 
             urlImgList.add(datas.getImage());
             titleList.add(datas.getTitle());
-            System.out.println("---349 urlImg = " + datas.getImage());
-            System.out.println("---350 title = " + datas.getTitle());
+//            System.out.println("---349 urlImg = " + datas.getImage());
+//            System.out.println("---350 title = " + datas.getTitle());
 //            }
         }
 //        System.out.println("---urlImgList = " + urlImgList.size());
@@ -393,7 +396,7 @@ public class HomeView2 extends BaseView {
 //                convertView = new ItemView(activity);
 //            }
 //            ((ItemView) convertView).setItemList(activity, rollBeans.get(position));
-            System.out.println("---尺寸:"+itemViews.size());
+//            System.out.println("---尺寸:"+itemViews.size());
             if (convertView==null || ((ItemView)convertView).getPositon()!=position) {
                 convertView = itemViews.get(position);
             }

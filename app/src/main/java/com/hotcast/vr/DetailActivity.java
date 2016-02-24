@@ -1,6 +1,7 @@
 package com.hotcast.vr;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.text.TextUtils;
@@ -22,6 +23,7 @@ import com.hotcast.vr.bean.Relation;
 import com.hotcast.vr.bean.Urls;
 import com.hotcast.vr.bean.Videos;
 import com.hotcast.vr.bean.VideosNew;
+import com.hotcast.vr.dialog.MyDialog;
 import com.hotcast.vr.receiver.DownloadReceiver;
 import com.hotcast.vr.tools.Constants;
 import com.hotcast.vr.tools.L;
@@ -87,9 +89,11 @@ public class DetailActivity extends BaseActivity {
     final String DOWNLOADING = "DOWNLOADING";
     final String FINISH = "FINISH";
     final String PAUSE = "PAUSE";
+    String playurl;
 
     ViewHolder holder;
     Intent intent;
+
 
     @OnClick({R.id.back, R.id.play, R.id.ll_share})
     void clickType(View v) {
@@ -99,11 +103,28 @@ public class DetailActivity extends BaseActivity {
                 break;
             case R.id.play:
                 L.e("你点击了播放的按钮");
-//                if (!TextUtils.isEmpty(play_url)) {
+
+//                if (TextUtils.isEmpty(play_url)){
+//                if (! TextUtils.isEmpty(play.getSd_url())){
+//                    playurl = play.getSd_url();
+//
+//
+//                }else if (! TextUtils.isEmpty(play.getHd_url())){
+//                    playurl = play.getHd_url();
+//                    BaseApplication.clarityText = "高清";
+//                }else if (! TextUtils.isEmpty(play.getUhd_url())){
+//                    playurl = play.getUhd_url();
+//                    BaseApplication.clarityText = "超清";
+//                }}else {
+//                    System.out.println("---playUrl = " + play_url);
+//                    playurl = play_url;
+//                }
                 intent = new Intent(DetailActivity.this, PlayerVRActivityNew.class);
                 intent.putExtra("play_url", play_url);
+                intent.putExtra("play",play);
                 intent.putExtra("title", title);
                 intent.putExtra("splite_screen", false);
+                System.out.println("---play_url = " + play_url);
                 DetailActivity.this.startActivity(intent);
                 break;
             case R.id.ll_share:
@@ -161,18 +182,30 @@ public class DetailActivity extends BaseActivity {
 //                    playTitle.add(playUrls.get(i).getTitle());
 //                }
                 play = new Gson().fromJson(responseInfo.result, Play.class);
-
-
                 if (! TextUtils.isEmpty(play.getSd_url())){
                     play_url = play.getSd_url();
+                    BaseApplication.clarityText = "标清";
                 }else if (! TextUtils.isEmpty(play.getHd_url())){
                     play_url = play.getHd_url();
+                    BaseApplication.clarityText = "高清";
                 }else if (! TextUtils.isEmpty(play.getUhd_url())){
                     play_url = play.getUhd_url();
+                    BaseApplication.clarityText = "超清";
                 }
-                System.out.println("---play_url:" + play_url);
-                title = play.getTitle();
                 initCatch(play_url);
+                try {
+                    LocalBean bean = db.findById(LocalBean.class,play_url);
+                    if (bean != null){
+                        play_url = bean.getLocalurl();
+                        System.out.println("---playUrl = " + play_url);
+                    }
+                } catch (DbException e) {
+                    e.printStackTrace();
+                }
+
+//                System.out.println("---play_url:" + play_url);
+                title = play.getTitle();
+                progressBar5.setVisibility(View.GONE);
             }
 
             @Override
@@ -183,17 +216,16 @@ public class DetailActivity extends BaseActivity {
 
 
     }
-
+    DbUtils db;
+    boolean isdownLoad = false;
     //初始化下载按钮
     private void initCatch(String play_url) {
-        DbUtils db = DbUtils.create(DetailActivity.this);
-        boolean isdownLoad = false;
         try {
             List<LocalBean> list = db.findAll(LocalBean.class);
             if (list != null && list.size() > 0) {
                 for (int i = 0; i < list.size(); i++) {
                     if (!TextUtils.isEmpty(play_url)) {
-                        System.out.println("***play_url:" + play_url + "***list.get(i).getUrl():" + list.get(i).getUrl());
+                        System.out.println("---play_url:" + play_url + "--list.get(i).getUrl():" + list.get(i).getUrl());
                         isdownLoad = play_url.equals(list.get(i).getId());
                     }
                 }
@@ -206,7 +238,6 @@ public class DetailActivity extends BaseActivity {
         } catch (DbException e) {
             e.printStackTrace();
         }
-        progressBar5.setVisibility(View.GONE);
     }
 
     private String videoset_id;
@@ -214,14 +245,16 @@ public class DetailActivity extends BaseActivity {
     private String requestUrl;
     DownloadReceiver receiver;
     IntentFilter filter;
+    String saveUrl;
 
     @Override
     public int getLayoutId() {
         return R.layout.movie_detail;
     }
-
+    LocalBean localBean;
     @Override
     public void init() {
+        db = DbUtils.create(DetailActivity.this);
         requestUrl = Constants.DETAIL;
         receiver = new DownloadReceiver();
         filter = new IntentFilter();
@@ -234,11 +267,83 @@ public class DetailActivity extends BaseActivity {
         ll_download.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DetailActivity.this.showDialog(null, "是否下载影片?", null, null, new BaseActivity.OnAlertSureClickListener() {
+                MyDialog.Builder builder = new MyDialog.Builder(DetailActivity.this) {
                     @Override
-                    public void onclick() {
+                    public void setCarity1() {
+                        if (!TextUtils.isEmpty(play.getSd_url())) {
+                            saveUrl = play.getSd_url();
+//                            initCatch(play_url);
+                        }else {
+                            //将该button字体颜色设置为灰色并不可点击
+                            showToast("没有标清连接");
+                            System.out.println("---没有标清连接");
+                        }
+                    }
+
+                    @Override
+                    public void setCarity2() {
+                        if (!TextUtils.isEmpty(play.getHd_url())) {
+                            saveUrl = play.getHd_url();
+//                            initCatch(play_url);
+
+                        }else {
+                            //将该button字体颜色设置为灰色并不可点击
+                            showToast("没有高清连接");
+                            System.out.println("---没有高清连接");
+                        }
+                    }
+
+                    @Override
+                    public void setCarity3() {
+                        if (!TextUtils.isEmpty(play.getUhd_url())) {
+                            saveUrl = play.getUhd_url();
+//                            initCatch(play_url);
+//                            try {
+//                                LocalBean bean = db.findById(LocalBean.class,play_url);
+//                                if (bean != null){
+//                                    play_url = bean.getLocalurl();
+//                                }
+//                            } catch (DbException e) {
+//                                e.printStackTrace();
+//                            }
+                        }else {
+                            //将该button字体颜色设置为灰色并不可点击
+                            showToast("没有超清连接");
+                            System.out.println("---没有超清连接");
+                        }
+                    }
+                };
+//                builder.setMessage("这个就是自定义的提示框");
+//                builder.setColor1(50);
+//                builder.setColor2(1);
+//                builder.setColor3(443215);
+                if (TextUtils.isEmpty(play.getSd_url())){
+                    System.out.println("---标清无");
+                    builder.setIsFocusable1(false);
+                }else {
+                    System.out.println("---play.getSd_url() = " + play.getSd_url());
+                    builder.setIsFocusable1(true);
+                }
+                if (TextUtils.isEmpty(play.getHd_url())){
+                    System.out.println("---高清无");
+                    builder.setIsFocusable2(false);
+                }else {
+                    System.out.println("---play.getHd_url() = " + play.getHd_url());
+                    builder.setIsFocusable2(true);
+                }
+                if (TextUtils.isEmpty(play.getUhd_url())){
+                    System.out.println("---超清无");
+                    builder.setIsFocusable3(false);
+                }else {
+                    System.out.println("---play.getUhd_url() = " + play.getUhd_url());
+                    builder.setIsFocusable3(true);
+                }
+                builder.setTitle("  请 选 择 下 载 清 晰 度 : ");
+                builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        System.out.println("---您选择确定");
                         BaseApplication.detailsList.add(details);
-                        BaseApplication.playUrls.add(play_url);
+                        BaseApplication.playUrls.add(saveUrl);
                         showToast("已经加入下载列表");
                         tv_cache.setText("已缓存");
                         ll_download.setFocusable(false);
@@ -246,8 +351,8 @@ public class DetailActivity extends BaseActivity {
                         LocalBean localBean = new LocalBean();
                         localBean.setTitle(title);
                         localBean.setImage(details.getImage().get(0));
-                        localBean.setId(play_url);
-                        localBean.setUrl(play_url);
+                        localBean.setId(saveUrl);
+                        localBean.setUrl(saveUrl);
                         localBean.setCurState(0);//還沒下載，準備下載
                         try {
                             db.delete(localBean);
@@ -258,8 +363,27 @@ public class DetailActivity extends BaseActivity {
                         int i = BaseApplication.downLoadManager.addTask(play_url, play_url, title + ".mp4", BaseApplication.VedioCacheUrl + title + ".mp4");
                         System.out.println("---加入任务返回值：" + i);
                         System.out.println("---详情下载的信息：" + play_url + "---本地：" + BaseApplication.VedioCacheUrl + title + ".mp4");
+                        dialog.dismiss();
+
+                        //设置你的操作事项
                     }
                 });
+
+                builder.setNegativeButton("取消",
+                        new android.content.DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                System.out.println("---您选择取消");
+                                dialog.dismiss();
+                            }
+                        });
+                builder.create().show();
+
+//                DetailActivity.this.showDialog(null, "是否下载影片?", null, null, new BaseActivity.OnAlertSureClickListener() {
+//                    @Override
+//                    public void onclick() {
+//
+//                    }
+//                });
             }
         });
     }
@@ -356,7 +480,7 @@ public class DetailActivity extends BaseActivity {
     public void getIntentData(Intent intent) {
         videoset_id = intent.getStringExtra("videoset_id");
 //        resource = intent.getStringExtra("resource");
-        L.e("---DetailActivity responseInfo:" + videoset_id );
+        L.e("---DetailActivity responseInfo:" + videoset_id);
     }
 
     List<Relation> relations;

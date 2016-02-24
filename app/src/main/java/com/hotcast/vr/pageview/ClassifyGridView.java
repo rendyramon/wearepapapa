@@ -86,7 +86,7 @@ public class ClassifyGridView extends BaseView {
             @Override
             public void onPullUpToRefresh(PullToRefreshBase<GridView> refreshView) {
                 bPullDown = false;
-                System.out.println("***ClassfyGridView() page" + page++);
+                System.out.println("---ClassfyGridView() page" + page++);
                 getNetData(page);
             }
         });
@@ -149,16 +149,17 @@ public class ClassifyGridView extends BaseView {
     }
 
     private void getNetData(int page) {
-        if (Utils.textIsNull(requestUrl)) {
-            grid.onRefreshComplete();
-            return;
-        }
+//        if (Utils.textIsNull(requestUrl)) {
+//            grid.onRefreshComplete();
+//            return;
+//        }
         params = new RequestParams();
         params.addBodyParameter("token", "123");
         params.addBodyParameter("channel_id", channel_id);
         params.addBodyParameter("version", BaseApplication.version);
         params.addBodyParameter("platform", BaseApplication.platform);
         params.addBodyParameter("page_size", String.valueOf(10));
+        System.out.println("---channel_id = " + channel_id + " version = " + BaseApplication.version + " platform = " + BaseApplication.platform );
         if(!bPullDown){
             params.addBodyParameter("page", String.valueOf(page));
         }
@@ -171,11 +172,19 @@ public class ClassifyGridView extends BaseView {
 
             @Override
             public void onSuccess(ResponseInfo<String> responseInfo) {
+                if (iv_noNet == null){
+                    iv_noNet = (ImageView) getRootView().findViewById(R.id.iv_noNet);
+                }
+                iv_noNet.setVisibility(View.GONE);
                 bDataProcessed = true;
                 bProcessing = false;
                 grid.onRefreshComplete();
                 L.e("responseInfo:" + responseInfo.result);
                 setViewData(responseInfo.result);
+                if (iv_noNet == null){
+                    iv_noNet = (ImageView) getRootView().findViewById(R.id.iv_noNet);
+                }
+                iv_noNet.setVisibility(View.GONE);
             }
 
             @Override
@@ -184,6 +193,7 @@ public class ClassifyGridView extends BaseView {
                     iv_noNet = (ImageView) getRootView().findViewById(R.id.iv_noNet);
                 }
                 iv_noNet.setVisibility(View.VISIBLE);
+                System.out.println("---请求数据失败！！！");
                 bDataProcessed = false;
                 bProcessing = false;
                 grid.onRefreshComplete();

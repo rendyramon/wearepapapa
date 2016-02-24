@@ -1,9 +1,11 @@
 package com.hotcast.vr.bean;
 
+import java.io.Serializable;
+
 /**
  * Created by lostnote on 15/11/29.
  */
-public class Play {
+public class Play implements Serializable{
     //标题
     String title;
     //标清源

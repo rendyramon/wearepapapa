@@ -3,13 +3,16 @@ package com.hotcast.vr.pageview;
 import android.os.Handler;
 import android.os.Message;
 import android.transition.Slide;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.hotcast.vr.BaseActivity;
+import com.hotcast.vr.BaseApplication;
 import com.hotcast.vr.PlayerContrallerInterface;
+import com.hotcast.vr.PlayerVRActivityNew;
 import com.hotcast.vr.R;
 import com.hotcast.vr.tools.DensityUtils;
 import com.hotcast.vr.tools.L;
@@ -17,6 +20,7 @@ import com.hotcast.vr.tools.Utils;
 
 import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
 
+import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 
@@ -24,6 +28,7 @@ import butterknife.OnClick;
  * Created by joey on 8/12/15.
  */
 public class PlayerContralView extends BaseView {
+
     @InjectView(R.id.btnBack)
     ImageView btnBack;
     @InjectView(R.id.tv_name)
@@ -40,9 +45,56 @@ public class PlayerContralView extends BaseView {
     ImageView touchMode;
     @InjectView(R.id.ivSplitScreen)
     ImageView splitScreen;
+    @InjectView(R.id.choiceclarity)
+    TextView choiceclarity;
+    @InjectView(R.id.tv_uhd)
+    TextView tv_uhd;
+    @InjectView(R.id.tv_hd)
+    TextView tv_hd;
+    @InjectView(R.id.tv_sd)
+    TextView tv_sd;
+    @InjectView(R.id.ll_choice)
+    LinearLayout ll_choice;
+
     @OnClick(R.id.btnBack)
     void clickBack() {
         activity.finish();
+    }
+    boolean isshow = false;
+    @OnClick(R.id.choiceclarity)
+    void choiceclarity(){
+        if (!isshow) {
+            ll_choice.setVisibility(View.VISIBLE);
+            isshow = true;
+        }else {
+            ll_choice.setVisibility(View.GONE);
+            isshow = false;
+        }
+        if(null != changeMode){
+            changeMode.clickChoiceClarity();
+        }
+    }
+    @OnClick(R.id.tv_sd)
+    void tv_sd(){
+        if(null != changeMode){
+            choiceclarity.setText(BaseApplication.clarityText);
+            changeMode.clickSd();
+        }
+    }
+    @OnClick(R.id.tv_hd)
+    void tv_hd(){
+        if(null != changeMode){
+            choiceclarity.setText(BaseApplication.clarityText);
+            changeMode.clickHd();
+        }
+    }
+
+    @OnClick(R.id.tv_uhd)
+    void tv_uhd(){
+        if(null != changeMode){
+            choiceclarity.setText(BaseApplication.clarityText);
+            changeMode.clickUhd();
+        }
     }
 
     @OnClick(R.id.ivSplitScreen)
@@ -52,6 +104,10 @@ public class PlayerContralView extends BaseView {
         }
 
     }
+//    public PlayerContralView(BaseActivity activity, int id,String clarityText){
+//        super(activity,id);
+//        choiceclarity.setText(clarityText);
+//    }
     public void setSplitScreen(boolean isSplitScreen){
         LinearLayout.LayoutParams params =(LinearLayout.LayoutParams) touchMode.getLayoutParams();
         LinearLayout.LayoutParams params2 =(LinearLayout.LayoutParams) splitScreen.getLayoutParams();
@@ -124,7 +180,7 @@ public class PlayerContralView extends BaseView {
     }
 
 
-    public PlayerContralView(BaseActivity activity, int type) {
+    public PlayerContralView(BaseActivity activity, int type,String clarityText) {
         super(activity, R.layout.player_contral);
         this.type = type;
         switch (type){
@@ -141,6 +197,7 @@ public class PlayerContralView extends BaseView {
                 touchMode.setVisibility(View.GONE);
                 break;
         }
+        choiceclarity.setText(clarityText);
         seekbar.setIndicatorPopupEnabled(false);
         seekbar.setOnProgressChangeListener(new DiscreteSeekBar.OnProgressChangeListener() {
             @Override
@@ -261,4 +318,9 @@ public class PlayerContralView extends BaseView {
     public void hide() {
         view.setVisibility(View.GONE);
     }
+
+//    @Override
+//    public void setText(String clarityText) {
+//        choiceclarity.setText(clarityText);
+//    }
 }
