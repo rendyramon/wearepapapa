@@ -341,8 +341,8 @@ public class DetailActivity extends BaseActivity {
                         System.out.println("---您选择确定");
                         BaseApplication.detailsList.add(details);
                         BaseApplication.playUrls.add(saveUrl);
-                        showToast("已经加入下载列表");
-                        tv_cache.setText("已缓存");
+//                        showToast("已经加入下载列表");
+//                        tv_cache.setText("已缓存");
                         ll_download.setFocusable(false);
                         DbUtils db = DbUtils.create(DetailActivity.this);
                         LocalBean localBean = new LocalBean();
@@ -361,6 +361,8 @@ public class DetailActivity extends BaseActivity {
                         int i = BaseApplication.downLoadManager.addTask(saveUrl, saveUrl, title + ".mp4", BaseApplication.VedioCacheUrl + title + ".mp4");
                         System.out.println("---加入任务返回值：" + i);
                         System.out.println("---详情下载的信息：" + saveUrl + "---本地：" + BaseApplication.VedioCacheUrl + title + ".mp4");
+                        showToast("已经加入下载列表");
+                        tv_cache.setText("已缓存");
                         dialog.dismiss();
 
                         //设置你的操作事项
