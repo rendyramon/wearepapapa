@@ -17,6 +17,12 @@ public class BaseView {
     protected View rootView;
     protected boolean bFirstInit = true, bDataProcessed, bProcessing;
 
+    public BaseView(BaseActivity activity, int id) {
+        this.activity = activity;
+        rootView = LayoutInflater.from(activity).inflate(id, null, false);
+        ButterKnife.inject(this, rootView);
+    }
+
     protected boolean checkRequest() {
         return !bDataProcessed && !bProcessing;
     }
@@ -33,13 +39,13 @@ public class BaseView {
 
     private View tabView;
 
-    public BaseView(BaseActivity activity, int id) {
-        this.activity = activity;
-
-        rootView = LayoutInflater.from(activity).inflate(id, null, false);
-        ButterKnife.inject(this, rootView);
-    }
-
+//    public BaseView(BaseActivity activity, int id,String clarityText) {
+//        this.activity = activity;
+//        rootView = LayoutInflater.from(activity).inflate(id, null, false);
+//        setText(clarityText);
+//        ButterKnife.inject(this, rootView);
+//    }
+//public abstract void setText(String clarityText);
     public int getTag() {
         return tag;
     }

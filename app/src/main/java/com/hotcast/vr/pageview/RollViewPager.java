@@ -41,11 +41,12 @@ public class RollViewPager extends ViewPager {
         @Override
         public void run() {
             if (viewList.size() != 0) {
+//                System.out.println("---切换轮播图：" + System.currentTimeMillis() + "---" + currentPosition);
+                startRoll();
                 //滚动viewpager
                 currentPosition = (currentPosition + 1) % viewList.size();
                 RollViewPager.this.setCurrentItem(currentPosition);//处理了滑动
-//                System.out.println("---切换轮播图：" + System.currentTimeMillis() + "---" + currentPosition);
-                startRoll();
+
 //                mhandler.obtainMessage().sendToTarget();
             }
         }
@@ -62,6 +63,7 @@ public class RollViewPager extends ViewPager {
                 getParent().requestDisallowInterceptTouchEvent(true);
                 downX = (int) ev.getX();
                 downY = (int) ev.getY();
+//                System.out.println("---ACTION_DOWN");
                 break;
             case MotionEvent.ACTION_MOVE:
                 int moveX = (int) ev.getX();
@@ -73,13 +75,14 @@ public class RollViewPager extends ViewPager {
                 } else {
                     //滚动轮播图片
                     getParent().requestDisallowInterceptTouchEvent(true);
+//                    System.out.println("---ACTION_MOVE");
                 }
                 break;
         }
+//        System.out.println("---super.dispatchTouchEvent(ev) = "+super.dispatchTouchEvent(ev));
         return super.dispatchTouchEvent(ev);
     }
 
-    ;
 
     //从界面移出的时候会调用方法
     @Override
@@ -115,13 +118,14 @@ public class RollViewPager extends ViewPager {
             @Override
             public void onPageScrolled(int arg0, float arg1, int arg2) {
                 // TODO Auto-generated method stub
+//                System.out.println("---onPageScrolled arg0 = " + arg0 + " arg1 = " + arg1 + " arg2 = " + arg2);
 
             }
 
             @Override
             public void onPageScrollStateChanged(int arg0) {
                 // TODO Auto-generated method stub
-
+//                System.out.println("---onPageScrolled arg0 = " + arg0 );
             }
         });
     }
@@ -142,7 +146,7 @@ public class RollViewPager extends ViewPager {
     }
 
     public interface onPageClick {
-        public abstract void onclick(int i);
+        void onclick(int i);
     }
 
     public void startRoll() {
@@ -154,7 +158,7 @@ public class RollViewPager extends ViewPager {
             myAdapter.notifyDataSetChanged();
         }
 //        System.out.println("---startroll执行");
-        mhandler.postDelayed(runnableTask, 3000);
+        mhandler.postDelayed(runnableTask, 4000l);
     }
 
     class MyAdapter extends PagerAdapter {
@@ -185,11 +189,14 @@ public class RollViewPager extends ViewPager {
                             mhandler.removeCallbacksAndMessages(null);//按住图片的时候移出图片的 轮播方法
                             downX = (int) event.getX();
                             downTime = System.currentTimeMillis();
+//                            System.out.println("---ACTION_DOWN--onTouch");
                             break;
                         case MotionEvent.ACTION_UP:
-                            if (System.currentTimeMillis() - downTime < 500 && downX == event.getX()) {
+//                            System.out.println("---ACTION_UP点击了轮播图--onTouch = " + (System.currentTimeMillis() - downTime < 500 && Math.abs(downX - event.getX())<20) );
+                            if (System.currentTimeMillis() - downTime < 500 && Math.abs(downX - event.getX())<20) {
                                 //点击事件被触发
                                 if (pageClick != null) {
+//                                    System.out.println("---ACTION_UP点击了轮播图--onTouch");
                                     pageClick.onclick(position);
                                 }
                             }

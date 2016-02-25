@@ -117,9 +117,9 @@ public class ItemView extends LinearLayout {
         LayoutParams params = new LayoutParams(
                 LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
         params.setMargins(0, 0, 30, 0);
-        for (int i = 0; i < rolls.size()-4; i++) {
+        for (int i = 0; i < rolls.size(); i++) {
             final Datas roll = rolls.get(i);
-            System.out.println("---ItemView  roll---" + roll);
+//            System.out.println("---ItemView  roll---" + roll);
 
             LinearLayout contentView = (LinearLayout) View.inflate(context,
                     R.layout.item_item_img, null);

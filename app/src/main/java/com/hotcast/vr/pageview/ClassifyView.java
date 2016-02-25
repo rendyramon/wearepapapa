@@ -88,12 +88,15 @@ public class ClassifyView extends BaseView {
         vs = new ArrayList<>();
         for (int i = 0;i < size; i++){
             titles.add(classifies.get(i).getTitle());
+//            System.out.println("---classifies.get(i).getType = " + classifies.get(i).getType());
             switch (classifies.get(i).getType()){
                 case "big":
                     views[i] = new ClassifyListView(activity,classifies.get(i).getId());
+                    System.out.println("---classifies " + classifies.get(i).getType());
                     break;
                 case "small":
                     views[i] = new ClassifyGridView(activity,classifies.get(i).getId());
+                    System.out.println("---classifies " + classifies.get(i).getType());
                     break;
             }
             vs.add(views[i].getRootView());
@@ -151,6 +154,7 @@ public class ClassifyView extends BaseView {
     }
 
     private void getNetData() {
+        System.out.println("---version = " + BaseApplication.version + "-platform = " + BaseApplication.platform);
         RequestParams params = new RequestParams();
         params.addBodyParameter("token", "123");
         params.addBodyParameter("version", BaseApplication.version);
@@ -166,7 +170,7 @@ public class ClassifyView extends BaseView {
             public void onSuccess(ResponseInfo<String> responseInfo) {
                 bDataProcessed = true;
                 bProcessing = false;
-                L.e("ClassifyView  responseInfo:" + responseInfo.result);
+                L.e("---ClassifyView  responseInfo:" + responseInfo.result);
                 setViewData(responseInfo.result);
 
             }
@@ -175,6 +179,7 @@ public class ClassifyView extends BaseView {
             public void onFailure(HttpException e, String s) {
                 bDataProcessed = false;
                 bProcessing = false;
+                System.out.println("---请求数据失败 classifyView");
             }
         });
     }
@@ -189,7 +194,7 @@ public class ClassifyView extends BaseView {
             classifies = channel.getData();
             BaseApplication.channel = channel;
             size = classifies.size();
-            L.e("adapter size=" + classifies.size());
+            L.e("---adapter size=" + classifies.size());
             initListView();
         }
     }

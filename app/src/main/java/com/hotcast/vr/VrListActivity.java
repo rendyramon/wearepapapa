@@ -58,6 +58,9 @@ public class VrListActivity extends BaseActivity {
     private ArrayList<String> descs = new ArrayList<>();
     Spannable span;
     String page;
+    boolean isSave;
+    String play_url;
+    String title;
     /**
      * 控件宽度
      */
@@ -84,6 +87,7 @@ public class VrListActivity extends BaseActivity {
     List<String> localUrlList;
     DbUtils db;
     int mCurrentImg;
+    LocalBean localBean;
 
     @Override
     public void init() {
@@ -192,6 +196,11 @@ public class VrListActivity extends BaseActivity {
         tv_desc1.setText(descs.get(mCurrentImg));
         tv_desc2.setText(descs.get(mCurrentImg));
         if (localUrlList.contains(vrPlays.get(mCurrentImg).getVideos().get(0).getVname())) {
+//            System.out.println("--localUrlList = " + localUrlList);
+            isSave = true;
+            title = vrPlays.get(mCurrentImg).getVideos().get(0).getVname();
+            play_url = BaseApplication.VedioCacheUrl+vrPlays.get(mCurrentImg).getVideos().get(0).getVname()+".mp4";
+            System.out.println("--localUrl = " +BaseApplication.VedioCacheUrl+ vrPlays.get(mCurrentImg).getVideos().get(0).getVname()+".mp4");
             setDownloadText(true);
         }
         img3D.setOnMovechangeListener(new Image3DSwitchView.OnMovechangeListener() {
@@ -707,11 +716,16 @@ public class VrListActivity extends BaseActivity {
 
     private void play(String vid) {
         intent = new Intent(VrListActivity.this, PlayerVRActivityNew.class);
-        intent.putExtra("vid", vid);
+        if (isSave){
+            intent.putExtra("play_url", play_url);
+            intent.putExtra("title", title);
+        }else {
+            intent.putExtra("vid", vid);
+        }
 //        intent.putExtra("title", title);
         intent.putExtra("splite_screen", true);
         VrListActivity.this.startActivity(intent);
-        System.out.println("***你点击了item，准备播放**");
+        System.out.println("---你点击了item，准备播放**");
     }
 
 

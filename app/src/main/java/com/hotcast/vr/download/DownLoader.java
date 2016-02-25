@@ -208,7 +208,7 @@ public class DownLoader {
                         }
                     }
                     inputStream = urlConn.getInputStream();
-                    byte[] buffer = new byte[1024 * 4];
+                    byte[] buffer = new byte[1024];
                     int length = -1;
                     while((length = inputStream.read(buffer)) != -1 && isdownloading){
                         localFile.write(buffer, 0, length);

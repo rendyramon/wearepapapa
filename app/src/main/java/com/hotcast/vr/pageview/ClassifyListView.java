@@ -162,10 +162,11 @@ public class ClassifyListView extends BaseView {
     }
 
     private void getNetData(int page) {
-        if (Utils.textIsNull(requestUrl)) {
-            list.onRefreshComplete();
-            return;
-        }
+//        if (Utils.textIsNull(requestUrl)) {
+//            list.onRefreshComplete();
+//            return;
+//        }
+        System.out.println("---channel_id = " + channel_id + " version = " + BaseApplication.version + " platform = " + BaseApplication.platform );
         params = new RequestParams();
         params.addBodyParameter("token", "123");
         params.addBodyParameter("channel_id", channel_id);
@@ -180,10 +181,15 @@ public class ClassifyListView extends BaseView {
             public void onStart() {
                 super.onStart();
                 bProcessing = true;
+                System.out.println("---开始请求！！！");
             }
 
             @Override
             public void onSuccess(ResponseInfo<String> responseInfo) {
+                if (iv_noNet == null){
+                    iv_noNet = (ImageView) getRootView().findViewById(R.id.iv_noNet);
+                }
+                iv_noNet.setVisibility(View.GONE);
                 bDataProcessed = true;
                 bProcessing = false;
                 list.onRefreshComplete();
@@ -193,6 +199,9 @@ public class ClassifyListView extends BaseView {
 
             @Override
             public void onFailure(HttpException e, String s) {
+                if (iv_noNet == null){
+                    iv_noNet = (ImageView) getRootView().findViewById(R.id.iv_noNet);
+                }
                 iv_noNet.setVisibility(View.VISIBLE);
                 bDataProcessed = false;
                 bProcessing = false;

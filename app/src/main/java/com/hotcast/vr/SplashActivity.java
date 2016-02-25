@@ -162,7 +162,7 @@ public class SplashActivity extends BaseActivity {
                     pageJump();
                 }
             }
-        }, 1500);
+        }, 3000);
     }
     private void pageJump() {
         boolean isFrist1 = true;

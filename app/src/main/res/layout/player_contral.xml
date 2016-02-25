@@ -55,13 +55,14 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/ll_controlbor"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:background="@drawable/play_bg"
         android:gravity="center"
         android:orientation="horizontal"
-        android:paddingRight="50dp">
+         >
 
         <ImageView
             android:id="@+id/btnPlay"
@@ -84,9 +85,60 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="10dp"
+            android:layout_marginRight="10dp"
             android:text="00:00:00/00:00:00"
             android:textColor="#ffffff"
             android:textSize="12dp" />
+        <TextView
+            android:id="@+id/choiceclarity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#22000000"
+            android:text="标清"
+            android:textSize="15sp"
+            android:layout_marginRight="15dp"
+            android:textColor="#ffffff"
+            android:layout_marginLeft="5dp">
+        </TextView>
+
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/ll_choice"
+        android:layout_width="wrap_content"
+        android:orientation="vertical"
+        android:layout_above="@id/ll_controlbor"
+        android:background="#22000000"
+        android:layout_alignParentRight="true"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:gravity="center_horizontal"
+        android:layout_height="wrap_content"
+        android:visibility="gone">
+        <TextView
+            android:id="@+id/tv_uhd"
+            android:layout_marginTop="15dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#ffffff"
+            android:textSize="15sp"
+            android:text="超清"/>
+        <TextView
+            android:id="@+id/tv_hd"
+            android:textSize="15sp"
+            android:layout_marginTop="15dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#ffffff"
+            android:text="高清"/>
+        <TextView
+            android:id="@+id/tv_sd"
+            android:textSize="15sp"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="15dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#ffffff"
+            android:text="标清"/>
 
     </LinearLayout>
 </RelativeLayout>

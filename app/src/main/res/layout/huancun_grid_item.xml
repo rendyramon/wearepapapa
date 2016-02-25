@@ -54,7 +54,7 @@
                 android:ellipsize="end"
                 android:gravity="center"
                 android:singleLine="true"
-                android:text="120kb/s"
+                android:text="0kb/s"
                 android:textColor="#ffffff"
                 android:textSize="12sp" />
         </LinearLayout>

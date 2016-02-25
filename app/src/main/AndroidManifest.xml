@@ -58,9 +58,6 @@
              </intent-filter>
         </activity>
         <activity
-            android:name=".PlayerSBSActivity"
-            android:screenOrientation="landscape" />
-        <activity
             android:name=".MainActivity"
             android:screenOrientation="portrait" />
         <activity
@@ -73,9 +70,6 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".PlayerVRActivity"
-            android:screenOrientation="landscape" />
         <activity
             android:name=".PlayerVRActivityNew"
             android:screenOrientation="landscape" />

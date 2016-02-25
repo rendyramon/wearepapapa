@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
+import android.text.Spanned;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
@@ -96,6 +97,7 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
      *
      * @param message 显示文案
      */
+    long loadingTime = 0;
     boolean isShowing = false;
     public void showLoading(String message) {
         if (!isShowing) {
@@ -104,10 +106,11 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
             msg.what = MESSAGE_SHOWLOADING;
             isShowing = true;
             messageHandler.sendMessage(msg);
+            loadingTime=System.currentTimeMillis();
         }
 
     }
-
+//    public boolean getI
     /**
      * 关闭loading
      */

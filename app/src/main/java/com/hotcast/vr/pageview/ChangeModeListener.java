@@ -6,4 +6,8 @@ package com.hotcast.vr.pageview;
 public interface ChangeModeListener {
     void clickTouchMode();
     void clickSplitScreen();
+    void clickChoiceClarity();
+    void clickSd();
+    void clickHd();
+    void clickUhd();
 }

@@ -14,11 +14,14 @@ import java.util.*;
 
 
 import com.google.gson.Gson;
+import com.hotcast.vr.bean.LocalBean;
 import com.hotcast.vr.bean.Play;
 import com.hotcast.vr.pageview.ChangeModeListener;
 import com.hotcast.vr.pageview.PlayerContralView;
 import com.hotcast.vr.tools.Constants;
 import com.hotcast.vr.tools.L;
+import com.lidroid.xutils.DbUtils;
+import com.lidroid.xutils.exception.DbException;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.RequestParams;
 import com.lidroid.xutils.http.ResponseInfo;
@@ -38,7 +41,12 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.SystemClock;
+import android.text.Html;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.style.AbsoluteSizeSpan;
 import android.util.FloatMath;
 import android.util.Log;
 import android.view.*;
@@ -90,7 +98,7 @@ public class PlayerVRActivityNew extends BaseLanActivity implements PFAssetObser
     };
     //    double nLenStart = 0;
     String play_url;
-    Play play;
+//    Play play;
 
     public void getplayUrl(String vid) {
         String mUrl = Constants.PLAY_URL;
@@ -119,10 +127,13 @@ public class PlayerVRActivityNew extends BaseLanActivity implements PFAssetObser
 
                 if (!TextUtils.isEmpty(play.getSd_url())) {
                     play_url = play.getSd_url();
+                    BaseApplication.clarityText = "标清";
                 } else if (!TextUtils.isEmpty(play.getHd_url())) {
                     play_url = play.getHd_url();
+                    BaseApplication.clarityText = "高清";
                 } else if (!TextUtils.isEmpty(play.getUhd_url())) {
                     play_url = play.getUhd_url();
+                    BaseApplication.clarityText = "超清";
                 }
                 System.out.println("---play_url:" + play_url);
                 title = play.getTitle();
@@ -144,23 +155,23 @@ public class PlayerVRActivityNew extends BaseLanActivity implements PFAssetObser
      *
      * @param filename The file path on device storage
      */
-
+    DbUtils db;
+    List<LocalBean> localBeans;
+    ArrayList<String> urls = new ArrayList<>();
     public void loadVideo(String filename) {
+
         L.e("filename=" + filename);
-//        System.out.println("---播放页面接受到的url："+filename);
+        System.out.println("---播放页面接受到的url：" + filename);
         _pfview = PFObjectFactory.view(this);
         _pfview.setMode(curMode, 0);
 
-//        _pfview.setFieldOfView(150);
 
         _pfasset = PFObjectFactory.assetFromUri(this, Uri.parse(filename), this);
 
         _pfview.displayAsset(_pfasset);
         _pfview.setNavigationMode(_currentNavigationMode);
-//        _pfview.setFieldOfView(100);
 
         _frameContainer.addView(_pfview.getView(), 0);
-
         _pfasset.play();
 
     }
@@ -174,6 +185,7 @@ public class PlayerVRActivityNew extends BaseLanActivity implements PFAssetObser
      */
     float oldTime = 0;
     boolean isplaying;
+
 
     public void onStatusMessage(final PFAsset asset, PFAssetStatus status) {
         switch (status) {
@@ -216,21 +228,38 @@ public class PlayerVRActivityNew extends BaseLanActivity implements PFAssetObser
                                 mPlayerContralView.setTotalDuration(totalDuration);
                             }
                             mPlayerContralView.setCurTime((int) asset.getPlaybackTime());
-                            if (oldTime == asset.getPlaybackTime() && !isPause) {
-                                showLoading("正在缓冲");
+                            if(!urls.contains(play_url)){
+                                if (asset.getPlaybackTime() == oldTime && !isPause) {
+                                    System.out.println("----12345");
+                                    if (BaseApplication.clarityText.equals("标清")){
+                                        showLoading("正在缓冲");
+                                    }else {
+                                        Spannable span =  new SpannableString("缓冲时间过长请切换底清晰度");
+                                        span.setSpan(new AbsoluteSizeSpan(20),0,span.length(),Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+
+                                        showLoading("正在缓冲\n" + span);
+                                    }
+                                    System.out.println("---缓冲超时System.currentTimeMillis() = " + System.currentTimeMillis());
+                                    System.out.println("--- " + (System.currentTimeMillis() - loadingTime));
+                                    if(System.currentTimeMillis()-loadingTime>30000l){
+                                        //表示加载超时
+                                        System.out.println("---缓冲超时，切换低清晰度电影");
+
+                                    }
 //                                System.out.println("----显示loading");
-                            } else if (oldTime > asset.getPlaybackTime()) {
-                                oldTime = asset.getPlaybackTime();
-                                hideLoading();
+                                } else if (oldTime > asset.getPlaybackTime()) {
+                                    oldTime = asset.getPlaybackTime();
+                                    hideLoading();
 //                                System.out.println("----隐藏loading1");
 
-                            } else if (oldTime < asset.getPlaybackTime()) {
-                                oldTime = asset.getPlaybackTime();
-                                hideLoading();
+                                } else if (oldTime < asset.getPlaybackTime()) {
+                                    oldTime = asset.getPlaybackTime();
+                                    hideLoading();
 //                                System.out.println("----隐藏loading2");
-                            } else {
-                                hideLoading();
+                                } else {
+                                    hideLoading();
 //                                System.out.println("----隐藏loading3");
+                                }
                             }
                             L.e("asset.getPlaybackTime() = " + asset.getPlaybackTime());
 //                            if (asset.getPlaybackTime() == asset.getPlaybackTime() && !isPause){
@@ -292,6 +321,8 @@ public class PlayerVRActivityNew extends BaseLanActivity implements PFAssetObser
         linCtr.setVisibility(View.GONE);
         mPlayerContralView.setStatusPlay();
         _pfview.setFieldOfView(75);
+        _pfasset.setPLaybackTime(BaseApplication.playbacktime);
+        System.out.println("---播放时间 = " + BaseApplication.playbacktime);
         mPlayerContralView.setmPlayerContrallerInterface(new PlayerContrallerInterface() {
             @Override
             public void play() {
@@ -383,7 +414,7 @@ public class PlayerVRActivityNew extends BaseLanActivity implements PFAssetObser
         audioManager = (AudioManager) getSystemService(Service.AUDIO_SERVICE);
 
         System.out.println("---104--开始加载的时间 = " + System.currentTimeMillis());
-        showLoading("正在加载...");
+        showLoading("正在加载");
         System.out.println("---" + vid + "---");
         if (vid == null || TextUtils.isEmpty(vid)) {
             initView();
@@ -395,9 +426,39 @@ public class PlayerVRActivityNew extends BaseLanActivity implements PFAssetObser
     }
 
     private void initView() {
-        mPlayerContralView1 = new PlayerContralView(this, PlayerContralView.TYPE_360);
-        mPlayerContralView2 = new PlayerContralView(this, PlayerContralView.TYPE_360);
+        db = DbUtils.create(this);
+        try {
+            localBeans = db.findAll(LocalBean.class);
+            System.out.println("---localBeans = " + localBeans);
+            for (int i = 0 ; i <localBeans.size(); i++){
+                urls.add(localBeans.get(i).getLocalurl());
+            }
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
+
+//        mPlayerContralView1 = new PlayerContralView(this, PlayerContralView.TYPE_360);
+//        mPlayerContralView2 = new PlayerContralView(this, PlayerContralView.TYPE_360);
+        mPlayerContralView1 = new PlayerContralView(this, PlayerContralView.TYPE_360,BaseApplication.clarityText);
+        mPlayerContralView2 = new PlayerContralView(this, PlayerContralView.TYPE_360,BaseApplication.clarityText);
         mPlayerContralView = new PlayerCtrMnger(mPlayerContralView1, mPlayerContralView2);
+        if (play != null){
+            if (!TextUtils.isEmpty(play.getSd_url())){
+                mPlayerContralView1.setCanclick1(true);
+                mPlayerContralView2.setCanclick1(true);
+            }
+            if (!TextUtils.isEmpty(play.getHd_url())){
+                mPlayerContralView1.setCanclick2(true);
+                mPlayerContralView2.setCanclick2(true);
+            }
+            if (!TextUtils.isEmpty(play.getUhd_url())){
+                mPlayerContralView1.setCanclick3(true);
+                mPlayerContralView2.setCanclick3(true);
+            }
+        }else {
+            mPlayerContralView1.setCanclick(false);
+            mPlayerContralView2.setCanclick(false);
+        }
         setPlayerContralView(linCtr);
         System.out.println("***PlaylerVRActivity***setPlayerContralView()");
         controller1.addView(mPlayerContralView1.getRootView(), ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
@@ -472,6 +533,83 @@ public class PlayerVRActivityNew extends BaseLanActivity implements PFAssetObser
                 _pfview.setMode(curMode, 0);
 
             }
+//            int paybackTime;
+
+            @Override
+            public void clickChoiceClarity() {
+
+                showLinCtr();
+            }
+
+            @Override
+            public void clickSd() {
+                showLinCtr();
+                BaseApplication.playbacktime = _pfasset.getPlaybackTime();
+                System.out.println("--播放到-->" + BaseApplication.playbacktime);
+                play_url = play.getSd_url();
+                if (!TextUtils.isEmpty(play_url) ) {
+                    BaseApplication.clarityText = "标清";
+                    Intent intent = new Intent(PlayerVRActivityNew.this, PlayerVRActivityNew.class);
+                    intent.putExtra("play_url", play_url);
+                    intent.putExtra("play", play);
+                    intent.putExtra("title", title);
+                    intent.putExtra("splite_screen", false);
+                    startActivity(intent);
+//                    _pfasset.setPLaybackTime(BaseApplication.playbacktime);
+                    finish();
+                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                    System.out.println("---切换清晰度为标清 url = " + play_url + " --time = " + BaseApplication.playbacktime);
+
+//                    BaseApplication.playbacktime = 0;
+//                    _pfasset.setPLaybackTime(BaseApplication.playbacktime);
+                }
+            }
+
+            @Override
+            public void clickHd() {
+                showLinCtr();
+                BaseApplication.playbacktime = _pfasset.getPlaybackTime();
+                System.out.println("--播放到-->" + BaseApplication.playbacktime);
+                play_url = play.getHd_url();
+                if (!TextUtils.isEmpty(play_url) ) {
+                    BaseApplication.clarityText = "高清";
+                    Intent intent = new Intent(PlayerVRActivityNew.this, PlayerVRActivityNew.class);
+                    intent.putExtra("play_url", play_url);
+                    intent.putExtra("play", play);
+                    intent.putExtra("title", title);
+                    intent.putExtra("splite_screen", false);
+                    startActivity(intent);
+//                    _pfasset.setPLaybackTime(BaseApplication.playbacktime);
+                    finish();
+                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                    System.out.println("---切换清晰度为高清 url = " + play_url + " --time = " + BaseApplication.playbacktime);
+//                    _pfasset.setPLaybackTime(BaseApplication.playbacktime);
+//                    BaseApplication.playbacktime = 0;
+                }
+            }
+
+            @Override
+            public void clickUhd() {
+                showLinCtr();
+                BaseApplication.playbacktime = _pfasset.getPlaybackTime();
+                System.out.println("--播放到-->" + BaseApplication.playbacktime);
+                play_url = play.getUhd_url();
+                if (!TextUtils.isEmpty(play_url) ) {
+                    BaseApplication.clarityText = "超清";
+                    Intent intent = new Intent(PlayerVRActivityNew.this, PlayerVRActivityNew.class);
+                    intent.putExtra("play_url", play_url);
+                    intent.putExtra("play", play);
+                    intent.putExtra("title", title);
+                    intent.putExtra("splite_screen", false);
+                    startActivity(intent);
+//                    _pfasset.setPLaybackTime(BaseApplication.playbacktime);
+                    finish();
+                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                    System.out.println("---切换清晰度为超清 url = " + play_url + " --time = " + BaseApplication.playbacktime);
+//                    _pfasset.setPLaybackTime(BaseApplication.playbacktime);
+//                    BaseApplication.playbacktime = 0;
+                }
+            }
         });
         if (getIntent().getData() == null) {
             loadVideo(play_url);
@@ -487,12 +625,27 @@ public class PlayerVRActivityNew extends BaseLanActivity implements PFAssetObser
     }
 
     String vid;
-
+Play play;
+    int qingxidu;
     @Override
     public void getIntentData(Intent intent) {
         vid = intent.getStringExtra("vid");
         title = getIntent().getStringExtra("title");
         play_url = getIntent().getStringExtra("play_url");
+        play = (Play) getIntent().getSerializableExtra("play");
+
+        qingxidu = getIntent().getIntExtra("qingxidu",1);
+       switch (qingxidu){
+           case 0:
+               BaseApplication.clarityText = "标清";
+               break;
+           case 1:
+               BaseApplication.clarityText = "高清";
+               break;
+           case 2:
+               BaseApplication.clarityText = "超清";
+               break;
+       }
         boolean b = intent.getBooleanExtra("splite_screen", false);
         if (b) {
             curMode = MODE_SPLIT_SCREEN;
@@ -504,7 +657,15 @@ public class PlayerVRActivityNew extends BaseLanActivity implements PFAssetObser
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        _pfview.release();
+//        _pfasset.stop();
+        this.showDialog("提示：", "是否退出播放？", "确定", "取消", new OnAlertSureClickListener() {
+            @Override
+            public void onclick() {
+                _pfview.release();
+                finish();
+            }
+        });
+
     }
 
     /**
@@ -613,21 +774,24 @@ public class PlayerVRActivityNew extends BaseLanActivity implements PFAssetObser
             System.out.println("单手指触碰");
             switch (event.getAction()) {
                 case MotionEvent.ACTION_UP:
-                    if (linCtr != null) {
-                        if (!ctr_vist) {
-                            ctr_vist = true;
-                            linCtr.setVisibility(View.VISIBLE);
-                            System.out.println("---显示进度条1");
-                            delayedHide(4000);
-                        } else {
-                            ctr_vist = false;
-                            linCtr.setVisibility(View.GONE);
-                            System.out.println("---隐藏进度条1");
-                        }
-                    }
+                    showLinCtr();
                     break;
             }
             return super.dispatchTouchEvent(event);
+        }
+    }
+    private void showLinCtr(){
+        if (linCtr != null) {
+            if (!ctr_vist) {
+                ctr_vist = true;
+                linCtr.setVisibility(View.VISIBLE);
+                System.out.println("---显示进度条1");
+                delayedHide(4000);
+            } else {
+                ctr_vist = false;
+                linCtr.setVisibility(View.GONE);
+                System.out.println("---隐藏进度条1");
+            }
         }
     }
 
@@ -653,7 +817,15 @@ public class PlayerVRActivityNew extends BaseLanActivity implements PFAssetObser
                 break;
             case KeyEvent.KEYCODE_BACK:
             case KeyEvent.KEYCODE_BUTTON_B:
-                finish();
+//                _pfasset.stop();
+                System.out.println("---返回键");
+                        this.showDialog("提示：", "是否退出播放？", "确定", "取消", new OnAlertSureClickListener() {
+                            @Override
+                            public void onclick() {
+                                _pfview.release();
+                                finish();
+                    }
+                });
                 break;
             case KeyEvent.KEYCODE_DPAD_CENTER:
             case KeyEvent.KEYCODE_BUTTON_A:

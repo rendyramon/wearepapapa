@@ -9,8 +9,8 @@ import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.hotcast.vr.BaseActivity;
+import com.hotcast.vr.PlayerVRActivityNew;
 import com.hotcast.vr.R;
-import com.hotcast.vr.PlayerVRActivity;
 import com.hotcast.vr.adapter.BaseAdapterHelper;
 import com.hotcast.vr.adapter.QuickAdapter;
 import com.hotcast.vr.bean.ListBean;
@@ -82,7 +82,7 @@ public class ListLocalView extends BaseView {
 //                    activity.showToast("下载未完成");
 //                    return ;
 //                }
-                Intent intent = new Intent(activity, PlayerVRActivity.class);
+                Intent intent = new Intent(activity, PlayerVRActivityNew.class);
                 intent.putExtra("url", item.getLocalPath());
                 intent.putExtra("splite_screen", false);
                 activity.startActivity(intent);
