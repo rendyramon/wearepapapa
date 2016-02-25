@@ -171,6 +171,7 @@ public class ListLocalActivity extends BaseActivity {
                     if (state == 3 && file.exists()) {
                         Intent intent = new Intent(ListLocalActivity.this, PlayerVRActivityNew.class);
                         intent.putExtra("play_url", localurl);
+                        intent.putExtra("qingxidu",list.get(i).getQingxidu());
                         intent.putExtra("title", list.get(i).getTitle());
                         intent.putExtra("splite_screen", false);
                         ListLocalActivity.this.startActivity(intent);
@@ -193,6 +194,7 @@ public class ListLocalActivity extends BaseActivity {
                         }
                     } else if (state == 1) {
                         BaseApplication.downLoadManager.stopTask(list.get(i).getUrl());
+                        System.out.println("---停止"+list.get(i).getUrl());
                         list.get(i).setCurState(4);
                         try {
                             db.saveOrUpdate(list.get(i));

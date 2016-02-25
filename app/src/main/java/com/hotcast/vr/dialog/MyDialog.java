@@ -155,9 +155,9 @@ public class MyDialog extends Dialog {
                 rg.check(R.id.rb_chao);
             }
 
-            rb_biao.setFocusable(isFocusable1);
-            rb_gao.setFocusable(isFocusable2);
-            rb_chao.setFocusable(isFocusable3);
+            rb_biao.setEnabled(isFocusable1);
+            rb_gao.setEnabled(isFocusable2);
+            rb_chao.setEnabled(isFocusable3);
             System.out.println("---isFocusable1 = " + isFocusable1 + "-isFocusable2= "+isFocusable2+"-isFocusable3="+isFocusable3);
 
             rg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {

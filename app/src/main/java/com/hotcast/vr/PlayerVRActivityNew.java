@@ -436,11 +436,29 @@ public class PlayerVRActivityNew extends BaseLanActivity implements PFAssetObser
         } catch (DbException e) {
             e.printStackTrace();
         }
+
 //        mPlayerContralView1 = new PlayerContralView(this, PlayerContralView.TYPE_360);
 //        mPlayerContralView2 = new PlayerContralView(this, PlayerContralView.TYPE_360);
         mPlayerContralView1 = new PlayerContralView(this, PlayerContralView.TYPE_360,BaseApplication.clarityText);
         mPlayerContralView2 = new PlayerContralView(this, PlayerContralView.TYPE_360,BaseApplication.clarityText);
         mPlayerContralView = new PlayerCtrMnger(mPlayerContralView1, mPlayerContralView2);
+        if (play != null){
+            if (!TextUtils.isEmpty(play.getSd_url())){
+                mPlayerContralView1.setCanclick1(true);
+                mPlayerContralView2.setCanclick1(true);
+            }
+            if (!TextUtils.isEmpty(play.getHd_url())){
+                mPlayerContralView1.setCanclick2(true);
+                mPlayerContralView2.setCanclick2(true);
+            }
+            if (!TextUtils.isEmpty(play.getUhd_url())){
+                mPlayerContralView1.setCanclick3(true);
+                mPlayerContralView2.setCanclick3(true);
+            }
+        }else {
+            mPlayerContralView1.setCanclick(false);
+            mPlayerContralView2.setCanclick(false);
+        }
         setPlayerContralView(linCtr);
         System.out.println("***PlaylerVRActivity***setPlayerContralView()");
         controller1.addView(mPlayerContralView1.getRootView(), ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
@@ -519,6 +537,7 @@ public class PlayerVRActivityNew extends BaseLanActivity implements PFAssetObser
 
             @Override
             public void clickChoiceClarity() {
+
                 showLinCtr();
             }
 
@@ -607,12 +626,26 @@ public class PlayerVRActivityNew extends BaseLanActivity implements PFAssetObser
 
     String vid;
 Play play;
+    int qingxidu;
     @Override
     public void getIntentData(Intent intent) {
         vid = intent.getStringExtra("vid");
         title = getIntent().getStringExtra("title");
         play_url = getIntent().getStringExtra("play_url");
         play = (Play) getIntent().getSerializableExtra("play");
+
+        qingxidu = getIntent().getIntExtra("qingxidu",1);
+       switch (qingxidu){
+           case 0:
+               BaseApplication.clarityText = "标清";
+               break;
+           case 1:
+               BaseApplication.clarityText = "高清";
+               break;
+           case 2:
+               BaseApplication.clarityText = "超清";
+               break;
+       }
         boolean b = intent.getBooleanExtra("splite_screen", false);
         if (b) {
             curMode = MODE_SPLIT_SCREEN;

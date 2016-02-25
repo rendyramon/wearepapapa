@@ -61,8 +61,42 @@ public class PlayerContralView extends BaseView {
         activity.finish();
     }
     boolean isshow = false;
+
+    public void setCanclick(boolean canclick) {
+        this.canclick = canclick;
+    }
+
+    boolean canclick = true;
+    boolean canclick1 = false;
+    boolean canclick2 = false;
+    boolean canclick3 = false;
+
+    public void setCanclick1(boolean canclick1) {
+        this.canclick1 = canclick1;
+    }
+
+    public void setCanclick2(boolean canclick2) {
+        this.canclick2 = canclick2;
+    }
+
+    public void setCanclick3(boolean canclick3) {
+        this.canclick3 = canclick3;
+    }
+
     @OnClick(R.id.choiceclarity)
     void choiceclarity(){
+        if (!canclick1){
+            tv_sd.setVisibility(View.GONE);
+        }
+        if (!canclick2){
+            tv_hd.setVisibility(View.GONE);
+        }
+        if (!canclick3){
+            tv_uhd.setVisibility(View.GONE);
+        }
+//        tv_sd.setEnabled(canclick1);
+//        tv_hd.setEnabled(canclick2);
+//        tv_uhd.setEnabled(canclick3);
         if (!isshow) {
             ll_choice.setVisibility(View.VISIBLE);
             isshow = true;
@@ -182,6 +216,7 @@ public class PlayerContralView extends BaseView {
 
     public PlayerContralView(BaseActivity activity, int type,String clarityText) {
         super(activity, R.layout.player_contral);
+        choiceclarity.setEnabled(canclick);
         this.type = type;
         switch (type){
             case TYPE_360:

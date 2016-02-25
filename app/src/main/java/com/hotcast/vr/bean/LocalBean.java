@@ -13,6 +13,16 @@ public class LocalBean implements Serializable {
     String PAUSE = "PAUSE";
     String WAITING = "WAITING";
 
+    public int getQingxidu() {
+        return qingxidu;
+    }
+
+    public void setQingxidu(int qingxidu) {
+        this.qingxidu = qingxidu;
+    }
+
+    int qingxidu;
+
     String title;
     String image;
     String url;
