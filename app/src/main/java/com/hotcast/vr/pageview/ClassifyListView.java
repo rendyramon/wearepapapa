@@ -186,7 +186,7 @@ public class ClassifyListView extends BaseView {
 
             @Override
             public void onSuccess(ResponseInfo<String> responseInfo) {
-                if (iv_noNet == null){
+                if (iv_noNet == null) {
                     iv_noNet = (ImageView) getRootView().findViewById(R.id.iv_noNet);
                 }
                 iv_noNet.setVisibility(View.GONE);
@@ -199,10 +199,12 @@ public class ClassifyListView extends BaseView {
 
             @Override
             public void onFailure(HttpException e, String s) {
-                if (iv_noNet == null){
+                if (iv_noNet == null) {
                     iv_noNet = (ImageView) getRootView().findViewById(R.id.iv_noNet);
+                    iv_noNet.setVisibility(View.VISIBLE);
+                } else {
+                    iv_noNet.setVisibility(View.VISIBLE);
                 }
-                iv_noNet.setVisibility(View.VISIBLE);
                 bDataProcessed = false;
                 bProcessing = false;
                 list.onRefreshComplete();
