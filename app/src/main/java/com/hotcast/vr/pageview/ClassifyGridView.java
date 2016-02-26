@@ -172,7 +172,7 @@ public class ClassifyGridView extends BaseView {
 
             @Override
             public void onSuccess(ResponseInfo<String> responseInfo) {
-                if (iv_noNet == null){
+                if (iv_noNet == null) {
                     iv_noNet = (ImageView) getRootView().findViewById(R.id.iv_noNet);
                 }
                 iv_noNet.setVisibility(View.GONE);
@@ -181,7 +181,7 @@ public class ClassifyGridView extends BaseView {
                 grid.onRefreshComplete();
                 L.e("responseInfo:" + responseInfo.result);
                 setViewData(responseInfo.result);
-                if (iv_noNet == null){
+                if (iv_noNet == null) {
                     iv_noNet = (ImageView) getRootView().findViewById(R.id.iv_noNet);
                 }
                 iv_noNet.setVisibility(View.GONE);
@@ -189,11 +189,13 @@ public class ClassifyGridView extends BaseView {
 
             @Override
             public void onFailure(HttpException e, String s) {
-                if (iv_noNet == null){
-                    iv_noNet = (ImageView) getRootView().findViewById(R.id.iv_noNet);
-                }
-                iv_noNet.setVisibility(View.VISIBLE);
                 System.out.println("---请求数据失败！！！");
+                if (iv_noNet == null) {
+                    iv_noNet = (ImageView) getRootView().findViewById(R.id.iv_noNet);
+                    iv_noNet.setVisibility(View.VISIBLE);
+                } else {
+                    iv_noNet.setVisibility(View.VISIBLE);
+                }
                 bDataProcessed = false;
                 bProcessing = false;
                 grid.onRefreshComplete();

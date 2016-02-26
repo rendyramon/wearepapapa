@@ -165,7 +165,6 @@ public class PlayerVRActivityNew extends BaseLanActivity implements PFAssetObser
         _pfview = PFObjectFactory.view(this);
         _pfview.setMode(curMode, 0);
 
-
         _pfasset = PFObjectFactory.assetFromUri(this, Uri.parse(filename), this);
 
         _pfview.displayAsset(_pfasset);
@@ -192,6 +191,7 @@ public class PlayerVRActivityNew extends BaseLanActivity implements PFAssetObser
             case LOADED:
                 System.out.println("---118--LOADED ");
                 Log.d("SimplePlayer", "Loaded");
+//                final
                 break;
             case DOWNLOADING:
                 Log.d("SimplePlayer", "Downloading 360� movie: " + _pfasset.getDownloadProgress() + " percent complete");
@@ -208,7 +208,7 @@ public class PlayerVRActivityNew extends BaseLanActivity implements PFAssetObser
                 break;
             case PLAYING:
                 hideLoading();
-                System.out.println("---135--结束加载的时间 = " + System.currentTimeMillis());
+                System.out.println("---135--结束加载的时间 = " + (System.currentTimeMillis() - startTime));
                 Log.d("SimplePlayer", "Playing");
 //		        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
                 initPlaying();
@@ -298,6 +298,7 @@ public class PlayerVRActivityNew extends BaseLanActivity implements PFAssetObser
                     _scrubberMonitorTimer.cancel();
                     _scrubberMonitorTimer = null;
                 }
+                BaseApplication.playbacktime = 0;
                 finish();
 //		        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
                 break;
@@ -384,7 +385,6 @@ public class PlayerVRActivityNew extends BaseLanActivity implements PFAssetObser
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
         if (null != _pfasset) {
             _pfasset.stop();
             _pfasset.release();
@@ -402,7 +402,7 @@ public class PlayerVRActivityNew extends BaseLanActivity implements PFAssetObser
     private String title;
     private String titleSplitScreen;
     private AudioManager audioManager; //音频
-
+    long startTime = 0;
     @Override
     public void init() {
 //        if (getIntent().getStringExtra("title").length() > 4){
@@ -412,7 +412,7 @@ public class PlayerVRActivityNew extends BaseLanActivity implements PFAssetObser
 
 //        }
         audioManager = (AudioManager) getSystemService(Service.AUDIO_SERVICE);
-
+        startTime = System.currentTimeMillis();
         System.out.println("---104--开始加载的时间 = " + System.currentTimeMillis());
         showLoading("正在加载");
         System.out.println("---" + vid + "---");
@@ -818,11 +818,12 @@ Play play;
             case KeyEvent.KEYCODE_BACK:
             case KeyEvent.KEYCODE_BUTTON_B:
 //                _pfasset.stop();
+//                finish();
                 System.out.println("---返回键");
                         this.showDialog("提示：", "是否退出播放？", "确定", "取消", new OnAlertSureClickListener() {
                             @Override
                             public void onclick() {
-                                _pfview.release();
+//                                _pfview.release();
                                 finish();
                     }
                 });

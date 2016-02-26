@@ -197,8 +197,8 @@ public class VrListActivity extends BaseActivity {
         tv_desc2.setText(descs.get(mCurrentImg));
         if (localUrlList.contains(vrPlays.get(mCurrentImg).getVideos().get(0).getVname())) {
 //            System.out.println("--localUrlList = " + localUrlList);
-            isSave = true;
             title = vrPlays.get(mCurrentImg).getVideos().get(0).getVname();
+            System.out.println("---title = " + title);
             play_url = BaseApplication.VedioCacheUrl+vrPlays.get(mCurrentImg).getVideos().get(0).getVname()+".mp4";
             System.out.println("--localUrl = " +BaseApplication.VedioCacheUrl+ vrPlays.get(mCurrentImg).getVideos().get(0).getVname()+".mp4");
             setDownloadText(true);
@@ -232,6 +232,8 @@ public class VrListActivity extends BaseActivity {
                     tv_desc1.setText(descs.get(mCurrentImg));
                     tv_desc2.setText(descs.get(mCurrentImg));
                     if (localUrlList.contains(vrPlays.get(mCurrentImg).getVideos().get(0).getVname())) {
+                        title = vrPlays.get(mCurrentImg).getVideos().get(0).getVname();
+                        play_url = BaseApplication.VedioCacheUrl+vrPlays.get(mCurrentImg).getVideos().get(0).getVname()+".mp4";
                         setDownloadText(true);
                     } else {
                         setDownloadText(false);
@@ -249,6 +251,8 @@ public class VrListActivity extends BaseActivity {
                     tv_desc1.setText(descs.get(mCurrentImg));
                     tv_desc2.setText(descs.get(mCurrentImg));
                     if (localUrlList.contains(vrPlays.get(mCurrentImg).getVideos().get(0).getVname())) {
+                        title = vrPlays.get(mCurrentImg).getVideos().get(0).getVname();
+                        play_url = BaseApplication.VedioCacheUrl+vrPlays.get(mCurrentImg).getVideos().get(0).getVname()+".mp4";
                         setDownloadText(true);
                     } else {
                         setDownloadText(false);
@@ -279,6 +283,8 @@ public class VrListActivity extends BaseActivity {
                     tv_desc1.setText(descs.get(mCurrentImg));
                     tv_desc2.setText(descs.get(mCurrentImg));
                     if (localUrlList.contains(vrPlays.get(mCurrentImg).getVideos().get(0).getVname())) {
+                        title = vrPlays.get(mCurrentImg).getVideos().get(0).getVname();
+                        play_url = BaseApplication.VedioCacheUrl+vrPlays.get(mCurrentImg).getVideos().get(0).getVname()+".mp4";
                         setDownloadText(true);
                     } else {
                         setDownloadText(false);
@@ -296,6 +302,8 @@ public class VrListActivity extends BaseActivity {
                     tv_desc1.setText(descs.get(mCurrentImg));
                     tv_desc2.setText(descs.get(mCurrentImg));
                     if (localUrlList.contains(vrPlays.get(mCurrentImg).getVideos().get(0).getVname())) {
+                        title = vrPlays.get(mCurrentImg).getVideos().get(0).getVname();
+                        play_url = BaseApplication.VedioCacheUrl+vrPlays.get(mCurrentImg).getVideos().get(0).getVname()+".mp4";
                         setDownloadText(true);
                     } else {
                         setDownloadText(false);
@@ -340,6 +348,8 @@ public class VrListActivity extends BaseActivity {
                     tv_desc1.setText(descs.get(mCurrentImg));
                     tv_desc2.setText(descs.get(mCurrentImg));
                     if (localUrlList.contains(vrPlays.get(mCurrentImg).getVideos().get(0).getVname())) {
+                        title = vrPlays.get(mCurrentImg).getVideos().get(0).getVname();
+                        play_url = BaseApplication.VedioCacheUrl+vrPlays.get(mCurrentImg).getVideos().get(0).getVname()+".mp4";
                         setDownloadText(true);
                     } else {
                         setDownloadText(false);
@@ -357,6 +367,8 @@ public class VrListActivity extends BaseActivity {
                     tv_desc1.setText(descs.get(mCurrentImg));
                     tv_desc2.setText(descs.get(mCurrentImg));
                     if (localUrlList.contains(vrPlays.get(mCurrentImg).getVideos().get(0).getVname())) {
+                        title = vrPlays.get(mCurrentImg).getVideos().get(0).getVname();
+                        play_url = BaseApplication.VedioCacheUrl+vrPlays.get(mCurrentImg).getVideos().get(0).getVname()+".mp4";
                         setDownloadText(true);
                     } else {
                         setDownloadText(false);
@@ -386,6 +398,8 @@ public class VrListActivity extends BaseActivity {
                     tv_desc1.setText(descs.get(mCurrentImg));
                     tv_desc2.setText(descs.get(mCurrentImg));
                     if (localUrlList.contains(vrPlays.get(mCurrentImg).getVideos().get(0).getVname())) {
+                        title = vrPlays.get(mCurrentImg).getVideos().get(0).getVname();
+                        play_url = BaseApplication.VedioCacheUrl+vrPlays.get(mCurrentImg).getVideos().get(0).getVname()+".mp4";
                         setDownloadText(true);
                     } else {
                         setDownloadText(false);
@@ -403,6 +417,8 @@ public class VrListActivity extends BaseActivity {
                     tv_desc1.setText(descs.get(mCurrentImg));
                     tv_desc2.setText(descs.get(mCurrentImg));
                     if (localUrlList.contains(vrPlays.get(mCurrentImg).getVideos().get(0).getVname())) {
+                        title = vrPlays.get(mCurrentImg).getVideos().get(0).getVname();
+                        play_url = BaseApplication.VedioCacheUrl+vrPlays.get(mCurrentImg).getVideos().get(0).getVname()+".mp4";
                         setDownloadText(true);
                     } else {
                         setDownloadText(false);
@@ -463,8 +479,10 @@ public class VrListActivity extends BaseActivity {
                         mCurrentImg = titles.size() - 1;
                     }
                     if (!localUrlList.contains(vrPlays.get(mCurrentImg).getVideos().get(0).getVname())) {
+                        title = vrPlays.get(mCurrentImg).getVideos().get(0).getVname();
                         System.out.println("---点击了：" + vrPlays.get(mCurrentImg).getTitle() + "--url:" + vrPlays.get(mCurrentImg).getVideos().get(0).getVname());
                         doDownloadrequest = true;
+                        play_url = BaseApplication.VedioCacheUrl+vrPlays.get(mCurrentImg).getVideos().get(0).getVname()+".mp4";
                         setDownloadText(true);
                         getplayUrl(mCurrentImg, vrPlays.get(mCurrentImg).getVideos().get(0).getVid(), vrPlays.get(mCurrentImg).getVideos().get(0).getVname());
                     }
@@ -491,7 +509,7 @@ public class VrListActivity extends BaseActivity {
                 break;
         }
     }
-
+    int qingxiduu;
     public void getplayUrl(final int mCurrent, String vid, final String name) {
         String mUrl = Constants.PLAY_URL;
         RequestParams params = new RequestParams();
@@ -515,12 +533,15 @@ public class VrListActivity extends BaseActivity {
 
                 if (!TextUtils.isEmpty(play.getSd_url())) {
                     play_url = play.getSd_url();
+                    qingxiduu = 0;
                 } else if (!TextUtils.isEmpty(play.getHd_url())) {
                     play_url = play.getHd_url();
+                    qingxiduu = 1;
                 } else if (!TextUtils.isEmpty(play.getUhd_url())) {
                     play_url = play.getUhd_url();
+                    qingxiduu = 2;
                 }
-                if (play_url == null || play_url == "") {
+                if (TextUtils.isEmpty(play_url)) {
                     mCurrentImg = img3D.getImgIndex() - 1;
                     if (mCurrentImg < 0) {
                         mCurrentImg = titles.size() - 1;
@@ -563,6 +584,7 @@ public class VrListActivity extends BaseActivity {
         LocalBean localBean = new LocalBean();
         localBean.setTitle(vname);
         localBean.setImage(vrPlays.get(mCurrentImg).getImage().get(0));
+        localBean.setQingxidu(qingxiduu);
         localBean.setId(play_url);
         localBean.setUrl(play_url);
         localBean.setCurState(0);//還沒下載，準備下載
@@ -619,6 +641,8 @@ public class VrListActivity extends BaseActivity {
                         tv_desc1.setText(descs.get(mCurrentImg));
                         tv_desc2.setText(descs.get(mCurrentImg));
                         if (localUrlList.contains(vrPlays.get(mCurrentImg).getVideos().get(0).getVname())) {
+                            title = vrPlays.get(mCurrentImg).getVideos().get(0).getVname();
+                            play_url = BaseApplication.VedioCacheUrl+vrPlays.get(mCurrentImg).getVideos().get(0).getVname()+".mp4";
                             setDownloadText(true);
                         } else {
                             setDownloadText(false);
@@ -636,6 +660,8 @@ public class VrListActivity extends BaseActivity {
                         tv_desc1.setText(descs.get(mCurrentImg));
                         tv_desc2.setText(descs.get(mCurrentImg));
                         if (localUrlList.contains(vrPlays.get(mCurrentImg).getVideos().get(0).getVname())) {
+                            title = vrPlays.get(mCurrentImg).getVideos().get(0).getVname();
+                            play_url = BaseApplication.VedioCacheUrl+vrPlays.get(mCurrentImg).getVideos().get(0).getVname()+".mp4";
                             setDownloadText(true);
                         } else {
                             setDownloadText(false);
@@ -665,6 +691,8 @@ public class VrListActivity extends BaseActivity {
                         tv_desc1.setText(descs.get(mCurrentImg));
                         tv_desc2.setText(descs.get(mCurrentImg));
                         if (localUrlList.contains(vrPlays.get(mCurrentImg).getVideos().get(0).getVname())) {
+                            title = vrPlays.get(mCurrentImg).getVideos().get(0).getVname();
+                            play_url = BaseApplication.VedioCacheUrl+vrPlays.get(mCurrentImg).getVideos().get(0).getVname()+".mp4";
                             setDownloadText(true);
                         } else {
                             setDownloadText(false);
@@ -682,6 +710,8 @@ public class VrListActivity extends BaseActivity {
                         tv_desc1.setText(descs.get(mCurrentImg));
                         tv_desc2.setText(descs.get(mCurrentImg));
                         if (localUrlList.contains(vrPlays.get(mCurrentImg).getVideos().get(0).getVname())) {
+                            title = vrPlays.get(mCurrentImg).getVideos().get(0).getVname();
+                            play_url = BaseApplication.VedioCacheUrl+vrPlays.get(mCurrentImg).getVideos().get(0).getVname()+".mp4";
                             setDownloadText(true);
                         } else {
                             setDownloadText(false);
@@ -716,8 +746,9 @@ public class VrListActivity extends BaseActivity {
     private void play(String vid) {
         intent = new Intent(VrListActivity.this, PlayerVRActivityNew.class);
         if (isSave){
-            intent.putExtra("play_url", play_url);
             intent.putExtra("title", title);
+            System.out.println("---title = " + title);
+            intent.putExtra("play_url", play_url);
         }else {
             intent.putExtra("vid", vid);
         }
@@ -745,43 +776,6 @@ public class VrListActivity extends BaseActivity {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-//        getParent().requestDisallowInterceptTouchEvent(true);
-//        switch (event.getAction()) {
-//            case MotionEvent.ACTION_DOWN:
-//                downX = (int) event.getX();
-//                downY = (int) event.getY();
-//                break;
-//            case MotionEvent.ACTION_UP:
-//                upX = (int) event.getX();
-//                upY = (int) event.getY();
-//                int xlen = Math.abs(downX - upX);
-//                int ylen = Math.abs(downY - upY);
-////        int length = (int) Math.sqrt((double) xlen * xlen + (double) ylen * ylen);
-//                if (ylen > 200) {
-//                    if (downY < upY) {
-//                        view1.showOrHideProgressBar(true);
-//                        view2.showOrHideProgressBar(true);
-//                        BaseApplication.scapePage--;
-//                        System.out.println("---downY:"+downY);
-//                        System.out.println("---upY:"+upY);
-//                        if (BaseApplication.scapePage > 0) {
-//                            getNetData(channel_id, BaseApplication.scapePage, 0);
-//                        } else {
-//                            view1.showOrHideProgressBar(false);
-//                            view2.showOrHideProgressBar(false);
-//                            view2.showNoInternetDialog("已经到第一页啦");
-//                            view1.showNoInternetDialog("已经到第一页啦");
-//                        }
-//                    } else {
-//                        view1.showOrHideProgressBar(true);
-//                        view2.showOrHideProgressBar(true);
-//                        BaseApplication.scapePage++;
-//                        getNetData(channel_id, BaseApplication.scapePage, 1);
-//                    }
-//                    return true;
-//                }
-//                break;
-//        }
         if (img3D.getmScroller().isFinished()) {
             if (mVelocityTracker == null) {
                 mVelocityTracker = VelocityTracker.obtain();
@@ -861,11 +855,13 @@ public class VrListActivity extends BaseActivity {
 
     public void setDownloadText(boolean flag) {
         if (flag) {
+            isSave = true;
             bt_ceach2.setText("已下载");
             bt_ceach1.setText("已下载");
             bt_ceach1.setTextColor(getResources().getColor(R.color.downloadtext2));
             bt_ceach2.setTextColor(getResources().getColor(R.color.downloadtext2));
         } else {
+            isSave = false;
             bt_ceach2.setText("未下载");
             bt_ceach1.setText("未下载");
             bt_ceach1.setTextColor(getResources().getColor(R.color.downloadtext1));
@@ -1058,6 +1054,8 @@ public class VrListActivity extends BaseActivity {
         tv_desc1.setText(descs.get(mCurrentImg));
         tv_desc2.setText(descs.get(mCurrentImg));
         if (localUrlList.contains(vrPlays.get(mCurrentImg).getVideos().get(0).getVname())) {
+            title = vrPlays.get(mCurrentImg).getVideos().get(0).getVname();
+            play_url = BaseApplication.VedioCacheUrl+vrPlays.get(mCurrentImg).getVideos().get(0).getVname()+".mp4";
             setDownloadText(true);
         }
         setLisener();
@@ -1098,6 +1096,8 @@ public class VrListActivity extends BaseActivity {
                     tv_desc1.setText(descs.get(mCurrentImg));
                     tv_desc2.setText(descs.get(mCurrentImg));
                     if (localUrlList.contains(vrPlays.get(mCurrentImg).getVideos().get(0).getVname())) {
+                        title = vrPlays.get(mCurrentImg).getVideos().get(0).getVname();
+                        play_url = BaseApplication.VedioCacheUrl+vrPlays.get(mCurrentImg).getVideos().get(0).getVname()+".mp4";
                         setDownloadText(true);
                     } else {
                         setDownloadText(false);
@@ -1115,6 +1115,8 @@ public class VrListActivity extends BaseActivity {
                     tv_desc1.setText(descs.get(mCurrentImg));
                     tv_desc2.setText(descs.get(mCurrentImg));
                     if (localUrlList.contains(vrPlays.get(mCurrentImg).getVideos().get(0).getVname())) {
+                        title = vrPlays.get(mCurrentImg).getVideos().get(0).getVname();
+                        play_url = BaseApplication.VedioCacheUrl+vrPlays.get(mCurrentImg).getVideos().get(0).getVname()+".mp4";
                         setDownloadText(true);
                     } else {
                         setDownloadText(false);
@@ -1145,6 +1147,8 @@ public class VrListActivity extends BaseActivity {
                     tv_desc1.setText(descs.get(mCurrentImg));
                     tv_desc2.setText(descs.get(mCurrentImg));
                     if (localUrlList.contains(vrPlays.get(mCurrentImg).getVideos().get(0).getVname())) {
+                        title = vrPlays.get(mCurrentImg).getVideos().get(0).getVname();
+                        play_url = BaseApplication.VedioCacheUrl+vrPlays.get(mCurrentImg).getVideos().get(0).getVname()+".mp4";
                         setDownloadText(true);
                     } else {
                         setDownloadText(false);
@@ -1162,6 +1166,8 @@ public class VrListActivity extends BaseActivity {
                     tv_desc1.setText(descs.get(mCurrentImg));
                     tv_desc2.setText(descs.get(mCurrentImg));
                     if (localUrlList.contains(vrPlays.get(mCurrentImg).getVideos().get(0).getVname())) {
+                        title = vrPlays.get(mCurrentImg).getVideos().get(0).getVname();
+                        play_url = BaseApplication.VedioCacheUrl+vrPlays.get(mCurrentImg).getVideos().get(0).getVname()+".mp4";
                         setDownloadText(true);
                     } else {
                         setDownloadText(false);
@@ -1206,6 +1212,8 @@ public class VrListActivity extends BaseActivity {
                     tv_desc1.setText(descs.get(mCurrentImg));
                     tv_desc2.setText(descs.get(mCurrentImg));
                     if (localUrlList.contains(vrPlays.get(mCurrentImg).getVideos().get(0).getVname())) {
+                        title = vrPlays.get(mCurrentImg).getVideos().get(0).getVname();
+                        play_url = BaseApplication.VedioCacheUrl+vrPlays.get(mCurrentImg).getVideos().get(0).getVname()+".mp4";
                         setDownloadText(true);
                     } else {
                         setDownloadText(false);
@@ -1223,6 +1231,8 @@ public class VrListActivity extends BaseActivity {
                     tv_desc1.setText(descs.get(mCurrentImg));
                     tv_desc2.setText(descs.get(mCurrentImg));
                     if (localUrlList.contains(vrPlays.get(mCurrentImg).getVideos().get(0).getVname())) {
+                        title = vrPlays.get(mCurrentImg).getVideos().get(0).getVname();
+                        play_url = BaseApplication.VedioCacheUrl+vrPlays.get(mCurrentImg).getVideos().get(0).getVname()+".mp4";
                         setDownloadText(true);
                     } else {
                         setDownloadText(false);
@@ -1252,6 +1262,8 @@ public class VrListActivity extends BaseActivity {
                     tv_desc1.setText(descs.get(mCurrentImg));
                     tv_desc2.setText(descs.get(mCurrentImg));
                     if (localUrlList.contains(vrPlays.get(mCurrentImg).getVideos().get(0).getVname())) {
+                        title = vrPlays.get(mCurrentImg).getVideos().get(0).getVname();
+                        play_url = BaseApplication.VedioCacheUrl+vrPlays.get(mCurrentImg).getVideos().get(0).getVname()+".mp4";
                         setDownloadText(true);
                     } else {
                         setDownloadText(false);
@@ -1269,6 +1281,8 @@ public class VrListActivity extends BaseActivity {
                     tv_desc1.setText(descs.get(mCurrentImg));
                     tv_desc2.setText(descs.get(mCurrentImg));
                     if (localUrlList.contains(vrPlays.get(mCurrentImg).getVideos().get(0).getVname())) {
+                        title = vrPlays.get(mCurrentImg).getVideos().get(0).getVname();
+                        play_url = BaseApplication.VedioCacheUrl+vrPlays.get(mCurrentImg).getVideos().get(0).getVname()+".mp4";
                         setDownloadText(true);
                     } else {
                         setDownloadText(false);

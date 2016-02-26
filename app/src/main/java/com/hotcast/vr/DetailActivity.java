@@ -198,16 +198,6 @@ public class DetailActivity extends BaseActivity {
                 }
                 initCatch(play_url);
                 saveUrl = play_url;
-                try {
-                    LocalBean bean = db.findById(LocalBean.class,play_url);
-                    if (bean != null){
-                        play_url = bean.getLocalurl();
-                        System.out.println("---playUrl = " + play_url);
-                    }
-                } catch (DbException e) {
-                    e.printStackTrace();
-                }
-
 //                System.out.println("---play_url:" + play_url);
                 title = play.getTitle();
                 progressBar5.setVisibility(View.GONE);
@@ -230,19 +220,39 @@ public class DetailActivity extends BaseActivity {
             if (list != null && list.size() > 0) {
                 for (int i = 0; i < list.size(); i++) {
                     if (!TextUtils.isEmpty(play_url)) {
-                        System.out.println("---play_url:" + play_url + "--list.get(i).getUrl():" + list.get(i).getUrl());
-                        isdownLoad = play_url.equals(list.get(i).getId());
+                        System.out.println("---play_url:" + play_url + " -list.get(i).getUrl():" + list.get(i).getId());
+                        if (play_url.equals(list.get(i).getUrl())){
+                            isdownLoad = true;
+                        }
+//                        isdownLoad = play_url.equals(list.get(i).getUrl());
+//                        System.out.println("---isdownLoad=" + isdownLoad);
                     }
                 }
                 if (isdownLoad) {
                     BaseApplication.isDownLoad = true;
                     tv_cache.setText("已缓存");
                     ll_download.setFocusable(false);
+                    setPlayUrl();
                 }
             }
         } catch (DbException e) {
             e.printStackTrace();
         }
+
+    }
+
+    private void setPlayUrl() {
+        try {
+            LocalBean bean = db.findById(LocalBean.class, play_url);
+            if (bean != null){
+                play_url = bean.getLocalurl();
+                qingxidu = bean.getQingxidu();
+                System.out.println("---playUrl = " + play_url);
+            }
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
+
     }
 
     private String videoset_id;

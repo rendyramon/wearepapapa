@@ -283,8 +283,10 @@ public class HomeView2 extends BaseView {
                 //隐藏底部加载更多 、顶部刷新的ui；
                 if (iv_noNet == null){
                     iv_noNet = (ImageView) getRootView().findViewById(R.id.iv_noNet);
+                    iv_noNet.setVisibility(View.VISIBLE);
+                }else {
+                    iv_noNet.setVisibility(View.VISIBLE);
                 }
-                iv_noNet.setVisibility(View.VISIBLE);
                 activity.showToast("网络连接异常");
                 hideRefreshView();
 
