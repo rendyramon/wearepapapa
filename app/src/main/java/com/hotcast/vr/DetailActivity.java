@@ -17,11 +17,10 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.hotcast.vr.bean.Details;
-import com.hotcast.vr.bean.LocalBean;
+import com.hotcast.vr.bean.LocalBean1;
 import com.hotcast.vr.bean.Play;
 import com.hotcast.vr.bean.Relation;
 import com.hotcast.vr.bean.Urls;
-import com.hotcast.vr.bean.Videos;
 import com.hotcast.vr.bean.VideosNew;
 import com.hotcast.vr.dialog.MyDialog;
 import com.hotcast.vr.receiver.DownloadReceiver;
@@ -216,7 +215,7 @@ public class DetailActivity extends BaseActivity {
     //初始化下载按钮
     private void initCatch(String play_url) {
         try {
-            List<LocalBean> list = db.findAll(LocalBean.class);
+            List<LocalBean1> list = db.findAll(LocalBean1.class);
             if (list != null && list.size() > 0) {
                 for (int i = 0; i < list.size(); i++) {
                     if (!TextUtils.isEmpty(play_url)) {
@@ -243,7 +242,7 @@ public class DetailActivity extends BaseActivity {
 
     private void setPlayUrl() {
         try {
-            LocalBean bean = db.findById(LocalBean.class, play_url);
+            LocalBean1 bean = db.findById(LocalBean1.class, play_url);
             if (bean != null){
                 play_url = bean.getLocalurl();
                 qingxidu = bean.getQingxidu();
@@ -267,7 +266,7 @@ public class DetailActivity extends BaseActivity {
     public int getLayoutId() {
         return R.layout.movie_detail;
     }
-    LocalBean localBean;
+    LocalBean1 localBean;
     @Override
     public void init() {
         db = DbUtils.create(DetailActivity.this);
@@ -355,7 +354,7 @@ public class DetailActivity extends BaseActivity {
 //                        tv_cache.setText("已缓存");
                         ll_download.setFocusable(false);
                         DbUtils db = DbUtils.create(DetailActivity.this);
-                        LocalBean localBean = new LocalBean();
+                        LocalBean1 localBean = new LocalBean1();
                         localBean.setTitle(title);
                         localBean.setImage(details.getImage().get(0));
                         localBean.setId(saveUrl);

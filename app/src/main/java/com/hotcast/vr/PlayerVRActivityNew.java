@@ -14,7 +14,7 @@ import java.util.*;
 
 
 import com.google.gson.Gson;
-import com.hotcast.vr.bean.LocalBean;
+import com.hotcast.vr.bean.LocalBean1;
 import com.hotcast.vr.bean.Play;
 import com.hotcast.vr.pageview.ChangeModeListener;
 import com.hotcast.vr.pageview.PlayerContralView;
@@ -28,26 +28,17 @@ import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.panframe.android.lib.*;
 
-import android.app.AlertDialog;
 import android.app.Service;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Matrix;
-import android.graphics.Point;
-import android.graphics.PointF;
 import android.media.AudioManager;
 import android.net.Uri;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.os.SystemClock;
-import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.AbsoluteSizeSpan;
-import android.util.FloatMath;
 import android.util.Log;
 import android.view.*;
 import android.view.View.*;
@@ -156,7 +147,7 @@ public class PlayerVRActivityNew extends BaseLanActivity implements PFAssetObser
      * @param filename The file path on device storage
      */
     DbUtils db;
-    List<LocalBean> localBeans;
+    List<LocalBean1> localBeans;
     ArrayList<String> urls = new ArrayList<>();
     public void loadVideo(String filename) {
 
@@ -428,7 +419,7 @@ public class PlayerVRActivityNew extends BaseLanActivity implements PFAssetObser
     private void initView() {
         db = DbUtils.create(this);
         try {
-            localBeans = db.findAll(LocalBean.class);
+            localBeans = db.findAll(LocalBean1.class);
             System.out.println("---localBeans = " + localBeans);
             for (int i = 0 ; i <localBeans.size(); i++){
                 urls.add(localBeans.get(i).getLocalurl());

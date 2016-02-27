@@ -1,39 +1,24 @@
 package com.hotcast.vr.pageview;
 
-import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.hotcast.vr.BaseActivity;
-import com.hotcast.vr.BaseApplication;
 import com.hotcast.vr.R;
-import com.hotcast.vr.VrListActivity;
-import com.hotcast.vr.adapter.BaseAdapterHelper;
 import com.hotcast.vr.adapter.QuickAdapter;
 import com.hotcast.vr.bean.Details;
 import com.hotcast.vr.bean.ListBean;
-import com.hotcast.vr.bean.LocalBean;
 import com.hotcast.vr.imageView.Image3DSwitchView;
-import com.hotcast.vr.imageView.Image3DView;
 import com.hotcast.vr.tools.DensityUtils;
 import com.hotcast.vr.tools.L;
-import com.hotcast.vr.tools.ScreenUtils;
-import com.hotcast.vr.tools.ViewUtils;
-import com.lidroid.xutils.BitmapUtils;
-import com.lidroid.xutils.DbUtils;
-import com.lidroid.xutils.exception.DbException;
 
 import java.util.List;
 
-import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 
@@ -79,7 +64,7 @@ public class VrListView extends BaseView implements GestureDetector.OnGestureLis
 //                    BaseApplication.isDownLoad = true;
 //                    bt_ceach.setFocusable(false);
 //                    DbUtils db = DbUtils.create(activity);
-//                    LocalBean localBean = new LocalBean();
+//                    LocalBean1 localBean = new LocalBean1();
 //                    localBean.setTitle(title);
 //                    localBean.setImage(details.getImage());
 //                    localBean.setId(media_id);
