@@ -4,25 +4,14 @@ import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.os.Environment;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
-import android.widget.Toast;
 
-import com.hotcast.vr.BaseApplication;
 import com.hotcast.vr.bean.Details;
-import com.hotcast.vr.bean.LocalBean;
 import com.lidroid.xutils.DbUtils;
 import com.lidroid.xutils.HttpUtils;
-import com.lidroid.xutils.exception.DbException;
-import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.HttpHandler;
-import com.lidroid.xutils.http.ResponseInfo;
-import com.lidroid.xutils.http.callback.RequestCallBack;
 
-import java.io.File;
-import java.util.HashMap;
 import java.util.Map;
 
 public class DownLoadingService extends Service {
@@ -95,7 +84,7 @@ public class DownLoadingService extends Service {
 //                        Intent intent2 = new Intent(START);
 //                        sendBroadcast(intent2);
 //                        try {
-//                            LocalBean localBean = db.findById(LocalBean.class, nowurl);
+//                            LocalBean1 localBean = db.findById(LocalBean1.class, nowurl);
 //                            if (localBean != null) {
 //                                //状态更新
 ////                                db.delete(localBean);
@@ -124,9 +113,9 @@ public class DownLoadingService extends Service {
 //                        intent.putExtra("play_url", nowurl);
 //                        intent.putExtra("localurl", localurl);
 //                        sendBroadcast(intent);
-//                        LocalBean localBean = null;
+//                        LocalBean1 localBean = null;
 //                        try {
-//                            localBean = db.findById(LocalBean.class, nowurl);
+//                            localBean = db.findById(LocalBean1.class, nowurl);
 //                            System.out.print("---数据库更新localBean：" + localBean);
 //                            if (localBean != null) {
 //                                //状态更新

@@ -9,7 +9,7 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 
 import com.hotcast.vr.BaseApplication;
-import com.hotcast.vr.bean.LocalBean;
+import com.hotcast.vr.bean.LocalBean1;
 import com.lidroid.xutils.DbUtils;
 import com.lidroid.xutils.db.sqlite.Selector;
 import com.lidroid.xutils.exception.DbException;
@@ -54,7 +54,7 @@ public class FileCacheService extends Service {
                 case FileObserver.DELETE:
                     System.out.println("---DELETE:" + path);
                     try {
-                        LocalBean localBean = db.findFirst(Selector.from(LocalBean.class).where("localurl","=", BaseApplication.VedioCacheUrl+path));
+                        LocalBean1 localBean = db.findFirst(Selector.from(LocalBean1.class).where("localurl","=", BaseApplication.VedioCacheUrl+path));
                         if (localBean!=null){
                             db.delete(localBean);
                         }

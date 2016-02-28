@@ -6,20 +6,17 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Size;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.GridView;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.hotcast.vr.bean.LocalBean;
+import com.hotcast.vr.bean.LocalBean1;
 import com.hotcast.vr.bean.MediaDownloadManager;
-import com.hotcast.vr.receiver.DownloadReceiver;
 import com.lidroid.xutils.BitmapUtils;
 import com.lidroid.xutils.DbUtils;
 import com.lidroid.xutils.exception.DbException;
@@ -89,7 +86,7 @@ public class ListLocalActivity extends BaseActivity {
     }
 
     DbUtils db;
-    List<LocalBean> list = null;
+    List<LocalBean1> list = null;
 
     DetailReceiver receiver;
     final String START = "START";
@@ -125,7 +122,7 @@ public class ListLocalActivity extends BaseActivity {
     private void initListView() {
         db = DbUtils.create(ListLocalActivity.this);
         try {
-            list = db.findAll(LocalBean.class);
+            list = db.findAll(LocalBean1.class);
             if (list == null) {
                 tv_downloded.setVisibility(View.GONE);
                 tv_downloding.setVisibility(View.GONE);
@@ -177,7 +174,7 @@ public class ListLocalActivity extends BaseActivity {
                         ListLocalActivity.this.startActivity(intent);
                         System.out.println("---点击的本地地址：" + localurl);
                     } else if (state == 2) {
-                        LocalBean localBean = list.get(i);
+                        LocalBean1 localBean = list.get(i);
                         BaseApplication.downLoadManager.addTask(localBean.getUrl(), localBean.getUrl(), localBean.getTitle() + ".mp4", BaseApplication.VedioCacheUrl + localBean.getTitle() + ".mp4");
                         list.get(i).setCurState(1);
                         try {
@@ -230,7 +227,7 @@ public class ListLocalActivity extends BaseActivity {
                             delete(list.get(i).getLocalurl());
                         }
                         db.delete(list.get(i));
-                        list = db.findAll(LocalBean.class);
+                        list = db.findAll(LocalBean1.class);
 
                     } catch (DbException e) {
                         e.printStackTrace();
@@ -255,9 +252,9 @@ public class ListLocalActivity extends BaseActivity {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            List<LocalBean> list = null;
+            List<LocalBean1> list = null;
             try {
-                list = db.findAll(LocalBean.class);
+                list = db.findAll(LocalBean1.class);
             } catch (DbException e) {
                 e.printStackTrace();
             }
@@ -296,7 +293,7 @@ public class ListLocalActivity extends BaseActivity {
 
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
-            final LocalBean bean = list.get(position);
+            final LocalBean1 bean = list.get(position);
             ViewHolder holder;
             if (convertView == null) {
                 holder = new ViewHolder();
@@ -404,7 +401,7 @@ public class ListLocalActivity extends BaseActivity {
                     System.out.println("----集合中的網絡地址:" + list.get(i).getUrl());
                     if (list.get(i).getUrl().equals(play_url)) {
                         try {
-                            LocalBean localBean = db.findById(LocalBean.class, play_url);
+                            LocalBean1 localBean = db.findById(LocalBean1.class, play_url);
                             if (localBean != null) {
                                 localBean.setCurState(3);
                                 localBean.setLocalurl(localurl);

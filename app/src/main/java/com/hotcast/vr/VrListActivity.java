@@ -19,16 +19,13 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.hotcast.vr.bean.ChannelList;
-import com.hotcast.vr.bean.Details;
-import com.hotcast.vr.bean.LocalBean;
+import com.hotcast.vr.bean.LocalBean1;
 import com.hotcast.vr.bean.Play;
-import com.hotcast.vr.bean.VideosNew;
 import com.hotcast.vr.imageView.Image3DSwitchView;
 import com.hotcast.vr.imageView.Image3DView;
 import com.hotcast.vr.pageview.VrListView;
 import com.hotcast.vr.tools.Constants;
 import com.hotcast.vr.tools.L;
-import com.hotcast.vr.tools.Utils;
 import com.lidroid.xutils.BitmapUtils;
 import com.lidroid.xutils.DbUtils;
 import com.lidroid.xutils.exception.DbException;
@@ -83,11 +80,11 @@ public class VrListActivity extends BaseActivity {
     TextView bt_ceach1;
     TextView bt_ceach2;
     int index = 1;
-    List<LocalBean> dbList = null;
+    List<LocalBean1> dbList = null;
     List<String> localUrlList;
     DbUtils db;
     int mCurrentImg;
-    LocalBean localBean;
+    LocalBean1 localBean;
 
     @Override
     public void init() {
@@ -107,14 +104,14 @@ public class VrListActivity extends BaseActivity {
         db = DbUtils.create(VrListActivity.this);
         localUrlList = new ArrayList<>();
         try {
-            dbList = db.findAll(LocalBean.class);
+            dbList = db.findAll(LocalBean1.class);
         } catch (DbException e) {
             e.printStackTrace();
         }
         if (dbList == null) {
             dbList = new ArrayList<>();
         } else {
-            for (LocalBean localBean : dbList) {
+            for (LocalBean1 localBean : dbList) {
                 System.out.println("---localBean_title:" + localBean.getTitle());
                 localUrlList.add(localBean.getTitle());
             }
@@ -582,7 +579,7 @@ public class VrListActivity extends BaseActivity {
     }
 
     public void downLoadMovie(int mCurrentImg, String vname, String play_url) {
-        LocalBean localBean = new LocalBean();
+        LocalBean1 localBean = new LocalBean1();
         localBean.setTitle(vname);
         localBean.setImage(vrPlays.get(mCurrentImg).getImage().get(0));
         localBean.setQingxidu(qingxiduu);
@@ -964,14 +961,14 @@ public class VrListActivity extends BaseActivity {
         db = DbUtils.create(VrListActivity.this);
         localUrlList = new ArrayList<>();
         try {
-            dbList = db.findAll(LocalBean.class);
+            dbList = db.findAll(LocalBean1.class);
         } catch (DbException e) {
             e.printStackTrace();
         }
         if (dbList == null) {
             dbList = new ArrayList<>();
         } else {
-            for (LocalBean localBean : dbList) {
+            for (LocalBean1 localBean : dbList) {
                 System.out.println("---localBean_title:" + localBean.getTitle());
                 localUrlList.add(localBean.getTitle());
             }

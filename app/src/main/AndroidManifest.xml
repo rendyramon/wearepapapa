@@ -87,6 +87,7 @@
             android:launchMode="singleTask" />
         <activity
             android:name=".ListLocalActivity"
+            android:screenOrientation="portrait"
             android:launchMode="singleTask" />
         <activity
             android:name=".DetailActivity"
@@ -94,9 +95,11 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".AboutActivity"
+            android:screenOrientation="portrait"
             android:launchMode="singleTask" />
         <activity
             android:name=".HelpActivity"
+            android:screenOrientation="portrait"
             android:launchMode="singleTask" />
         <activity
             android:name=".LandscapeActivity"

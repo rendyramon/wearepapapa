@@ -7,7 +7,7 @@ import java.io.Serializable;
 /**
  * Created by lostnote on 15/12/7.
  */
-public class LocalBean implements Serializable {
+public class LocalBean1 implements Serializable {
     String DOWNLOADING = "DOWNLOADING";
     String FINISH = "FINISH";
     String PAUSE = "PAUSE";
@@ -166,7 +166,7 @@ public class LocalBean implements Serializable {
 
     @Override
     public String toString() {
-        return "LocalBean{" +
+        return "LocalBean1{" +
                 "title='" + title + '\'' +
                 ", image='" + image + '\'' +
                 ", url='" + url + '\'' +
