@@ -1,48 +1,26 @@
 package com.hotcast.vr.bean;
 
-import android.graphics.Bitmap;
-
-import java.io.Serializable;
-
 /**
  * Created by lostnote on 15/12/7.
  */
-public class LocalBean1 implements Serializable {
+public class LocalBean {
     String DOWNLOADING = "DOWNLOADING";
     String FINISH = "FINISH";
     String PAUSE = "PAUSE";
     String WAITING = "WAITING";
 
-    public int getQingxidu() {
-        return qingxidu;
-    }
-
-    public void setQingxidu(int qingxidu) {
-        this.qingxidu = qingxidu;
-    }
-
-    int qingxidu;//新添加
-
     String title;
     String image;
     String url;
-    Bitmap localBitmap;//新添加
-    boolean isDownloading = false;//下载中，暂停
 
-    public boolean isDownloading() {
-        return isDownloading;
-    }
+    String speed;
+    String pecent;
 
-    public void setDownloading(boolean downloading) {
-        isDownloading = downloading;
-    }
-    public Bitmap getLocalBitmap() {
-        return localBitmap;
-    }
-
-    public void setLocalBitmap(Bitmap localBitmap) {
-        this.localBitmap = localBitmap;
-    }
+    String id;
+    public static final int STATE_NONE = 0, STATE_DOWNLOADING = 1, STATE_FAILED = 2, STATE_SUCCESS = 3;
+    private int curState = STATE_NONE;
+    private long downloadId;
+    private long total, current;
 
     public String getSpeed() {
         return speed;
@@ -60,9 +38,6 @@ public class LocalBean1 implements Serializable {
         this.pecent = pecent;
     }
 
-    String speed;
-    String pecent;
-
     public String getState() {
         return state;
     }
@@ -71,11 +46,10 @@ public class LocalBean1 implements Serializable {
         this.state = state;
     }
 
-    String state = WAITING;
+    String state = WAITING ;
 
     String localurl;
     private boolean downloadSuccessed;
-
     public boolean isDownloadSuccessed() {
         return downloadSuccessed;
     }
@@ -91,7 +65,6 @@ public class LocalBean1 implements Serializable {
     public String getLocalurl() {
         return localurl;
     }
-
     public String getId() {
         return id;
     }
@@ -99,12 +72,6 @@ public class LocalBean1 implements Serializable {
     public void setId(String id) {
         this.id = id;
     }
-
-    String id;
-    public static final int STATE_NONE = 0, STATE_DOWNLOADING = 1, STATE_FAILED = 2, STATE_SUCCESS = 3,STATE_PAUSE = 4;
-    private int curState = STATE_NONE;
-    private long downloadId;
-    private long total, current;
 
     public int getCurState() {
         return curState;
@@ -166,7 +133,7 @@ public class LocalBean1 implements Serializable {
 
     @Override
     public String toString() {
-        return "LocalBean1{" +
+        return "LocalBean{" +
                 "title='" + title + '\'' +
                 ", image='" + image + '\'' +
                 ", url='" + url + '\'' +

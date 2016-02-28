@@ -233,13 +233,18 @@ public class ClassifyListView extends BaseView {
             e.printStackTrace();
         }
         for (int i = 0; i < tmpList.size(); i ++){
-            ChannelList channelList = tmpList.get(i);
-//            channelList.setChannel_id(channel_id);
             try {
-                db.save(channelList);
+                db.saveAll(tmpList);
             } catch (DbException e) {
                 e.printStackTrace();
             }
+//            ChannelList channelList = tmpList.get(i);
+////            channelList.setChannel_id(channel_id);
+//            try {
+//                db.save(channelList);
+//            } catch (DbException e) {
+//                e.printStackTrace();
+//            }
         }
         if(bPullDown){
             adapter.addNewAll(tmpList);

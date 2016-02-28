@@ -149,8 +149,6 @@ public class ListLocalActivity extends BaseActivity {
                 adapter = new HuancunAdapter();
                 lv.setAdapter(adapter);
             }
-
-
         }
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -168,7 +166,7 @@ public class ListLocalActivity extends BaseActivity {
                     if (state == 3 && file.exists()) {
                         Intent intent = new Intent(ListLocalActivity.this, PlayerVRActivityNew.class);
                         intent.putExtra("play_url", localurl);
-                        intent.putExtra("qingxidu",list.get(i).getQingxidu());
+                        intent.putExtra("qingxidu", list.get(i).getQingxidu());
                         intent.putExtra("title", list.get(i).getTitle());
                         intent.putExtra("splite_screen", false);
                         ListLocalActivity.this.startActivity(intent);
@@ -191,7 +189,7 @@ public class ListLocalActivity extends BaseActivity {
                         }
                     } else if (state == 1) {
                         BaseApplication.downLoadManager.stopTask(list.get(i).getUrl());
-                        System.out.println("---停止"+list.get(i).getUrl());
+                        System.out.println("---停止" + list.get(i).getUrl());
                         list.get(i).setCurState(4);
                         try {
                             db.saveOrUpdate(list.get(i));
@@ -328,22 +326,32 @@ public class ListLocalActivity extends BaseActivity {
                     holder.iv_huancun_sd.setVisibility(View.VISIBLE);
                     holder.iv_huancun_sd.setBackgroundResource(R.mipmap.huancun_sb);
                     holder.tv_huancun_downspeed.setText("0KB/S");
-                    holder.tv_huancun_downpecent.setText(strs[2]);
+                    if (strs.length > 2){
+                        holder.tv_huancun_downpecent.setText(strs[2]);
+                    }else {
+                        holder.tv_huancun_downpecent.setText("已下载0%");
+                    }
                 } else {
                     String[] strs = speed.split(" ");
                     holder.tv_huancun_downspeed.setText(strs[0]);
                     holder.tv_huancun_downpecent.setText(strs[1]);
                 }
-            } else {
-                holder.iv_huancun_sd.setVisibility(View.GONE);
-                holder.tv_huancun_downspeed.setVisibility(View.GONE);
-                holder.tv_huancun_downpecent.setVisibility(View.GONE);
             }
+//            else {
+//                holder.iv_huancun_sd.setVisibility(View.GONE);
+//                holder.tv_huancun_downspeed.setVisibility(View.GONE);
+//                holder.tv_huancun_downpecent.setVisibility(View.GONE);
+//            }
             if (bean.getCurState() == 3) {
                 holder.iv_huancun_sd.setVisibility(View.GONE);
                 holder.tv_huancun_downspeed.setVisibility(View.GONE);
                 holder.tv_huancun_downpecent.setVisibility(View.GONE);
-            } else if (bean.getCurState() == 4 || bean.getCurState() == 2) {
+            } else if (bean.getCurState() ==1 ){
+                holder.iv_huancun_sd.setVisibility(View.VISIBLE);
+                holder.tv_huancun_downspeed.setVisibility(View.VISIBLE);
+                holder.tv_huancun_downpecent.setVisibility(View.VISIBLE);
+                holder.iv_huancun_sd.setBackgroundResource(R.mipmap.huancun_img);
+            }else if (bean.getCurState() == 4 || bean.getCurState() == 2) {
                 holder.iv_huancun_sd.setVisibility(View.VISIBLE);
                 holder.tv_huancun_downspeed.setVisibility(View.VISIBLE);
                 holder.tv_huancun_downpecent.setVisibility(View.VISIBLE);

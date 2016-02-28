@@ -16,11 +16,15 @@ import com.hotcast.vr.bean.Channel;
 import com.hotcast.vr.bean.Classify;
 import com.hotcast.vr.bean.Details;
 import com.hotcast.vr.bean.HomeRoll;
+import com.hotcast.vr.bean.LocalBean;
+import com.hotcast.vr.bean.LocalBean1;
 import com.hotcast.vr.download.DownLoadManager;
 import com.hotcast.vr.download.DownLoadService;
 import com.hotcast.vr.services.FileCacheService;
 import com.hotcast.vr.tools.L;
 import com.lidroid.xutils.BitmapUtils;
+import com.lidroid.xutils.DbUtils;
+import com.lidroid.xutils.exception.DbException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,14 +34,14 @@ public class BaseApplication extends Application {
     public static boolean doAsynctask = false;//本地视频同步数据库处理
     public static List<String> strs = new ArrayList<>();
     public static int size;
-    public  static float playbacktime = 0;
-    public  static String clarityText = "标清";
+    public static float playbacktime = 0;
+    public static String clarityText = "标清";
 
     //横屏时的图片数量
     public static int scapePage = 1;
     public static boolean isDownLoad = false;
     public static boolean isUpdate = false;
-//    public static List<Classify> netClassifys;
+    //    public static List<Classify> netClassifys;
     public static Channel channel;
     public static final String TAG = BaseApplication.class.getSimpleName();
     //    public static BitmapUtils mFinalBitmap;
@@ -47,10 +51,11 @@ public class BaseApplication extends Application {
     public static BaseApplication getInstance() {
         return instance;
     }
+
     public static String version;//版本号
     public static String platform;//平台号
     public static String device = "weihuoqu";//设备号
-    public static String packagename ;//包名
+    public static String packagename;//包名
 
 
     public static final String IMG_DISCCACHE_DIR = "/mnt/sdcard/jarvis/imgcache";
@@ -61,19 +66,23 @@ public class BaseApplication extends Application {
     public static List<Classify> classifies = new ArrayList<>();
     public static List<String> playUrls = new ArrayList<>();//需要下載的電影地址
     public static List<Details> detailsList = new ArrayList<>();//需要下載的電影地址
-    SharedPreferences sp ;
+    SharedPreferences sp;
     public static BitmapUtils bu;
+
     public static BitmapUtils getDisplay(Context context, int failedImgId) {
         BitmapUtils mFinalBitmap = new BitmapUtils(context, IMG_DISCCACHE_DIR);
         mFinalBitmap.configDefaultLoadFailedImage(failedImgId);
         mFinalBitmap.configDefaultLoadingImage(failedImgId);
         return mFinalBitmap;
     }
+
     public static PackageInfo info;
     private PackageManager packageManager;
 
     @Override
     public void onCreate() {
+//        updateDb();
+        DbdateSave();
         Thread.currentThread().setUncaughtExceptionHandler(new MyExecptionHandler());
         super.onCreate();
         bu = new BitmapUtils(this);
@@ -88,12 +97,49 @@ public class BaseApplication extends Application {
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
-        sp= getSharedPreferences("cache_config",Context.MODE_PRIVATE);
+        sp = getSharedPreferences("cache_config", Context.MODE_PRIVATE);
         BaseApplication.cacheFileChange = sp.getBoolean("cacheFileCache", false);
         BaseApplication.version = info.versionName;
         BaseApplication.platform = getAppMetaData(this, "UMENG_CHANNEL");
         BaseApplication.packagename = info.packageName;
-        System.out.println("---"+getAppMetaData(this,"UMENG_CHANNEL"));
+        System.out.println("---" + getAppMetaData(this, "UMENG_CHANNEL"));
+    }
+
+    public void DbdateSave() {
+        DbUtils db = DbUtils.create(this);
+        try {
+            List<LocalBean> localBeens = db.findAll(LocalBean.class);
+            if (localBeens!= null && localBeens.size()>1){
+                for (int i =0;i<localBeens.size();i++){
+                    LocalBean1 l = new LocalBean1();
+                    l.setQingxidu(1);
+                    l.setTitle(localBeens.get(i).getTitle());
+                    l.setLocalurl(localBeens.get(i).getLocalurl());
+                    l.setId(localBeens.get(i).getId());
+                    l.setCurState(3);
+                    l.setImage(localBeens.get(i).getImage());
+                    db.save(l);
+                    System.out.println("---同步数据库："+localBeens.get(i).getLocalurl());
+                }
+            }
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void updateDb() {
+        DbUtils db = DbUtils.create(this, "Localbean", 2, new DbUtils.DbUpgradeListener() {
+            @Override
+            public void onUpgrade(DbUtils dbUtils, int i, int i1) {
+                try {
+                    dbUtils.execNonQuery("alter table add url varchar(50)");
+                    System.out.println("---数据库添加列成功");
+                } catch (DbException e) {
+                    System.out.println("---添加列失败");
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     private class MyExecptionHandler implements Thread.UncaughtExceptionHandler {
@@ -111,8 +157,9 @@ public class BaseApplication extends Application {
             android.os.Process.killProcess(android.os.Process.myPid());
         }
     }
+
     public static void getIMEI(Context context) {
-        TelephonyManager tm  = (TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE);
+        TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
         device = tm.getDeviceId();
 
     }
@@ -140,6 +187,7 @@ public class BaseApplication extends Application {
 
     /**
      * 获取application中指定的meta-data----UMENG_CHANNEL
+     *
      * @return 如果没有获取成功(没有对应值，或者异常)，则返回值为空
      */
     public static String getAppMetaData(Context ctx, String key) {

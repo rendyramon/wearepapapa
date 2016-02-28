@@ -324,7 +324,6 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout imp
                 mIsHandledTouchEvent = false;
             }
             break;
-
         case MotionEvent.ACTION_CANCEL:
         case MotionEvent.ACTION_UP:
             if (mIsHandledTouchEvent) {
