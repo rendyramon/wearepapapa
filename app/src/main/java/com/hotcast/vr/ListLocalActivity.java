@@ -304,12 +304,14 @@ public class ListLocalActivity extends BaseActivity {
                 holder.tv_huancun_downpecent = (TextView) convertView.findViewById(R.id.tv_huancun_downpecent);
                 holder.tv_huancun_downspeed = (TextView) convertView.findViewById(R.id.tv_huancun_downspeed);
                 holder.tv_huancun_moviename = (TextView) convertView.findViewById(R.id.tv_huancun_moviename);
-                bu.display(holder.iv_huancun_img, bean.getImage());
                 convertView.setTag(holder);
             } else {
                 holder = (ViewHolder) convertView.getTag();
             }
-
+            if (!holder.iv_huancun_img.getTag().equals( bean.getImage())){
+                bu.display(holder.iv_huancun_img, bean.getImage());
+                holder.iv_huancun_img.setTag(bean.getImage());
+            }
             holder.tv_huancun_moviename.setText(bean.getTitle());
             String speed = speeds.get(bean.getUrl());
             holder.tv_finish.setVisibility(View.GONE);
