@@ -175,6 +175,7 @@ public class PlayerVRActivityNew extends BaseLanActivity implements PFAssetObser
      * @param status The current status of the asset.
      */
     float oldTime = 0;
+    long stime = 0;
     boolean isplaying = false;
     boolean iShowLoading = false;
 
@@ -232,10 +233,13 @@ public class PlayerVRActivityNew extends BaseLanActivity implements PFAssetObser
                                     isplaying = false;
 
                                     if (!iShowLoading) {
-                                        oldTime = System.currentTimeMillis();
+
+                                        stime = System.currentTimeMillis();
+                                        System.out.println("----初始化时间+"+stime);
                                         iShowLoading = true;
                                     }
-                                    if (System.currentTimeMillis() - oldTime > 1200) {
+                                    System.out.println("----时间差"+(System.currentTimeMillis() - stime));
+                                    if (System.currentTimeMillis() - stime > 1200) {
                                         if (BaseApplication.clarityText.equals("标清")) {
                                             showLoading("正在缓冲");
                                         } else {
@@ -440,10 +444,13 @@ public class PlayerVRActivityNew extends BaseLanActivity implements PFAssetObser
         db = DbUtils.create(this);
         try {
             localBeans = db.findAll(LocalBean1.class);
-            System.out.println("---localBeans = " + localBeans);
-            for (int i = 0; i < localBeans.size(); i++) {
-                urls.add(localBeans.get(i).getLocalurl());
+            if(localBeans != null){
+                System.out.println("---localBeans = " + localBeans);
+                for (int i = 0; i < localBeans.size(); i++) {
+                    urls.add(localBeans.get(i).getLocalurl());
+                }
             }
+
         } catch (DbException e) {
             e.printStackTrace();
         }

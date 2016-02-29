@@ -191,6 +191,10 @@ public class HomeView2 extends BaseView {
                 bDataProcessed = true;
                 bProcessing = false;
                 //隐藏底部加载更多 、顶部刷新的ui；
+                if (iv_noNet == null) {
+                    iv_noNet = (ImageView) getRootView().findViewById(R.id.iv_noNet);
+                    iv_noNet.setVisibility(View.GONE);
+                }
                 hideRefreshView();
                 L.e("HomeView2 responseInfo:" + responseInfo.result);
                 setViewSubject(responseInfo.result);

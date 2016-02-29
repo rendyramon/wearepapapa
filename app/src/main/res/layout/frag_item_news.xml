@@ -32,6 +32,11 @@
         android:id="@+id/progressBar4"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true" />
-
+    <ImageView
+        android:id="@+id/iv_noNet"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@mipmap/nonet"/>
 
 </RelativeLayout>

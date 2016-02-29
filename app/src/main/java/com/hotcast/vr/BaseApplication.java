@@ -82,7 +82,6 @@ public class BaseApplication extends Application {
     @Override
     public void onCreate() {
 //        updateDb();
-        DbdateSave();
         Thread.currentThread().setUncaughtExceptionHandler(new MyExecptionHandler());
         super.onCreate();
         bu = new BitmapUtils(this);
@@ -103,28 +102,6 @@ public class BaseApplication extends Application {
         BaseApplication.platform = getAppMetaData(this, "UMENG_CHANNEL");
         BaseApplication.packagename = info.packageName;
         System.out.println("---" + getAppMetaData(this, "UMENG_CHANNEL"));
-    }
-
-    public void DbdateSave() {
-        DbUtils db = DbUtils.create(this);
-        try {
-            List<LocalBean> localBeens = db.findAll(LocalBean.class);
-            if (localBeens!= null && localBeens.size()>1){
-                for (int i =0;i<localBeens.size();i++){
-                    LocalBean1 l = new LocalBean1();
-                    l.setQingxidu(1);
-                    l.setTitle(localBeens.get(i).getTitle());
-                    l.setLocalurl(localBeens.get(i).getLocalurl());
-                    l.setId(localBeens.get(i).getId());
-                    l.setCurState(3);
-                    l.setImage(localBeens.get(i).getImage());
-                    db.save(l);
-                    System.out.println("---同步数据库："+localBeens.get(i).getLocalurl());
-                }
-            }
-        } catch (DbException e) {
-            e.printStackTrace();
-        }
     }
 
     public void updateDb() {

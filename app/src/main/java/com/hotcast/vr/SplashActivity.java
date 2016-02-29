@@ -19,11 +19,15 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.hotcast.vr.asynctask.LocalVideosAsynctask;
 import com.hotcast.vr.bean.Classify;
+import com.hotcast.vr.bean.LocalBean;
+import com.hotcast.vr.bean.LocalBean1;
 import com.hotcast.vr.bean.Update;
 import com.hotcast.vr.services.DownLoadingService;
 import com.hotcast.vr.tools.Constants;
 import com.hotcast.vr.tools.L;
 import com.hotcast.vr.tools.Utils;
+import com.lidroid.xutils.DbUtils;
+import com.lidroid.xutils.exception.DbException;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.RequestParams;
 import com.lidroid.xutils.http.ResponseInfo;
@@ -79,7 +83,7 @@ public class SplashActivity extends BaseActivity {
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
-        new LocalVideosAsynctask(this).execute();
+        DbdateSave();
         L.e("PackageName:" + getPackageName());
         getNetDate();
 //        getNetDate2();
@@ -87,7 +91,34 @@ public class SplashActivity extends BaseActivity {
 
     }
 
-
+    public void DbdateSave() {
+        DbUtils db = DbUtils.create(this);
+        try {
+            List<LocalBean> localBeens = db.findAll(LocalBean.class);
+            if (localBeens!= null && localBeens.size()>0){
+                for (int i =0;i<localBeens.size();i++){
+                    LocalBean1 l = new LocalBean1();
+                    l.setQingxidu(1);
+                    l.setTitle(localBeens.get(i).getTitle());
+                    l.setLocalurl(localBeens.get(i).getLocalurl());
+                    l.setId(localBeens.get(i).getId());
+                    l.setCurState(3);
+                    l.setUrl(localBeens.get(i).getUrl());
+                    l.setImage(localBeens.get(i).getImage());
+                    if (localBeens.get(i).getLocalurl()!= null) {
+                        db.save(l);
+                    }
+                    System.out.println("***同步数据库：" +localBeens.get(i).getLocalurl()+"--"+localBeens.get(i).getUrl());
+                }
+                db.deleteAll(LocalBean.class);
+            }else {
+                System.out.println("***异步加载本地");
+                new LocalVideosAsynctask(this).execute();
+            }
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
+    }
     private void getNetDate() {
         RequestParams params = new RequestParams();
         params.addBodyParameter("token", "123");
