@@ -150,7 +150,7 @@ public class SplashActivity extends BaseActivity {
         spec = update.getUrl();
         is_force = update.getIs_force();
         version = update.getVersion();
-        System.out.println("--version = " + version);
+        System.out.println("--update = " + update);
         newFeatures = update.getLog();
 //        System.out.println("***SplashActivity spec:" + spec + ",force:" + force);
     }
