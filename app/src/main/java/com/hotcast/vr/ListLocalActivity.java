@@ -111,6 +111,7 @@ public class ListLocalActivity extends BaseActivity {
     }
 
     static class ViewHolder {
+        TextView tv_finish;
         ImageView iv_huancun_img;//預覽圖
         ImageView iv_huancun_sd;//暫停或下載中
         TextView tv_huancun_downpecent;//下載進度
@@ -296,6 +297,7 @@ public class ListLocalActivity extends BaseActivity {
             if (convertView == null) {
                 holder = new ViewHolder();
                 convertView = View.inflate(ListLocalActivity.this, R.layout.huancun_grid_item, null);
+                holder.tv_finish = (TextView) convertView.findViewById(R.id.tv_finish);
                 holder.iv_huancun_img = (ImageView) convertView.findViewById(R.id.iv_huancun_img);
                 holder.iv_huancun_sd = (ImageView) convertView.findViewById(R.id.iv_huancun_sd);
                 holder.ib_delete = (ImageView) convertView.findViewById(R.id.ib_delete);
@@ -310,25 +312,27 @@ public class ListLocalActivity extends BaseActivity {
             bu.display(holder.iv_huancun_img, bean.getImage());
             holder.tv_huancun_moviename.setText(bean.getTitle());
             String speed = speeds.get(bean.getUrl());
-
+            holder.tv_finish.setVisibility(View.GONE);
             holder.iv_huancun_sd.setVisibility(View.VISIBLE);
-            holder.iv_huancun_sd.setBackgroundResource(R.mipmap.huancun_img);
+            holder.iv_huancun_sd.setBackgroundResource(R.mipmap.huancun_sb);
             holder.tv_huancun_downspeed.setVisibility(View.VISIBLE);
             holder.tv_huancun_downpecent.setVisibility(View.VISIBLE);
             System.out.println("---adapter：" + speed);
             if (speed != null) {
                 if ("FINISH".equals(speed)) {
+                    holder.tv_finish.setVisibility(View.VISIBLE);
                     holder.iv_huancun_sd.setVisibility(View.GONE);
                     holder.tv_huancun_downspeed.setVisibility(View.GONE);
                     holder.tv_huancun_downpecent.setVisibility(View.GONE);
                 } else if (speed.contains("PAUSE")) {
+                    list.get(position).setCurState(2);
                     String[] strs = speed.split(" ");
                     holder.iv_huancun_sd.setVisibility(View.VISIBLE);
                     holder.iv_huancun_sd.setBackgroundResource(R.mipmap.huancun_sb);
                     holder.tv_huancun_downspeed.setText("0KB/S");
-                    if (strs.length > 2){
+                    if (strs.length > 2) {
                         holder.tv_huancun_downpecent.setText(strs[2]);
-                    }else {
+                    } else {
                         holder.tv_huancun_downpecent.setText("已下载0%");
                     }
                 } else {
@@ -343,15 +347,16 @@ public class ListLocalActivity extends BaseActivity {
 //                holder.tv_huancun_downpecent.setVisibility(View.GONE);
 //            }
             if (bean.getCurState() == 3) {
+                holder.tv_finish.setVisibility(View.VISIBLE);
                 holder.iv_huancun_sd.setVisibility(View.GONE);
                 holder.tv_huancun_downspeed.setVisibility(View.GONE);
                 holder.tv_huancun_downpecent.setVisibility(View.GONE);
-            } else if (bean.getCurState() ==1 ){
+            } else if (bean.getCurState() == 1) {
                 holder.iv_huancun_sd.setVisibility(View.VISIBLE);
                 holder.tv_huancun_downspeed.setVisibility(View.VISIBLE);
                 holder.tv_huancun_downpecent.setVisibility(View.VISIBLE);
                 holder.iv_huancun_sd.setBackgroundResource(R.mipmap.huancun_img);
-            }else if (bean.getCurState() == 4 || bean.getCurState() == 2) {
+            } else if (bean.getCurState() == 4 || bean.getCurState() == 2) {
                 holder.iv_huancun_sd.setVisibility(View.VISIBLE);
                 holder.tv_huancun_downspeed.setVisibility(View.VISIBLE);
                 holder.tv_huancun_downpecent.setVisibility(View.VISIBLE);
@@ -376,9 +381,8 @@ public class ListLocalActivity extends BaseActivity {
      * 这是接受下载进度的广播接受者
      */
     class DetailReceiver extends BroadcastReceiver {
-
         @Override
-        public void onReceive(Context context, Intent intent) {
+        public synchronized void onReceive(Context context, Intent intent) {
             action = intent.getAction();
             String play_url = intent.getStringExtra("play_url");//電影的下載地址，作為電影的唯一标识
             if ("DOWNLOADING".equals(action)) {
@@ -388,13 +392,13 @@ public class ListLocalActivity extends BaseActivity {
                 if (pecent == 0) {
                     pecent = current;
                 } else {
-                    speed = (Math.abs((current - pecent))) / 1024 + "KB/S" + " 已下载" + (current * 100) / total + "%";
+                    long s = (Math.abs((current - pecent))) / 1024 > 10000 ? 800+((Math.abs((current - pecent))) / 10240000) : ((Math.abs((current - pecent))) / 1024);
+                    speed = s + "KB/S" + " 已下载" + (current * 100) / total + "%";
                     pecent = current;
                     speeds.put(play_url, speed);
                 }
                 System.out.println("---接收到的信息：" + speed);
                 if (adapter != null) {
-//                    adapter.notifyDataSetInvalidated();
                     adapter.notifyDataSetChanged();
                 } else {
                     adapter = new HuancunAdapter();
@@ -426,7 +430,6 @@ public class ListLocalActivity extends BaseActivity {
                 }
                 System.out.println("---接收到的信息：" + "FINISH");
                 if (adapter != null) {
-//                    adapter.notifyDataSetInvalidated();
                     adapter.notifyDataSetChanged();
                 } else {
                     adapter = new HuancunAdapter();
@@ -436,7 +439,6 @@ public class ListLocalActivity extends BaseActivity {
                 String speed = speeds.get(play_url);
                 speeds.put(play_url, "PAUSE " + speed);
                 if (adapter != null) {
-//                    adapter.notifyDataSetInvalidated();
                     adapter.notifyDataSetChanged();
                 } else {
                     adapter = new HuancunAdapter();
@@ -449,7 +451,15 @@ public class ListLocalActivity extends BaseActivity {
                     }
                 }
                 if (adapter != null) {
-//                    adapter.notifyDataSetInvalidated();
+                    adapter.notifyDataSetChanged();
+                } else {
+                    adapter = new HuancunAdapter();
+                    lv.setAdapter(adapter);
+                }
+            }else if("ERROR".equals(action)){
+                String speed = speeds.get(play_url);
+                speeds.put(play_url, "PAUSE " + speed);
+                if (adapter != null) {
                     adapter.notifyDataSetChanged();
                 } else {
                     adapter = new HuancunAdapter();

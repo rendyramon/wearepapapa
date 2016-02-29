@@ -208,12 +208,12 @@ public class DownLoader {
                         }
                     }
                     inputStream = urlConn.getInputStream();
-                    byte[] buffer = new byte[1024];
+                    byte[] buffer = new byte[1024*2];
                     int length = -1;
                     while((length = inputStream.read(buffer)) != -1 && isdownloading){
                         localFile.write(buffer, 0, length);
                         downFileSize += length;
-                        int nowProgress = (int)((100 * downFileSize)/fileSize);
+                        int nowProgress = (int)((500 * downFileSize)/fileSize);
                         if(nowProgress > progress){
                             progress = nowProgress;
                             handler.sendEmptyMessage(TASK_PROGESS);
@@ -368,7 +368,7 @@ public class DownLoader {
             while(it.hasNext()){
                 DownLoadListener listener = (DownLoadListener)it.next();
                 listener.onProgress(getSQLDownLoadInfo(),isSupportBreakpoint);
-            } 
+            }
         }
     }
     
