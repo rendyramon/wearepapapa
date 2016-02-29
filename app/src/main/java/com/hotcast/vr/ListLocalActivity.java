@@ -155,8 +155,8 @@ public class ListLocalActivity extends BaseActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 String localurl = list.get(i).getLocalurl();
-                System.out.println("---点击的本地地址：" + localurl);
                 int state = list.get(i).getCurState();
+                System.out.println("***state：" + state);
                 File file;
                 if (localurl != null) {
                     file = new File(localurl);
@@ -171,9 +171,10 @@ public class ListLocalActivity extends BaseActivity {
                         intent.putExtra("title", list.get(i).getTitle());
                         intent.putExtra("splite_screen", false);
                         ListLocalActivity.this.startActivity(intent);
-                        System.out.println("---点击的本地地址：" + localurl);
+                        System.out.println("***播放：" + localurl);
                     } else if (state == 2) {
                         LocalBean1 localBean = list.get(i);
+                        System.out.println("***开始" + list.get(i).getUrl());
                         BaseApplication.downLoadManager.addTask(localBean.getUrl(), localBean.getUrl(), localBean.getTitle() + ".mp4", BaseApplication.VedioCacheUrl + localBean.getTitle() + ".mp4");
                         list.get(i).setCurState(1);
                         try {
@@ -190,7 +191,7 @@ public class ListLocalActivity extends BaseActivity {
                         }
                     } else if (state == 1) {
                         BaseApplication.downLoadManager.stopTask(list.get(i).getUrl());
-                        System.out.println("---停止" + list.get(i).getUrl());
+                        System.out.println("***停止" + list.get(i).getUrl());
                         list.get(i).setCurState(4);
                         try {
                             db.saveOrUpdate(list.get(i));
@@ -198,13 +199,13 @@ public class ListLocalActivity extends BaseActivity {
                             e.printStackTrace();
                         }
                         if (adapter != null) {
-//                            adapter.notifyDataSetInvalidated();
                             adapter.notifyDataSetChanged();
                         } else {
                             adapter = new HuancunAdapter();
                             lv.setAdapter(adapter);
                         }
                     } else if (state == 4) {
+                        System.out.println("***继续" + list.get(i).getUrl());
                         BaseApplication.downLoadManager.startTask(list.get(i).getUrl());
                         list.get(i).setCurState(1);
                         try {
@@ -213,7 +214,6 @@ public class ListLocalActivity extends BaseActivity {
                             e.printStackTrace();
                         }
                         if (adapter != null) {
-//                            adapter.notifyDataSetInvalidated();
                             adapter.notifyDataSetChanged();
                         } else {
                             adapter = new HuancunAdapter();
@@ -304,11 +304,12 @@ public class ListLocalActivity extends BaseActivity {
                 holder.tv_huancun_downpecent = (TextView) convertView.findViewById(R.id.tv_huancun_downpecent);
                 holder.tv_huancun_downspeed = (TextView) convertView.findViewById(R.id.tv_huancun_downspeed);
                 holder.tv_huancun_moviename = (TextView) convertView.findViewById(R.id.tv_huancun_moviename);
-                convertView.setTag(holder);
                 bu.display(holder.iv_huancun_img, bean.getImage());
+                convertView.setTag(holder);
             } else {
                 holder = (ViewHolder) convertView.getTag();
             }
+
             holder.tv_huancun_moviename.setText(bean.getTitle());
             String speed = speeds.get(bean.getUrl());
             holder.tv_finish.setVisibility(View.GONE);
@@ -316,7 +317,7 @@ public class ListLocalActivity extends BaseActivity {
             holder.iv_huancun_sd.setBackgroundResource(R.mipmap.huancun_sb);
             holder.tv_huancun_downspeed.setVisibility(View.VISIBLE);
             holder.tv_huancun_downpecent.setVisibility(View.VISIBLE);
-            System.out.println("---adapter：" + speed);
+//            System.out.println("---adapter：" + speed);
             if (speed != null) {
                 if ("FINISH".equals(speed)) {
                     holder.tv_finish.setVisibility(View.VISIBLE);
@@ -324,7 +325,6 @@ public class ListLocalActivity extends BaseActivity {
                     holder.tv_huancun_downspeed.setVisibility(View.GONE);
                     holder.tv_huancun_downpecent.setVisibility(View.GONE);
                 } else if (speed.contains("PAUSE")) {
-                    list.get(position).setCurState(2);
                     String[] strs = speed.split(" ");
                     holder.iv_huancun_sd.setVisibility(View.VISIBLE);
                     holder.iv_huancun_sd.setBackgroundResource(R.mipmap.huancun_sb);
@@ -340,11 +340,6 @@ public class ListLocalActivity extends BaseActivity {
                     holder.tv_huancun_downpecent.setText(strs[1]);
                 }
             }
-//            else {
-//                holder.iv_huancun_sd.setVisibility(View.GONE);
-//                holder.tv_huancun_downspeed.setVisibility(View.GONE);
-//                holder.tv_huancun_downpecent.setVisibility(View.GONE);
-//            }
             if (bean.getCurState() == 3) {
                 holder.tv_finish.setVisibility(View.VISIBLE);
                 holder.iv_huancun_sd.setVisibility(View.GONE);
@@ -391,7 +386,7 @@ public class ListLocalActivity extends BaseActivity {
                 if (pecent == 0) {
                     pecent = current;
                 } else {
-                    long s = (Math.abs((current - pecent))) / 1024 > 10000 ? 800 + ((Math.abs((current - pecent))) / 10240000) : ((Math.abs((current - pecent))) / 1024);
+                    long s = (Math.abs((current - pecent))) / 1024 > 10000 ? 800+((Math.abs((current - pecent))) / 10240000) : ((Math.abs((current - pecent))) / 1024);
                     speed = s + "KB/S" + " 已下载" + (current * 100) / total + "%";
                     pecent = current;
                     speeds.put(play_url, speed);
@@ -455,9 +450,14 @@ public class ListLocalActivity extends BaseActivity {
                     adapter = new HuancunAdapter();
                     lv.setAdapter(adapter);
                 }
-            } else if ("ERROR".equals(action)) {
+            }else if("ERROR".equals(action)){
                 String speed = speeds.get(play_url);
                 speeds.put(play_url, "PAUSE " + speed);
+                for (int i = 0; i<list.size();i++){
+                    if (list.get(i).getUrl().equals(play_url)) {
+                        list.get(i).setCurState(4);
+                    }
+                }
                 if (adapter != null) {
                     adapter.notifyDataSetChanged();
                 } else {
