@@ -111,14 +111,14 @@ public class PlayerContralView extends BaseView {
     @OnClick(R.id.tv_sd)
     void tv_sd(){
         if(null != changeMode){
-            choiceclarity.setText(BaseApplication.clarityText);
+            choiceclarity.setText("标清");
             changeMode.clickSd();
         }
     }
     @OnClick(R.id.tv_hd)
     void tv_hd(){
         if(null != changeMode){
-            choiceclarity.setText(BaseApplication.clarityText);
+            choiceclarity.setText("高清");
             changeMode.clickHd();
         }
     }
@@ -126,7 +126,7 @@ public class PlayerContralView extends BaseView {
     @OnClick(R.id.tv_uhd)
     void tv_uhd(){
         if(null != changeMode){
-            choiceclarity.setText(BaseApplication.clarityText);
+            choiceclarity.setText("超清");
             changeMode.clickUhd();
         }
     }

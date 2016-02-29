@@ -192,18 +192,18 @@ public class PlayerVRActivityNew extends BaseLanActivity implements PFAssetObser
                 ;
                 break;
             case DOWNLOADED:
-                System.out.println("---126--Downloaded to " + asset.getUrl());
+//                System.out.println("---126--Downloaded to " + asset.getUrl());
                 Log.d("SimplePlayer", "Downloaded to " + asset.getUrl());
                 break;
             case DOWNLOADCANCELLED:
-                System.out.println("---130--DOWNLOADCANCELLED");
+//                System.out.println("---130--DOWNLOADCANCELLED");
                 Log.d("SimplePlayer", "Download cancelled");
                 break;
             case PLAYING:
                 hideLoading();
                 iShowLoading = false;
                 isplaying = true;
-                System.out.println("---135--结束加载的时间 = " + (System.currentTimeMillis() - startTime));
+//                System.out.println("---135--结束加载的时间 = " + (System.currentTimeMillis() - startTime));
                 Log.d("SimplePlayer", "Playing");
 //		        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
                 initPlaying();
@@ -229,16 +229,16 @@ public class PlayerVRActivityNew extends BaseLanActivity implements PFAssetObser
                             mPlayerContralView.setCurTime((int) asset.getPlaybackTime());
                             if (!urls.contains(play_url)) {
                                 if (asset.getPlaybackTime() == oldTime && !isPause) {
-                                    System.out.println("----12345");
+//                                    System.out.println("----12345");
                                     isplaying = false;
 
                                     if (!iShowLoading) {
 
                                         stime = System.currentTimeMillis();
-                                        System.out.println("----初始化时间+"+stime);
+//                                        System.out.println("----初始化时间+"+stime);
                                         iShowLoading = true;
                                     }
-                                    System.out.println("----时间差"+(System.currentTimeMillis() - stime));
+//                                    System.out.println("----时间差"+(System.currentTimeMillis() - stime));
                                     if (System.currentTimeMillis() - stime > 1200) {
                                         if (BaseApplication.clarityText.equals("标清")) {
                                             showLoading("正在缓冲");
@@ -248,11 +248,11 @@ public class PlayerVRActivityNew extends BaseLanActivity implements PFAssetObser
 
                                             showLoading("正在缓冲\n" + span);
                                         }
-                                        System.out.println("---缓冲超时System.currentTimeMillis() = " + System.currentTimeMillis());
-                                        System.out.println("--- " + (System.currentTimeMillis() - loadingTime));
+//                                        System.out.println("---缓冲超时System.currentTimeMillis() = " + System.currentTimeMillis());
+//                                        System.out.println("--- " + (System.currentTimeMillis() - loadingTime));
                                         if (System.currentTimeMillis() - loadingTime > 30000l) {
                                             //表示加载超时
-                                            System.out.println("---缓冲超时，切换低清晰度电影");
+//                                            System.out.println("---缓冲超时，切换低清晰度电影");
                                         }
                                     }
 //                                System.out.println("----显示loading");
@@ -563,7 +563,7 @@ public class PlayerVRActivityNew extends BaseLanActivity implements PFAssetObser
             public void clickSd() {
                 showLinCtr();
                 BaseApplication.playbacktime = _pfasset.getPlaybackTime();
-                System.out.println("--播放到-->" + BaseApplication.playbacktime);
+                System.out.println("---播放到-->" + BaseApplication.playbacktime);
                 play_url = play.getSd_url();
                 if (!TextUtils.isEmpty(play_url)) {
                     BaseApplication.clarityText = "标清";
@@ -571,12 +571,13 @@ public class PlayerVRActivityNew extends BaseLanActivity implements PFAssetObser
                     intent.putExtra("play_url", play_url);
                     intent.putExtra("play", play);
                     intent.putExtra("title", title);
+                    intent.putExtra("qingxidu",0);
                     intent.putExtra("splite_screen", false);
                     startActivity(intent);
 //                    _pfasset.setPLaybackTime(BaseApplication.playbacktime);
+                    System.out.println("---切换清晰度为标清 url = " + play_url + " --time = " + BaseApplication.playbacktime + "清晰度："+BaseApplication.clarityText);
                     finish();
                     overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                    System.out.println("---切换清晰度为标清 url = " + play_url + " --time = " + BaseApplication.playbacktime);
 
 //                    BaseApplication.playbacktime = 0;
 //                    _pfasset.setPLaybackTime(BaseApplication.playbacktime);
@@ -587,7 +588,7 @@ public class PlayerVRActivityNew extends BaseLanActivity implements PFAssetObser
             public void clickHd() {
                 showLinCtr();
                 BaseApplication.playbacktime = _pfasset.getPlaybackTime();
-                System.out.println("--播放到-->" + BaseApplication.playbacktime);
+                System.out.println("---播放到-->" + BaseApplication.playbacktime);
                 play_url = play.getHd_url();
                 if (!TextUtils.isEmpty(play_url)) {
                     BaseApplication.clarityText = "高清";
@@ -595,12 +596,14 @@ public class PlayerVRActivityNew extends BaseLanActivity implements PFAssetObser
                     intent.putExtra("play_url", play_url);
                     intent.putExtra("play", play);
                     intent.putExtra("title", title);
+                    intent.putExtra("qingxidu",1);
                     intent.putExtra("splite_screen", false);
                     startActivity(intent);
 //                    _pfasset.setPLaybackTime(BaseApplication.playbacktime);
+                    System.out.println("---切换清晰度为高清 url = " + play_url + " --time = " + BaseApplication.playbacktime +"清晰度："+BaseApplication.clarityText);
                     finish();
                     overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                    System.out.println("---切换清晰度为高清 url = " + play_url + " --time = " + BaseApplication.playbacktime);
+
 //                    _pfasset.setPLaybackTime(BaseApplication.playbacktime);
 //                    BaseApplication.playbacktime = 0;
                 }
@@ -610,7 +613,7 @@ public class PlayerVRActivityNew extends BaseLanActivity implements PFAssetObser
             public void clickUhd() {
                 showLinCtr();
                 BaseApplication.playbacktime = _pfasset.getPlaybackTime();
-                System.out.println("--播放到-->" + BaseApplication.playbacktime);
+                System.out.println("---播放到-->" + BaseApplication.playbacktime);
                 play_url = play.getUhd_url();
                 if (!TextUtils.isEmpty(play_url)) {
                     BaseApplication.clarityText = "超清";
@@ -618,12 +621,13 @@ public class PlayerVRActivityNew extends BaseLanActivity implements PFAssetObser
                     intent.putExtra("play_url", play_url);
                     intent.putExtra("play", play);
                     intent.putExtra("title", title);
+                    intent.putExtra("qingxidu",2);
                     intent.putExtra("splite_screen", false);
                     startActivity(intent);
 //                    _pfasset.setPLaybackTime(BaseApplication.playbacktime);
                     finish();
                     overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                    System.out.println("---切换清晰度为超清 url = " + play_url + " --time = " + BaseApplication.playbacktime);
+                    System.out.println("---切换清晰度为超清 url = " + play_url + " --time = " + BaseApplication.playbacktime+ "清晰度："+BaseApplication.clarityText);
 //                    _pfasset.setPLaybackTime(BaseApplication.playbacktime);
 //                    BaseApplication.playbacktime = 0;
                 }

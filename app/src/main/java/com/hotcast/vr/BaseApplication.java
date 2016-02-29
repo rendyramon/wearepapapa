@@ -35,7 +35,7 @@ public class BaseApplication extends Application {
     public static List<String> strs = new ArrayList<>();
     public static int size;
     public static float playbacktime = 0;
-    public static String clarityText = "标清";
+    public static String clarityText = "";
 
     //横屏时的图片数量
     public static int scapePage = 1;

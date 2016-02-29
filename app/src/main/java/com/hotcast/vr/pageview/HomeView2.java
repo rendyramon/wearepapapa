@@ -194,6 +194,8 @@ public class HomeView2 extends BaseView {
                 if (iv_noNet == null) {
                     iv_noNet = (ImageView) getRootView().findViewById(R.id.iv_noNet);
                     iv_noNet.setVisibility(View.GONE);
+                } else {
+                    iv_noNet.setVisibility(View.GONE);
                 }
                 hideRefreshView();
                 L.e("HomeView2 responseInfo:" + responseInfo.result);
