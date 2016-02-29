@@ -308,7 +308,7 @@ public class ListLocalActivity extends BaseActivity {
             } else {
                 holder = (ViewHolder) convertView.getTag();
             }
-            if (!holder.iv_huancun_img.getTag().equals( bean.getImage())){
+            if (!bean.getImage().equals(holder.iv_huancun_img.getTag())) {
                 bu.display(holder.iv_huancun_img, bean.getImage());
                 holder.iv_huancun_img.setTag(bean.getImage());
             }
@@ -388,7 +388,7 @@ public class ListLocalActivity extends BaseActivity {
                 if (pecent == 0) {
                     pecent = current;
                 } else {
-                    long s = (Math.abs((current - pecent))) / 1024 > 10000 ? 800+((Math.abs((current - pecent))) / 10240000) : ((Math.abs((current - pecent))) / 1024);
+                    long s = (Math.abs((current - pecent))) / 1024 > 10000 ? 800 + ((Math.abs((current - pecent))) / 10240000) : ((Math.abs((current - pecent))) / 1024);
                     speed = s + "KB/S" + " 已下载" + (current * 100) / total + "%";
                     pecent = current;
                     speeds.put(play_url, speed);
@@ -452,10 +452,10 @@ public class ListLocalActivity extends BaseActivity {
                     adapter = new HuancunAdapter();
                     lv.setAdapter(adapter);
                 }
-            }else if("ERROR".equals(action)){
+            } else if ("ERROR".equals(action)) {
                 String speed = speeds.get(play_url);
                 speeds.put(play_url, "PAUSE " + speed);
-                for (int i = 0; i<list.size();i++){
+                for (int i = 0; i < list.size(); i++) {
                     if (list.get(i).getUrl().equals(play_url)) {
                         list.get(i).setCurState(4);
                     }
