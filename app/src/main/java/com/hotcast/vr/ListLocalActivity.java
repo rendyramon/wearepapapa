@@ -305,11 +305,11 @@ public class ListLocalActivity extends BaseActivity {
                 holder.tv_huancun_downspeed = (TextView) convertView.findViewById(R.id.tv_huancun_downspeed);
                 holder.tv_huancun_moviename = (TextView) convertView.findViewById(R.id.tv_huancun_moviename);
                 convertView.setTag(holder);
+                bu.display(holder.iv_huancun_img, bean.getImage());
             } else {
                 holder = (ViewHolder) convertView.getTag();
             }
 
-            bu.display(holder.iv_huancun_img, bean.getImage());
             holder.tv_huancun_moviename.setText(bean.getTitle());
             String speed = speeds.get(bean.getUrl());
             holder.tv_finish.setVisibility(View.GONE);
