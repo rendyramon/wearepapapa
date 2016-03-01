@@ -33,6 +33,7 @@ public class DownLoader {
     private int TASK_PROGESS = 2;
     private int TASK_ERROR = 3;
     private int TASK_SUCCESS = 4;
+    private int MYTASK_PROGESS = 5;
     
     /**文件暂存路径*/
     private final String TEMP_FILEPATH = FileHelper.getTempDirPath();
@@ -88,6 +89,7 @@ public class DownLoader {
     public void start(){
         if(downLoadThread == null){
             downloadtimes = 0;
+            setStop(false);
             ondownload = true;
             handler.sendEmptyMessage(TASK_START);
             downLoadThread = new DownLoadThread();
@@ -101,6 +103,7 @@ public class DownLoader {
             downLoadThread.stopDownLoad();
             pool.remove(downLoadThread);
             downLoadThread = null;
+            setStop(true);
         }
     }
     
@@ -168,7 +171,7 @@ public class DownLoader {
         private HttpURLConnection urlConn;
         private InputStream inputStream;
         private int progress = -1;
-        
+        boolean isFirstNotice = true;
         public DownLoadThread(){
             isdownloading = true;
         }
@@ -176,7 +179,6 @@ public class DownLoader {
         @Override
         public void run() {
             while(downloadtimes < maxdownloadtimes){ //做3次请求的尝试
-                
                 try {
                     if(downFileSize == fileSize 
                             && fileSize > 0){
@@ -191,6 +193,7 @@ public class DownLoader {
                     }
                     url = new URL(sqlDownLoadInfo.getUrl());
                     urlConn = (HttpURLConnection)url.openConnection();
+                    isFirstNotice = true ;
                     urlConn.setConnectTimeout(5000);
                     urlConn.setReadTimeout(10000);
                     if(fileSize < 1){//第一次下载，初始化
@@ -216,7 +219,12 @@ public class DownLoader {
                         int nowProgress = (int)((500 * downFileSize)/fileSize);
                         if(nowProgress > progress){
                             progress = nowProgress;
-                            handler.sendEmptyMessage(TASK_PROGESS);
+//                            handler.sendEmptyMessage(TASK_PROGESS);
+                        }
+                        //修改
+                        if (isFirstNotice){
+                            isFirstNotice = false;
+                            handler.sendEmptyMessage(MYTASK_PROGESS);
                         }
                     }
                     //下载完了
@@ -426,7 +434,15 @@ public class DownLoader {
     public interface DownLoadSuccess{
         public void onTaskSeccess(String TaskID);
     }
-    
+    public boolean isStop() {
+        return isStop;
+    }
+
+    public void setStop(boolean stop) {
+        isStop = stop;
+    }
+
+    boolean isStop = false;
     Handler handler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
@@ -438,9 +454,16 @@ public class DownLoader {
             }else if(msg.what == TASK_PROGESS){ //改变进程
                 onProgressNotice();
             }else if(msg.what == TASK_ERROR){ //下载出错
+                isStop = true;
                 errorNotice();
             }else if(msg.what == TASK_SUCCESS){ //下载完成
                 successNotice();
+            }else if(msg.what == MYTASK_PROGESS){
+                if (!isStop){
+                    onProgressNotice();
+                    System.out.println("---接到刷新消息");
+                    handler.sendEmptyMessageDelayed(MYTASK_PROGESS,1000);
+                }
             }
         }
     };
