@@ -31,7 +31,6 @@ public class DownLoadService extends Service {
     DbUtils db;
     List<String> fileUrls;
     List<File> fileList;
-    DownLoadLisener downLoadLisener;
 
     @Override
 
@@ -48,7 +47,6 @@ public class DownLoadService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        downLoadLisener = new DownLoadLisener();
         downLoadManager = new DownLoadManager(DownLoadService.this);
         BaseApplication.downLoadManager = downLoadManager;
         db = DbUtils.create(this);
@@ -71,23 +69,6 @@ public class DownLoadService extends Service {
         downLoadManager.setSupportBreakpoint(true);
         downLoadManager.setAllTaskListener(new DownloadManagerListener());
     }
-
-//    @Override
-//    public int onStartCommand(Intent intent, int flags, int startId) {
-//        fileUrls = new ArrayList<>();
-//        fileList = new ArrayList<>();
-//        return super.onStartCommand(intent, flags, startId);
-//    }
-
-    public void startThread() {
-        if (downLoadLisener == null) {
-            downLoadLisener = new DownLoadLisener();
-        }
-        if (!downLoadLisener.isRunning()) {
-            downLoadLisener.start();
-        }
-    }
-
     final String START = "START";
     final String DOWNLOADING = "DOWNLOADING";
     final String FINISH = "FINISH";
@@ -125,12 +106,6 @@ public class DownLoadService extends Service {
             intent.putExtra("current", sqlDownLoadInfo.getDownloadSize());
             intent.putExtra("total", sqlDownLoadInfo.getFileSize());
             sendBroadcast(intent);
-//            fileUrls.add(FileHelper.getTempDirPath() + "/(" + FileHelper.filterIDChars(sqlDownLoadInfo.getTaskID()) + ")" + sqlDownLoadInfo.getFileName());
-//            File file = new File(fileUrls.get(0));
-//            if (file.exists()){
-//                fileList.add(file);
-//                startThread();
-//            }
         }
 
         @Override
@@ -196,31 +171,4 @@ public class DownLoadService extends Service {
 
         }
     };
-
-    public class DownLoadLisener extends Thread {
-        private boolean isRunning = false;
-
-        public boolean isRunning() {
-            return isRunning;
-        }
-
-        public void setRunning(boolean running) {
-            isRunning = running;
-        }
-
-        @Override
-        public void run() {
-            setRunning(true);
-            while (isRunning) {
-                SystemClock.sleep(1000);
-//                Message message = Message.obtain();
-                if (fileList!=null && fileList.size()>0){
-//                    message.obj = fileList.get(0);
-                    System.out.println("---已下载："+fileList.get(0).length()+"KB");
-                }
-            }
-            setRunning(false);
-        }
-    }
-
 }
