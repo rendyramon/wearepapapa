@@ -100,7 +100,7 @@ public class DownLoadService extends Service {
         @Override
         public void onProgress(SQLDownLoadInfo sqlDownLoadInfo, boolean isSupportBreakpoint) {
             //根据监听到的信息查找列表相对应的任务，更新相应任务的进度
-            System.out.println("---onProgress:" + sqlDownLoadInfo.getDownloadSize()+"总大小"+sqlDownLoadInfo.getFileSize());
+            System.out.println("---2：onProgress:" + sqlDownLoadInfo.getDownloadSize()+"总大小"+sqlDownLoadInfo.getFileSize());
             Intent intent = new Intent(DOWNLOADING);
             intent.putExtra("play_url", sqlDownLoadInfo.getTaskID());
             intent.putExtra("current", sqlDownLoadInfo.getDownloadSize());

@@ -372,6 +372,20 @@ public class ListLocalActivity extends BaseActivity {
     String action;
     String speed;
     int index = -1;
+    long refreshTime = 0;
+
+    public void adapterRefresh() {
+        if (System.currentTimeMillis() - refreshTime > 1000) {
+            System.out.println("---3：刷新：" + speed);
+            refreshTime= System.currentTimeMillis();
+            if (adapter != null) {
+                adapter.notifyDataSetChanged();
+            } else {
+                adapter = new HuancunAdapter();
+                lv.setAdapter(adapter);
+            }
+        }
+    }
 
     /**
      * 这是接受下载进度的广播接受者
@@ -394,12 +408,7 @@ public class ListLocalActivity extends BaseActivity {
                     speeds.put(play_url, speed);
                 }
                 System.out.println("---接收到的信息：" + speed);
-                if (adapter != null) {
-                    adapter.notifyDataSetChanged();
-                } else {
-                    adapter = new HuancunAdapter();
-                    lv.setAdapter(adapter);
-                }
+                adapterRefresh();
             } else if ("FINISH".equals(action)) {
 //              下載完畢，執行下載完畢的邏輯
                 speeds.put(play_url, "FINISH");
@@ -425,33 +434,18 @@ public class ListLocalActivity extends BaseActivity {
                     }
                 }
                 System.out.println("---接收到的信息：" + "FINISH");
-                if (adapter != null) {
-                    adapter.notifyDataSetChanged();
-                } else {
-                    adapter = new HuancunAdapter();
-                    lv.setAdapter(adapter);
-                }
+                adapterRefresh();
             } else if ("PAUSE".equals(action)) {
                 String speed = speeds.get(play_url);
                 speeds.put(play_url, "PAUSE " + speed);
-                if (adapter != null) {
-                    adapter.notifyDataSetChanged();
-                } else {
-                    adapter = new HuancunAdapter();
-                    lv.setAdapter(adapter);
-                }
+                adapterRefresh();
             } else if ("START".equals(action)) {
                 for (int i = 0; i < list.size(); i++) {
                     if (list.get(i).getUrl().equals(play_url)) {
                         list.get(i).setCurState(1);
                     }
                 }
-                if (adapter != null) {
-                    adapter.notifyDataSetChanged();
-                } else {
-                    adapter = new HuancunAdapter();
-                    lv.setAdapter(adapter);
-                }
+                adapterRefresh();
             } else if ("ERROR".equals(action)) {
                 String speed = speeds.get(play_url);
                 speeds.put(play_url, "PAUSE " + speed);
@@ -460,12 +454,7 @@ public class ListLocalActivity extends BaseActivity {
                         list.get(i).setCurState(4);
                     }
                 }
-                if (adapter != null) {
-                    adapter.notifyDataSetChanged();
-                } else {
-                    adapter = new HuancunAdapter();
-                    lv.setAdapter(adapter);
-                }
+                adapterRefresh();
             }
         }
 

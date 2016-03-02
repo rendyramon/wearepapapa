@@ -211,7 +211,7 @@ public class DownLoader {
                         }
                     }
                     inputStream = urlConn.getInputStream();
-                    byte[] buffer = new byte[1024*2];
+                    byte[] buffer = new byte[1024*4];
                     int length = -1;
                     while((length = inputStream.read(buffer)) != -1 && isdownloading){
                         localFile.write(buffer, 0, length);
@@ -457,11 +457,12 @@ public class DownLoader {
                 isStop = true;
                 errorNotice();
             }else if(msg.what == TASK_SUCCESS){ //下载完成
+                isStop = true;
                 successNotice();
             }else if(msg.what == MYTASK_PROGESS){
                 if (!isStop){
                     onProgressNotice();
-                    System.out.println("---接到刷新消息");
+                    System.out.println("---1：接到刷新消息");
                     handler.sendEmptyMessageDelayed(MYTASK_PROGESS,1000);
                 }
             }
