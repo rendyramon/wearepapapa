@@ -36,8 +36,7 @@ public class MainActivity_new extends BaseActivity {
     @InjectView(R.id.main_radio)
     RadioGroup radioGroup;
 
-    @InjectView(R.id.tv_title)
-    TextView title;
+
     @InjectView(R.id.rl_agreement)
     ScrollView rl_agreement;
     @InjectView(R.id.cb_agreement)
@@ -101,15 +100,15 @@ public class MainActivity_new extends BaseActivity {
                 public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
                     switch (checkedId) {
                         case R.id.page_home:
-                            title.setText(titles.get(0));
+//                            title.setText(titles.get(0));
                             content.setCurrentItem(0);
                             break;
                         case R.id.page_classify:
-                            title.setText(titles.get(1));
+//                            title.setText(titles.get(1));
                             content.setCurrentItem(1);
                             break;
                         case R.id.page_mine:
-                            title.setText(titles.get(2));
+//                            title.setText(titles.get(2));
                             content.setCurrentItem(2);
                             break;
                     }
@@ -128,7 +127,7 @@ public class MainActivity_new extends BaseActivity {
 
                 @Override
                 public void onPageSelected(int position) {
-                    title.setText(titles.get(position));
+//                    title.setText(titles.get(position));
                     radioGroup.check(checkedId[position]);
                     clickTab(position);
                 }

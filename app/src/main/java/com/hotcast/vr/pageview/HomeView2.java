@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,6 +45,8 @@ import java.lang.reflect.TypeVariable;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.InjectView;
+
 
 /**
  * Created by lostnote on 15/11/17.
@@ -57,6 +60,8 @@ public class HomeView2 extends BaseView {
     private LinearLayout dots_ll;
     @ViewInject(R.id.iv_noNet)
     ImageView iv_noNet;
+//    @InjectView(R.id.tv_title)
+//    TextView title;
 
 
     private FloatingActionButton fab_home;
@@ -86,6 +91,7 @@ public class HomeView2 extends BaseView {
 //        requestUrl = Constants.URL_HOME;
         requestUrl = Constants.ROLL;
         db = DbUtils.create(activity);
+//        title.setText("首页");
         init();
     }
 
@@ -93,8 +99,11 @@ public class HomeView2 extends BaseView {
     private void initListView() {
         layout_roll_view = View.inflate(activity, R.layout.layout_roll_view, null);//轮播图
         ViewUtils.inject(this, layout_roll_view);
+//        ((RelativeLayout.LayoutParams)layout_roll_view.getLayoutParams()).addRule();
         ll_top_news_viewpager = (LinearLayout) layout_roll_view.findViewById(R.id.ll_top_news_viewpager);
         rootView = View.inflate(activity, R.layout.frag_item_news, null);
+        TextView title = (TextView) rootView.findViewById(R.id.tv_title);
+        title.setText("首页");
         ViewUtils.inject(this, rootView);
         fab_home = (FloatingActionButton) rootView.findViewById(R.id.fab_home);
         progressBar4 = (ProgressBar) rootView.findViewById(R.id.progressBar4);

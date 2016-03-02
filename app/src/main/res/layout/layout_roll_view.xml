@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="185dp"
+    android:layout_height="220dp"
      >
      	<!-- 放置轮播图片位置 -->
         <LinearLayout
             android:id="@+id/ll_top_news_viewpager"
             android:layout_width="fill_parent"
-            android:layout_height="242.5dp"
+            android:layout_height="220dp"
             android:orientation="horizontal" />
 	
         <LinearLayout

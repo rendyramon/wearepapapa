@@ -4,6 +4,7 @@
 
     <string name="app_name">VR热播</string>
     <string name="mine_cache">离线缓存</string>
+    <string name="mine_change">修改密码</string>
     <string name="mine_about">关于我们</string>
     <string name="mine_version">版本更新</string>
     <string name="mine_help">帮助</string>
