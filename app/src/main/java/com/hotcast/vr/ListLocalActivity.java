@@ -386,7 +386,6 @@ public class ListLocalActivity extends BaseActivity {
             }
         }
     }
-
     /**
      * 这是接受下载进度的广播接受者
      */
@@ -402,7 +401,7 @@ public class ListLocalActivity extends BaseActivity {
                 if (pecent == 0) {
                     pecent = current;
                 } else {
-                    long s = (Math.abs((current - pecent))) / 1024 > 10000 ? 800 + ((Math.abs((current - pecent))) / 10240000) : ((Math.abs((current - pecent))) / 1024);
+                    long s = (Math.abs((current - pecent))) / 1024 > 12000 ? 2000 + ((Math.abs((current - pecent))) / 10240000) : ((Math.abs((current - pecent))) / 1024);
                     speed = s + "KB/S" + " 已下载" + (current * 100) / total + "%";
                     pecent = current;
                     speeds.put(play_url, speed);
