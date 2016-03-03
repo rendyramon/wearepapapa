@@ -16,7 +16,15 @@ public class Play implements Serializable{
     String uhd_url;
     //web播放地址（最低清晰度)
     String web_url;
+    String imgurl;//预览图
 
+    public String getImgurl() {
+        return imgurl;
+    }
+
+    public void setImgurl(String imgurl) {
+        this.imgurl = imgurl;
+    }
     public String getTitle() {
         return title;
     }

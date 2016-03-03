@@ -150,6 +150,20 @@
             android:launchMode="singleTop"
             android:screenOrientation="landscape"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen" />
+        <activity
+            android:name=".LocalCachelActivity_new"
+            android:launchMode="singleTop"
+            android:screenOrientation="landscape"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" />
+        <activity
+            android:name=".LandscapeActivity_new"
+            android:launchMode="singleTop"
+            android:screenOrientation="landscape"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" />
+        <activity
+            android:name=".LandscapeActivity_Second"
+            android:screenOrientation="landscape"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"></activity>
     </application>
 
 </manifest>

@@ -22,7 +22,6 @@ public class LocalBean1 implements Serializable {
     }
 
     int qingxidu;//新添加
-
     String title;
     String image;
     String url;
@@ -36,6 +35,7 @@ public class LocalBean1 implements Serializable {
     public void setDownloading(boolean downloading) {
         isDownloading = downloading;
     }
+
     public Bitmap getLocalBitmap() {
         return localBitmap;
     }
@@ -101,7 +101,7 @@ public class LocalBean1 implements Serializable {
     }
 
     String id;
-    public static final int STATE_NONE = 0, STATE_DOWNLOADING = 1, STATE_FAILED = 2, STATE_SUCCESS = 3,STATE_PAUSE = 4;
+    public static final int STATE_NONE = 0, STATE_DOWNLOADING = 1, STATE_FAILED = 2, STATE_SUCCESS = 3, STATE_PAUSE = 4;
     private int curState = STATE_NONE;
     private long downloadId;
     private long total, current;
