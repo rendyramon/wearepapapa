@@ -3,6 +3,7 @@ package com.hotcast.vr.pageview;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -43,6 +44,8 @@ public class ClassifyView extends BaseView {
     TabPageIndicator indicator;
     @ViewInject(R.id.iv_noNet)
     ImageView iv_noNet;
+    @InjectView(R.id.tv_title)
+    TextView title;
 
     private MyPagerAdapter adapter;
     private int curTabIndex = -1;
@@ -59,6 +62,7 @@ public class ClassifyView extends BaseView {
     public ClassifyView(BaseActivity activity){
         super(activity, R.layout.layout_classify);
         requestUrl = Constants.CHANNEL_LIST;
+        title.setText("分类");
         init();
     }
     @Override

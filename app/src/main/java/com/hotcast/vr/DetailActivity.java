@@ -471,7 +471,7 @@ public class DetailActivity extends BaseActivity {
         videoses = (ArrayList<VideosNew>) details.getVideos();
         L.e("DetailActivity details.getVideo() =" + details.getVideos());
         L.e("DetailActivity videoses =" + videoses);
-        if (videoses != null) {
+        if (videoses != null && videoses.size() > 0) {
             for (int i = 0; i < videoses.size(); i++) {
                 video_ids.add(videoses.get(i).getVid());
             }
@@ -554,7 +554,11 @@ public class DetailActivity extends BaseActivity {
             }
             TextView tv_movie = (TextView) contentView
                     .findViewById(R.id.tv_movie);
+//            System.out.println("---relation = " + relation);
+//            System.out.println("---relation.getVideos() = " + relation.getVideos());
+            if (relation != null && relation.getVideos().size()>0){
             tv_movie.setText(relation.getVideos().get(0).getVname());
+            }
             iv_movie.setFocusable(true);
             iv_movie.setOnClickListener(new View.OnClickListener() {
                 @Override

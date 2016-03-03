@@ -2,7 +2,11 @@ package com.hotcast.vr.pageview;
 
 import android.content.Intent;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.hotcast.vr.AboutActivity;
 import com.hotcast.vr.BaseActivity;
@@ -28,6 +32,19 @@ public class MineView extends BaseView implements View.OnClickListener {
     RelativeLayout rl_version;
     @InjectView(R.id.rl_help)
     RelativeLayout rl_help;
+    @InjectView(R.id.tv_title)
+    TextView title;
+    @InjectView(R.id.iv_head)
+    ImageView iv_head;
+    @InjectView(R.id.ll_login)
+    LinearLayout ll_login;
+    @InjectView(R.id.login)
+    Button login;
+    @InjectView(R.id.regist)
+    Button regist;
+    @InjectView(R.id.tv_username)
+    TextView tv_username;
+
     private UpdateAppManager updateAppManager;
     String spec;
     String is_force;
@@ -39,6 +56,7 @@ public class MineView extends BaseView implements View.OnClickListener {
 
     @Override
     public void init() {
+        title.setText("注销");
         spec = activity.sp.select("spec", "");
         is_force = activity.sp.select("is_force", "");
         newFeatures = activity.sp.select("newFeatures", "");
