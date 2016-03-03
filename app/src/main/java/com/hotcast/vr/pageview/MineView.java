@@ -14,7 +14,9 @@ import com.hotcast.vr.BaseApplication;
 import com.hotcast.vr.DetailActivity;
 import com.hotcast.vr.HelpActivity;
 import com.hotcast.vr.ListLocalActivity;
+import com.hotcast.vr.LoginActivity;
 import com.hotcast.vr.R;
+import com.hotcast.vr.RegistActivity;
 import com.hotcast.vr.UpdateAppManager;
 import com.hotcast.vr.tools.SharedPreUtil;
 
@@ -45,6 +47,7 @@ public class MineView extends BaseView implements View.OnClickListener {
     @InjectView(R.id.tv_username)
     TextView tv_username;
 
+
     private UpdateAppManager updateAppManager;
     String spec;
     String is_force;
@@ -56,6 +59,7 @@ public class MineView extends BaseView implements View.OnClickListener {
 
     @Override
     public void init() {
+
         title.setText("注销");
         spec = activity.sp.select("spec", "");
         is_force = activity.sp.select("is_force", "");
@@ -67,6 +71,8 @@ public class MineView extends BaseView implements View.OnClickListener {
     }
 
     private void initListView() {
+        login.setOnClickListener(this);
+        regist.setOnClickListener(this);
         rl_cache.setOnClickListener(this);
         rl_about.setOnClickListener(this);
         rl_version.setOnClickListener(this);
@@ -77,6 +83,17 @@ public class MineView extends BaseView implements View.OnClickListener {
     public void onClick(View view) {
         Intent intent;
         switch (view.getId()) {
+            case R.id.login:
+                intent = new Intent(activity, LoginActivity.class);
+                activity.startActivity(intent);
+                System.out.println("---您点击了登录按钮");
+                break;
+            case R.id.regist:
+                intent = new Intent(activity, RegistActivity.class);
+                activity.startActivity(intent);
+                System.out.println("---您点击了注册按钮");
+                break;
+
             case R.id.rl_cache:
 
                 intent = new Intent(activity, ListLocalActivity.class);
