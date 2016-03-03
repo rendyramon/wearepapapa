@@ -34,6 +34,7 @@ public class BaseApplication extends Application {
     public static boolean doAsynctask = false;//本地视频同步数据库处理
     public static List<String> strs = new ArrayList<>();
     public static int size;
+    public static boolean isLogin = false;
     public static float playbacktime = 0;
     public static String clarityText = "";
 

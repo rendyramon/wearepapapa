@@ -59,7 +59,13 @@ public class MineView extends BaseView implements View.OnClickListener {
 
     @Override
     public void init() {
-
+        if (BaseApplication.isLogin){
+            ll_login.setVisibility(View.GONE);
+            tv_username.setVisibility(View.VISIBLE);
+        }else {
+            ll_login.setVisibility(View.VISIBLE);
+            tv_username.setVisibility(View.GONE);
+        }
         title.setText("注销");
         spec = activity.sp.select("spec", "");
         is_force = activity.sp.select("is_force", "");
@@ -86,11 +92,13 @@ public class MineView extends BaseView implements View.OnClickListener {
             case R.id.login:
                 intent = new Intent(activity, LoginActivity.class);
                 activity.startActivity(intent);
+                activity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                 System.out.println("---您点击了登录按钮");
                 break;
             case R.id.regist:
                 intent = new Intent(activity, RegistActivity.class);
                 activity.startActivity(intent);
+                activity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                 System.out.println("---您点击了注册按钮");
                 break;
 
@@ -98,11 +106,13 @@ public class MineView extends BaseView implements View.OnClickListener {
 
                 intent = new Intent(activity, ListLocalActivity.class);
                 activity.startActivity(intent);
+                activity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                 break;
             case R.id.rl_about:
 
                 intent = new Intent(activity, AboutActivity.class);
                 activity.startActivity(intent);
+                activity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                 break;
             case R.id.rl_version:
                 if (BaseApplication.isUpdate) {
@@ -115,6 +125,7 @@ public class MineView extends BaseView implements View.OnClickListener {
             case R.id.rl_help:
                 intent = new Intent(activity, HelpActivity.class);
                 activity.startActivity(intent);
+                activity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                 break;
         }
     }

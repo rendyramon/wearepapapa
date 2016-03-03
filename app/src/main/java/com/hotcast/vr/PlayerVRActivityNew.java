@@ -849,6 +849,7 @@ public class PlayerVRActivityNew extends BaseLanActivity implements PFAssetObser
                     public void onclick() {
 //                                _pfview.release();
                         finish();
+                        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                     }
                 });
                 break;

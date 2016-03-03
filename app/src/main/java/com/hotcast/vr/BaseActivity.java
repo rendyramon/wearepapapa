@@ -386,6 +386,7 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
         intent.putExtra("classifies", BaseApplication.channel);
 
         startActivity(intent);
+       overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
     }
 
     //    判断是否有个网络连接

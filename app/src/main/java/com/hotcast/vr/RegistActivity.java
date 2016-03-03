@@ -38,6 +38,7 @@ public class RegistActivity extends BaseActivity {
                 ll_regist2.setVisibility(View.VISIBLE);
                 break;
 
+
         }
     }
     @Override
