@@ -102,6 +102,14 @@
             android:screenOrientation="portrait"
             android:launchMode="singleTask" />
         <activity
+            android:name=".LoginActivity"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTask" />
+        <activity
+            android:name=".RegistActivity"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTask" />
+        <activity
             android:name=".LandscapeActivity"
             android:launchMode="singleTop"
             android:screenOrientation="landscape"

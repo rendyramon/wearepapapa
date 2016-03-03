@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#f5f5f5">
+    <include
+        android:id="@+id/head"
+        layout="@layout/head_login" />
+    <LinearLayout
+        android:id="@+id/ll_regist1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/head"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="62dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:textColor="#38383c"
+                android:text="VR热播  "/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="15sp"
+                android:textColor="#38383c"
+                android:text="给你 “观” 的自由"/>
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#e5e5e5"/>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:orientation="horizontal"
+            android:background="#ffffff">
+            <ImageView
+                android:id="@+id/iv_regist"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:src="@mipmap/name"/>
+            <EditText
+                android:id="@+id/et_phone"
+                android:layout_toRightOf="@id/iv_regist"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:inputType="number"
+                android:hint="用户名 / 手机号"/>
+        </RelativeLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#e5e5e5"/>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:orientation="horizontal"
+            android:background="#ffffff">
+            <ImageView
+                android:id="@+id/iv_verificationcode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:src="@mipmap/verificationcode"/>
+            <EditText
+                android:id="@+id/et_verificationcode"
+                android:layout_toRightOf="@id/iv_verificationcode"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:inputType="number"
+                android:hint="请输入验证码"/>
+            <ImageView
+                android:id="@+id/iv_look"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="15dp"
+                android:background="@drawable/look_selector"
+                android:layout_alignTop="@+id/iv_verificationcode"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true" />
+        </RelativeLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#e5e5e5"/>
+
+        <Button
+            android:id="@+id/bt_next"
+            android:layout_marginTop="24dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textSize="17sp"
+            android:textColor="#ffffff"
+            android:text="登录"
+            android:background="@drawable/regist_selector"/>
+    </LinearLayout>
+</RelativeLayout>

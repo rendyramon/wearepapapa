@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <include
+        android:id="@+id/head"
+        layout="@layout/head_login" />
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#f5f5f5"
+        android:layout_below="@id/head">
+       <include
+           android:id="@+id/regist1"
+           layout="@layout/regist1" />
+        <include
+            android:id="@+id/regist2"
+            layout="@layout/regist2"/>
+
+    </FrameLayout>
+
+</RelativeLayout>
