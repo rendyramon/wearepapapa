@@ -1,18 +1,15 @@
 package com.hotcast.vr;
 
 import android.content.Intent;
-import android.graphics.Rect;
 import android.text.TextUtils;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
-import android.text.method.TransformationMethod;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.lidroid.xutils.view.annotation.event.OnClick;
 
 import butterknife.InjectView;
 
