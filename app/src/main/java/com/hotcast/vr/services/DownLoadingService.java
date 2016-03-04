@@ -84,7 +84,7 @@ public class DownLoadingService extends Service {
 //                        Intent intent2 = new Intent(START);
 //                        sendBroadcast(intent2);
 //                        try {
-//                            LocalBean1 localBean = db.findById(LocalBean1.class, nowurl);
+//                            LocalBean2 localBean = db.findById(LocalBean2.class, nowurl);
 //                            if (localBean != null) {
 //                                //状态更新
 ////                                db.delete(localBean);
@@ -113,9 +113,9 @@ public class DownLoadingService extends Service {
 //                        intent.putExtra("play_url", nowurl);
 //                        intent.putExtra("localurl", localurl);
 //                        sendBroadcast(intent);
-//                        LocalBean1 localBean = null;
+//                        LocalBean2 localBean = null;
 //                        try {
-//                            localBean = db.findById(LocalBean1.class, nowurl);
+//                            localBean = db.findById(LocalBean2.class, nowurl);
 //                            System.out.print("---数据库更新localBean：" + localBean);
 //                            if (localBean != null) {
 //                                //状态更新

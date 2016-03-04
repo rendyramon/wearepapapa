@@ -17,7 +17,7 @@ import android.widget.TextView;
 
 import com.hotcast.vr.adapter.LocalGalleyAdapter;
 import com.hotcast.vr.bean.LocalBean;
-import com.hotcast.vr.bean.LocalBean1;
+import com.hotcast.vr.bean.LocalBean2;
 import com.hotcast.vr.pageview.LandGalleyView;
 import com.lidroid.xutils.DbUtils;
 import com.lidroid.xutils.exception.DbException;
@@ -29,7 +29,7 @@ import java.util.List;
 import butterknife.InjectView;
 
 public class LocalCachelActivity_new extends BaseActivity {
-    List<LocalBean1> dbList;//本地视频集合
+    List<LocalBean2> dbList;//本地视频集合
     boolean noData;
     @InjectView(R.id.container1)
     RelativeLayout container1;
@@ -101,9 +101,9 @@ public class LocalCachelActivity_new extends BaseActivity {
                     tv_title2.setText(dbList.get(position).getTitle());
                     if (dbList.get(position).isDownloading()) {
                         System.out.println("---显示进度"+dbList.get(position).getUrl());
-                        LocalBean1 l = null;
+                        LocalBean2 l = null;
                         try {
-                            l = db.findById(LocalBean1.class, dbList.get(position).getUrl());
+                            l = db.findById(LocalBean2.class, dbList.get(position).getUrl());
                             setSpeedAndPecent(l.getSpeed(),l.getPecent());
                         } catch (DbException e) {
                             e.printStackTrace();
@@ -154,7 +154,7 @@ public class LocalCachelActivity_new extends BaseActivity {
 
     @Override
     public void getIntentData(Intent intent) {
-        dbList = (List<LocalBean1>) getIntent().getSerializableExtra("dbList");
+        dbList = (List<LocalBean2>) getIntent().getSerializableExtra("dbList");
     }
 
     int downX;
@@ -287,7 +287,7 @@ public class LocalCachelActivity_new extends BaseActivity {
                 //执行相应操作
                 long current = intent.getLongExtra("current", -1);//电影当前进度
                 int index = ids.indexOf(play_url);
-                LocalBean1 localBean = dbList.get(index);
+                LocalBean2 localBean = dbList.get(index);
                 localBean.setSpeed((current - localBean.getCurrent()) / 1024 + "");
                 localBean.setCurrent(current);
                 localBean.setPecent(((current * 100) / total) + "");
@@ -302,7 +302,7 @@ public class LocalCachelActivity_new extends BaseActivity {
                 String vid = intent.getStringExtra("vid");
                 long total = intent.getLongExtra("total", -1);//电影总大小
                 int index = ids.indexOf(vid);
-                LocalBean1 localBean = dbList.get(index);
+                LocalBean2 localBean = dbList.get(index);
                 localBean.setCurState(3);
                 localBean.setPecent("100");
                 localBean.setCurrent(total);
@@ -358,7 +358,7 @@ public class LocalCachelActivity_new extends BaseActivity {
         if (noData) {
             mImages1.remove(nowPosotion);
             //删除数据库和本地中的缓存文件
-            LocalBean1 localBean = dbList.get(nowPosotion);
+            LocalBean2 localBean = dbList.get(nowPosotion);
             DbUtils db = DbUtils.create(this);
             try {
                 db.deleteById(LocalBean.class,localBean.getId());

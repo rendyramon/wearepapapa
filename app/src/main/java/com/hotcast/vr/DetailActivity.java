@@ -17,7 +17,7 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.hotcast.vr.bean.Details;
-import com.hotcast.vr.bean.LocalBean1;
+import com.hotcast.vr.bean.LocalBean2;
 import com.hotcast.vr.bean.Play;
 import com.hotcast.vr.bean.Relation;
 import com.hotcast.vr.bean.Urls;
@@ -215,7 +215,7 @@ public class DetailActivity extends BaseActivity {
     //初始化下载按钮
     private void initCatch(String play_url) {
         try {
-            List<LocalBean1> list = db.findAll(LocalBean1.class);
+            List<LocalBean2> list = db.findAll(LocalBean2.class);
             if (list != null && list.size() > 0) {
                 for (int i = 0; i < list.size(); i++) {
                     if (!TextUtils.isEmpty(play_url)) {
@@ -242,7 +242,7 @@ public class DetailActivity extends BaseActivity {
 
     private void setPlayUrl() {
         try {
-            LocalBean1 bean = db.findById(LocalBean1.class, play_url);
+            LocalBean2 bean = db.findById(LocalBean2.class, play_url);
             if (bean != null){
                 play_url = bean.getLocalurl();
                 qingxidu = bean.getQingxidu();
@@ -266,7 +266,7 @@ public class DetailActivity extends BaseActivity {
     public int getLayoutId() {
         return R.layout.movie_detail;
     }
-    LocalBean1 localBean;
+    LocalBean2 localBean;
     @Override
     public void init() {
         db = DbUtils.create(DetailActivity.this);
@@ -354,17 +354,19 @@ public class DetailActivity extends BaseActivity {
 //                        tv_cache.setText("已缓存");
                         ll_download.setFocusable(false);
                         DbUtils db = DbUtils.create(DetailActivity.this);
-                        LocalBean1 localBean = new LocalBean1();
+                        LocalBean2 localBean = new LocalBean2();
                         localBean.setTitle(title);
                         localBean.setImage(details.getImage().get(0));
                         localBean.setId(saveUrl);
+                        localBean.setVid(details.getVideos().get(0).getVid());
                         localBean.setUrl(saveUrl);
                         localBean.setQingxidu(qingxidu);
                         localBean.setCurState(0);//還沒下載，準備下載
                         try {
-                            db.delete(localBean);
-                            db.save(localBean);
+                            db.saveOrUpdate(localBean);
+                            System.out.println("---新添加的Vid："+db.findById(LocalBean2.class,saveUrl).getVid());
                         } catch (DbException e) {
+                            System.out.println("---新添加的失败："+e);
                             e.printStackTrace();
                         }
                         int i = BaseApplication.downLoadManager.addTask(saveUrl, saveUrl, title + ".mp4", BaseApplication.VedioCacheUrl + title + ".mp4");

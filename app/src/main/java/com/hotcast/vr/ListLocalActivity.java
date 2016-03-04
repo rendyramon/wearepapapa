@@ -15,7 +15,7 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.hotcast.vr.bean.LocalBean1;
+import com.hotcast.vr.bean.LocalBean2;
 import com.hotcast.vr.bean.MediaDownloadManager;
 import com.lidroid.xutils.BitmapUtils;
 import com.lidroid.xutils.DbUtils;
@@ -87,7 +87,7 @@ public class ListLocalActivity extends BaseActivity {
     }
 
     DbUtils db;
-    List<LocalBean1> list = null;
+    List<LocalBean2> list = null;
 
     DetailReceiver receiver;
     final String START = "START";
@@ -124,7 +124,7 @@ public class ListLocalActivity extends BaseActivity {
     private void initListView() {
         db = DbUtils.create(ListLocalActivity.this);
         try {
-            list = db.findAll(LocalBean1.class);
+            list = db.findAll(LocalBean2.class);
             if (list == null) {
                 tv_downloded.setVisibility(View.GONE);
                 tv_downloding.setVisibility(View.GONE);
@@ -133,6 +133,7 @@ public class ListLocalActivity extends BaseActivity {
             } else {
                 ids = new ArrayList<>();
                 for (int i = 0; i < list.size(); i++) {
+                    System.out.println("---本地数据获取："+list.get(i).getVid());
                     ids.add(list.get(i).getUrl());
                 }
                 tv_downloded.setVisibility(View.VISIBLE);
@@ -178,7 +179,7 @@ public class ListLocalActivity extends BaseActivity {
                         ListLocalActivity.this.startActivity(intent);
                         System.out.println("***播放：" + localurl);
                     } else if (state == 2) {
-                        LocalBean1 localBean = list.get(i);
+                        LocalBean2 localBean = list.get(i);
                         System.out.println("***开始" + list.get(i).getUrl());
                         BaseApplication.downLoadManager.addTask(localBean.getUrl(), localBean.getUrl(), localBean.getTitle() + ".mp4", BaseApplication.VedioCacheUrl + localBean.getTitle() + ".mp4");
                         list.get(i).setCurState(1);
@@ -231,7 +232,7 @@ public class ListLocalActivity extends BaseActivity {
                             delete(list.get(i).getLocalurl());
                         }
                         db.delete(list.get(i));
-                        list = db.findAll(LocalBean1.class);
+                        list = db.findAll(LocalBean2.class);
 
                     } catch (DbException e) {
                         e.printStackTrace();
@@ -256,9 +257,9 @@ public class ListLocalActivity extends BaseActivity {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            List<LocalBean1> list = null;
+            List<LocalBean2> list = null;
             try {
-                list = db.findAll(LocalBean1.class);
+                list = db.findAll(LocalBean2.class);
             } catch (DbException e) {
                 e.printStackTrace();
             }
@@ -297,7 +298,7 @@ public class ListLocalActivity extends BaseActivity {
 
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
-            final LocalBean1 bean = list.get(position);
+            final LocalBean2 bean = list.get(position);
             ViewHolder holder;
             if (convertView == null) {
                 holder = new ViewHolder();
@@ -388,9 +389,9 @@ public class ListLocalActivity extends BaseActivity {
                 lv.setAdapter(adapter);
             }
             int index = ids.indexOf(play_url);
-            LocalBean1 localBean = null;
+            LocalBean2 localBean = null;
             try {
-                localBean = db.findById(LocalBean1.class, play_url);
+                localBean = db.findById(LocalBean2.class, play_url);
                 if (localBean != null) {
                     localBean.setSpeed((current - localBean.getCurrent()) / 1024 + "");
                     localBean.setCurrent(current);
@@ -449,7 +450,7 @@ public class ListLocalActivity extends BaseActivity {
                     System.out.println("----集合中的網絡地址:" + list.get(i).getUrl());
                     if (list.get(i).getUrl().equals(play_url)) {
                         try {
-                            LocalBean1 localBean = db.findById(LocalBean1.class, play_url);
+                            LocalBean2 localBean = db.findById(LocalBean2.class, play_url);
                             if (localBean != null) {
                                 localBean.setCurState(3);
                                 localBean.setLocalurl(localurl);

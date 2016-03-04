@@ -14,7 +14,7 @@ import java.util.*;
 
 
 import com.google.gson.Gson;
-import com.hotcast.vr.bean.LocalBean1;
+import com.hotcast.vr.bean.LocalBean2;
 import com.hotcast.vr.bean.Play;
 import com.hotcast.vr.pageview.ChangeModeListener;
 import com.hotcast.vr.pageview.PlayerContralView;
@@ -147,7 +147,7 @@ public class PlayerVRActivityNew extends BaseLanActivity implements PFAssetObser
      * @param filename The file path on device storage
      */
     DbUtils db;
-    List<LocalBean1> localBeans;
+    List<LocalBean2> localBeans;
     ArrayList<String> urls = new ArrayList<>();
 
     public void loadVideo(String filename) {
@@ -443,7 +443,7 @@ public class PlayerVRActivityNew extends BaseLanActivity implements PFAssetObser
     private void initView() {
         db = DbUtils.create(this);
         try {
-            localBeans = db.findAll(LocalBean1.class);
+            localBeans = db.findAll(LocalBean2.class);
             if(localBeans != null){
                 System.out.println("---localBeans = " + localBeans);
                 for (int i = 0; i < localBeans.size(); i++) {
