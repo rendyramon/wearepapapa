@@ -61,7 +61,7 @@ public class LandscapeActivity_Second extends BaseActivity {
     TextView tv_page2;
     DbUtils db;
     List<String> localUrlList;
-    List<LocalBean> dbList;
+    List<LocalBean1> dbList;
 
     @Override
 
@@ -77,16 +77,16 @@ public class LandscapeActivity_Second extends BaseActivity {
         db = DbUtils.create(this);
         localUrlList = new ArrayList<>();
         try {
-            dbList = db.findAll(LocalBean.class);
+            dbList = db.findAll(LocalBean1.class);
         } catch (DbException e) {
             e.printStackTrace();
         }
         if (dbList == null) {
             dbList = new ArrayList<>();
         } else {
-            for (LocalBean localBean : dbList) {
+            for (LocalBean1 localBean : dbList) {
                 System.out.println("---localBean_url:" + localBean.getUrl());
-                localUrlList.add(localBean.getId());
+                localUrlList.add(localBean.getUrl());
             }
         }
         initView();

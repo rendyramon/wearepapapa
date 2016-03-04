@@ -78,12 +78,14 @@ public class DownLoadService extends Service {
     private class DownloadManagerListener implements DownLoadListener {
         @Override
         public void onStart(SQLDownLoadInfo sqlDownLoadInfo) {
-            System.out.println("---接收到刷新信息onStart");
             String taskID = sqlDownLoadInfo.getTaskID();//taskID是网络地址
             try {
                 LocalBean1 localBean = db.findById(LocalBean1.class, taskID);
                 if (localBean != null) {
+                    System.out.println("---接收到刷新信息onStart");
                     localBean.setCurState(1);
+                    localBean.setDownloading(true);
+                    localBean.setTotal(sqlDownLoadInfo.getFileSize());
                     localBean.setLocalurl(BaseApplication.VedioCacheUrl + localBean.getTitle() + ".mp4");
                     db.saveOrUpdate(localBean);
                 }
@@ -135,6 +137,7 @@ public class DownLoadService extends Service {
             try {
                 LocalBean1 localBean = db.findById(LocalBean1.class, taskID);
                 localBean.setCurState(3);
+                localBean.setDownloading(false);
                 localBean.setLocalurl(BaseApplication.VedioCacheUrl + localBean.getTitle() + ".mp4");
                 db.saveOrUpdate(localBean);
             } catch (DbException e) {

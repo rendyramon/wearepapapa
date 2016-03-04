@@ -22,6 +22,7 @@ import com.lidroid.xutils.DbUtils;
 import com.lidroid.xutils.exception.DbException;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -93,7 +94,7 @@ public class ListLocalActivity extends BaseActivity {
     final String DOWNLOADING = "DOWNLOADING";
     final String FINISH = "FINISH";
     final String PAUSE = "PAUSE";
-
+    List<String> ids;
     @Override
     public void init() {
         receiver = new DetailReceiver();
@@ -130,6 +131,10 @@ public class ListLocalActivity extends BaseActivity {
                 bt_editor.setVisibility(View.GONE);
                 cache_no.setVisibility(View.VISIBLE);
             } else {
+                ids = new ArrayList<>();
+                for (int i = 0; i < list.size(); i++) {
+                    ids.add(list.get(i).getUrl());
+                }
                 tv_downloded.setVisibility(View.VISIBLE);
                 tv_downloding.setVisibility(View.VISIBLE);
                 cache_no.setVisibility(View.GONE);
@@ -371,13 +376,39 @@ public class ListLocalActivity extends BaseActivity {
     long pecent = 0;
     String action;
     String speed;
-    int index = -1;
     long refreshTime = 0;
+
+    public void adapterRefresh(String play_url, long current, long total) {
+        if (System.currentTimeMillis() - refreshTime > 1000) {
+            refreshTime = System.currentTimeMillis();
+            if (adapter != null) {
+                adapter.notifyDataSetChanged();
+            } else {
+                adapter = new HuancunAdapter();
+                lv.setAdapter(adapter);
+            }
+            int index = ids.indexOf(play_url);
+            LocalBean1 localBean = null;
+            try {
+                localBean = db.findById(LocalBean1.class, play_url);
+                if (localBean != null) {
+                    localBean.setSpeed((current - localBean.getCurrent()) / 1024 + "");
+                    localBean.setCurrent(current);
+                    localBean.setPecent(((current * 100) / total) + "");
+                    db.saveOrUpdate(localBean);
+                    list.get(index).setSpeed(localBean.getSpeed());
+                    list.get(index).setPecent(localBean.getPecent());
+                    list.get(index).setCurrent(current);
+                }
+            } catch (DbException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
     public void adapterRefresh() {
         if (System.currentTimeMillis() - refreshTime > 1000) {
-            System.out.println("---3：刷新：" + speed);
-            refreshTime= System.currentTimeMillis();
+            refreshTime = System.currentTimeMillis();
             if (adapter != null) {
                 adapter.notifyDataSetChanged();
             } else {
@@ -386,6 +417,7 @@ public class ListLocalActivity extends BaseActivity {
             }
         }
     }
+
     /**
      * 这是接受下载进度的广播接受者
      */
@@ -407,7 +439,7 @@ public class ListLocalActivity extends BaseActivity {
                     speeds.put(play_url, speed);
                 }
                 System.out.println("---接收到的信息：" + speed);
-                adapterRefresh();
+                adapterRefresh(play_url, current, total);
             } else if ("FINISH".equals(action)) {
 //              下載完畢，執行下載完畢的邏輯
                 speeds.put(play_url, "FINISH");

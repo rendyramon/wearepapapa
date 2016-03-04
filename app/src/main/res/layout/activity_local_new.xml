@@ -30,7 +30,7 @@
 
                 <LinearLayout
                     android:id="@+id/ll_downloading1"
-                    android:layout_width="118dp"
+                    android:layout_width="115dp"
                     android:layout_height="wrap_content"
                     android:layout_alignBottom="@+id/gallery1"
                     android:layout_centerHorizontal="true"
@@ -45,7 +45,14 @@
                         android:layout_marginRight="10dp"
                         android:text="已下载0%"
                         android:textSize="8dp" />
-
+                    <TextView
+                        android:id="@+id/tv_finish"
+                        android:visibility="gone"
+                        android:textColor="#8CF8E3"
+                        android:textSize="12sp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="已完成"/>
                     <TextView
                         android:id="@+id/tv_speed1"
                         android:layout_width="wrap_content"

@@ -58,7 +58,7 @@ public class LocalCachelActivity_new extends BaseActivity {
     final String DOWNLOADING = "DOWNLOADING";
     final String FINISH = "FINISH";
     final String PAUSE = "PAUSE";
-
+    DbUtils db;
     @Override
     public int getLayoutId() {
         return R.layout.activity_local_new;
@@ -66,9 +66,14 @@ public class LocalCachelActivity_new extends BaseActivity {
 
     @Override
     public void init() {
+        db = DbUtils.create(this);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         ids = new ArrayList<>();
         if (dbList == null || dbList.size() <= 0) {
+            view1 = (ViewGroup) findViewById(R.id.delete_window1);
+            view2 = (ViewGroup) findViewById(R.id.delete_window2);
+            view1.setVisibility(View.INVISIBLE);
+            view2.setVisibility(View.INVISIBLE);
             noData = false;
             container1.setBackgroundResource(R.mipmap.backgroud_heng_nodata);
             container2.setBackgroundResource(R.mipmap.backgroud_heng_nodata);
@@ -86,6 +91,8 @@ public class LocalCachelActivity_new extends BaseActivity {
             gallery1.setAdapter(adapter1);
             gallery2.setAdapter(adapter2);
             initView();
+//            http://cdn.hotcast.cn/media%2Fzhanxinggongyu%2Fzxgy1020160226.mp4
+//            http://cdn.hotcast.cn/media%2Fzhanxinggongyu%2Fzxgy1020160226.mp4
             gallery1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -93,8 +100,14 @@ public class LocalCachelActivity_new extends BaseActivity {
                     tv_title1.setText(dbList.get(position).getTitle());
                     tv_title2.setText(dbList.get(position).getTitle());
                     if (dbList.get(position).isDownloading()) {
-                        ll_downloading1.setVisibility(View.VISIBLE);
-                        ll_downloading2.setVisibility(View.VISIBLE);
+                        System.out.println("---显示进度"+dbList.get(position).getUrl());
+                        LocalBean1 l = null;
+                        try {
+                            l = db.findById(LocalBean1.class, dbList.get(position).getUrl());
+                            setSpeedAndPecent(l.getSpeed(),l.getPecent());
+                        } catch (DbException e) {
+                            e.printStackTrace();
+                        }
                     } else {
                         ll_downloading1.setVisibility(View.INVISIBLE);
                         ll_downloading2.setVisibility(View.INVISIBLE);
@@ -365,6 +378,9 @@ public class LocalCachelActivity_new extends BaseActivity {
                 tv_title2.setVisibility(View.INVISIBLE);
                 container1.setBackgroundResource(R.mipmap.backgroud_heng_nodata);
                 container2.setBackgroundResource(R.mipmap.backgroud_heng_nodata);
+                ll_downloading1.setVisibility(View.INVISIBLE);
+                ll_downloading2.setVisibility(View.INVISIBLE);
+
             }
         }
     }
