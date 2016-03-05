@@ -167,6 +167,7 @@ public class LoginActivity extends BaseActivity {
                                 showToast("亲,登录成功了哟，快去看片儿吧*_*" );
                                 sp.add("userData",user2.getData());
                                 finish();
+
                             } else {
                                 bt_login.setEnabled(false);
                                 showToast("亲," + user2.getMessage() + "^_^");
