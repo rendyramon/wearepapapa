@@ -18,6 +18,14 @@ public class Constants {
     //    版本更新接口
     public static final String URL_UPDATE = SERVER_URL + "/app/info/update";
     public static final String RELATION = SERVER_URL + "/app/videoset/get-relation";
+//  发送短信
+    public static final String SENDMESSAG = SERVER_URL + "/member/sms/send-message";
+//    验证注册码
+    public static final String CHECKMESSAG = SERVER_URL + "/member/sms/check-message";
+//    注册
+    public static final String REGIST = SERVER_URL + "/member/user/register";
+//    登录
+    public static final String LOGIN = SERVER_URL + "/member/user/login";
 
 
 

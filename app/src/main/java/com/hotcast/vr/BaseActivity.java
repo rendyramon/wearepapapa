@@ -41,6 +41,8 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import butterknife.ButterKnife;
 import dmax.dialog.SpotsDialog;
@@ -110,6 +112,7 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
         }
 
     }
+
 //    public boolean getI
     /**
      * 关闭loading
@@ -325,6 +328,15 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
             im.hideSoftInputFromWindow(token,
                     InputMethodManager.HIDE_NOT_ALWAYS);
         }
+    }
+    public boolean isMobileNo(String phone){
+        Pattern p = Pattern.compile("^((13[0-9])|(15[^4,\\D])|(18[0,5-9]))\\d{8}$");
+
+        Matcher m = p.matcher(phone);
+
+        System.out.println(m.matches()+"---");
+
+        return m.matches();
     }
 
 

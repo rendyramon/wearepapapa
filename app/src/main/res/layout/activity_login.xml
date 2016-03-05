@@ -94,13 +94,14 @@
             android:background="#e5e5e5"/>
 
         <Button
-            android:id="@+id/bt_next"
+            android:id="@+id/bt_login"
             android:layout_marginTop="24dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:textSize="17sp"
             android:textColor="#ffffff"
+            android:enabled="false"
             android:text="登录"
             android:background="@drawable/regist_selector"/>
         <TextView

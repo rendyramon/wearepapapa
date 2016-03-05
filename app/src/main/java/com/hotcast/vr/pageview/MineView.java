@@ -18,7 +18,9 @@ import com.hotcast.vr.LoginActivity;
 import com.hotcast.vr.R;
 import com.hotcast.vr.RegistActivity;
 import com.hotcast.vr.UpdateAppManager;
+import com.hotcast.vr.bean.UserData;
 import com.hotcast.vr.tools.SharedPreUtil;
+import com.lidroid.xutils.BitmapUtils;
 
 import butterknife.InjectView;
 
@@ -57,11 +59,14 @@ public class MineView extends BaseView implements View.OnClickListener {
         super(activity, R.layout.layout_mine);
     }
 
+
     @Override
     public void init() {
+        bitmapUtils = new BitmapUtils(activity);
         if (BaseApplication.isLogin){
             ll_login.setVisibility(View.GONE);
             tv_username.setVisibility(View.VISIBLE);
+            showMasseg();
         }else {
             ll_login.setVisibility(View.VISIBLE);
             tv_username.setVisibility(View.GONE);
@@ -76,6 +81,28 @@ public class MineView extends BaseView implements View.OnClickListener {
         super.init();
     }
 
+    UserData userData;
+    BitmapUtils bitmapUtils;
+    private void showMasseg() {
+        userData = activity.sp.select("userData",null);
+        if (userData != null){
+            tv_username.setText(userData.getUsername());
+            bitmapUtils.display(iv_head,userData.getAvatar());
+        }
+
+//        tv_username.setText();
+    }
+
+    public void refreshView(){
+    if (BaseApplication.isLogin){
+        ll_login.setVisibility(View.GONE);
+        tv_username.setVisibility(View.VISIBLE);
+        showMasseg();
+    }else {
+        ll_login.setVisibility(View.VISIBLE);
+        tv_username.setVisibility(View.GONE);
+    }
+}
     private void initListView() {
         login.setOnClickListener(this);
         regist.setOnClickListener(this);

@@ -43,76 +43,28 @@
                 android:layout_margin="10dp"
                 android:src="@mipmap/verificationcode"/>
             <EditText
-                android:id="@+id/et_phone"
+                android:id="@+id/et_password"
                 android:layout_toRightOf="@id/iv_regist"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:textColor="#adadad"
+                android:inputType="textVisiblePassword"
                 android:textSize="14sp"
                 android:hint="请设置至少6位的密码"/>
         </RelativeLayout>
-        <!--<View-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="1dp"-->
-            <!--android:background="#e5e5e5"/>-->
-        <!--<RelativeLayout-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="55dp"-->
-            <!--android:orientation="horizontal"-->
-            <!--android:background="#ffffff">-->
-            <!--<ImageView-->
-                <!--android:id="@+id/iv_verificationcode"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_margin="10dp"-->
-                <!--android:src="@mipmap/verificationcode"/>-->
-            <!--<EditText-->
-                <!--android:id="@+id/et_verificationcode"-->
-                <!--android:layout_toRightOf="@id/iv_verificationcode"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="match_parent"-->
-                <!--android:hint="请输入验证码"/>-->
-            <!--<Button-->
-                <!--android:id="@+id/bt_verificationcode"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_marginRight="15dp"-->
-                <!--android:background="@drawable/buttom_selector"-->
-                <!--android:layout_alignTop="@+id/iv_verificationcode"-->
-                <!--android:layout_alignParentRight="true"-->
-                <!--android:layout_alignParentEnd="true" />-->
-        <!--</RelativeLayout>-->
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="#e5e5e5"/>
-        <!--<LinearLayout-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="40dp"-->
-            <!--android:orientation="horizontal"-->
-            <!--android:gravity="center">-->
-            <!--<TextView-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:textColor="#ef38383c"-->
-                <!--android:textSize="10dp"-->
-                <!--android:text="注册即视为同意 "/>-->
-            <!--<TextView-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:textColor="#1d98d8"-->
-                <!--android:textSize="10dp"-->
-                <!--android:text="《VR热播app用户协议》"/>-->
-
-        <!--</LinearLayout>-->
         <Button
-            android:id="@+id/bt_next"
+            android:id="@+id/bt_yes"
             android:layout_marginTop="24dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:textSize="17sp"
             android:textColor="#ffffff"
+            android:enabled="false"
             android:text="确认"
             android:background="@drawable/regist_selector"/>
     </LinearLayout>

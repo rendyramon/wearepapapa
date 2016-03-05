@@ -190,6 +190,7 @@ public class MainActivity_new extends BaseActivity {
 
     @Override
     protected void onStart() {
+        ((MineView)view2).refreshView();
         super.onStart();
     }
 
