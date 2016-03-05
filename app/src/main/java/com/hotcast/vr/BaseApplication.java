@@ -15,16 +15,11 @@ import android.util.DisplayMetrics;
 import com.hotcast.vr.bean.Channel;
 import com.hotcast.vr.bean.Classify;
 import com.hotcast.vr.bean.Details;
-import com.hotcast.vr.bean.HomeRoll;
-import com.hotcast.vr.bean.LocalBean;
-import com.hotcast.vr.bean.LocalBean1;
 import com.hotcast.vr.download.DownLoadManager;
 import com.hotcast.vr.download.DownLoadService;
 import com.hotcast.vr.services.FileCacheService;
 import com.hotcast.vr.tools.L;
 import com.lidroid.xutils.BitmapUtils;
-import com.lidroid.xutils.DbUtils;
-import com.lidroid.xutils.exception.DbException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -105,20 +100,36 @@ public class BaseApplication extends Application {
         System.out.println("---" + getAppMetaData(this, "UMENG_CHANNEL"));
     }
 
-    public void updateDb() {
-        DbUtils db = DbUtils.create(this, "Localbean", 2, new DbUtils.DbUpgradeListener() {
-            @Override
-            public void onUpgrade(DbUtils dbUtils, int i, int i1) {
-                try {
-                    dbUtils.execNonQuery("alter table add url varchar(50)");
-                    System.out.println("---数据库添加列成功");
-                } catch (DbException e) {
-                    System.out.println("---添加列失败");
-                    e.printStackTrace();
-                }
-            }
-        });
-    }
+//    public void updateDb() {
+//        System.out.println("---升级数据库");
+//        DbUtils dbUtils = DbUtils.create(this);
+//        try {
+//            dbUtils.execNonQuery("alter LocalBean2 add vid varchar(80)");
+//            System.out.println("---数据库添加列成功");
+//        } catch (DbException e) {
+//            System.out.println("---添加列失败");
+//            e.printStackTrace();
+//        }
+////        DbUtils db = DbUtils.create(this, "Localbean1", 3, new DbUtils.DbUpgradeListener() {
+////            @Override
+////            public void onUpgrade(DbUtils dbUtils, int i, int i1) {
+////                try {
+////                    dbUtils.execNonQuery("alter table add vid varchar(80)");
+////                    System.out.println("---数据库添加列成功");
+////                } catch (DbException e) {
+////                    System.out.println("---添加列失败");
+////                    e.printStackTrace();
+////                }
+////            }
+////        });
+////        DbUtils dbUtils = DbUtils.create(this);
+////        try {
+////            System.out.println("---数据测试：" +dbUtils.findAll(LocalBean2.class).get(0).getVid());
+////        } catch (DbException e) {
+////            System.out.println("---数据测试失败");
+////            e.printStackTrace();
+////        }
+//    }
 
     private class MyExecptionHandler implements Thread.UncaughtExceptionHandler {
         /**

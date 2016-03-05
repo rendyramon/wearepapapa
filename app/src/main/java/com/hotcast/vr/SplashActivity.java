@@ -1,28 +1,22 @@
 package com.hotcast.vr;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.hotcast.vr.asynctask.LocalVideosAsynctask;
-import com.hotcast.vr.bean.Classify;
 import com.hotcast.vr.bean.LocalBean;
 import com.hotcast.vr.bean.LocalBean1;
+import com.hotcast.vr.bean.LocalBean2;
 import com.hotcast.vr.bean.Update;
-import com.hotcast.vr.services.DownLoadingService;
 import com.hotcast.vr.tools.Constants;
 import com.hotcast.vr.tools.L;
 import com.hotcast.vr.tools.Utils;
@@ -49,29 +43,32 @@ public class SplashActivity extends BaseActivity {
     @InjectView(R.id.iv_start)
     ImageView iv_start;
 
-//    显示下载更新对话框
+    //    显示下载更新对话框
     protected static final int SHOW_UPDATE_DIALOG = 1;
-//    加载主UI界面
+    //    加载主UI界面
     private static final int LOAD_MAINUI = 2;
-//    包管理器
+    //    包管理器
     private PackageManager packageManager;
 
     private String requestUrl;
     //下载路径
-    private String spec ;
+    private String spec;
     //更新日志
     private String newFeatures;
     //是否强制更新
     private String is_force;
-    private int[] images = {R.mipmap.guide_1,R.mipmap.guide_2,R.mipmap.guide_3,R.mipmap.guide_4};
+    private int[] images = {R.mipmap.guide_1, R.mipmap.guide_2, R.mipmap.guide_3, R.mipmap.guide_4};
 
     private Timer timer;
-    boolean  isFrist ;
+    boolean isFrist;
+
     @Override
     public int getLayoutId() {
         return R.layout.activity_splash;
     }
+
     private PackageInfo info;
+
     @Override
     public void init() {
         AnalyticsConfig.enableEncrypt(true);
@@ -84,10 +81,11 @@ public class SplashActivity extends BaseActivity {
             e.printStackTrace();
         }
         DbdateSave();
+        new LocalVideosAsynctask(this).execute();
         L.e("PackageName:" + getPackageName());
         getNetDate();
 //        getNetDate2();
-            System.out.println("***sp=" + sp);
+        System.out.println("***sp=" + sp);
 
     }
 
@@ -95,30 +93,48 @@ public class SplashActivity extends BaseActivity {
         DbUtils db = DbUtils.create(this);
         try {
             List<LocalBean> localBeens = db.findAll(LocalBean.class);
-            if (localBeens!= null && localBeens.size()>0){
-                for (int i =0;i<localBeens.size();i++){
-                    LocalBean1 l = new LocalBean1();
+            List<LocalBean1> localBeens1 = db.findAll(LocalBean1.class);
+            if (localBeens != null && localBeens.size() > 0) {
+                for (int i = 0; i < localBeens.size(); i++) {
+                    LocalBean2 l = new LocalBean2();
                     l.setQingxidu(1);
                     l.setTitle(localBeens.get(i).getTitle());
                     l.setLocalurl(localBeens.get(i).getLocalurl());
                     l.setId(localBeens.get(i).getId());
                     l.setCurState(3);
+                    l.setVid("localbean");
                     l.setUrl(localBeens.get(i).getUrl());
                     l.setImage(localBeens.get(i).getImage());
-                    if (localBeens.get(i).getLocalurl()!= null) {
+                    if (localBeens.get(i).getLocalurl() != null) {
                         db.save(l);
                     }
-                    System.out.println("***同步数据库：" +localBeens.get(i).getLocalurl()+"--"+localBeens.get(i).getUrl());
+                    System.out.println("***同步数据库：" + localBeens.get(i).getLocalurl() + "--" + localBeens.get(i).getUrl());
                 }
                 db.deleteAll(LocalBean.class);
-            }else {
-                System.out.println("***异步加载本地");
-                new LocalVideosAsynctask(this).execute();
+            }
+            if (localBeens1 != null && localBeens1.size() > 0) {
+                for (int i = 0; i < localBeens1.size(); i++) {
+                    LocalBean2 l = new LocalBean2();
+                    l.setQingxidu(localBeens1.get(i).getQingxidu());
+                    l.setTitle(localBeens1.get(i).getTitle());
+                    l.setLocalurl(localBeens1.get(i).getLocalurl());
+                    l.setId(localBeens1.get(i).getId());
+                    l.setCurState(localBeens1.get(i).getCurState());
+                    l.setVid("localbean");
+                    l.setUrl(localBeens1.get(i).getUrl());
+                    l.setImage(localBeens1.get(i).getImage());
+                    if (localBeens1.get(i).getLocalurl() != null) {
+                        db.save(l);
+                    }
+                    System.out.println("***同步数据库：" + localBeens1.get(i).getLocalurl() + "--" + localBeens1.get(i).getUrl());
+                }
+                db.deleteAll(LocalBean1.class);
             }
         } catch (DbException e) {
             e.printStackTrace();
         }
     }
+
     private void getNetDate() {
         RequestParams params = new RequestParams();
         params.addBodyParameter("token", "123");
@@ -141,8 +157,10 @@ public class SplashActivity extends BaseActivity {
             }
         });
     }
-   private String version;
-    private void setViewData(String json){
+
+    private String version;
+
+    private void setViewData(String json) {
         if (Utils.textIsNull(json)) {
             return;
         }
@@ -170,7 +188,7 @@ public class SplashActivity extends BaseActivity {
         startJmp();
     }
 
-    Handler shanler = new Handler(){
+    Handler shanler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             System.out.println("---第一次运行，显示引导页");
@@ -188,13 +206,14 @@ public class SplashActivity extends BaseActivity {
                 if (isFrist) {
                     shanler.sendEmptyMessage(0);
 
-                }else {
+                } else {
                     vp_guide.setVisibility(View.GONE);
                     pageJump();
                 }
             }
         }, 3000);
     }
+
     private void pageJump() {
         boolean isFrist1 = true;
         Intent intent = new Intent(this, MainActivity_new.class);
@@ -207,25 +226,26 @@ public class SplashActivity extends BaseActivity {
                 BaseApplication.isUpdate = true;
                 intent.putExtra("spec", spec);
                 intent.putExtra("is_force", is_force);
-                intent.putExtra("newFeatures",newFeatures);
+                intent.putExtra("newFeatures", newFeatures);
             }
 
         } else {
             L.e("***不是第一次运行" + isFrist + "不显示");
-           isFrist1 = false;
+            isFrist1 = false;
             if (!BaseApplication.version.equals(version)) {
 
                 BaseApplication.isUpdate = true;
                 intent.putExtra("spec", spec);
                 intent.putExtra("is_force", is_force);
-                intent.putExtra("newFeatures",newFeatures);
+                intent.putExtra("newFeatures", newFeatures);
             }
         }
-        intent.putExtra("isFrist1",isFrist1);
+        intent.putExtra("isFrist1", isFrist1);
         startActivity(intent);
         finish();
     }
-    class MyAdapter extends PagerAdapter{
+
+    class MyAdapter extends PagerAdapter {
 
         @Override
         public int getCount() {
@@ -239,17 +259,17 @@ public class SplashActivity extends BaseActivity {
 
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
-            ImageView iv = (ImageView) View.inflate(SplashActivity.this,R.layout.splash_item,null);
+            ImageView iv = (ImageView) View.inflate(SplashActivity.this, R.layout.splash_item, null);
             System.out.println("--创建iv");
             iv.setBackgroundResource(images[position]);
             vp_guide.addView(iv);
-            if(position == images.length-1){
-              iv.setOnClickListener(new View.OnClickListener() {
-                  @Override
-                  public void onClick(View v) {
-                      pageJump();
-                  }
-              });
+            if (position == images.length - 1) {
+                iv.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        pageJump();
+                    }
+                });
             }
             return iv;
         }

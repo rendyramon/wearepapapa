@@ -19,7 +19,7 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.hotcast.vr.bean.ChannelList;
-import com.hotcast.vr.bean.LocalBean1;
+import com.hotcast.vr.bean.LocalBean2;
 import com.hotcast.vr.bean.Play;
 import com.hotcast.vr.imageView.Image3DSwitchView;
 import com.hotcast.vr.imageView.Image3DView;
@@ -80,11 +80,11 @@ public class VrListActivity extends BaseActivity {
     TextView bt_ceach1;
     TextView bt_ceach2;
     int index = 1;
-    List<LocalBean1> dbList = null;
+    List<LocalBean2> dbList = null;
     List<String> localUrlList;
     DbUtils db;
     int mCurrentImg;
-    LocalBean1 localBean;
+    LocalBean2 localBean;
 
     @Override
     public void init() {
@@ -104,14 +104,14 @@ public class VrListActivity extends BaseActivity {
         db = DbUtils.create(VrListActivity.this);
         localUrlList = new ArrayList<>();
         try {
-            dbList = db.findAll(LocalBean1.class);
+            dbList = db.findAll(LocalBean2.class);
         } catch (DbException e) {
             e.printStackTrace();
         }
         if (dbList == null) {
             dbList = new ArrayList<>();
         } else {
-            for (LocalBean1 localBean : dbList) {
+            for (LocalBean2 localBean : dbList) {
                 System.out.println("---localBean_title:" + localBean.getTitle());
                 localUrlList.add(localBean.getTitle());
             }
@@ -579,7 +579,7 @@ public class VrListActivity extends BaseActivity {
     }
 
     public void downLoadMovie(int mCurrentImg, String vname, String play_url) {
-        LocalBean1 localBean = new LocalBean1();
+        LocalBean2 localBean = new LocalBean2();
         localBean.setTitle(vname);
         localBean.setImage(vrPlays.get(mCurrentImg).getImage().get(0));
         localBean.setQingxidu(qingxiduu);
@@ -961,14 +961,14 @@ public class VrListActivity extends BaseActivity {
         db = DbUtils.create(VrListActivity.this);
         localUrlList = new ArrayList<>();
         try {
-            dbList = db.findAll(LocalBean1.class);
+            dbList = db.findAll(LocalBean2.class);
         } catch (DbException e) {
             e.printStackTrace();
         }
         if (dbList == null) {
             dbList = new ArrayList<>();
         } else {
-            for (LocalBean1 localBean : dbList) {
+            for (LocalBean2 localBean : dbList) {
                 System.out.println("---localBean_title:" + localBean.getTitle());
                 localUrlList.add(localBean.getTitle());
             }

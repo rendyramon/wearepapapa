@@ -5,17 +5,14 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
-import android.os.SystemClock;
 
 import com.hotcast.vr.BaseApplication;
-import com.hotcast.vr.bean.LocalBean1;
-import com.hotcast.vr.download.dbcontrol.FileHelper;
+import com.hotcast.vr.bean.LocalBean2;
 import com.hotcast.vr.download.dbcontrol.bean.SQLDownLoadInfo;
 import com.lidroid.xutils.DbUtils;
 import com.lidroid.xutils.exception.DbException;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -80,7 +77,7 @@ public class DownLoadService extends Service {
         public void onStart(SQLDownLoadInfo sqlDownLoadInfo) {
             String taskID = sqlDownLoadInfo.getTaskID();//taskID是网络地址
             try {
-                LocalBean1 localBean = db.findById(LocalBean1.class, taskID);
+                LocalBean2 localBean = db.findById(LocalBean2.class, taskID);
                 if (localBean != null) {
                     System.out.println("---接收到刷新信息onStart");
                     localBean.setCurState(1);
@@ -114,7 +111,7 @@ public class DownLoadService extends Service {
         public void onStop(SQLDownLoadInfo sqlDownLoadInfo, boolean isSupportBreakpoint) {
             System.out.println("---onStop");
             try {
-                LocalBean1 localBean = db.findById(LocalBean1.class, sqlDownLoadInfo.getTaskID());
+                LocalBean2 localBean = db.findById(LocalBean2.class, sqlDownLoadInfo.getTaskID());
                 if (localBean != null) {
                     localBean.setCurState(4);
                     localBean.setLocalurl(BaseApplication.VedioCacheUrl + localBean.getTitle() + ".mp4");
@@ -135,7 +132,7 @@ public class DownLoadService extends Service {
             System.out.println("---接收到刷新信息onSuccess");
             String taskID = sqlDownLoadInfo.getTaskID();//taskID是网络地址
             try {
-                LocalBean1 localBean = db.findById(LocalBean1.class, taskID);
+                LocalBean2 localBean = db.findById(LocalBean2.class, taskID);
                 localBean.setCurState(3);
                 localBean.setDownloading(false);
                 localBean.setLocalurl(BaseApplication.VedioCacheUrl + localBean.getTitle() + ".mp4");
@@ -155,7 +152,7 @@ public class DownLoadService extends Service {
             System.out.println("---接收到刷新信息onError");
             String taskID = sqlDownLoadInfo.getTaskID();//taskID是网络地址
             try {
-                LocalBean1 localBean = db.findById(LocalBean1.class, taskID);
+                LocalBean2 localBean = db.findById(LocalBean2.class, taskID);
                 localBean.setCurState(2);
                 localBean.setLocalurl(BaseApplication.VedioCacheUrl + localBean.getTitle() + ".mp4");
                 db.saveOrUpdate(localBean);

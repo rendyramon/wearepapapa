@@ -45,6 +45,7 @@ public class GalleryItemView extends RelativeLayout {
     GalleyAdapter adapter1;
     List<String> localUrlList;
     Handler handler;
+
     public List<String> getLocalUrlList() {
         return localUrlList;
     }
@@ -52,7 +53,8 @@ public class GalleryItemView extends RelativeLayout {
     public void setLocalUrlList(List<String> localUrlList) {
         this.localUrlList = localUrlList;
     }
-    public GalleryItemView(Context context, List<ChannelList> tmpList, List<String> titles, List<String> descs,Handler handler) {
+
+    public GalleryItemView(Context context, List<ChannelList> tmpList, List<String> titles, List<String> descs, Handler handler) {
         super(context);
         this.handler = handler;
         bitmapUtils = new BitmapUtils(context);
@@ -70,10 +72,10 @@ public class GalleryItemView extends RelativeLayout {
     public void setText(int p) {
         tv_title1.setText(titles.get(p));
         tv_desc1.setText(titles.get(p));
-        if (localUrlList.contains(tmpList.get(p).getVideos().get(0).getVid())){
+        if (localUrlList.contains(tmpList.get(p).getVideos().get(0).getVid())) {
             bt_ceach1.setText("已下载");
             bt_ceach1.setBackgroundResource(R.drawable.download_button_bluel);
-        }else{
+        } else {
             bt_ceach1.setText("未下载");
             bt_ceach1.setBackgroundResource(R.drawable.download_button_nomal);
         }
@@ -131,6 +133,32 @@ public class GalleryItemView extends RelativeLayout {
         });
     }
 
+//                            _ooOoo_
+//                           o8888888o
+//                           88" . "88
+//                           (| -_- |)
+//                            O\ = /O
+//                        ____/`---'\____
+//                      .   ' \\| |// `.
+//                       / \\||| : |||// \
+//                     / _||||| -:- |||||- \
+//                       | | \\\ - /// | |
+//                     | \_| ''\---/'' | |
+//                      \ .-\__ `-` ___/-. /
+//                   ___`. .' /--.--\ `. . __
+//                ."" '< `.___\_<|>_/___.' >'"".
+//               | | : `- \`.;`\ _ /`;.`/ - ` : | |
+//                 \ \ `-. \_ __\ /__ _/ .-` / /
+//         ======`-.____`-.___\_____/___.-`____.-'======
+//                            `=---='
+//
+//         .............................................
+//                  佛祖镇楼                  BUG辟易
+//          佛曰:
+//                  写字楼里写字间，写字间里程序员；
+//                  程序人员写程序，又拿程序换酒钱。
+//                  酒醒只在网上坐，酒醉还来网下眠；
+//                  酒醉酒醒日复日，网上网下年复年。
     public void showOrHideLoadingBar(boolean flag) {
         if (flag) {
             isloading = flag;
@@ -160,9 +188,11 @@ public class GalleryItemView extends RelativeLayout {
     public void setHandler(Handler handler) {
         this.mhandler = handler;
     }
+
     public boolean scrollmy(MotionEvent event) {
         return gallery1.scrollmy(event);
     }
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         return gallery1.onTouchEvent(event);
@@ -188,6 +218,7 @@ public class GalleryItemView extends RelativeLayout {
     public String getImgurl() {
         return tmpList.get(getSelectedItemPosition()).getImage().get(0);
     }
+
     public String getNowId() {
         return tmpList.get(getSelectedItemPosition()).getVideos().get(0).getVid();
     }

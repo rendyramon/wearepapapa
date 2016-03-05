@@ -4,7 +4,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 
 import com.hotcast.vr.BaseApplication;
-import com.hotcast.vr.bean.LocalBean1;
+import com.hotcast.vr.bean.LocalBean2;
 import com.hotcast.vr.tools.HotVedioCacheUtils;
 import com.hotcast.vr.tools.SaveBitmapUtils;
 import com.hotcast.vr.tools.VedioBitmapUtils;
@@ -17,9 +17,9 @@ import java.util.List;
 /**
  * Created by liurongzhi on 2016/2/2.
  */
-public class LocalVideosAsynctask extends AsyncTask<Integer, Integer, List<LocalBean1>>{
+public class LocalVideosAsynctask extends AsyncTask<Integer, Integer, List<LocalBean2>>{
     Context context;
-    private List<LocalBean1> dbList;
+    private List<LocalBean2> dbList;
     public LocalVideosAsynctask(Context context){
         super();
         this.context = context;
@@ -33,7 +33,7 @@ public class LocalVideosAsynctask extends AsyncTask<Integer, Integer, List<Local
     protected List doInBackground(Integer... params) {
         DbUtils db = DbUtils.create(context);
         try {
-            dbList = db.findAll(LocalBean1.class);
+            dbList = db.findAll(LocalBean2.class);
         } catch (DbException e) {
             e.printStackTrace();
         }
@@ -47,7 +47,7 @@ public class LocalVideosAsynctask extends AsyncTask<Integer, Integer, List<Local
         if (localNames != null) {
             int size = dbList.size();
             List<String> titles = new ArrayList<>();
-            for (LocalBean1 localBean : dbList){
+            for (LocalBean2 localBean : dbList){
                 titles.add(localBean.getTitle());
             }
             for (int i = 0; i < localNames.length; i++) {
@@ -56,7 +56,7 @@ public class LocalVideosAsynctask extends AsyncTask<Integer, Integer, List<Local
 
                 if (size == 0) {
                     System.out.println("---title1"+title1);
-                    LocalBean1 localBean = new LocalBean1();
+                    LocalBean2 localBean = new LocalBean2();
                     localBean.setLocalurl(BaseApplication.VedioCacheUrl + localNames[i]);
                     localBean.setCurState(3);
                     SaveBitmapUtils.saveMyBitmap(title1, VedioBitmapUtils.getMiniVedioBitmap(BaseApplication.VedioCacheUrl + localNames[i]));
@@ -74,7 +74,7 @@ public class LocalVideosAsynctask extends AsyncTask<Integer, Integer, List<Local
                 } else {
                     if (!titles.contains(title1)){
                         System.out.println("---不为空title1"+title1);
-                        LocalBean1 localBean = new LocalBean1();
+                        LocalBean2 localBean = new LocalBean2();
                         localBean.setLocalurl(BaseApplication.VedioCacheUrl + localNames[i]);
                         localBean.setCurState(3);
                         SaveBitmapUtils.saveMyBitmap(title.replace(".mp4", ""), VedioBitmapUtils.getMiniVedioBitmap(BaseApplication.VedioCacheUrl + localNames[i]));
@@ -99,7 +99,7 @@ public class LocalVideosAsynctask extends AsyncTask<Integer, Integer, List<Local
     }
 
     @Override
-    protected void onPostExecute(List<LocalBean1> s) {
+    protected void onPostExecute(List<LocalBean2> s) {
 //            super.onPostExecute(s);
     }
 }

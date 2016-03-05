@@ -64,7 +64,7 @@ public class VrListView extends BaseView implements GestureDetector.OnGestureLis
 //                    BaseApplication.isDownLoad = true;
 //                    bt_ceach.setFocusable(false);
 //                    DbUtils db = DbUtils.create(activity);
-//                    LocalBean1 localBean = new LocalBean1();
+//                    LocalBean2 localBean = new LocalBean2();
 //                    localBean.setTitle(title);
 //                    localBean.setImage(details.getImage());
 //                    localBean.setId(media_id);

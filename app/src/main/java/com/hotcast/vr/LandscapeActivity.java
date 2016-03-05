@@ -24,7 +24,7 @@ import com.google.gson.reflect.TypeToken;
 import com.hotcast.vr.bean.ChanelData;
 import com.hotcast.vr.bean.Channel;
 import com.hotcast.vr.bean.ChannelList;
-import com.hotcast.vr.bean.LocalBean1;
+import com.hotcast.vr.bean.LocalBean2;
 import com.hotcast.vr.imageView.Image3DView;
 import com.hotcast.vr.pageview.VrListView;
 import com.hotcast.vr.services.DownLoadingService;
@@ -139,7 +139,7 @@ public class LandscapeActivity extends BaseActivity implements View.OnClickListe
                 //查询本地指定的缓存文件夹
                 DbUtils db = DbUtils.create(LandscapeActivity.this);
                 try {
-                    dbList = db.findAll(LocalBean1.class);
+                    dbList = db.findAll(LocalBean2.class);
                 } catch (DbException e) {
                     e.printStackTrace();
                 }
@@ -170,7 +170,7 @@ public class LandscapeActivity extends BaseActivity implements View.OnClickListe
                 //查询本地指定的缓存文件夹
                 DbUtils db = DbUtils.create(LandscapeActivity.this);
                 try {
-                    dbList = db.findAll(LocalBean1.class);
+                    dbList = db.findAll(LocalBean2.class);
                 } catch (DbException e) {
                     e.printStackTrace();
                 }
@@ -301,7 +301,7 @@ public class LandscapeActivity extends BaseActivity implements View.OnClickListe
                     if (BaseApplication.doAsynctask) {
                         DbUtils db = DbUtils.create(LandscapeActivity.this);
                         try {
-                            dbList = db.findAll(LocalBean1.class);
+                            dbList = db.findAll(LocalBean2.class);
                         } catch (DbException e) {
                             e.printStackTrace();
                         }
@@ -681,10 +681,10 @@ public class LandscapeActivity extends BaseActivity implements View.OnClickListe
     }
 
     //本地缓存的集合，在异步中处理
-    List<LocalBean1> dbList = null;
+    List<LocalBean2> dbList = null;
     boolean dataCacheOk = false;
 
-    class MyAsyncTask extends AsyncTask<Integer, Integer, List<LocalBean1>> {
+    class MyAsyncTask extends AsyncTask<Integer, Integer, List<LocalBean2>> {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -694,7 +694,7 @@ public class LandscapeActivity extends BaseActivity implements View.OnClickListe
         protected List doInBackground(Integer... params) {
             DbUtils db = DbUtils.create(LandscapeActivity.this);
             try {
-                dbList = db.findAll(LocalBean1.class);
+                dbList = db.findAll(LocalBean2.class);
             } catch (DbException e) {
                 e.printStackTrace();
             }
@@ -708,7 +708,7 @@ public class LandscapeActivity extends BaseActivity implements View.OnClickListe
             if (localNames != null) {
                 int size = dbList.size();
                 List<String> titles = new ArrayList<>();
-                for (LocalBean1 localBean : dbList){
+                for (LocalBean2 localBean : dbList){
                     titles.add(localBean.getTitle());
                 }
                 for (int i = 0; i < localNames.length; i++) {
@@ -717,7 +717,7 @@ public class LandscapeActivity extends BaseActivity implements View.OnClickListe
 
                     if (size == 0) {
                         System.out.println("---title1"+title1);
-                        LocalBean1 localBean = new LocalBean1();
+                        LocalBean2 localBean = new LocalBean2();
                         localBean.setLocalurl(BaseApplication.VedioCacheUrl + localNames[i]);
                         localBean.setCurState(3);
                         SaveBitmapUtils.saveMyBitmap(title1, VedioBitmapUtils.getMiniVedioBitmap(BaseApplication.VedioCacheUrl + localNames[i]));
@@ -735,7 +735,7 @@ public class LandscapeActivity extends BaseActivity implements View.OnClickListe
                     } else {
                         if (!titles.contains(title1)){
                             System.out.println("---不为空title1"+title1);
-                            LocalBean1 localBean = new LocalBean1();
+                            LocalBean2 localBean = new LocalBean2();
                             localBean.setLocalurl(BaseApplication.VedioCacheUrl + localNames[i]);
                             localBean.setCurState(3);
                             SaveBitmapUtils.saveMyBitmap(title.replace(".mp4", ""), VedioBitmapUtils.getMiniVedioBitmap(BaseApplication.VedioCacheUrl + localNames[i]));
@@ -760,7 +760,7 @@ public class LandscapeActivity extends BaseActivity implements View.OnClickListe
         }
 
         @Override
-        protected void onPostExecute(List<LocalBean1> s) {
+        protected void onPostExecute(List<LocalBean2> s) {
 //            super.onPostExecute(s);
             System.out.println("----数据处理完毕");
             dataCacheOk = true;

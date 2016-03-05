@@ -22,7 +22,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.hotcast.vr.bean.LocalBean1;
+import com.hotcast.vr.bean.LocalBean2;
 import com.hotcast.vr.imageView.Image3DSwitchView;
 import com.hotcast.vr.imageView.Image3DView;
 import com.hotcast.vr.pageview.LocalListView;
@@ -65,13 +65,13 @@ public class LocalCachelActivity extends BaseActivity {
      */
     public static int mWidth;
     //缓存的视频名称（不包含前缀地址）
-    private List<LocalBean1> dbList;
+    private List<LocalBean2> dbList;
     DbUtils db;
     BitmapUtils bitmapUtils;
     private DetailReceiver receiver;
     //db原始尺寸
     private int trueSize;
-    private List<LocalBean1> Truelist;
+    private List<LocalBean2> Truelist;
     int mCurrentImg;
     Button bt_delete1;
     Button bt_delete2;
@@ -365,7 +365,7 @@ public class LocalCachelActivity extends BaseActivity {
 
     @Override
     public void getIntentData(Intent intent) {
-        Truelist = (ArrayList<LocalBean1>) getIntent().getSerializableExtra("dbList");
+        Truelist = (ArrayList<LocalBean2>) getIntent().getSerializableExtra("dbList");
         System.out.println("---传递数据的尺寸2：" + Truelist.size());
         if (Truelist == null) {
             Truelist = new ArrayList<>();

@@ -7,7 +7,7 @@ import java.io.Serializable;
 /**
  * Created by lostnote on 15/12/7.
  */
-public class LocalBean1 implements Serializable {
+public class LocalBean2 implements Serializable {
     String DOWNLOADING = "DOWNLOADING";
     String FINISH = "FINISH";
     String PAUSE = "PAUSE";
@@ -22,6 +22,7 @@ public class LocalBean1 implements Serializable {
     }
 
     int qingxidu;//新添加
+    String vid;//新添加
     String title;
     String image;
     String url;
@@ -163,9 +164,17 @@ public class LocalBean1 implements Serializable {
     public void setUrl(String url) {
         this.url = url;
     }
+    public String getVid() {
+        return vid;
+    }
+
+    public void setVid(String vid) {
+        this.vid = vid;
+    }
+
     @Override
     public String toString() {
-        return "LocalBean1{" +
+        return "LocalBean2{" +
                 "title='" + title + '\'' +
                 ", image='" + image + '\'' +
                 ", url='" + url + '\'' +

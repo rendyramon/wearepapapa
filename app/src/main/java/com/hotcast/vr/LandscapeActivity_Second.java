@@ -17,7 +17,7 @@ import com.hotcast.vr.VerticalGallery.VerticalGallery;
 import com.hotcast.vr.VerticalGallery.VerticalGalleryAdapterView;
 import com.hotcast.vr.bean.ChannelList;
 import com.hotcast.vr.bean.LocalBean;
-import com.hotcast.vr.bean.LocalBean1;
+import com.hotcast.vr.bean.LocalBean2;
 import com.hotcast.vr.bean.Play;
 import com.hotcast.vr.dialog.MyDialog;
 import com.hotcast.vr.pageview.GalleryItemView;
@@ -61,7 +61,7 @@ public class LandscapeActivity_Second extends BaseActivity {
     TextView tv_page2;
     DbUtils db;
     List<String> localUrlList;
-    List<LocalBean1> dbList;
+    List<LocalBean2> dbList;
 
     @Override
 
@@ -75,18 +75,19 @@ public class LandscapeActivity_Second extends BaseActivity {
         views1 = new ArrayList<>();
         views2 = new ArrayList<>();
         db = DbUtils.create(this);
+        System.out.println("---数据库版本：" + db.getDaoConfig().getDbVersion());
         localUrlList = new ArrayList<>();
         try {
-            dbList = db.findAll(LocalBean1.class);
+            dbList = db.findAll(LocalBean2.class);
         } catch (DbException e) {
             e.printStackTrace();
         }
         if (dbList == null) {
             dbList = new ArrayList<>();
         } else {
-            for (LocalBean1 localBean : dbList) {
+            for (LocalBean2 localBean : dbList) {
                 System.out.println("---localBean_url:" + localBean.getUrl());
-                localUrlList.add(localBean.getUrl());
+                localUrlList.add(localBean.getVid());
             }
         }
         initView();
@@ -108,8 +109,8 @@ public class LandscapeActivity_Second extends BaseActivity {
             } else {
                 start = size - 8;
             }
-            GalleryItemView itemView1 = new GalleryItemView(this, tmpList.subList(start, size), titles.subList(start, size), descs.subList(start, size),mhandler);
-            GalleryItemView itemView2 = new GalleryItemView(this, tmpList.subList(start, size), titles.subList(start, size), descs.subList(start, size),mhandler);
+            GalleryItemView itemView1 = new GalleryItemView(this, tmpList.subList(start, size), titles.subList(start, size), descs.subList(start, size), mhandler);
+            GalleryItemView itemView2 = new GalleryItemView(this, tmpList.subList(start, size), titles.subList(start, size), descs.subList(start, size), mhandler);
             itemView1.setHandler(mhandler);
             itemView1.setLocalUrlList(localUrlList);
             itemView2.setHandler(mhandler);
@@ -217,7 +218,7 @@ public class LandscapeActivity_Second extends BaseActivity {
         int length = (int) Math.sqrt((double) xlen * xlen + (double) ylen * ylen);
         int lengthY = Math.abs(moveY - downY);
         int lengthX = Math.abs(moveX - downX);
-//        System.out.println("---length:" + length);
+        System.out.println("---length:" + length);
 //        if (length < 20 && !isloading) {
 //            //执行点击事件
 //            clickItem();
@@ -234,6 +235,15 @@ public class LandscapeActivity_Second extends BaseActivity {
         return true;
     }
 
+    public void clickItem() {
+        if (!isloading) {
+            showOrHideLoadingBar(true);
+            String url = views1.get(nowPage).getImgurl();
+            //获取地址并下载
+            getplayUrl(views1.get(nowPage).downVideoData(), url, true);
+        }
+    }
+
     public void clickItemDown() {
         if (!isloading) {
             if (localUrlList.contains(views1.get(nowPage).downVideoData())) {
@@ -242,7 +252,7 @@ public class LandscapeActivity_Second extends BaseActivity {
                 showOrHideLoadingBar(true);
                 String url = views1.get(nowPage).getImgurl();
                 //获取地址并下载
-                getplayUrl(views1.get(nowPage).downVideoData(), url,false);
+                getplayUrl(views1.get(nowPage).downVideoData(), url, false);
             }
         }
     }
@@ -354,7 +364,7 @@ public class LandscapeActivity_Second extends BaseActivity {
                 L.e("---DetailActivity responseInfo:" + responseInfo.result);
                 Play play = new Gson().fromJson(responseInfo.result, Play.class);
                 play.setImgurl(img);
-                if (flag){
+                if (flag) {
                     String play_url = null;
                     if (!TextUtils.isEmpty(play.getHd_url())) {
                         play_url = play.getHd_url();
@@ -363,22 +373,27 @@ public class LandscapeActivity_Second extends BaseActivity {
                     } else if (!TextUtils.isEmpty(play.getUhd_url())) {
                         play_url = play.getUhd_url();
                     }
-                }else{
+                    Intent intent = new Intent(LandscapeActivity_Second.this, PlayerVRActivityNew.class);
+                    intent.putExtra("play_url", play_url);
+                    intent.putExtra("title", play.getTitle());
+                    intent.putExtra("splite_screen", true);
+                    startActivity(intent);
+                } else {
                     String urls[] = new String[3];
-                    urls[0] =play.getSd_url();
-                    urls[1] =play.getHd_url();
-                    urls[2] =play.getUhd_url();
-                    if (!TextUtils.isEmpty(urls[0])){
+                    urls[0] = play.getSd_url();
+                    urls[1] = play.getHd_url();
+                    urls[2] = play.getUhd_url();
+                    if (!TextUtils.isEmpty(urls[0])) {
                         saveUrl = urls[0];
-                    }else if(!TextUtils.isEmpty(urls[1])){
-                        System.out.println("---默认选择高清："+urls[1]);
+                    } else if (!TextUtils.isEmpty(urls[1])) {
+                        System.out.println("---默认选择高清：" + urls[1]);
                         saveUrl = urls[1];
-                    }else if (!TextUtils.isEmpty(urls[2])){
+                    } else if (!TextUtils.isEmpty(urls[2])) {
                         saveUrl = urls[2];
-                    }else {
+                    } else {
                         return;
                     }
-                    showDialog(urls,play,vid);
+                    showDialog(urls, play, vid);
                 }
                 showOrHideLoadingBar(false);
             }
@@ -393,13 +408,14 @@ public class LandscapeActivity_Second extends BaseActivity {
         });
     }
 
-    public void startDownLoad(String play_url, Play play, String vid,int qingxidu) {
-        System.out.println("---play_url:"+play_url+"--qingxidu:"+qingxidu);
+    public void startDownLoad(String play_url, Play play, String vid, int qingxidu) {
+        System.out.println("---play_url:" + play_url + "--qingxidu:" + qingxidu);
         DbUtils db = DbUtils.create(this);
-        LocalBean1 localBean = new LocalBean1();
+        LocalBean2 localBean = new LocalBean2();
         localBean.setTitle(play.getTitle());
         localBean.setImage(play.getImgurl());
         localBean.setId(play_url);
+        localBean.setVid(vid);
         localBean.setUrl(play_url);
         localBean.setQingxidu(qingxidu);
         localBean.setCurState(0);//還沒下載，準備下載
@@ -410,22 +426,24 @@ public class LandscapeActivity_Second extends BaseActivity {
             e.printStackTrace();
         }
         BaseApplication.downLoadManager.addTask(play_url, play_url, play.getTitle() + ".mp4", BaseApplication.VedioCacheUrl + play.getTitle() + ".mp4");
-        System.out.println("---尺寸1："+views1.get(nowPage).getLocalUrlList().size());
-        localUrlList.add(play_url);
-        System.out.println("---尺寸2："+views1.get(nowPage).getLocalUrlList().size());
+        System.out.println("---尺寸1：" + views1.get(nowPage).getLocalUrlList().size());
+        localUrlList.add(vid);
+        System.out.println("---尺寸2：" + views1.get(nowPage).getLocalUrlList().size());
         views1.get(nowPage).setText(views1.get(nowPage).getSelectedItemPosition());
         views2.get(nowPage).setText(views1.get(nowPage).getSelectedItemPosition());
     }
+
     String saveUrl;
     int qingxidu = 1;
-    public void showDialog(final String urls[],final Play play, final String vid){
+
+    public void showDialog(final String urls[], final Play play, final String vid) {
         MyDialog.Builder builder = new MyDialog.Builder(this) {
             @Override
             public void setCarity1() {
                 if (!TextUtils.isEmpty(urls[0])) {
                     saveUrl = urls[0];
                     qingxidu = 0;
-                }else {
+                } else {
                     //将该button字体颜色设置为灰色并不可点击
                     showToast("没有标清连接");
                     System.out.println("---没有标清连接");
@@ -437,7 +455,7 @@ public class LandscapeActivity_Second extends BaseActivity {
                 if (!TextUtils.isEmpty(urls[1])) {
                     saveUrl = urls[1];
                     qingxidu = 1;
-                }else {
+                } else {
                     //将该button字体颜色设置为灰色并不可点击
                     showToast("没有高清连接");
                     System.out.println("---没有高清连接");
@@ -449,31 +467,31 @@ public class LandscapeActivity_Second extends BaseActivity {
                 if (!TextUtils.isEmpty(urls[2])) {
                     saveUrl = urls[2];
                     qingxidu = 2;
-                }else {
+                } else {
                     //将该button字体颜色设置为灰色并不可点击
                     showToast("没有超清连接");
                     System.out.println("---没有超清连接");
                 }
             }
         };
-        if (TextUtils.isEmpty(urls[0])){
+        if (TextUtils.isEmpty(urls[0])) {
             System.out.println("---标清无");
             builder.setIsFocusable1(false);
-        }else {
+        } else {
             System.out.println("---play.getSd_url() = " + urls[0]);
             builder.setIsFocusable1(true);
         }
-        if (TextUtils.isEmpty(urls[1])){
+        if (TextUtils.isEmpty(urls[1])) {
             System.out.println("---高清无");
             builder.setIsFocusable2(false);
-        }else {
+        } else {
             System.out.println("---play.getHd_url() = " + urls[1]);
             builder.setIsFocusable2(true);
         }
-        if (TextUtils.isEmpty(urls[2])){
+        if (TextUtils.isEmpty(urls[2])) {
             System.out.println("---超清无");
             builder.setIsFocusable3(false);
-        }else {
+        } else {
             System.out.println("---play.getUhd_url() = " + urls[2]);
             builder.setIsFocusable3(true);
         }
@@ -481,7 +499,7 @@ public class LandscapeActivity_Second extends BaseActivity {
         builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 System.out.println("---您选择确定");
-                startDownLoad(saveUrl, play, vid,qingxidu);
+                startDownLoad(saveUrl, play, vid, qingxidu);
                 dialog.dismiss();
                 //设置你的操作事项
             }
