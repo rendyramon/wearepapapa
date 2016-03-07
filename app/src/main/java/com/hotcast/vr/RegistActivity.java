@@ -20,6 +20,9 @@ import com.lidroid.xutils.http.RequestParams;
 import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import butterknife.InjectView;
 import butterknife.OnClick;
 
@@ -110,15 +113,25 @@ public class RegistActivity extends BaseActivity {
 
             @Override
             public void onSuccess(ResponseInfo<String> responseInfo) {
-                user2 = new Gson().fromJson(responseInfo.result,User2.class);
-                System.out.println("---user2="+user2);
-                if ("success".equals(user2.getMessage())|| 0<=user2.getCode() && 10>= user2.getCode()){
-                    BaseApplication.isLogin = true;
-                    showToast("亲，注册成功了哟^_^，快去看片儿吧");
-                    finish();
-                }else {
-                    showToast("亲，密码不要输入特殊字符哦*_*");
+                JSONObject j = null;
+                try {
+                    j = new JSONObject(responseInfo.result);
+                    JSONObject data = j.getJSONObject("data");
+                    user2 = new Gson().fromJson(responseInfo.result,User2.class);
+                    System.out.println("---user2="+user2);
+                    if ("success".equals(user2.getMessage())|| 0<=user2.getCode() && 10>= user2.getCode()){
+                        BaseApplication.isLogin = true;
+                        sp.add("userData", data.toString());
+                        showToast("亲，注册成功了哟^_^，快去看片儿吧");
+                        finish();
+                    }else {
+                        showToast("亲，密码不要输入特殊字符哦*_*");
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
+
+
             }
 
             @Override

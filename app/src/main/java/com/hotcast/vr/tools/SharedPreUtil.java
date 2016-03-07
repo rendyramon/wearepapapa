@@ -38,6 +38,7 @@ public class SharedPreUtil {
         if (value instanceof Integer) {
             edit.putInt(key, (Integer) value);
         } else if (value instanceof String) {
+            System.out.println("---"+value);
             edit.putString(key, (String) value);
         } else if (value instanceof Boolean) {
             edit.putBoolean(key, (Boolean) value);

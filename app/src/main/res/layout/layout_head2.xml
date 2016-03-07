@@ -41,6 +41,7 @@
     android:layout_below="@id/iv_head"
    android:gravity="center_horizontal"
     android:layout_marginTop="14dp"
+    android:visibility="gone"
     android:orientation="horizontal">
 
     <Button
@@ -73,6 +74,6 @@
         android:textSize="14sp"
         android:textColor="#ffffff"
         android:text="热波科技用户名"
-        android:visibility="gone"
+        android:gravity="center"
         android:background="@mipmap/username"/>
 </RelativeLayout>

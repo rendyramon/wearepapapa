@@ -1,6 +1,7 @@
 package com.hotcast.vr.pageview;
 
 import android.content.Intent;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -8,18 +9,18 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.hotcast.vr.AboutActivity;
 import com.hotcast.vr.BaseActivity;
 import com.hotcast.vr.BaseApplication;
-import com.hotcast.vr.DetailActivity;
 import com.hotcast.vr.HelpActivity;
 import com.hotcast.vr.ListLocalActivity;
 import com.hotcast.vr.LoginActivity;
 import com.hotcast.vr.R;
 import com.hotcast.vr.RegistActivity;
 import com.hotcast.vr.UpdateAppManager;
+import com.hotcast.vr.bean.User2;
 import com.hotcast.vr.bean.UserData;
-import com.hotcast.vr.tools.SharedPreUtil;
 import com.lidroid.xutils.BitmapUtils;
 
 import butterknife.InjectView;
@@ -66,10 +67,13 @@ public class MineView extends BaseView implements View.OnClickListener {
         if (BaseApplication.isLogin){
             ll_login.setVisibility(View.GONE);
             tv_username.setVisibility(View.VISIBLE);
+            title.setVisibility(View.VISIBLE);
+            title.setOnClickListener(this);
             showMasseg();
         }else {
             ll_login.setVisibility(View.VISIBLE);
             tv_username.setVisibility(View.GONE);
+            title.setVisibility(View.GONE);
         }
         title.setText("注销");
         spec = activity.sp.select("spec", "");
@@ -81,13 +85,16 @@ public class MineView extends BaseView implements View.OnClickListener {
         super.init();
     }
 
-    UserData userData;
+    UserData userDate;
     BitmapUtils bitmapUtils;
+    String date;
     private void showMasseg() {
-        userData = activity.sp.select("userData",null);
-        if (userData != null){
-            tv_username.setText(userData.getUsername());
-            bitmapUtils.display(iv_head,userData.getAvatar());
+        date = activity.sp.select("userData","");
+        System.out.println("---select date="+ date);
+        if (!TextUtils.isEmpty(date)){
+            userDate = new Gson().fromJson(date, UserData.class);
+            tv_username.setText(userDate.getUsername());
+            bitmapUtils.display(iv_head,userDate.getAvatar());
         }
 
 //        tv_username.setText();
@@ -97,10 +104,13 @@ public class MineView extends BaseView implements View.OnClickListener {
     if (BaseApplication.isLogin){
         ll_login.setVisibility(View.GONE);
         tv_username.setVisibility(View.VISIBLE);
+        title.setVisibility(View.VISIBLE);
+        title.setOnClickListener(this);
         showMasseg();
     }else {
         ll_login.setVisibility(View.VISIBLE);
         tv_username.setVisibility(View.GONE);
+        title.setVisibility(View.GONE);
     }
 }
     private void initListView() {
@@ -153,6 +163,13 @@ public class MineView extends BaseView implements View.OnClickListener {
                 intent = new Intent(activity, HelpActivity.class);
                 activity.startActivity(intent);
                 activity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                break;
+            case R.id.tv_title:
+                BaseApplication.isLogin = false;
+                refreshView();
+                iv_head.setImageResource(R.mipmap.head);
+//                bitmapUtils.display(iv_head, String.valueOf(R.mipmap.head));
+                title.setVisibility(View.GONE);
                 break;
         }
     }
