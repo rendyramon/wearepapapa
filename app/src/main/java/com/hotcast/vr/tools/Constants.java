@@ -27,6 +27,9 @@ public class Constants {
 //    登录
     public static final String LOGIN = SERVER_URL + "/member/user/login";
 
+    public static final String LOGOUT = SERVER_URL + "/member/user/logout";
+
+
 
 
     //    public static final String SERVER = "http://101.200.231.61:9900";

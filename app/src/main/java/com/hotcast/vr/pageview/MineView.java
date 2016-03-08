@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -19,9 +20,18 @@ import com.hotcast.vr.LoginActivity;
 import com.hotcast.vr.R;
 import com.hotcast.vr.RegistActivity;
 import com.hotcast.vr.UpdateAppManager;
+import com.hotcast.vr.bean.User1;
 import com.hotcast.vr.bean.User2;
 import com.hotcast.vr.bean.UserData;
+import com.hotcast.vr.tools.Constants;
 import com.lidroid.xutils.BitmapUtils;
+import com.lidroid.xutils.exception.HttpException;
+import com.lidroid.xutils.http.RequestParams;
+import com.lidroid.xutils.http.ResponseInfo;
+import com.lidroid.xutils.http.callback.RequestCallBack;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import butterknife.InjectView;
 
@@ -64,17 +74,11 @@ public class MineView extends BaseView implements View.OnClickListener {
     @Override
     public void init() {
         bitmapUtils = new BitmapUtils(activity);
-        if (BaseApplication.isLogin){
-            ll_login.setVisibility(View.GONE);
-            tv_username.setVisibility(View.VISIBLE);
-            title.setVisibility(View.VISIBLE);
-            title.setOnClickListener(this);
-            showMasseg();
-        }else {
-            ll_login.setVisibility(View.VISIBLE);
-            tv_username.setVisibility(View.GONE);
-            title.setVisibility(View.GONE);
+//        date = activity.sp.select("userData","");
+        if (!TextUtils.isEmpty(date)){
+            BaseApplication.isLogin = true;
         }
+        refreshView();
         title.setText("注销");
         spec = activity.sp.select("spec", "");
         is_force = activity.sp.select("is_force", "");
@@ -90,7 +94,6 @@ public class MineView extends BaseView implements View.OnClickListener {
     String date;
     private void showMasseg() {
         date = activity.sp.select("userData","");
-        System.out.println("---select date="+ date);
         if (!TextUtils.isEmpty(date)){
             userDate = new Gson().fromJson(date, UserData.class);
             tv_username.setText(userDate.getUsername());
@@ -106,6 +109,7 @@ public class MineView extends BaseView implements View.OnClickListener {
         tv_username.setVisibility(View.VISIBLE);
         title.setVisibility(View.VISIBLE);
         title.setOnClickListener(this);
+        tv_username.setOnClickListener(this);
         showMasseg();
     }else {
         ll_login.setVisibility(View.VISIBLE);
@@ -126,6 +130,10 @@ public class MineView extends BaseView implements View.OnClickListener {
     public void onClick(View view) {
         Intent intent;
         switch (view.getId()) {
+            case R.id.tv_username:
+
+                System.out.println("---您点击了用户名，你可以修改用户名");
+                break;
             case R.id.login:
                 intent = new Intent(activity, LoginActivity.class);
                 activity.startActivity(intent);
@@ -165,12 +173,45 @@ public class MineView extends BaseView implements View.OnClickListener {
                 activity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                 break;
             case R.id.tv_title:
-                BaseApplication.isLogin = false;
-                refreshView();
-                iv_head.setImageResource(R.mipmap.head);
-//                bitmapUtils.display(iv_head, String.valueOf(R.mipmap.head));
-                title.setVisibility(View.GONE);
+                logout(userDate.getLogin_token());
+
                 break;
         }
+    }
+
+    private void logout(String login_token) {
+        String mUrl = Constants.LOGOUT;
+        RequestParams params = new RequestParams();
+        params.addBodyParameter("token", "123");
+        params.addBodyParameter("version", BaseApplication.version);
+        params.addBodyParameter("platform", BaseApplication.platform);
+        params.addBodyParameter("login_token", login_token);
+        activity.httpPost(mUrl, params, new RequestCallBack<String>() {
+            @Override
+            public void onStart() {
+                super.onStart();
+
+            }
+
+            @Override
+            public void onSuccess(ResponseInfo<String> responseInfo) {
+                System.out.println("---responseInfo.result = " + responseInfo.result);
+                User1 user1 = new Gson().fromJson(responseInfo.result,User1.class);
+                if ("user1".equals(user1.getMessage()) || 0<=user1.getCode()&& 10>=user1.getCode()){
+                    BaseApplication.isLogin = false;
+                    refreshView();
+                    iv_head.setImageResource(R.mipmap.head);
+                    activity.sp.delete("userData");
+                    title.setVisibility(View.GONE);
+                }else {
+                    activity.showToast("亲，"+user1.getMessage()+"T_T");
+                }
+            }
+
+            @Override
+            public void onFailure(HttpException e, String s) {
+                activity.showToast("亲,注销失败了T_T，请检查一下网络");
+            }
+        });
     }
 }
