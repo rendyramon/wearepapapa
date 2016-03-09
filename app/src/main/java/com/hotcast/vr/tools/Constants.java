@@ -26,8 +26,12 @@ public class Constants {
     public static final String REGIST = SERVER_URL + "/member/user/register";
 //    登录
     public static final String LOGIN = SERVER_URL + "/member/user/login";
-
+//    注销
     public static final String LOGOUT = SERVER_URL + "/member/user/logout";
+//    更改用户名
+    public static final String RENAME = SERVER_URL + "/member/user/set-username";
+    //    忘记密码
+    public static final String FORGET = SERVER_URL + "/member/user/forget-password";
 
 
 

@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.hotcast.vr.bean.User2;
 import com.hotcast.vr.tools.Constants;
+import com.hotcast.vr.tools.Md5Utils;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.RequestParams;
 import com.lidroid.xutils.http.ResponseInfo;
@@ -43,6 +44,8 @@ public class LoginActivity extends BaseActivity {
     Button bt_login;
     @InjectView(R.id.iv_return)
     ImageView iv_return;
+    @InjectView(R.id.tv_forgot)
+    TextView tv_forgot;
 
     String username;
     String password;
@@ -60,6 +63,7 @@ public class LoginActivity extends BaseActivity {
         bt_login.setOnClickListener(this);
         iv_look.setOnClickListener(this);
         iv_return.setOnClickListener(this);
+        tv_forgot.setOnClickListener(this);
         et_username.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -106,6 +110,7 @@ public class LoginActivity extends BaseActivity {
 
     @Override
     public void onClick(View view) {
+        Intent intent;
         switch (view.getId()) {
             case R.id.bt_login:
                 username = et_username.getText().toString().trim();
@@ -133,6 +138,12 @@ public class LoginActivity extends BaseActivity {
             case R.id.iv_return:
                 finish();
                 break;
+            case R.id.tv_forgot:
+                intent = new Intent(this,RegistActivity.class);
+                intent.putExtra("title","找回密码");
+                startActivity(intent);
+                finish();
+                break;
         }
     }
 
@@ -141,7 +152,8 @@ public class LoginActivity extends BaseActivity {
     private void login(String username, String password) {
         String mUrl = Constants.LOGIN;
         RequestParams params = new RequestParams();
-        params.addBodyParameter("token", "123");
+        String str = format.format(System.currentTimeMillis());
+        params.addBodyParameter("token", Md5Utils.getMd5("hotcast-" + str + "-hotcast"));
         params.addBodyParameter("version", BaseApplication.version);
         params.addBodyParameter("platform", BaseApplication.platform);
         params.addBodyParameter("phone", username);

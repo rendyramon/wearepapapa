@@ -29,6 +29,7 @@ import com.hotcast.vr.pullrefreshview.PullToRefreshBase;
 import com.hotcast.vr.pullrefreshview.PullToRefreshListView;
 import com.hotcast.vr.tools.Constants;
 import com.hotcast.vr.tools.L;
+import com.hotcast.vr.tools.Md5Utils;
 import com.hotcast.vr.tools.Utils;
 import com.lidroid.xutils.DbUtils;
 import com.lidroid.xutils.ViewUtils;
@@ -103,7 +104,7 @@ public class HomeView2 extends BaseView {
         ll_top_news_viewpager = (LinearLayout) layout_roll_view.findViewById(R.id.ll_top_news_viewpager);
         rootView = View.inflate(activity, R.layout.frag_item_news, null);
         TextView title = (TextView) rootView.findViewById(R.id.tv_title);
-        title.setText("首页");
+        title.setText("热播");
         ViewUtils.inject(this, rootView);
         fab_home = (FloatingActionButton) rootView.findViewById(R.id.fab_home);
         progressBar4 = (ProgressBar) rootView.findViewById(R.id.progressBar4);
@@ -184,7 +185,8 @@ public class HomeView2 extends BaseView {
         }
         String url = Constants.SPECIAL;
         RequestParams params = new RequestParams();
-        params.addBodyParameter("token", "123");
+        String str = activity.format.format(System.currentTimeMillis());
+        params.addBodyParameter("token", Md5Utils.getMd5("hotcast-" + str + "-hotcast"));
         params.addBodyParameter("version", BaseApplication.version);
         params.addBodyParameter("platform", BaseApplication.platform);
         System.out.println("---version = " + BaseApplication.version + " --platform = " + BaseApplication.platform);
@@ -271,7 +273,8 @@ public class HomeView2 extends BaseView {
         }
         String url = requestUrl;
         RequestParams params = new RequestParams();
-        params.addBodyParameter("token", "123");
+        String str = activity.format.format(System.currentTimeMillis());
+        params.addBodyParameter("token", Md5Utils.getMd5("hotcast-"+str+"-hotcast"));
         params.addBodyParameter("version", BaseApplication.version);
         params.addBodyParameter("platform", BaseApplication.platform);
         activity.httpPost(url, params, new RequestCallBack<String>() {

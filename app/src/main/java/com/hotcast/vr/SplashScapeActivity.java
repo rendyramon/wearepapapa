@@ -14,6 +14,7 @@ import com.hotcast.vr.pageview.SplashView;
 import com.hotcast.vr.services.DownLoadingService;
 import com.hotcast.vr.tools.Constants;
 import com.hotcast.vr.tools.L;
+import com.hotcast.vr.tools.Md5Utils;
 import com.hotcast.vr.tools.Utils;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.RequestParams;
@@ -74,7 +75,8 @@ public class SplashScapeActivity extends BaseActivity {
     private List<Classify> classifies;
     private void getNetDate() {
         RequestParams params = new RequestParams();
-        params.addBodyParameter("token", "123");
+        String str = format.format(System.currentTimeMillis());
+        params.addBodyParameter("token", Md5Utils.getMd5("hotcast-" + str + "-hotcast"));
         this.httpPost(Constants.URL_CLASSIFY_TITLTE, params, new RequestCallBack<String>() {
             @Override
             public void onStart() {
@@ -98,7 +100,8 @@ public class SplashScapeActivity extends BaseActivity {
     private void getUpDate() {
 //        System.out.println("---"+SplashActivity.getAppMetaData(this, "UMENG_CHANNEL"));
         RequestParams params = new RequestParams();
-        params.addBodyParameter("token", "123");
+        String str = format.format(System.currentTimeMillis());
+        params.addBodyParameter("token", Md5Utils.getMd5("hotcast-"+str+"-hotcast"));
         params.addBodyParameter("version", BaseApplication.version);
         params.addBodyParameter("platform",BaseApplication.platform);
         this.httpPost(Constants.URL_UPDATE, params, new RequestCallBack<String>() {

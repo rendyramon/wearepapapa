@@ -38,6 +38,7 @@ import com.lidroid.xutils.http.client.HttpRequest;
 import com.umeng.analytics.MobclickAgent;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -62,6 +63,7 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
     public static final int CODE_GET_PIC_FOR_SCHOOL = 103;
     public static final int CODE_GET_PIC_FOR_DORM = 104;
     public static final int CODE_GET_PIC_FOR_CHSI = 105;
+   public SimpleDateFormat format;
 
     public SharedPreUtil sp;
 
@@ -146,6 +148,7 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
         setContentView(getLayoutId());
         ButterKnife.inject(this);
         sp = SharedPreUtil.getInstance(this);
+        format = new SimpleDateFormat("yyyyMMddHH");
         // 5.获取页面传入数据
         getIntentData(getIntent());
         // 6.初始化

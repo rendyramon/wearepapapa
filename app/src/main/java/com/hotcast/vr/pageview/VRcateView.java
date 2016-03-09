@@ -23,6 +23,7 @@ import com.hotcast.vr.bean.Classify;
 import com.hotcast.vr.bean.VrPlay;
 import com.hotcast.vr.tools.Constants;
 import com.hotcast.vr.tools.L;
+import com.hotcast.vr.tools.Md5Utils;
 import com.hotcast.vr.tools.Utils;
 import com.lidroid.xutils.BitmapUtils;
 import com.lidroid.xutils.DbUtils;
@@ -118,8 +119,8 @@ public class VRcateView extends BaseView {
         System.out.println("***VrListActivity *** getNetData()" + mUlr);
         L.e("播放路径 mUrl=" + mUlr);
         RequestParams params = new RequestParams();
-        System.out.println("***VrListActivity *** getNetData()" + params);
-        params.addBodyParameter("token", "123");
+        String str = activity.format.format(System.currentTimeMillis());
+        params.addBodyParameter("token", Md5Utils.getMd5("hotcast-" + str + "-hotcast"));
         params.addBodyParameter("channel_id", channel_id);
         System.out.println("***VrListActivity *** getNetData()" + channel_id);
         activity.httpPost(mUlr, params, new RequestCallBack<String>() {

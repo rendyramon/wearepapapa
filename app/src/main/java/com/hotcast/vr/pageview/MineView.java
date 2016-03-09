@@ -18,12 +18,14 @@ import com.hotcast.vr.HelpActivity;
 import com.hotcast.vr.ListLocalActivity;
 import com.hotcast.vr.LoginActivity;
 import com.hotcast.vr.R;
+import com.hotcast.vr.ReNameActivity;
 import com.hotcast.vr.RegistActivity;
 import com.hotcast.vr.UpdateAppManager;
 import com.hotcast.vr.bean.User1;
 import com.hotcast.vr.bean.User2;
 import com.hotcast.vr.bean.UserData;
 import com.hotcast.vr.tools.Constants;
+import com.hotcast.vr.tools.Md5Utils;
 import com.lidroid.xutils.BitmapUtils;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.RequestParams;
@@ -73,11 +75,9 @@ public class MineView extends BaseView implements View.OnClickListener {
 
     @Override
     public void init() {
-        bitmapUtils = new BitmapUtils(activity);
+//        bitmapUtils = new BitmapUtils(activity);
 //        date = activity.sp.select("userData","");
-        if (!TextUtils.isEmpty(date)){
-            BaseApplication.isLogin = true;
-        }
+
         refreshView();
         title.setText("注销");
         spec = activity.sp.select("spec", "");
@@ -92,11 +92,16 @@ public class MineView extends BaseView implements View.OnClickListener {
     UserData userDate;
     BitmapUtils bitmapUtils;
     String date;
+    String username;
     private void showMasseg() {
-        date = activity.sp.select("userData","");
         if (!TextUtils.isEmpty(date)){
             userDate = new Gson().fromJson(date, UserData.class);
-            tv_username.setText(userDate.getUsername());
+            username = activity.sp.select("username","");
+            if (!TextUtils.isEmpty(username)){
+                tv_username.setText(username);
+            }else {
+                tv_username.setText(userDate.getUsername());
+            }
             bitmapUtils.display(iv_head,userDate.getAvatar());
         }
 
@@ -104,6 +109,11 @@ public class MineView extends BaseView implements View.OnClickListener {
     }
 
     public void refreshView(){
+        date = activity.sp.select("userData","");
+        bitmapUtils = new BitmapUtils(activity);
+        if (!TextUtils.isEmpty(date)){
+            BaseApplication.isLogin = true;
+        }
     if (BaseApplication.isLogin){
         ll_login.setVisibility(View.GONE);
         tv_username.setVisibility(View.VISIBLE);
@@ -131,7 +141,10 @@ public class MineView extends BaseView implements View.OnClickListener {
         Intent intent;
         switch (view.getId()) {
             case R.id.tv_username:
-
+                intent = new Intent(activity, ReNameActivity.class);
+                intent.putExtra("title","更改用户名");
+                activity.startActivity(intent);
+                activity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                 System.out.println("---您点击了用户名，你可以修改用户名");
                 break;
             case R.id.login:
@@ -174,7 +187,6 @@ public class MineView extends BaseView implements View.OnClickListener {
                 break;
             case R.id.tv_title:
                 logout(userDate.getLogin_token());
-
                 break;
         }
     }
@@ -182,7 +194,8 @@ public class MineView extends BaseView implements View.OnClickListener {
     private void logout(String login_token) {
         String mUrl = Constants.LOGOUT;
         RequestParams params = new RequestParams();
-        params.addBodyParameter("token", "123");
+        String str = activity.format.format(System.currentTimeMillis());
+        params.addBodyParameter("token", Md5Utils.getMd5("hotcast-" + str + "-hotcast"));
         params.addBodyParameter("version", BaseApplication.version);
         params.addBodyParameter("platform", BaseApplication.platform);
         params.addBodyParameter("login_token", login_token);
@@ -199,10 +212,11 @@ public class MineView extends BaseView implements View.OnClickListener {
                 User1 user1 = new Gson().fromJson(responseInfo.result,User1.class);
                 if ("user1".equals(user1.getMessage()) || 0<=user1.getCode()&& 10>=user1.getCode()){
                     BaseApplication.isLogin = false;
-                    refreshView();
                     iv_head.setImageResource(R.mipmap.head);
                     activity.sp.delete("userData");
+                    activity.sp.delete("username");
                     title.setVisibility(View.GONE);
+                    refreshView();
                 }else {
                     activity.showToast("亲，"+user1.getMessage()+"T_T");
                 }

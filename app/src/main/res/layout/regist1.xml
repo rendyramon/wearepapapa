@@ -25,6 +25,15 @@
                 android:textColor="#38383c"
                 android:text="给你 “观” 的自由"/>
         </LinearLayout>
+        <TextView
+            android:id="@+id/tv_findpw"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:layout_margin="10dp"
+            android:visibility="gone"
+            android:textColor="#000000"
+            android:text="请在下面输入您要找回的账号："/>
 
         <View
             android:layout_width="match_parent"

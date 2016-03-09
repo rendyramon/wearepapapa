@@ -23,6 +23,7 @@ import com.hotcast.vr.dialog.MyDialog;
 import com.hotcast.vr.pageview.GalleryItemView;
 import com.hotcast.vr.tools.Constants;
 import com.hotcast.vr.tools.L;
+import com.hotcast.vr.tools.Md5Utils;
 import com.hotcast.vr.tools.Utils;
 import com.lidroid.xutils.DbUtils;
 import com.lidroid.xutils.exception.DbException;
@@ -294,7 +295,8 @@ public class LandscapeActivity_Second extends BaseActivity {
         L.e("播放路径 mUrl=" + mUlr);
         RequestParams params = new RequestParams();
         System.out.println("***VrListActivity *** getNetData()" + params);
-        params.addBodyParameter("token", "123");
+        String str = format.format(System.currentTimeMillis());
+        params.addBodyParameter("token", Md5Utils.getMd5("hotcast-" + str + "-hotcast"));
         params.addBodyParameter("channel_id", channel_id);
         params.addBodyParameter("version", BaseApplication.version);
         params.addBodyParameter("platform", BaseApplication.platform);
@@ -344,7 +346,8 @@ public class LandscapeActivity_Second extends BaseActivity {
         final String id = vid;
         String mUrl = Constants.PLAY_URL;
         RequestParams params = new RequestParams();
-        params.addBodyParameter("token", "123");
+        String str = format.format(System.currentTimeMillis());
+        params.addBodyParameter("token", Md5Utils.getMd5("hotcast-"+str+"-hotcast"));
         params.addBodyParameter("version", BaseApplication.version);
         params.addBodyParameter("platform", BaseApplication.platform);
         params.addBodyParameter("vid", vid);

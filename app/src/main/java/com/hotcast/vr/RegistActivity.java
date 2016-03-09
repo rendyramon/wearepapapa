@@ -7,7 +7,6 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -15,6 +14,7 @@ import com.google.gson.Gson;
 import com.hotcast.vr.bean.User1;
 import com.hotcast.vr.bean.User2;
 import com.hotcast.vr.tools.Constants;
+import com.hotcast.vr.tools.Md5Utils;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.RequestParams;
 import com.lidroid.xutils.http.ResponseInfo;
@@ -46,12 +46,20 @@ public class RegistActivity extends BaseActivity {
     EditText et_password;
     @InjectView(R.id.bt_yes)
     Button bt_yes;
+    @InjectView(R.id.tv_login)
+    TextView tv_login;
+    @InjectView(R.id.tv_findpw)
+    TextView tv_findpw;
 
     String phone;
     String password;
     String verificationcode;
     String mUrl =null;
     User1 user1;
+    String title;
+    String type = "register";
+    Boolean isforget = false;
+    boolean isgetVerifivation = false;
 
 
 
@@ -74,7 +82,7 @@ public class RegistActivity extends BaseActivity {
                 phone = et_phone.getText().toString();
                 System.out.println("---phone = " + phone.length());
                 if (!TextUtils.isEmpty(phone) && phone.length() == 11 || isMobileNo(phone)){
-                    getVerificationCode(phone);
+                    getVerificationCode(phone,type);
                 }else {
                     bt_verificationcode.setEnabled(false);
                     showToast("亲，请输入正确的手机号码哟^_^");
@@ -97,13 +105,19 @@ public class RegistActivity extends BaseActivity {
     }
     User2 user2;
     private void rePassword(String password, String phone) {
-        mUrl = Constants.REGIST;
+        if (isforget){
+            mUrl = Constants.FORGET;
+        }else {
+            mUrl = Constants.REGIST;
+        }
         RequestParams params = new RequestParams();
-        params.addBodyParameter("token", "123");
+        String str = format.format(System.currentTimeMillis());
+        params.addBodyParameter("token", Md5Utils.getMd5("hotcast-" + str + "-hotcast"));
         params.addBodyParameter("version", BaseApplication.version);
         params.addBodyParameter("platform", BaseApplication.platform);
         params.addBodyParameter("phone",phone);
         params.addBodyParameter("password",password);
+        System.out.println("---phone="+phone+" password="+password+" mUrl="+mUrl);
         this.httpPost(mUrl, params, new RequestCallBack<String>() {
             @Override
             public void onStart() {
@@ -113,19 +127,32 @@ public class RegistActivity extends BaseActivity {
 
             @Override
             public void onSuccess(ResponseInfo<String> responseInfo) {
+                System.out.println("---responseInfo= " + responseInfo.result);
                 JSONObject j = null;
                 try {
                     j = new JSONObject(responseInfo.result);
-                    JSONObject data = j.getJSONObject("data");
-                    user2 = new Gson().fromJson(responseInfo.result,User2.class);
-                    System.out.println("---user2="+user2);
-                    if ("success".equals(user2.getMessage())|| 0<=user2.getCode() && 10>= user2.getCode()){
-                        BaseApplication.isLogin = true;
-                        sp.add("userData", data.toString());
-                        showToast("亲，注册成功了哟^_^，快去看片儿吧");
-                        finish();
-                    }else {
-                        showToast("亲，密码不要输入特殊字符哦*_*");
+                    String data = j.getString("data");
+                    if (data.length() > 11) {
+                        user2 = new Gson().fromJson(responseInfo.result, User2.class);
+                        System.out.println("---user2 = " + user2);
+                        if ("success".equals(user2.getMessage()) || 0 <= user2.getCode() && 10 >= user2.getCode()) {
+                            BaseApplication.isLogin = true;
+                            showToast("亲,登录成功了哟，快去看片儿吧*_*");
+                            System.out.println("---add userData=" + data);
+                            sp.add("userData", data.toString());
+
+                            System.out.println("---select userData=" + sp.select("userData", "**"));
+                            finish();
+
+                        } else {
+                            bt_yes.setEnabled(false);
+                            showToast("亲," + user2.getMessage() + "^_^");
+                            System.out.println("---message=" + user2.getMessage());
+                        }
+                    } else {
+                        String message = j.getString("message");
+                        showToast("亲," + message + "^_^");
+                        System.out.println("---message=" + message+" code="+j.getString("code"));
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -145,7 +172,8 @@ public class RegistActivity extends BaseActivity {
     private void sendVerify(String verificationcode,String phone) {
         mUrl = Constants.CHECKMESSAG;
         RequestParams params = new RequestParams();
-        params.addBodyParameter("token", "123");
+        String str = format.format(System.currentTimeMillis());
+        params.addBodyParameter("token", Md5Utils.getMd5("hotcast-"+str+"-hotcast"));
         params.addBodyParameter("version", BaseApplication.version);
         params.addBodyParameter("platform", BaseApplication.platform);
         params.addBodyParameter("phone",phone);
@@ -175,13 +203,15 @@ public class RegistActivity extends BaseActivity {
         });
     }
 
-    private void getVerificationCode(String phone) {
+    private void getVerificationCode(String phone,String type) {
         mUrl = Constants.SENDMESSAG;
         RequestParams params = new RequestParams();
-        params.addBodyParameter("token", "123");
+        String str = format.format(System.currentTimeMillis());
+        params.addBodyParameter("token", Md5Utils.getMd5("hotcast-"+str+"-hotcast"));
         params.addBodyParameter("version", BaseApplication.version);
         params.addBodyParameter("platform", BaseApplication.platform);
         params.addBodyParameter("phone",phone);
+        params.addBodyParameter("type",type);
         this.httpPost(mUrl, params, new RequestCallBack<String>() {
             @Override
             public void onStart() {
@@ -194,8 +224,8 @@ public class RegistActivity extends BaseActivity {
                 user1 = new Gson().fromJson(responseInfo.result, User1.class);
                 System.out.println("---user1 = " + user1);
                 if ("success".equals(user1.getMessage()) || 0 <= user1.getCode() && 10 >= user1.getCode()) {
+                    isgetVerifivation = true;
                     bt_verificationcode.setEnabled(false);
-
                 } else {
                     showToast("亲," + user1.getMessage() +"^_^");
                     bt_verificationcode.setEnabled(true);
@@ -244,7 +274,7 @@ public class RegistActivity extends BaseActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (s.length() == 6){
+                if (isgetVerifivation && s.length() == 6){
                     bt_next.setEnabled(true);
                 }else {
                     bt_next.setEnabled(false);
@@ -282,6 +312,13 @@ public class RegistActivity extends BaseActivity {
 
     @Override
     public void getIntentData(Intent intent) {
+        title = intent.getStringExtra("title");
+        if (!TextUtils.isEmpty(title)){
+            isforget = true;
+            tv_findpw.setVisibility(View.VISIBLE);
+            type = "forget";
+            tv_login.setText(title);
+        }
 
     }
 }
