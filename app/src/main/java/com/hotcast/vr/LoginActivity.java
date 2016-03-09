@@ -153,7 +153,6 @@ public class LoginActivity extends BaseActivity {
     private void login(String username, String password) {
         String mUrl = Constants.LOGIN;
         RequestParams params = new RequestParams();
-        String str = format.format(System.currentTimeMillis());
         params.addBodyParameter("token", TokenUtils.createToken(this));
         params.addBodyParameter("version", BaseApplication.version);
         params.addBodyParameter("platform", BaseApplication.platform);

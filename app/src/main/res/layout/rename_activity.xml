@@ -13,7 +13,29 @@
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:background="@null"
+        android:visibility="gone"
         android:hint="请输入新的用户名"/>
+    <EditText
+        android:id="@+id/et_oldpassword"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:background="@null"
+        android:visibility="gone"
+        android:inputType="textVisiblePassword"
+        android:drawableLeft="@mipmap/verificationcode"
+        android:hint="请输入旧密码"/>
+    <EditText
+        android:id="@+id/et_newpassword"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:background="@null"
+        android:visibility="gone"
+        android:inputType="textVisiblePassword"
+        android:enabled="false"
+        android:drawableLeft="@mipmap/verificationcode"
+        android:hint="请输入新密码"/>
     <Button
         android:id="@+id/bt_save"
         android:layout_width="wrap_content"

@@ -62,6 +62,8 @@ public class MineView2 extends BaseView implements View.OnClickListener {
     Button regist;
     @InjectView(R.id.tv_username)
     TextView tv_username;
+    @InjectView(R.id.rl_change)
+    RelativeLayout rl_change;
 
 
     private UpdateAppManager updateAppManager;
@@ -121,6 +123,7 @@ public class MineView2 extends BaseView implements View.OnClickListener {
         title.setVisibility(View.VISIBLE);
         title.setOnClickListener(this);
         tv_username.setOnClickListener(this);
+        iv_head.setOnClickListener(this);
         showMasseg();
     }else {
         ll_login.setVisibility(View.VISIBLE);
@@ -135,12 +138,25 @@ public class MineView2 extends BaseView implements View.OnClickListener {
         rl_about.setOnClickListener(this);
         rl_version.setOnClickListener(this);
         rl_help.setOnClickListener(this);
+        rl_change.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View view) {
         Intent intent;
         switch (view.getId()) {
+            case R.id.rl_change:
+                // TODO 点击跳转修改该密码
+                intent = new Intent(activity, ReNameActivity.class);
+                intent.putExtra("title","修改密码");
+                activity.startActivity(intent);
+                activity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                System.out.println("---你点击了修改该密码");
+                break;
+            case R.id.iv_head:
+                // TODO 点击更换头像
+                System.out.println("---你点击了更换头像");
+                break;
             case R.id.tv_username:
                 intent = new Intent(activity, ReNameActivity.class);
                 intent.putExtra("title","更改用户名");
@@ -168,12 +184,12 @@ public class MineView2 extends BaseView implements View.OnClickListener {
                 activity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                 break;
             case R.id.rl_about:
-
                 intent = new Intent(activity, AboutActivity.class);
                 activity.startActivity(intent);
                 activity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                 break;
             case R.id.rl_version:
+                System.out.println("---你点击了监测版本更新");
                 if (BaseApplication.isUpdate) {
                     updateAppManager = new UpdateAppManager(activity, spec, is_force, newFeatures);
                     updateAppManager.checkUpdateInfo();
