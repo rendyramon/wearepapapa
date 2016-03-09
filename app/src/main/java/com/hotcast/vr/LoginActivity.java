@@ -153,6 +153,8 @@ public class LoginActivity extends BaseActivity {
         String mUrl = Constants.LOGIN;
         RequestParams params = new RequestParams();
         String str = format.format(System.currentTimeMillis());
+        System.out.println("---str="+str);
+        System.out.println("---token="+Md5Utils.getMd5("hotcast-" + str + "-hotcast"));
         params.addBodyParameter("token", Md5Utils.getMd5("hotcast-" + str + "-hotcast"));
         params.addBodyParameter("version", BaseApplication.version);
         params.addBodyParameter("platform", BaseApplication.platform);

@@ -6,7 +6,7 @@
     android:orientation="vertical">
     <include
         android:id="@+id/head"
-        layout="@layout/layout_head2"/>
+        layout="@layout/layout_head"/>
    <RelativeLayout
        android:id="@+id/rl_cache"
        android:background="#ffffff"
@@ -39,6 +39,7 @@
         android:layout_marginTop="19dp"
         android:layout_width="match_parent"
         android:layout_height="43dp"
+        android:visibility="gone"
         android:gravity="center_vertical">
         <ImageView
             android:id="@+id/iv_change"

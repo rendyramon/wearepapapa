@@ -391,7 +391,7 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
 //        spec = activity.sp.select("spec","");
 //        is_force = activity.sp.select("is_force","");
 //        newFeatures = activity.sp.select("newFeatures","");
-        Intent intent = new Intent(this, LandscapeActivity_new.class);
+        Intent intent = new Intent(this, LandscapeActivity.class);
         if (!BaseApplication.info.versionName.equals(BaseApplication.version)) {
             BaseApplication.isUpdate = true;
             intent.putExtra("spec", this.sp.select("spec",""));

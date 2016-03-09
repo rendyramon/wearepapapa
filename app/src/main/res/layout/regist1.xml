@@ -56,6 +56,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:inputType="number"
+                android:background="@null"
                 android:hint="请输入手机号"/>
         </RelativeLayout>
         <View
@@ -79,6 +80,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:inputType="number"
+                android:background="@null"
                 android:hint="请输入验证码"/>
             <Button
                 android:id="@+id/bt_verificationcode"

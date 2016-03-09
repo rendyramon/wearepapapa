@@ -54,6 +54,7 @@
                 android:textColor="#adadad"
                 android:inputType="phone"
                 android:autoLink="phone"
+                android:background="@null"
                 android:hint="手机号"/>
         </RelativeLayout>
         <View
@@ -77,6 +78,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:inputType="textPassword"
+                android:background="@null"
                 android:hint="请输入密码"/>
             <ImageView
                 android:id="@+id/iv_look"

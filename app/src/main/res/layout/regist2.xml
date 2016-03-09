@@ -50,6 +50,7 @@
                 android:textColor="#adadad"
                 android:inputType="textVisiblePassword"
                 android:textSize="14sp"
+                android:background="@null"
                 android:hint="请设置至少6位的密码"/>
         </RelativeLayout>
         <View

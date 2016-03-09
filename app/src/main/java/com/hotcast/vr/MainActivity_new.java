@@ -8,7 +8,6 @@ import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.ScrollView;
-import android.widget.TextView;
 
 import com.hotcast.vr.adapter.MyPagerAdapter;
 import com.hotcast.vr.pageview.BaseView;
@@ -16,6 +15,7 @@ import com.hotcast.vr.pageview.ClassifyView;
 import com.hotcast.vr.pageview.HomeView2;
 
 import com.hotcast.vr.pageview.MineView;
+import com.hotcast.vr.pageview.MineView2;
 import com.hotcast.vr.tools.L;
 
 import java.util.ArrayList;
@@ -81,7 +81,7 @@ public class MainActivity_new extends BaseActivity {
             }
             view0 = new HomeView2(this);
             view1 = new ClassifyView(this);
-            view2 = new MineView(this);
+            view2 = new MineView2(this);
             views[0] = view0;
             views[1] = view1;
             views[2] = view2;
@@ -190,7 +190,7 @@ public class MainActivity_new extends BaseActivity {
 
     @Override
     protected void onStart() {
-        ((MineView)view2).refreshView();
+        ((MineView2)view2).refreshView();
         super.onStart();
     }
 
