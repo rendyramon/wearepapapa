@@ -21,6 +21,7 @@ import com.hotcast.vr.pageview.PlayerContralView;
 import com.hotcast.vr.tools.Constants;
 import com.hotcast.vr.tools.L;
 import com.hotcast.vr.tools.Md5Utils;
+import com.hotcast.vr.tools.TokenUtils;
 import com.lidroid.xutils.DbUtils;
 import com.lidroid.xutils.exception.DbException;
 import com.lidroid.xutils.exception.HttpException;
@@ -95,8 +96,7 @@ public class PlayerVRActivityNew extends BaseLanActivity implements PFAssetObser
     public void getplayUrl(String vid) {
         String mUrl = Constants.PLAY_URL;
         RequestParams params = new RequestParams();
-        String str = format.format(System.currentTimeMillis());
-        params.addBodyParameter("token", Md5Utils.getMd5("hotcast-" + str + "-hotcast"));
+        params.addBodyParameter("token", TokenUtils.createToken(this));
         params.addBodyParameter("version", BaseApplication.version);
         params.addBodyParameter("platform", BaseApplication.platform);
         params.addBodyParameter("vid", vid);

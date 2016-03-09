@@ -15,6 +15,7 @@ import com.hotcast.vr.image3D.Image3DView;
 import com.hotcast.vr.tools.Constants;
 import com.hotcast.vr.tools.L;
 import com.hotcast.vr.tools.Md5Utils;
+import com.hotcast.vr.tools.TokenUtils;
 import com.hotcast.vr.tools.Utils;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.RequestParams;
@@ -77,8 +78,7 @@ public class LandscapeView extends BaseView implements View.OnClickListener{
 
     private void getNetDate(){
         RequestParams params = new RequestParams();
-        String str = activity.format.format(System.currentTimeMillis());
-        params.addBodyParameter("token", Md5Utils.getMd5("hotcast-" + str + "-hotcast"));
+        params.addBodyParameter("token", TokenUtils.createToken(activity));
         activity.httpPost(Constants.URL_CLASSIFY_TITLTE, params, new RequestCallBack<String>() {
             @Override
             public void onStart() {
@@ -121,8 +121,7 @@ public class LandscapeView extends BaseView implements View.OnClickListener{
         System.out.println("***VrListActivity *** getNetData()" + mUlr);
         L.e("播放路径 mUrl=" + mUlr);
         RequestParams params = new RequestParams();
-        String str = activity.format.format(System.currentTimeMillis());
-        params.addBodyParameter("token", Md5Utils.getMd5("hotcast-"+str+"-hotcast"));
+        params.addBodyParameter("token", TokenUtils.createToken(activity));
         params.addBodyParameter("channel_id", channel_id);
         System.out.println("***VrListActivity *** getNetData()" + channel_id);
         activity.httpPost(mUlr, params, new RequestCallBack<String>() {

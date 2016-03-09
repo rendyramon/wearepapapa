@@ -34,6 +34,7 @@ import com.hotcast.vr.tools.HotVedioCacheUtils;
 import com.hotcast.vr.tools.L;
 import com.hotcast.vr.tools.Md5Utils;
 import com.hotcast.vr.tools.SaveBitmapUtils;
+import com.hotcast.vr.tools.TokenUtils;
 import com.hotcast.vr.tools.Utils;
 import com.hotcast.vr.tools.VedioBitmapUtils;
 import com.lidroid.xutils.BitmapUtils;
@@ -636,8 +637,7 @@ public class LandscapeActivity extends BaseActivity implements View.OnClickListe
         L.e("播放路径 mUrl=" + mUlr);
         RequestParams params = new RequestParams();
         System.out.println("***VrListActivity *** getNetData()" + params);
-        String str = format.format(System.currentTimeMillis());
-        params.addBodyParameter("token", Md5Utils.getMd5("hotcast-" + str + "-hotcast"));
+        params.addBodyParameter("token", TokenUtils.createToken(this));
         params.addBodyParameter("channel_id", channel_id);
         params.addBodyParameter("version", BaseApplication.version);
         params.addBodyParameter("platform", BaseApplication.platform);

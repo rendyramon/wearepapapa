@@ -27,6 +27,7 @@ import com.hotcast.vr.pageview.VrListView;
 import com.hotcast.vr.tools.Constants;
 import com.hotcast.vr.tools.L;
 import com.hotcast.vr.tools.Md5Utils;
+import com.hotcast.vr.tools.TokenUtils;
 import com.lidroid.xutils.BitmapUtils;
 import com.lidroid.xutils.DbUtils;
 import com.lidroid.xutils.exception.DbException;
@@ -512,8 +513,7 @@ public class VrListActivity extends BaseActivity {
     public void getplayUrl(final int mCurrent, String vid, final String name) {
         String mUrl = Constants.PLAY_URL;
         RequestParams params = new RequestParams();
-        String str = format.format(System.currentTimeMillis());
-        params.addBodyParameter("token", Md5Utils.getMd5("hotcast-" + str + "-hotcast"));
+        params.addBodyParameter("token", TokenUtils.createToken(this));
         params.addBodyParameter("version", BaseApplication.version);
         params.addBodyParameter("platform", BaseApplication.platform);
         params.addBodyParameter("vid", vid);
@@ -882,8 +882,7 @@ public class VrListActivity extends BaseActivity {
     public void getNetData(final String channel_id, int requestpage, final int upordown) {
         String mUlr = Constants.PROGRAM_LIST;
         RequestParams params = new RequestParams();
-        String str = format.format(System.currentTimeMillis());
-        params.addBodyParameter("token", Md5Utils.getMd5("hotcast-"+str+"-hotcast"));
+        params.addBodyParameter("token", TokenUtils.createToken(this));
         params.addBodyParameter("channel_id", channel_id);
         params.addBodyParameter("version", BaseApplication.version);
         params.addBodyParameter("platform", BaseApplication.platform);

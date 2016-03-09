@@ -19,6 +19,7 @@ import com.hotcast.vr.pagerindicator.TabPageIndicator;
 import com.hotcast.vr.tools.Constants;
 import com.hotcast.vr.tools.L;
 import com.hotcast.vr.tools.Md5Utils;
+import com.hotcast.vr.tools.TokenUtils;
 import com.hotcast.vr.tools.Utils;
 import com.lidroid.xutils.DbUtils;
 import com.lidroid.xutils.db.sqlite.WhereBuilder;
@@ -161,8 +162,7 @@ public class ClassifyView extends BaseView {
     private void getNetData() {
         System.out.println("---version = " + BaseApplication.version + "-platform = " + BaseApplication.platform);
         RequestParams params = new RequestParams();
-        String str = activity.format.format(System.currentTimeMillis());
-        params.addBodyParameter("token", Md5Utils.getMd5("hotcast-" + str + "-hotcast"));
+        params.addBodyParameter("token", TokenUtils.createToken(activity));
         params.addBodyParameter("version", BaseApplication.version);
         params.addBodyParameter("platform", BaseApplication.platform);
         activity.httpPost(requestUrl, params, new RequestCallBack<String>() {

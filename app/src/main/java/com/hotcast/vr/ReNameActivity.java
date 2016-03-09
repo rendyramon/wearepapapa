@@ -14,6 +14,7 @@ import com.hotcast.vr.bean.User2;
 import com.hotcast.vr.bean.UserData;
 import com.hotcast.vr.tools.Constants;
 import com.hotcast.vr.tools.Md5Utils;
+import com.hotcast.vr.tools.TokenUtils;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.RequestParams;
 import com.lidroid.xutils.http.ResponseInfo;
@@ -69,9 +70,12 @@ public class ReNameActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.bt_save:
-
-                username = et_username.getText().toString();
-                reName(username);
+                username = et_username.getText().toString().trim();
+                if (!TextUtils.isEmpty(username)){
+                    reName(username);
+                }else {
+                    showToast("亲，用户名不能为空哦^_^");
+                }
                 break;
         }
     }
@@ -79,8 +83,7 @@ public class ReNameActivity extends BaseActivity {
     private void reName(final String username) {
         mUrl = Constants.RENAME;
         RequestParams params = new RequestParams();
-        String str = format.format(System.currentTimeMillis());
-        params.addBodyParameter("token", Md5Utils.getMd5("hotcast-"+str+"-hotcast"));
+        params.addBodyParameter("token", TokenUtils.createToken(this));
         params.addBodyParameter("version", BaseApplication.version);
         params.addBodyParameter("platform", BaseApplication.platform);
         params.addBodyParameter("login_token", userData.getLogin_token());

@@ -29,6 +29,7 @@ import com.hotcast.vr.tools.Constants;
 import com.hotcast.vr.tools.L;
 import com.hotcast.vr.tools.Md5Utils;
 import com.hotcast.vr.tools.ScreenUtils;
+import com.hotcast.vr.tools.TokenUtils;
 import com.hotcast.vr.tools.Utils;
 import com.hotcast.vr.tools.ViewUtils;
 import com.lidroid.xutils.BitmapUtils;
@@ -169,8 +170,7 @@ public class ClassifyListView extends BaseView {
 //        }
         System.out.println("---channel_id = " + channel_id + " version = " + BaseApplication.version + " platform = " + BaseApplication.platform );
         params = new RequestParams();
-        String str = activity.format.format(System.currentTimeMillis());
-        params.addBodyParameter("token", Md5Utils.getMd5("hotcast-" + str + "-hotcast"));
+        params.addBodyParameter("token", TokenUtils.createToken(activity));
         params.addBodyParameter("channel_id", channel_id);
         params.addBodyParameter("version", BaseApplication.version);
         params.addBodyParameter("platform", BaseApplication.platform);

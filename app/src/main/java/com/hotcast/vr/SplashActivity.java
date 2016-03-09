@@ -20,6 +20,7 @@ import com.hotcast.vr.bean.Update;
 import com.hotcast.vr.tools.Constants;
 import com.hotcast.vr.tools.L;
 import com.hotcast.vr.tools.Md5Utils;
+import com.hotcast.vr.tools.TokenUtils;
 import com.hotcast.vr.tools.Utils;
 import com.lidroid.xutils.DbUtils;
 import com.lidroid.xutils.exception.DbException;
@@ -138,8 +139,7 @@ public class SplashActivity extends BaseActivity {
 
     private void getNetDate() {
         RequestParams params = new RequestParams();
-        String str = format.format(System.currentTimeMillis());
-        params.addBodyParameter("token", Md5Utils.getMd5("hotcast-" + str + "-hotcast"));
+        params.addBodyParameter("token", TokenUtils.createToken(this));
         params.addBodyParameter("version", BaseApplication.version);
         params.addBodyParameter("platform", BaseApplication.platform);
         this.httpPost(requestUrl, params, new RequestCallBack<String>() {

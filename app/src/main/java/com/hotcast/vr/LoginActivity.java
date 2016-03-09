@@ -17,6 +17,7 @@ import com.google.gson.Gson;
 import com.hotcast.vr.bean.User2;
 import com.hotcast.vr.tools.Constants;
 import com.hotcast.vr.tools.Md5Utils;
+import com.hotcast.vr.tools.TokenUtils;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.RequestParams;
 import com.lidroid.xutils.http.ResponseInfo;
@@ -153,9 +154,7 @@ public class LoginActivity extends BaseActivity {
         String mUrl = Constants.LOGIN;
         RequestParams params = new RequestParams();
         String str = format.format(System.currentTimeMillis());
-        System.out.println("---str="+str);
-        System.out.println("---token="+Md5Utils.getMd5("hotcast-" + str + "-hotcast"));
-        params.addBodyParameter("token", Md5Utils.getMd5("hotcast-" + str + "-hotcast"));
+        params.addBodyParameter("token", TokenUtils.createToken(this));
         params.addBodyParameter("version", BaseApplication.version);
         params.addBodyParameter("platform", BaseApplication.platform);
         params.addBodyParameter("phone", username);

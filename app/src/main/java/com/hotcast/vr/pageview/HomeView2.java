@@ -30,6 +30,7 @@ import com.hotcast.vr.pullrefreshview.PullToRefreshListView;
 import com.hotcast.vr.tools.Constants;
 import com.hotcast.vr.tools.L;
 import com.hotcast.vr.tools.Md5Utils;
+import com.hotcast.vr.tools.TokenUtils;
 import com.hotcast.vr.tools.Utils;
 import com.lidroid.xutils.DbUtils;
 import com.lidroid.xutils.ViewUtils;
@@ -185,8 +186,7 @@ public class HomeView2 extends BaseView {
         }
         String url = Constants.SPECIAL;
         RequestParams params = new RequestParams();
-        String str = activity.format.format(System.currentTimeMillis());
-        params.addBodyParameter("token", Md5Utils.getMd5("hotcast-" + str + "-hotcast"));
+        params.addBodyParameter("token", TokenUtils.createToken(activity));
         params.addBodyParameter("version", BaseApplication.version);
         params.addBodyParameter("platform", BaseApplication.platform);
         System.out.println("---version = " + BaseApplication.version + " --platform = " + BaseApplication.platform);
@@ -273,8 +273,7 @@ public class HomeView2 extends BaseView {
         }
         String url = requestUrl;
         RequestParams params = new RequestParams();
-        String str = activity.format.format(System.currentTimeMillis());
-        params.addBodyParameter("token", Md5Utils.getMd5("hotcast-"+str+"-hotcast"));
+        params.addBodyParameter("token", TokenUtils.createToken(activity));
         params.addBodyParameter("version", BaseApplication.version);
         params.addBodyParameter("platform", BaseApplication.platform);
         activity.httpPost(url, params, new RequestCallBack<String>() {

@@ -15,6 +15,7 @@ import com.hotcast.vr.bean.User1;
 import com.hotcast.vr.bean.User2;
 import com.hotcast.vr.tools.Constants;
 import com.hotcast.vr.tools.Md5Utils;
+import com.hotcast.vr.tools.TokenUtils;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.RequestParams;
 import com.lidroid.xutils.http.ResponseInfo;
@@ -111,8 +112,7 @@ public class RegistActivity extends BaseActivity {
             mUrl = Constants.REGIST;
         }
         RequestParams params = new RequestParams();
-        String str = format.format(System.currentTimeMillis());
-        params.addBodyParameter("token", Md5Utils.getMd5("hotcast-" + str + "-hotcast"));
+        params.addBodyParameter("token", TokenUtils.createToken(this));
         params.addBodyParameter("version", BaseApplication.version);
         params.addBodyParameter("platform", BaseApplication.platform);
         params.addBodyParameter("phone",phone);
@@ -172,8 +172,7 @@ public class RegistActivity extends BaseActivity {
     private void sendVerify(String verificationcode,String phone) {
         mUrl = Constants.CHECKMESSAG;
         RequestParams params = new RequestParams();
-        String str = format.format(System.currentTimeMillis());
-        params.addBodyParameter("token", Md5Utils.getMd5("hotcast-"+str+"-hotcast"));
+        params.addBodyParameter("token", TokenUtils.createToken(this));
         params.addBodyParameter("version", BaseApplication.version);
         params.addBodyParameter("platform", BaseApplication.platform);
         params.addBodyParameter("phone",phone);
@@ -206,8 +205,7 @@ public class RegistActivity extends BaseActivity {
     private void getVerificationCode(String phone,String type) {
         mUrl = Constants.SENDMESSAG;
         RequestParams params = new RequestParams();
-        String str = format.format(System.currentTimeMillis());
-        params.addBodyParameter("token", Md5Utils.getMd5("hotcast-"+str+"-hotcast"));
+        params.addBodyParameter("token", TokenUtils.createToken(this));
         params.addBodyParameter("version", BaseApplication.version);
         params.addBodyParameter("platform", BaseApplication.platform);
         params.addBodyParameter("phone",phone);

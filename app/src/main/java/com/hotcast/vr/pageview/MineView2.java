@@ -26,6 +26,7 @@ import com.hotcast.vr.bean.User2;
 import com.hotcast.vr.bean.UserData;
 import com.hotcast.vr.tools.Constants;
 import com.hotcast.vr.tools.Md5Utils;
+import com.hotcast.vr.tools.TokenUtils;
 import com.lidroid.xutils.BitmapUtils;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.RequestParams;
@@ -194,8 +195,8 @@ public class MineView2 extends BaseView implements View.OnClickListener {
     private void logout(String login_token) {
         String mUrl = Constants.LOGOUT;
         RequestParams params = new RequestParams();
-        String str = activity.format.format(System.currentTimeMillis());
-        params.addBodyParameter("token", Md5Utils.getMd5("hotcast-" + str + "-hotcast"));
+        System.out.println("--token= "+TokenUtils.createToken(activity));
+        params.addBodyParameter("token", TokenUtils.createToken(activity));
         params.addBodyParameter("version", BaseApplication.version);
         params.addBodyParameter("platform", BaseApplication.platform);
         params.addBodyParameter("login_token", login_token);
