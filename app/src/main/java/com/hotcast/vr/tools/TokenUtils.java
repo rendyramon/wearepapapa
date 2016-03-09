@@ -7,10 +7,14 @@ import android.text.TextUtils;
 
 import com.hotcast.vr.BaseApplication;
 
+import java.text.SimpleDateFormat;
+
 /**
  * Created by liurongzhi on 2016/3/9.
  */
 public class TokenUtils {
+    public static SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHH");
+
     public static String createToken(Context context) {
         String token = null;
         if (BaseApplication.platform == null || BaseApplication.platform.equals("")) {
@@ -18,10 +22,10 @@ public class TokenUtils {
         }
         if ("android".equals(BaseApplication.platform)) {
             //主线版
-            token = Md5Utils.getMd5("hotcast-" + System.currentTimeMillis() + "-hotcast");
+            token = Md5Utils.getMd5("hotcast-" + format.format(System.currentTimeMillis()) + "-hotcast");
         } else {
             //其他渠道包
-            token = Md5Utils.getMd5(BaseApplication.platform + "-" + System.currentTimeMillis());
+            token = Md5Utils.getMd5(BaseApplication.platform + "-" + format.format(System.currentTimeMillis()));
         }
         return token;
     }
