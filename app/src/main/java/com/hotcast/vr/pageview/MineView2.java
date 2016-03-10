@@ -93,7 +93,7 @@ public class MineView2 extends BaseView implements View.OnClickListener {
     public void init() {
 //        bitmapUtils = new BitmapUtils(activity);
 //        date = activity.sp.select("userData","");
-        iv_head.setOnClickListener(this);
+
         refreshView();
         title.setText("注销");
         spec = activity.sp.select("spec", "");
@@ -144,11 +144,15 @@ public class MineView2 extends BaseView implements View.OnClickListener {
             title.setVisibility(View.VISIBLE);
             title.setOnClickListener(this);
             tv_username.setOnClickListener(this);
+            rl_change.setVisibility(View.VISIBLE);
+            iv_head.setOnClickListener(this);
             showMasseg();
         } else {
             ll_login.setVisibility(View.VISIBLE);
             tv_username.setVisibility(View.GONE);
             title.setVisibility(View.GONE);
+            iv_head.setImageResource(R.mipmap.head);
+            rl_change.setVisibility(View.GONE);
         }
     }
     private void initListView() {

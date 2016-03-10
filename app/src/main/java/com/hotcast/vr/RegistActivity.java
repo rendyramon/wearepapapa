@@ -95,6 +95,7 @@ public class RegistActivity extends BaseActivity {
                 verificationcode = et_verificationcode.getText().toString();
                 if (!TextUtils.isEmpty(verificationcode) && verificationcode.length() == 6 ){
                     sendVerify(verificationcode,phone);
+                    bt_next.setEnabled(false);
                 }else {
                     showToast("亲，请输入正确的验证^_^，请重输入");
                 }
@@ -137,11 +138,10 @@ public class RegistActivity extends BaseActivity {
                         System.out.println("---user2 = " + user2);
                         if ("success".equals(user2.getMessage()) || 0 <= user2.getCode() && 10 >= user2.getCode()) {
                             BaseApplication.isLogin = true;
-                            showToast("亲,登录成功了哟，快去看片儿吧*_*");
+                            showToast("亲,注册成功了哟，快去看片儿吧*_*");
                             System.out.println("---add userData=" + data);
-                            sp.add("userData", data.toString());
-
-                            System.out.println("---select userData=" + sp.select("userData", "**"));
+                            sp.add("userData", data);
+                            System.out.println("---select userData=" + sp.select("userData", ""));
                             finish();
 
                         } else {
@@ -164,7 +164,6 @@ public class RegistActivity extends BaseActivity {
             @Override
             public void onFailure(HttpException e, String s) {
                 showToast("亲，密码不要输入特殊字符哦*_*");
-//                bt_verificationcode.setEnabled(true);
             }
         });
     }
@@ -191,12 +190,14 @@ public class RegistActivity extends BaseActivity {
                     ll_regist1.setVisibility(View.GONE);
                     ll_regist2.setVisibility(View.VISIBLE);
                 }else {
-                    showToast("亲，请输入正确的验证^_^，请重输入");
+                    bt_next.setEnabled(true);
+                    showToast("亲，"+user1.getMessage()+"^_^");
                 }
             }
 
             @Override
             public void onFailure(HttpException e, String s) {
+                bt_next.setEnabled(true);
                 showToast("亲，请输入正确的验证^_^，请重输入");
             }
         });

@@ -142,12 +142,14 @@ public class ReNameActivity extends BaseActivity {
                         newPassword = et_newpassword.getText().toString().trim();
                         if (!TextUtils.isEmpty(oldPassword) && !TextUtils.isEmpty(newPassword)){
                                 saveNewPassword(oldPassword,newPassword);
+                            bt_save.setEnabled(false);
                         }
                         break;
                     case "更改用户名":
                         username = et_username.getText().toString().trim();
                         if (!TextUtils.isEmpty(username)) {
                             saveNewUsername(username);
+                            bt_save.setEnabled(false);
                         } else {
                             showToast("亲，用户名不能为空哦^_^");
                         }
@@ -182,13 +184,15 @@ public class ReNameActivity extends BaseActivity {
                         showToast("亲，您的密码已经修改该成功了哟^_^");
                         finish();
                     }else {
-                        showToast("亲，"+user1.getMessage()+"*_*");
+                        bt_save.setEnabled(true);
+                        showToast("亲，" + user1.getMessage() + "*_*");
                     }
                 }
             }
 
             @Override
             public void onFailure(HttpException e, String s) {
+                bt_save.setEnabled(true);
                 showToast("亲，修改该用户名失败了T_T，请检查网络");
             }
         });
@@ -219,12 +223,16 @@ public class ReNameActivity extends BaseActivity {
                         sp.add("username", username);
                         showToast("亲，您的昵称已经修改该成功了哟^_^");
                         finish();
+                    }else {
+                        bt_save.setEnabled(true);
+                        showToast("亲，"+user1.getMessage()+"^_^");
                     }
                 }
             }
 
             @Override
             public void onFailure(HttpException e, String s) {
+                bt_save.setEnabled(true);
                 showToast("亲，修改该用户名失败了T_T，请检查网络");
             }
         });

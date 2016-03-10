@@ -87,23 +87,19 @@ public class SplashActivity extends BaseActivity {
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
-        String userData = sp.select("userData", "");
-        if (!TextUtils.isEmpty(userData)){
-            UserData userData1 = new Gson().fromJson(userData, UserData.class);
-            if (userData1 != null){
-                getUserData(userData1.getLogin_token());
-                System.out.println("---1login_token=" + userData1.getLogin_token());
-                System.out.println("---2login_token=" + userData1.getLogin_token().toString());
-
-            }
-        }
-
 
         DbdateSave();
         new LocalVideosAsynctask(this).execute();
         L.e("PackageName:" + getPackageName());
         getNetDate();
-
+        String userData = sp.select("userData", "");
+        if (!TextUtils.isEmpty(userData)){
+            UserData userData1 = new Gson().fromJson(userData, UserData.class);
+            if (userData1 != null){
+                System.out.println("---login_token=" + userData1.getLogin_token());
+                getUserData(userData1.getLogin_token());
+            }
+        }
         System.out.println("***sp=" + sp);
 
     }
@@ -115,7 +111,7 @@ public class SplashActivity extends BaseActivity {
         params.addBodyParameter("version", BaseApplication.version);
         params.addBodyParameter("platform", BaseApplication.platform);
         params.addBodyParameter("login_token", login_token);
-        System.out.println("---login_token= "+login_token);
+        System.out.println("---login_token="+login_token);
         this.httpPost(requestUrl, params, new RequestCallBack<String>() {
             @Override
             public void onStart() {

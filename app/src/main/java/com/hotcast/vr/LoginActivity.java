@@ -120,6 +120,7 @@ public class LoginActivity extends BaseActivity {
                     showToast("亲，手机号或密码不能为空为空哦^_^");
                 }
                 login(username, password);
+                bt_login.setEnabled(false);
                 System.out.println("---点击了登录按钮");
 
                 break;
@@ -168,7 +169,6 @@ public class LoginActivity extends BaseActivity {
             @Override
             public void onSuccess(ResponseInfo<String> responseInfo) {
                 System.out.println("---responseInfo.result = " + responseInfo.result);
-
                 try {
                     JSONObject j = new JSONObject(responseInfo.result);
                     String data = j.getString("data");
@@ -193,6 +193,7 @@ public class LoginActivity extends BaseActivity {
                     } else {
                         String message = j.getString("message");
                         showToast("亲," + message + "^_^");
+                        bt_login.setEnabled(true);
                         System.out.println("---message=" + message);
                     }
                 } catch (JSONException e) {
@@ -205,8 +206,8 @@ public class LoginActivity extends BaseActivity {
 
             @Override
             public void onFailure(HttpException e, String s) {
-                bt_login.setEnabled(false);
-                showToast("亲，验证码获取失败T_T，请重新获取");
+                bt_login.setEnabled(true);
+                showToast("亲，登录失败了T_T，请重新登录");
             }
         });
     }
