@@ -47,11 +47,7 @@ public class LandscapeActivity_Second extends BaseActivity {
     private VerticalGallery vg2;
     private int nowPosition;
     private int nowPage = 0;
-    //    private GalleryItemView itemView1;
-//    private GalleryItemView itemView2;
-    //    private GalleryItemView upitemView1;
     private GalleryItemView downitemView1;
-    //    private GalleryItemView upitemView2;
     private GalleryItemView downitemView2;
     ImageAdapter adapter1;
     ImageAdapter adapter2;
@@ -286,6 +282,9 @@ public class LandscapeActivity_Second extends BaseActivity {
                 case 2:
                     clickItemDown();
                     break;
+                case 3:
+                    clickItem();
+                    break;
             }
         }
     };
@@ -368,11 +367,15 @@ public class LandscapeActivity_Second extends BaseActivity {
                 play.setImgurl(img);
                 if (flag) {
                     String play_url = null;
-                    if (!TextUtils.isEmpty(play.getHd_url())) {
-                        play_url = play.getHd_url();
-                    } else if (!TextUtils.isEmpty(play.getSd_url())) {
+                    if (!TextUtils.isEmpty(play.getSd_url())) {
+                        BaseApplication.clarityText = "标清";
                         play_url = play.getSd_url();
+                    } else if (!TextUtils.isEmpty(play.getHd_url())) {
+                        BaseApplication.clarityText = "高清";
+                        play_url = play.getHd_url();
+
                     } else if (!TextUtils.isEmpty(play.getUhd_url())) {
+                        BaseApplication.clarityText = "超清";
                         play_url = play.getUhd_url();
                     }
                     Intent intent = new Intent(LandscapeActivity_Second.this, PlayerVRActivityNew.class);

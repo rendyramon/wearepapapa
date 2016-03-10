@@ -124,6 +124,12 @@ public class GalleryItemView extends RelativeLayout {
 
             }
         });
+        findViewById(R.id.clickview).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                handler.sendEmptyMessage(3);
+            }
+        });
         bt_ceach1.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {

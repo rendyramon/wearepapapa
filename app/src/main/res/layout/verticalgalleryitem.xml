@@ -13,7 +13,13 @@
         android:layout_marginBottom="4dp"
         android:focusable="false"
         android:spacing="5dp" />
-
+    <Button
+        android:background="#00000000"
+        android:id="@+id/clickview"
+        android:layout_centerInParent="true"
+        android:layout_marginBottom="4dp"
+        android:layout_width="110dp"
+        android:layout_height="80dp" />
     <TextView
         android:id="@+id/tv_title1"
         android:layout_width="wrap_content"
