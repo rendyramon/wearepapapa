@@ -1,14 +1,25 @@
 package com.hotcast.vr.pageview;
 
+import android.annotation.TargetApi;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.os.Build;
+import android.os.Handler;
+import android.provider.MediaStore;
 import android.text.TextUtils;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.hotcast.vr.AboutActivity;
@@ -62,15 +73,17 @@ public class MineView2 extends BaseView implements View.OnClickListener {
     Button regist;
     @InjectView(R.id.tv_username)
     TextView tv_username;
-
+    Handler handler;
 
     private UpdateAppManager updateAppManager;
     String spec;
     String is_force;
     String newFeatures;
+    boolean ishowPopupWindow = false;
 
-    public MineView2(BaseActivity activity) {
+    public MineView2(BaseActivity activity, Handler mhandler) {
         super(activity, R.layout.layout_mine2);
+        handler = mhandler;
     }
 
 
@@ -78,7 +91,7 @@ public class MineView2 extends BaseView implements View.OnClickListener {
     public void init() {
 //        bitmapUtils = new BitmapUtils(activity);
 //        date = activity.sp.select("userData","");
-
+        iv_head.setOnClickListener(this);
         refreshView();
         title.setText("注销");
         spec = activity.sp.select("spec", "");
@@ -94,40 +107,49 @@ public class MineView2 extends BaseView implements View.OnClickListener {
     BitmapUtils bitmapUtils;
     String date;
     String username;
+    String avatar;
+
     private void showMasseg() {
-        if (!TextUtils.isEmpty(date)){
+        if (!TextUtils.isEmpty(date)) {
             userDate = new Gson().fromJson(date, UserData.class);
-            username = activity.sp.select("username","");
-            if (!TextUtils.isEmpty(username)){
+            username = activity.sp.select("username", "");
+            avatar = activity.sp.select("avatar", "");
+            if (!TextUtils.isEmpty(username)) {
                 tv_username.setText(username);
-            }else {
+            } else {
                 tv_username.setText(userDate.getUsername());
             }
-            bitmapUtils.display(iv_head,userDate.getAvatar());
+            if (!TextUtils.isEmpty(avatar)) {
+                bitmapUtils.display(iv_head, avatar);
+
+            } else {
+                bitmapUtils.display(iv_head, userDate.getAvatar());
+            }
         }
 
 //        tv_username.setText();
     }
 
-    public void refreshView(){
-        date = activity.sp.select("userData","");
+    public void refreshView() {
+        date = activity.sp.select("userData", "");
         bitmapUtils = new BitmapUtils(activity);
-        if (!TextUtils.isEmpty(date)){
+        if (!TextUtils.isEmpty(date)) {
             BaseApplication.isLogin = true;
         }
-    if (BaseApplication.isLogin){
-        ll_login.setVisibility(View.GONE);
-        tv_username.setVisibility(View.VISIBLE);
-        title.setVisibility(View.VISIBLE);
-        title.setOnClickListener(this);
-        tv_username.setOnClickListener(this);
-        showMasseg();
-    }else {
-        ll_login.setVisibility(View.VISIBLE);
-        tv_username.setVisibility(View.GONE);
-        title.setVisibility(View.GONE);
+        if (BaseApplication.isLogin) {
+            ll_login.setVisibility(View.GONE);
+            tv_username.setVisibility(View.VISIBLE);
+            title.setVisibility(View.VISIBLE);
+            title.setOnClickListener(this);
+            tv_username.setOnClickListener(this);
+            showMasseg();
+        } else {
+            ll_login.setVisibility(View.VISIBLE);
+            tv_username.setVisibility(View.GONE);
+            title.setVisibility(View.GONE);
+        }
     }
-}
+
     private void initListView() {
         login.setOnClickListener(this);
         regist.setOnClickListener(this);
@@ -143,7 +165,7 @@ public class MineView2 extends BaseView implements View.OnClickListener {
         switch (view.getId()) {
             case R.id.tv_username:
                 intent = new Intent(activity, ReNameActivity.class);
-                intent.putExtra("title","更改用户名");
+                intent.putExtra("title", "更改用户名");
                 activity.startActivity(intent);
                 activity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                 System.out.println("---您点击了用户名，你可以修改用户名");
@@ -162,7 +184,6 @@ public class MineView2 extends BaseView implements View.OnClickListener {
                 break;
 
             case R.id.rl_cache:
-
                 intent = new Intent(activity, ListLocalActivity.class);
                 activity.startActivity(intent);
                 activity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
@@ -189,13 +210,55 @@ public class MineView2 extends BaseView implements View.OnClickListener {
             case R.id.tv_title:
                 logout(userDate.getLogin_token());
                 break;
+            case R.id.iv_head:
+                if (BaseApplication.isLogin) {
+                    showPopupWinow();
+                } else {
+                    Toast.makeText(activity, "亲，您还没有登陆哟~", Toast.LENGTH_SHORT).show();
+                }
+                break;
+            case R.id.bt_pictue:
+                //打开本地相册
+                if (popupWindow != null && popupWindow.isShowing()) {
+                    popupWindow.dismiss();
+                    System.out.println("---隐藏");
+                    ishowPopupWindow = popupWindow.isShowing();
+                    handler.sendEmptyMessage(0);
+                    break;
+                }
+                break;
+            case R.id.bt_camera:
+                //打开相机
+                if (popupWindow != null && popupWindow.isShowing()) {
+                    popupWindow.dismiss();
+                    ishowPopupWindow = popupWindow.isShowing();
+                    handler.sendEmptyMessage(1);
+                }
+                break;
         }
+    }
+
+    PopupWindow popupWindow;
+    Button bt_camera;
+    Button bt_pictue;
+
+    public void showPopupWinow() {
+        ishowPopupWindow = true;
+        View view = LayoutInflater.from(activity).inflate(
+                R.layout.popopwindow_mineview, null);
+        bt_camera = (Button) view.findViewById(R.id.bt_camera);
+        bt_pictue = (Button) view.findViewById(R.id.bt_pictue);
+        bt_camera.setOnClickListener(this);
+        bt_pictue.setOnClickListener(this);
+        popupWindow = new PopupWindow(view, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
+        popupWindow.setBackgroundDrawable(new BitmapDrawable());
+        popupWindow.showAtLocation(this.getRootView(), Gravity.CENTER | Gravity.BOTTOM, 0, 0);
     }
 
     private void logout(String login_token) {
         String mUrl = Constants.LOGOUT;
         RequestParams params = new RequestParams();
-        System.out.println("--token= "+TokenUtils.createToken(activity));
+        System.out.println("--token= " + TokenUtils.createToken(activity));
         params.addBodyParameter("token", TokenUtils.createToken(activity));
         params.addBodyParameter("version", BaseApplication.version);
         params.addBodyParameter("platform", BaseApplication.platform);
@@ -210,16 +273,17 @@ public class MineView2 extends BaseView implements View.OnClickListener {
             @Override
             public void onSuccess(ResponseInfo<String> responseInfo) {
                 System.out.println("---responseInfo.result = " + responseInfo.result);
-                User1 user1 = new Gson().fromJson(responseInfo.result,User1.class);
-                if ("user1".equals(user1.getMessage()) || 0<=user1.getCode()&& 10>=user1.getCode()){
+                User1 user1 = new Gson().fromJson(responseInfo.result, User1.class);
+                if ("user1".equals(user1.getMessage()) || 0 <= user1.getCode() && 10 >= user1.getCode()) {
                     BaseApplication.isLogin = false;
-                    iv_head.setImageResource(R.mipmap.head);
+                    iv_head.setImageResource(R.mipmap.head2);
                     activity.sp.delete("userData");
                     activity.sp.delete("username");
+                    activity.sp.delete("avatar");
                     title.setVisibility(View.GONE);
                     refreshView();
-                }else {
-                    activity.showToast("亲，"+user1.getMessage()+"T_T");
+                } else {
+                    activity.showToast("亲，" + user1.getMessage() + "T_T");
                 }
             }
 
@@ -229,4 +293,10 @@ public class MineView2 extends BaseView implements View.OnClickListener {
             }
         });
     }
+
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    public void setHeadBitmap(Bitmap bt) {
+        iv_head.setBackground(new BitmapDrawable(bt));
+    }
+
 }

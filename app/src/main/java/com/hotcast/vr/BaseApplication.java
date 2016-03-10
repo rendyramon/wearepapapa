@@ -32,7 +32,6 @@ public class BaseApplication extends Application {
     public static boolean isLogin = false;
     public static float playbacktime = 0;
     public static String clarityText = "";
-
     //横屏时的图片数量
     public static int scapePage = 1;
     public static boolean isDownLoad = false;

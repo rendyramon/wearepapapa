@@ -140,8 +140,8 @@ public class LoginActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.tv_forgot:
-                intent = new Intent(this,RegistActivity.class);
-                intent.putExtra("title","找回密码");
+                intent = new Intent(this, RegistActivity.class);
+                intent.putExtra("title", "找回密码");
                 startActivity(intent);
                 finish();
                 break;
@@ -179,8 +179,9 @@ public class LoginActivity extends BaseActivity {
                         if ("success".equals(user2.getMessage()) || 0 <= user2.getCode() && 10 >= user2.getCode()) {
                             BaseApplication.isLogin = true;
                             showToast("亲,登录成功了哟，快去看片儿吧*_*");
-                            System.out.println("---add userData=" + data);
+
                             sp.add("userData", data.toString());
+                            System.out.println("---add userData=" + data);
 
                             System.out.println("---select userData=" + sp.select("userData", "**"));
                             finish();
