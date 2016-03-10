@@ -91,8 +91,10 @@ public class SplashActivity extends BaseActivity {
         if (!TextUtils.isEmpty(userData)){
             UserData userData1 = new Gson().fromJson(userData, UserData.class);
             if (userData1 != null){
-                System.out.println("---login_token=" + userData1.getLogin_token());
                 getUserData(userData1.getLogin_token());
+                System.out.println("---1login_token=" + userData1.getLogin_token());
+                System.out.println("---2login_token=" + userData1.getLogin_token().toString());
+
             }
         }
 
@@ -112,7 +114,8 @@ public class SplashActivity extends BaseActivity {
         params.addBodyParameter("token", TokenUtils.createToken(this));
         params.addBodyParameter("version", BaseApplication.version);
         params.addBodyParameter("platform", BaseApplication.platform);
-        params.addBodyParameter("requestUrl", login_token);
+        params.addBodyParameter("login_token", login_token);
+        System.out.println("---login_token= "+login_token);
         this.httpPost(requestUrl, params, new RequestCallBack<String>() {
             @Override
             public void onStart() {

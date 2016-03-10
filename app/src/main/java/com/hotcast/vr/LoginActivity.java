@@ -180,7 +180,7 @@ public class LoginActivity extends BaseActivity {
                             showToast("亲,登录成功了哟，快去看片儿吧*_*");
                             data = j.getJSONObject("data").toString();
                             sp.add("userData", data);
-                            System.out.println("---add userData=" + data);
+                            System.out.println("---1add userData=" + data);
 
                             System.out.println("---select userData=" + sp.select("userData", "**"));
                             finish();
