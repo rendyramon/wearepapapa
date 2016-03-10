@@ -34,6 +34,10 @@ public class Constants {
     public static final String FORGET = SERVER_URL + "/member/user/forget-password";
     //上传头像
     public static final String UPHEAD = SERVER_URL + "/member/user/upload-avatar";
+    //    修改密码
+    public static final String CHANGPASSWORD = SERVER_URL + "/member/user/reset-password";
+
+
 
 
     //    public static final String SERVER = "http://101.200.231.61:9900";
