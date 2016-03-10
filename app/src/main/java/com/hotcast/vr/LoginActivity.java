@@ -178,8 +178,8 @@ public class LoginActivity extends BaseActivity {
                         if ("success".equals(user2.getMessage()) || 0 <= user2.getCode() && 10 >= user2.getCode()) {
                             BaseApplication.isLogin = true;
                             showToast("亲,登录成功了哟，快去看片儿吧*_*");
-
-                            sp.add("userData", data.toString());
+                            data = j.getJSONObject("data").toString();
+                            sp.add("userData", data);
                             System.out.println("---add userData=" + data);
 
                             System.out.println("---select userData=" + sp.select("userData", "**"));

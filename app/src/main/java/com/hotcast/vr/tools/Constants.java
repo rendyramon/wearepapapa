@@ -36,6 +36,8 @@ public class Constants {
     public static final String UPHEAD = SERVER_URL + "/member/user/upload-avatar";
     //    修改密码
     public static final String CHANGPASSWORD = SERVER_URL + "/member/user/reset-password";
+//    获取用户信息
+    public static final String INFO = SERVER_URL+"/member/user/info";
 
 
 

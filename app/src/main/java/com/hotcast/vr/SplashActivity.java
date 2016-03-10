@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -17,6 +18,8 @@ import com.hotcast.vr.bean.LocalBean;
 import com.hotcast.vr.bean.LocalBean1;
 import com.hotcast.vr.bean.LocalBean2;
 import com.hotcast.vr.bean.Update;
+import com.hotcast.vr.bean.User2;
+import com.hotcast.vr.bean.UserData;
 import com.hotcast.vr.tools.Constants;
 import com.hotcast.vr.tools.L;
 import com.hotcast.vr.tools.Md5Utils;
@@ -29,6 +32,9 @@ import com.lidroid.xutils.http.RequestParams;
 import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.umeng.analytics.AnalyticsConfig;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.List;
 import java.util.Timer;
@@ -74,7 +80,6 @@ public class SplashActivity extends BaseActivity {
     @Override
     public void init() {
         AnalyticsConfig.enableEncrypt(true);
-        requestUrl = Constants.URL_UPDATE;
         packageManager = this.getPackageManager();
         try {
             info = packageManager.getPackageInfo(this.getPackageName(), 0);
@@ -82,13 +87,78 @@ public class SplashActivity extends BaseActivity {
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
+        String userData = sp.select("userData", "");
+        if (!TextUtils.isEmpty(userData)){
+            UserData userData1 = new Gson().fromJson(userData, UserData.class);
+            if (userData1 != null){
+                System.out.println("---login_token=" + userData1.getLogin_token());
+                getUserData(userData1.getLogin_token());
+            }
+        }
+
+
         DbdateSave();
         new LocalVideosAsynctask(this).execute();
         L.e("PackageName:" + getPackageName());
         getNetDate();
-//        getNetDate2();
+
         System.out.println("***sp=" + sp);
 
+    }
+
+    private void getUserData(String login_token) {
+        requestUrl = Constants.INFO;
+        RequestParams params = new RequestParams();
+        params.addBodyParameter("token", TokenUtils.createToken(this));
+        params.addBodyParameter("version", BaseApplication.version);
+        params.addBodyParameter("platform", BaseApplication.platform);
+        params.addBodyParameter("requestUrl", login_token);
+        this.httpPost(requestUrl, params, new RequestCallBack<String>() {
+            @Override
+            public void onStart() {
+                super.onStart();
+
+            }
+
+            @Override
+            public void onSuccess(ResponseInfo<String> responseInfo) {
+                System.out.println("---responseInfo.result = " + responseInfo.result);
+
+                try {
+                    JSONObject j = new JSONObject(responseInfo.result);
+                    String data = j.getString("data");
+                    if (data.length() > 5) {
+                        User2 user2 = new Gson().fromJson(responseInfo.result, User2.class);
+                        System.out.println("---user2 = " + user2);
+                        if ("success".equals(user2.getMessage()) || 0 <= user2.getCode() && 10 >= user2.getCode()) {
+                            sp.add("userData", data);
+//                            System.out.println("---add userData=" + data);
+//                            System.out.println("---select userData=" + sp.select("userData", "**"));
+
+                        } else {
+                            showToast("亲," + user2.getMessage() + "^_^");
+                            System.out.println("---message=" + user2.getMessage());
+                        }
+                    } else {
+                        sp.delete("userData");
+                        BaseApplication.isLogin = false;
+                        String message = j.getString("message");
+                        showToast("亲," + message + "^_^");
+                        System.out.println("---message=" + message);
+                    }
+                } catch (JSONException e) {
+                    System.out.println("--解析失败：" + e);
+                    e.printStackTrace();
+                }
+
+
+            }
+
+            @Override
+            public void onFailure(HttpException e, String s) {
+                showToast("亲，获取信息失败了T_T，请重检查网络");
+            }
+        });
     }
 
     public void DbdateSave() {
@@ -138,6 +208,7 @@ public class SplashActivity extends BaseActivity {
     }
 
     private void getNetDate() {
+        requestUrl = Constants.URL_UPDATE;
         RequestParams params = new RequestParams();
         params.addBodyParameter("token", TokenUtils.createToken(this));
         params.addBodyParameter("version", BaseApplication.version);

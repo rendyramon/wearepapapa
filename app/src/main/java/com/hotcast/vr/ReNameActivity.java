@@ -202,6 +202,7 @@ public class ReNameActivity extends BaseActivity {
         params.addBodyParameter("platform", BaseApplication.platform);
         params.addBodyParameter("login_token", userData.getLogin_token());
         params.addBodyParameter("username", username);
+        System.out.println("---login_token="+userData.getLogin_token());
         this.httpPost(mUrl, params, new RequestCallBack<String>() {
             @Override
             public void onStart() {
