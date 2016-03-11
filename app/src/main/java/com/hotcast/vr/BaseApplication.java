@@ -148,7 +148,8 @@ public class BaseApplication extends Application {
 
     public static void getIMEI(Context context) {
         TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-        device = tm.getDeviceId();
+//        device = tm.getDeviceId();
+        device = "moniqi6.0";
 
     }
 
