@@ -148,8 +148,7 @@ public class BaseApplication extends Application {
 
     public static void getIMEI(Context context) {
         TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-//        device = tm.getDeviceId();
-        device = "模拟器";
+        device = tm.getDeviceId();
 
     }
 
