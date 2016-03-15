@@ -1107,7 +1107,10 @@ public class VerticalGallery extends VerticalGalleryAbsSpinner implements
 
 		return handled;
 	}
-
+	//适配手柄
+	public void myKeyDown(int keyCode, KeyEvent event){
+		onKeyDown(keyCode,event);
+	}
 	@Override
 	public boolean dispatchKeyEvent(KeyEvent event) {
 		// Gallery steals all key events
@@ -1128,13 +1131,13 @@ public class VerticalGallery extends VerticalGalleryAbsSpinner implements
 			if (movePrevious()) {
 				playSoundEffect(SoundEffectConstants.NAVIGATION_UP);
 			}
-			return true;
+			return false;
 
 		case KeyEvent.KEYCODE_DPAD_DOWN:
 			if (moveNext()) {
 				playSoundEffect(SoundEffectConstants.NAVIGATION_DOWN);
 			}
-			return true;
+			return false;
 
 		case KeyEvent.KEYCODE_DPAD_CENTER:
 		case KeyEvent.KEYCODE_ENTER:
@@ -1142,7 +1145,7 @@ public class VerticalGallery extends VerticalGalleryAbsSpinner implements
 			// fallthrough to default handling
 		}
 
-		return super.onKeyDown(keyCode, event);
+		return super.onKeyDown(keyCode,event);
 	}
 
 	@Override

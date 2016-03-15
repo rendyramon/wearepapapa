@@ -144,6 +144,7 @@ public class LandscapeActivity_Second extends BaseActivity {
             @Override
             public void onItemSelected(VerticalGalleryAdapterView<?> parent, View view, int position, long id) {
                 nowPage = position;
+                setText(nowPage);
             }
 
             @Override
@@ -526,24 +527,35 @@ public class LandscapeActivity_Second extends BaseActivity {
         switch (keyCode){
             case 19:
                 System.out.println("---上一页");
+                if (vg1.getSelectedItemPosition()>0) {
+                    int next = vg1.getSelectedItemPosition()-1;
+                    vg1.setSelection(next,true);
+                    vg2.setSelection(next, true);
+                }
                 break;
             case 20:
                 System.out.println("---下一页");
+                if (vg1.getSelectedItemPosition()<views1.size()-1) {
+                    System.out.println("---下一页");
+                    int next = vg1.getSelectedItemPosition()+1;
+                    vg1.setSelection(next,true);
+                    vg2.setSelection(next,true);
+                }
                 break;
             case 21:
-//                views1.get(nowPage).myKeyDown(keyCode,event);
-//                views2.get(nowPage).myKeyDown(keyCode, event);
+                views1.get(nowPage).myKeyDown(keyCode,event);
+                views2.get(nowPage).myKeyDown(keyCode, event);
                 System.out.println("---上一个");
                 break;
             case 22:
-//                views1.get(nowPage).myKeyDown(keyCode, event);
-//                views2.get(nowPage).myKeyDown(keyCode, event);
+                views1.get(nowPage).myKeyDown(keyCode, event);
+                views2.get(nowPage).myKeyDown(keyCode, event);
                 System.out.println("---下一个");
                 break;
             case 96:
             case 23:
                 System.out.println("---点击播放");
-//                clickItem(nowPosition);
+                clickItem();
                 break;
             case 97:
             case 4:

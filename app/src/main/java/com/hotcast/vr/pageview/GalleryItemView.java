@@ -217,12 +217,9 @@ public class GalleryItemView extends RelativeLayout {
         context.startActivity(intent);
     }
 
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        return false;
+    public void myKeyDown(int keyCode, KeyEvent event){
+        gallery1.myKeyDown(keyCode, event);
     }
-
-
     public String downVideoData() {
         return tmpList.get(getSelectedItemPosition()).getVideos().get(0).getVid();
 

@@ -267,6 +267,7 @@ public class MineView2 extends BaseView implements View.OnClickListener {
         popupWindow = new PopupWindow(view, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
         popupWindow.setBackgroundDrawable(new BitmapDrawable());
         popupWindow.showAtLocation(this.getRootView(), Gravity.CENTER | Gravity.BOTTOM, 0, 0);
+        popupWindow.update();
     }
 
     private void logout(String login_token) {
