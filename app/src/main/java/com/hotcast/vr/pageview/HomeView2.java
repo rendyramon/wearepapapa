@@ -20,6 +20,7 @@ import com.hotcast.vr.BaseActivity;
 import com.hotcast.vr.BaseApplication;
 import com.hotcast.vr.DetailActivity;
 import com.hotcast.vr.R;
+import com.hotcast.vr.WebViewActivity;
 import com.hotcast.vr.bean.Datas;
 import com.hotcast.vr.bean.HomeBean;
 import com.hotcast.vr.bean.HomeRoll;
@@ -349,13 +350,21 @@ public class HomeView2 extends BaseView {
         RollViewPager rollViewPager = new RollViewPager(activity, viewList, new RollViewPager.onPageClick() {
             @Override
             public void onclick(int i) {
-//                System.out.println("---跳转详情页 " );
-                Intent intent = new Intent(activity, DetailActivity.class);
-                intent.putExtra("videoset_id", datasList.get(i).getMedia_id());
-//                    intent.putExtra("resource", datasList.get(i).getResource());
-                activity.startActivity(intent);
+                Intent intent;
+                switch (datasList.get(i).getType()){
+                    case "videoset":
+                        intent = new Intent(activity, DetailActivity.class);
+                        intent.putExtra("videoset_id", datasList.get(i).getMedia_id());
+                        activity.startActivity(intent);
+                        break;
+                    case "web":
+                        intent = new Intent(activity,WebViewActivity.class);
+                        intent.putExtra("rec_ur",datasList.get(i).getRec_ur());
+                        activity.startActivity(intent);
+                        break;
+                }
 
-//                Toast.makeText(activity, "position = " + i, Toast.LENGTH_SHORT).show();
+
             }
         });
 //        System.out.println("---335 datasList = " + datasList);
