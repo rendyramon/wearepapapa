@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -271,6 +272,7 @@ public class DetailActivity extends BaseActivity {
     LocalBean2 localBean;
     @Override
     public void init() {
+
         db = DbUtils.create(DetailActivity.this);
         requestUrl = Constants.DETAIL;
         receiver = new DownloadReceiver();

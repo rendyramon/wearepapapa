@@ -15,6 +15,7 @@
 
     <include
         layout="@layout/item_correlation_movies" />
+
 </LinearLayout>
     <View
         android:id="@+id/translucentview"
