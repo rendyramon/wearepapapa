@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -518,5 +519,37 @@ public class LandscapeActivity_Second extends BaseActivity {
                     }
                 });
         builder.create().show();
+    }
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        System.out.println("---keyCode second=" + keyCode);
+        switch (keyCode){
+            case 19:
+                System.out.println("---上一页");
+                break;
+            case 20:
+                System.out.println("---下一页");
+                break;
+            case 21:
+//                views1.get(nowPage).myKeyDown(keyCode,event);
+//                views2.get(nowPage).myKeyDown(keyCode, event);
+                System.out.println("---上一个");
+                break;
+            case 22:
+//                views1.get(nowPage).myKeyDown(keyCode, event);
+//                views2.get(nowPage).myKeyDown(keyCode, event);
+                System.out.println("---下一个");
+                break;
+            case 96:
+            case 23:
+                System.out.println("---点击播放");
+//                clickItem(nowPosition);
+                break;
+            case 97:
+            case 4:
+                finish();
+                break;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }

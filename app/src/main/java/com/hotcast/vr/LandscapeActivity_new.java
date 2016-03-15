@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -44,6 +45,7 @@ import com.lidroid.xutils.http.RequestParams;
 import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -537,6 +539,33 @@ public class LandscapeActivity_new extends BaseActivity {
         super.onBackPressed();
     }
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        System.out.println("---keyCode="+keyCode);
+        switch (keyCode){
+            case 19:
+                break;
+            case 20:
+                break;
+            case 21:
+                gallery1.myKeyDown(keyCode,event);
+                gallery2.myKeyDown(keyCode,event);
+                break;
+            case 22:
+                gallery1.myKeyDown(keyCode,event);
+                gallery2.myKeyDown(keyCode,event);
+                break;
+            case 96:
+            case 23:
+                clickItem(nowPosition);
+                break;
+            case 97:
+            case 4:
+                finish();
+                break;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
 
     private void install(String apkAbsolutePath) {
 

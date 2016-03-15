@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Handler;
 import android.os.Message;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -333,15 +334,37 @@ public class LocalCachelActivity_new extends BaseActivity {
         }
     }
 
-//    @Override
-//    public boolean onKeyDown(int keyCode, KeyEvent event) {
-//        switch (keyCode) {
-//            case KeyEvent.KEYCODE_VOLUME_DOWN:
-//                event.startTracking();
-//                return true;
-//        }
-//        return super.onKeyDown(keyCode, event);
-//    }
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        System.out.println("---keyCode="+keyCode);
+        switch (keyCode){
+            case 19:
+                break;
+            case 20:
+                break;
+            case 21:
+                gallery1.myKeyDown(keyCode,event);
+                gallery2.myKeyDown(keyCode,event);
+                break;
+            case 22:
+                gallery1.myKeyDown(keyCode,event);
+                gallery2.myKeyDown(keyCode,event);
+                break;
+            case 96:
+            case 23:
+                pOd = false;//进入播放模式
+                view1.setVisibility(View.INVISIBLE);
+                view2.setVisibility(View.INVISIBLE);
+                System.out.println("---删除执行");
+                deleteVedio();
+                break;
+            case 97:
+            case 4:
+                finish();
+                break;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
 //
 //    @Override
 //    public boolean onKeyLongPress(int keyCode, KeyEvent event) {

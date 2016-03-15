@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
 import android.util.AttributeSet;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.widget.Gallery;
 
@@ -49,6 +50,14 @@ public class LandGalleyView extends Gallery {
         return super.onTouchEvent(event);
     }
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        System.out.println("---keyCode999="+keyCode);
+        return false;
+    }
+    public void myKeyDown(int keyCode, KeyEvent event){
+        super.onKeyDown(keyCode,event);
+    }
 //    @Override
 //    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
 //        System.out.println("---velocityX:"+velocityX);

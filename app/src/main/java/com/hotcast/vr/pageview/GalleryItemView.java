@@ -3,6 +3,7 @@ package com.hotcast.vr.pageview;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -215,6 +216,12 @@ public class GalleryItemView extends RelativeLayout {
         intent.putExtra("splite_screen", true);
         context.startActivity(intent);
     }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        return false;
+    }
+
 
     public String downVideoData() {
         return tmpList.get(getSelectedItemPosition()).getVideos().get(0).getVid();
