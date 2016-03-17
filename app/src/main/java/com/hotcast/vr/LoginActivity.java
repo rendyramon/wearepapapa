@@ -163,9 +163,7 @@ public class LoginActivity extends BaseActivity {
             @Override
             public void onStart() {
                 super.onStart();
-
             }
-
             @Override
             public void onSuccess(ResponseInfo<String> responseInfo) {
                 System.out.println("---responseInfo.result = " + responseInfo.result);

@@ -4,28 +4,39 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.hotcast.vr.adapter.PinglunAdapter;
 import com.hotcast.vr.bean.Details;
 import com.hotcast.vr.bean.LocalBean2;
+import com.hotcast.vr.bean.Pinglun;
 import com.hotcast.vr.bean.Play;
 import com.hotcast.vr.bean.Relation;
 import com.hotcast.vr.bean.Urls;
+import com.hotcast.vr.bean.UserData;
 import com.hotcast.vr.bean.VideosNew;
 import com.hotcast.vr.dialog.MyDialog;
+import com.hotcast.vr.pageview.DetailScrollView;
 import com.hotcast.vr.receiver.DownloadReceiver;
 import com.hotcast.vr.tools.Constants;
+import com.hotcast.vr.tools.DensityUtils;
 import com.hotcast.vr.tools.L;
 import com.hotcast.vr.tools.Md5Utils;
 import com.hotcast.vr.tools.TokenUtils;
@@ -38,6 +49,9 @@ import com.lidroid.xutils.http.RequestParams;
 import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.umeng.analytics.MobclickAgent;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -71,8 +85,11 @@ public class DetailActivity extends BaseActivity {
     LinearLayout ll_download;
     @InjectView(R.id.progressBar5)
     ProgressBar progressBar5;
-
-//    private Play play;
+    @InjectView(R.id.et_pinglun)
+    EditText et_pinglun;
+    @InjectView(R.id.bt_sendpinglun)
+    Button bt_sendpinglun;
+    //    private Play play;
     private Details details;
     //    可以播放的URL集合大小
     private int size;
@@ -123,8 +140,8 @@ public class DetailActivity extends BaseActivity {
 //                }
                 intent = new Intent(DetailActivity.this, PlayerVRActivityNew.class);
                 intent.putExtra("play_url", play_url);
-                intent.putExtra("play",play);
-                intent.putExtra("qingxidu",qingxidu);
+                intent.putExtra("play", play);
+                intent.putExtra("qingxidu", qingxidu);
                 intent.putExtra("title", title);
                 intent.putExtra("splite_screen", false);
                 System.out.println("---play_url = " + play_url);
@@ -144,6 +161,7 @@ public class DetailActivity extends BaseActivity {
     String title;
     String media_id;
     Play play;
+
     public void getplayUrl() {
         mUrl = Constants.PLAY_URL;
         RequestParams params = new RequestParams();
@@ -185,15 +203,15 @@ public class DetailActivity extends BaseActivity {
 //                    playTitle.add(playUrls.get(i).getTitle());
 //                }
                 play = new Gson().fromJson(responseInfo.result, Play.class);
-                if (! TextUtils.isEmpty(play.getSd_url())){
+                if (!TextUtils.isEmpty(play.getSd_url())) {
                     play_url = play.getSd_url();
                     qingxidu = 0;
                     BaseApplication.clarityText = "标清";
-                }else if (! TextUtils.isEmpty(play.getHd_url())){
+                } else if (!TextUtils.isEmpty(play.getHd_url())) {
                     play_url = play.getHd_url();
                     qingxidu = 1;
                     BaseApplication.clarityText = "高清";
-                }else if (! TextUtils.isEmpty(play.getUhd_url())){
+                } else if (!TextUtils.isEmpty(play.getUhd_url())) {
                     play_url = play.getUhd_url();
                     qingxidu = 2;
                     BaseApplication.clarityText = "超清";
@@ -213,8 +231,10 @@ public class DetailActivity extends BaseActivity {
 
 
     }
+
     DbUtils db;
     boolean isdownLoad = false;
+
     //初始化下载按钮
     private void initCatch(String play_url) {
         try {
@@ -223,7 +243,7 @@ public class DetailActivity extends BaseActivity {
                 for (int i = 0; i < list.size(); i++) {
                     if (!TextUtils.isEmpty(play_url)) {
                         System.out.println("---play_url:" + play_url + " -list.get(i).getUrl():" + list.get(i).getId());
-                        if (play_url.equals(list.get(i).getUrl())){
+                        if (play_url.equals(list.get(i).getUrl())) {
                             isdownLoad = true;
                         }
 //                        isdownLoad = play_url.equals(list.get(i).getUrl());
@@ -246,7 +266,7 @@ public class DetailActivity extends BaseActivity {
     private void setPlayUrl() {
         try {
             LocalBean2 bean = db.findById(LocalBean2.class, play_url);
-            if (bean != null){
+            if (bean != null) {
                 play_url = bean.getLocalurl();
                 qingxidu = bean.getQingxidu();
                 System.out.println("---playUrl = " + play_url);
@@ -258,7 +278,7 @@ public class DetailActivity extends BaseActivity {
     }
 
     private String videoset_id;
-//    private String resource;
+    //    private String resource;
     private String requestUrl;
     DownloadReceiver receiver;
     IntentFilter filter;
@@ -269,7 +289,9 @@ public class DetailActivity extends BaseActivity {
     public int getLayoutId() {
         return R.layout.movie_detail;
     }
+
     LocalBean2 localBean;
+
     @Override
     public void init() {
 
@@ -283,6 +305,30 @@ public class DetailActivity extends BaseActivity {
         filter.addAction(PAUSE);
         registerReceiver(receiver, filter);
         getNetDate();
+        et_pinglun.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String str = et_pinglun.getText().toString().trim();
+                if (str.length() > 0) {
+                    bt_sendpinglun.setClickable(true);
+                    bt_sendpinglun.setOnClickListener(DetailActivity.this);
+                    bt_sendpinglun.setTextColor(getResources().getColor(R.color.pinglunbutton1));
+                } else {
+                    bt_sendpinglun.setClickable(false);
+                    bt_sendpinglun.setTextColor(getResources().getColor(R.color.pinglunbutton2));
+                }
+            }
+        });
         ll_download.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -292,7 +338,7 @@ public class DetailActivity extends BaseActivity {
                         if (!TextUtils.isEmpty(play.getSd_url())) {
                             saveUrl = play.getSd_url();
                             qingxidu = 0;
-                        }else {
+                        } else {
                             //将该button字体颜色设置为灰色并不可点击
                             showToast("没有标清连接");
                             System.out.println("---没有标清连接");
@@ -304,7 +350,7 @@ public class DetailActivity extends BaseActivity {
                         if (!TextUtils.isEmpty(play.getHd_url())) {
                             saveUrl = play.getHd_url();
                             qingxidu = 1;
-                        }else {
+                        } else {
                             //将该button字体颜色设置为灰色并不可点击
                             showToast("没有高清连接");
                             System.out.println("---没有高清连接");
@@ -315,8 +361,8 @@ public class DetailActivity extends BaseActivity {
                     public void setCarity3() {
                         if (!TextUtils.isEmpty(play.getUhd_url())) {
                             saveUrl = play.getUhd_url();
-                          qingxidu = 2;
-                        }else {
+                            qingxidu = 2;
+                        } else {
                             //将该button字体颜色设置为灰色并不可点击
                             showToast("没有超清连接");
                             System.out.println("---没有超清连接");
@@ -327,24 +373,24 @@ public class DetailActivity extends BaseActivity {
 //                builder.setColor1(50);
 //                builder.setColor2(1);
 //                builder.setColor3(443215);
-                if (TextUtils.isEmpty(play.getSd_url())){
+                if (TextUtils.isEmpty(play.getSd_url())) {
                     System.out.println("---标清无");
                     builder.setIsFocusable1(false);
-                }else {
+                } else {
                     System.out.println("---play.getSd_url() = " + play.getSd_url());
                     builder.setIsFocusable1(true);
                 }
-                if (TextUtils.isEmpty(play.getHd_url())){
+                if (TextUtils.isEmpty(play.getHd_url())) {
                     System.out.println("---高清无");
                     builder.setIsFocusable2(false);
-                }else {
+                } else {
                     System.out.println("---play.getHd_url() = " + play.getHd_url());
                     builder.setIsFocusable2(true);
                 }
-                if (TextUtils.isEmpty(play.getUhd_url())){
+                if (TextUtils.isEmpty(play.getUhd_url())) {
                     System.out.println("---超清无");
                     builder.setIsFocusable3(false);
-                }else {
+                } else {
                     System.out.println("---play.getUhd_url() = " + play.getUhd_url());
                     builder.setIsFocusable3(true);
                 }
@@ -368,9 +414,9 @@ public class DetailActivity extends BaseActivity {
                         localBean.setCurState(0);//還沒下載，準備下載
                         try {
                             db.saveOrUpdate(localBean);
-                            System.out.println("---新添加的Vid："+db.findById(LocalBean2.class,saveUrl).getVid());
+                            System.out.println("---新添加的Vid：" + db.findById(LocalBean2.class, saveUrl).getVid());
                         } catch (DbException e) {
-                            System.out.println("---新添加的失败："+e);
+                            System.out.println("---新添加的失败：" + e);
                             e.printStackTrace();
                         }
                         int i = BaseApplication.downLoadManager.addTask(saveUrl, saveUrl, title + ".mp4", BaseApplication.VedioCacheUrl + title + ".mp4");
@@ -432,8 +478,20 @@ public class DetailActivity extends BaseActivity {
         introduced.setText(details.getDesc());
         System.out.println("---" + details.getUpdate_time() + "**" + details.getId() + "**" + Integer.parseInt(details.getUpdate_time()));
 //        Integer.parseInt(details.getUpdate_at());
+    }
 
-
+    public void refreshPinglun() {
+        tv_count.setText("评 论 (" + pinglun.getCount() + ")");
+        ViewGroup.LayoutParams params = lv_pinglun.getLayoutParams();
+        params.height = DensityUtils.dp2px(this, 68 * datas.size() + 40);
+        lv_pinglun.setLayoutParams(params);
+        if (adapter == null) {
+            adapter = new PinglunAdapter(this, datas);
+            lv_pinglun.setAdapter(adapter);
+        } else {
+            adapter.notifyDataSetChanged();
+        }
+        isloadingPinglun = false;
     }
 
     private void getNetDate() {
@@ -454,6 +512,7 @@ public class DetailActivity extends BaseActivity {
             public void onSuccess(ResponseInfo<String> responseInfo) {
                 L.e("****getNateDate *** DetailActivity responseInfo:" + responseInfo.result);
                 setViewData(responseInfo.result);
+                getPinglun(false, 10);
             }
 
             @Override
@@ -562,8 +621,8 @@ public class DetailActivity extends BaseActivity {
                     .findViewById(R.id.tv_movie);
 //            System.out.println("---relation = " + relation);
 //            System.out.println("---relation.getVideos() = " + relation.getVideos());
-            if (relation != null && relation.getVideos().size()>0){
-            tv_movie.setText(relation.getVideos().get(0).getVname());
+            if (relation != null && relation.getVideos().size() > 0) {
+                tv_movie.setText(relation.getVideos().get(0).getVname());
             }
             iv_movie.setFocusable(true);
             iv_movie.setOnClickListener(new View.OnClickListener() {
@@ -584,9 +643,154 @@ public class DetailActivity extends BaseActivity {
         }
     }
 
+    TextView tv_count;
+    ListView lv_pinglun;
+    PinglunAdapter adapter;
+    DetailScrollView sv;
+    boolean isloadingPinglun = false;
+
+    public void initPinglun() {
+        tv_count = (TextView) findViewById(R.id.tv_count);
+        lv_pinglun = (ListView) findViewById(R.id.lv_pinglun);
+        sv = (DetailScrollView) findViewById(R.id.sv);
+        sv.setScrollBottomListener(new DetailScrollView.ScrollBottomListener() {
+            @Override
+            public void scrollBottom() {
+                if (!isloadingPinglun && datas.size() < pinglun.getCount()) {
+                    isloadingPinglun = true;
+                    getPinglun(false, 10);
+                }
+                System.out.println("---滑动到了底部");
+            }
+        });
+
+        refreshPinglun();
+    }
+
     @Override
     protected void onDestroy() {
         unregisterReceiver(receiver);
         super.onDestroy();
+    }
+
+    int tmp_page = 0;
+    int total_page;
+    Pinglun pinglun;
+    List<Pinglun.Data> datas;
+
+    private void getPinglun(boolean flag, int number) {
+        final boolean isrefresh = flag;
+        RequestParams params = new RequestParams();
+        params.addBodyParameter("token", TokenUtils.createToken(this));
+        params.addBodyParameter("version", BaseApplication.version);
+        params.addBodyParameter("platform", BaseApplication.platform);
+
+        params.addBodyParameter("per_page", number + "");
+        params.addBodyParameter("tmp_page", tmp_page + 1 + "");
+        params.addBodyParameter("videoset_id", videoset_id);
+        this.httpPost(Constants.GETPINGLUN, params, new RequestCallBack<String>() {
+            @Override
+            public void onStart() {
+                super.onStart();
+            }
+
+            @Override
+            public void onSuccess(ResponseInfo<String> responseInfo) {
+                System.out.println("---评论列表：" + responseInfo.result);
+                try {
+                    JSONObject j = new JSONObject(responseInfo.result);
+                    String data = j.getString("data");
+                    if (data != null && !"".equals(data) && data.length() > 3) {
+                        pinglun = new Gson().fromJson(data, Pinglun.class);
+                        total_page = pinglun.getTotal_page();
+                        if (datas == null) {
+                            datas = new ArrayList<Pinglun.Data>();
+                        }
+                        System.out.println("---data:" + pinglun.getData().size());
+                        if (!isrefresh) {
+                            tmp_page++;
+                            datas.addAll(pinglun.getData());
+                        } else {
+                            datas = pinglun.getData();
+                            System.out.println("---data:" + datas.size());
+                            adapter.setDatas(datas);
+                            System.out.println("---adapter:" + adapter.getDatas().size());
+
+                        }
+                        if (tmp_page == 1) {
+                            initPinglun();
+                        } else {
+                            refreshPinglun();
+                        }
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(HttpException e, String s) {
+            }
+        });
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.bt_sendpinglun:
+                if (BaseApplication.isLogin) {
+                    sendPinglun();
+                } else {
+                    intent = new Intent(this, LoginActivity.class);
+                    startActivity(intent);
+                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                }
+                break;
+        }
+    }
+
+    public void sendPinglun() {
+        RequestParams params = new RequestParams();
+        params.addBodyParameter("token", TokenUtils.createToken(this));
+        params.addBodyParameter("version", BaseApplication.version);
+        params.addBodyParameter("platform", BaseApplication.platform);
+
+        UserData userData = new Gson().fromJson(sp.select("userData", ""), UserData.class);
+
+        params.addBodyParameter("login_token", userData.getLogin_token());
+        params.addBodyParameter("content", et_pinglun.getText().toString().trim());
+        params.addBodyParameter("videoset_id", videoset_id);
+        this.httpPost(Constants.SENDPINGLUN, params, new RequestCallBack<String>() {
+            @Override
+            public void onStart() {
+                super.onStart();
+            }
+
+            @Override
+            public void onSuccess(ResponseInfo<String> responseInfo) {
+                System.out.println("---评论结果：" + responseInfo.result);
+                try {
+                    JSONObject j = new JSONObject(responseInfo.result);
+                    String message = j.getString("message");
+                    if ("success".equals(message)) {
+                        Toast.makeText(DetailActivity.this, "评论成功", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(DetailActivity.this, message, Toast.LENGTH_SHORT).show();
+                    }
+                    if (datas == null) {
+                        getPinglun(true, 10);
+                    } else {
+                        getPinglun(true, datas.size() + 2);
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(HttpException e, String s) {
+            }
+        });
     }
 }

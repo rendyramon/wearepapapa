@@ -521,29 +521,30 @@ public class LandscapeActivity_Second extends BaseActivity {
                 });
         builder.create().show();
     }
+
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         System.out.println("---keyCode second=" + keyCode);
-        switch (keyCode){
+        switch (keyCode) {
             case 19:
                 System.out.println("---上一页");
-                if (vg1.getSelectedItemPosition()>0) {
-                    int next = vg1.getSelectedItemPosition()-1;
-                    vg1.setSelection(next,true);
+                if (vg1.getSelectedItemPosition() > 0) {
+                    int next = vg1.getSelectedItemPosition() - 1;
+                    vg1.setSelection(next, true);
                     vg2.setSelection(next, true);
                 }
                 break;
             case 20:
                 System.out.println("---下一页");
-                if (vg1.getSelectedItemPosition()<views1.size()-1) {
+                if (vg1.getSelectedItemPosition() < views1.size() - 1) {
                     System.out.println("---下一页");
-                    int next = vg1.getSelectedItemPosition()+1;
-                    vg1.setSelection(next,true);
-                    vg2.setSelection(next,true);
+                    int next = vg1.getSelectedItemPosition() + 1;
+                    vg1.setSelection(next, true);
+                    vg2.setSelection(next, true);
                 }
                 break;
             case 21:
-                views1.get(nowPage).myKeyDown(keyCode,event);
+                views1.get(nowPage).myKeyDown(keyCode, event);
                 views2.get(nowPage).myKeyDown(keyCode, event);
                 System.out.println("---上一个");
                 break;

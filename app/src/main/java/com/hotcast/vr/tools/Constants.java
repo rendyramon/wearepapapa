@@ -36,10 +36,10 @@ public class Constants {
     public static final String UPHEAD = SERVER_URL + "/member/user/upload-avatar";
     //    修改密码
     public static final String CHANGPASSWORD = SERVER_URL + "/member/user/reset-password";
-//    获取用户信息
-    public static final String INFO = SERVER_URL+"/member/user/info";
-
-
+    //    获取用户信息
+    public static final String INFO = SERVER_URL + "/member/user/info";
+    //获取评论
+    public static final String PINGLUN = SERVER_URL + "/member/comment/get-comment";
 
 
     //    public static final String SERVER = "http://101.200.231.61:9900";
@@ -68,6 +68,9 @@ public class Constants {
 
     //    统计播放接口
     public static final String URL_PLAY_count = SERVER + "/count/player";
+    //    提交评论
+    public static final String SENDPINGLUN = SERVER_URL + "/member/comment/send-comment";
+    public static final String GETPINGLUN = SERVER_URL + "/member/comment/get-comment";
 
 //    public static final String URL_HOME = "127.0.0.1/v1.1/";
 }

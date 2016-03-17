@@ -3,25 +3,92 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#f1f1f1">
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
-    <include
-        layout="@layout/item_detail_introduction" />
 
-    <include
-        layout="@layout/item_detail_indexmovie"/>
+    <com.hotcast.vr.pageview.DetailScrollView
+        android:id="@+id/sv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="none">
 
-    <include
-        layout="@layout/item_correlation_movies" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-</LinearLayout>
+            <include layout="@layout/item_detail_introduction" />
+
+            <include layout="@layout/item_detail_indexmovie" />
+
+            <include layout="@layout/item_correlation_movies" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#cccccc" />
+
+            <TextView
+                android:id="@+id/tv_count"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_marginTop="1dp"
+                android:background="#fafafa"
+                android:gravity="center_vertical"
+                android:paddingLeft="12dp"
+                android:text="评 论 (0)"
+                android:textColor="#383838"
+                android:textSize="12sp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#cccccc" />
+
+            <ListView
+                android:id="@+id/lv_pinglun"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:divider="@null"
+                android:scrollbars="none" />
+        </LinearLayout>
+    </com.hotcast.vr.pageview.DetailScrollView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_alignParentBottom="true"
+        android:background="#cccccc"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/et_pinglun"
+            android:layout_width="0dp"
+            android:layout_height="32dp"
+            android:layout_marginLeft="6dp"
+            android:layout_weight="8"
+            android:background="@drawable/juxing_pinglun"
+            android:hint="快来发表你的评论吧~"
+            android:maxLength="40"
+            android:textSize="15dp" />
+
+        <Button
+            android:id="@+id/bt_sendpinglun"
+            android:layout_width="0dp"
+            android:layout_height="32dp"
+            android:layout_marginLeft="6dp"
+            android:layout_marginRight="6dp"
+            android:layout_weight="2"
+            android:background="@drawable/juxing_pinglun_button"
+            android:clickable="false"
+            android:text="发送"
+            android:textColor="@color/pinglunbutton2" />
+    </LinearLayout>
+
     <View
         android:id="@+id/translucentview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#88000000"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
 </RelativeLayout>

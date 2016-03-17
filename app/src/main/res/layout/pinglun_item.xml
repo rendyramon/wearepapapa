@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="75dp"
+    android:background="#fafafa">
+
+    <ImageView
+        android:id="@+id/iv_head"
+        android:layout_width="31dp"
+        android:layout_height="31dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="10dp"
+        android:src="@mipmap/head" />
+
+    <ImageView
+        android:id="@+id/iv_headbc"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginTop="5dp"
+        android:background="@mipmap/pinglun_back" />
+
+    <TextView
+        android:id="@+id/tv_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/iv_head"
+        android:layout_toEndOf="@+id/iv_headbc"
+        android:layout_toRightOf="@+id/iv_headbc"
+        android:text="老司机师傅"
+        android:textColor="#666666"
+        android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/tv_lou"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_name"
+        android:layout_toEndOf="@+id/iv_headbc"
+        android:layout_toRightOf="@+id/iv_headbc"
+        android:text="1楼"
+        android:textColor="#888888"
+        android:textSize="10sp" />
+
+    <TextView
+        android:id="@+id/tv_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_toEndOf="@+id/tv_lou"
+        android:layout_toRightOf="@+id/tv_lou"
+        android:layout_alignBottom="@id/tv_lou"
+        android:text="1月22日 09:59"
+        android:textColor="#888888"
+        android:textSize="8sp" />
+
+    <TextView
+        android:id="@+id/tv_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/iv_head"
+        android:layout_marginBottom="8dp"
+        android:text="我是一楼我是一楼我是一楼我是一楼我是一楼我是一楼我是一楼我是一楼"
+        android:textColor="#222222"
+        android:textSize="11sp"
+        android:layout_alignLeft="@+id/tv_lou"
+        android:layout_alignStart="@+id/tv_lou" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#cccccc" />
+</RelativeLayout>
