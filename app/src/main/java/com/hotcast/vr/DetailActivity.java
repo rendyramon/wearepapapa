@@ -304,6 +304,9 @@ public class DetailActivity extends BaseActivity {
         filter.addAction(FINISH);
         filter.addAction(PAUSE);
         registerReceiver(receiver, filter);
+        tv_count = (TextView) findViewById(R.id.tv_count);
+        lv_pinglun = (ListView) findViewById(R.id.lv_pinglun);
+        sv = (DetailScrollView) findViewById(R.id.sv);
         getNetDate();
         et_pinglun.addTextChangedListener(new TextWatcher() {
             @Override
@@ -481,14 +484,18 @@ public class DetailActivity extends BaseActivity {
     }
 
     public void refreshPinglun() {
-        tv_count.setText("评 论 (" + pinglun.getCount() + ")");
+        tv_count.setText("评 论 (" + count + ")");
         ViewGroup.LayoutParams params = lv_pinglun.getLayoutParams();
         params.height = DensityUtils.dp2px(this, 68 * datas.size() + 40);
         lv_pinglun.setLayoutParams(params);
         if (adapter == null) {
+            System.out.println("---33333");
             adapter = new PinglunAdapter(this, datas);
             lv_pinglun.setAdapter(adapter);
         } else {
+            System.out.println("---44444" + datas.size());
+            lv_pinglun.setAdapter(adapter);
+            adapter.setDatas(datas);
             adapter.notifyDataSetChanged();
         }
         isloadingPinglun = false;
@@ -650,9 +657,6 @@ public class DetailActivity extends BaseActivity {
     boolean isloadingPinglun = false;
 
     public void initPinglun() {
-        tv_count = (TextView) findViewById(R.id.tv_count);
-        lv_pinglun = (ListView) findViewById(R.id.lv_pinglun);
-        sv = (DetailScrollView) findViewById(R.id.sv);
         sv.setScrollBottomListener(new DetailScrollView.ScrollBottomListener() {
             @Override
             public void scrollBottom() {
@@ -660,10 +664,8 @@ public class DetailActivity extends BaseActivity {
                     isloadingPinglun = true;
                     getPinglun(false, 10);
                 }
-                System.out.println("---滑动到了底部");
             }
         });
-
         refreshPinglun();
     }
 
@@ -674,6 +676,7 @@ public class DetailActivity extends BaseActivity {
     }
 
     int tmp_page = 0;
+    int count;
     int total_page;
     Pinglun pinglun;
     List<Pinglun.Data> datas;
@@ -700,9 +703,11 @@ public class DetailActivity extends BaseActivity {
                 try {
                     JSONObject j = new JSONObject(responseInfo.result);
                     String data = j.getString("data");
+                    total_page = 0;
                     if (data != null && !"".equals(data) && data.length() > 3) {
                         pinglun = new Gson().fromJson(data, Pinglun.class);
                         total_page = pinglun.getTotal_page();
+                        count = pinglun.getCount();
                         if (datas == null) {
                             datas = new ArrayList<Pinglun.Data>();
                         }
@@ -713,16 +718,20 @@ public class DetailActivity extends BaseActivity {
                         } else {
                             datas = pinglun.getData();
                             System.out.println("---data:" + datas.size());
-                            if (adapter==null){
-                                adapter = new PinglunAdapter(DetailActivity.this,datas);
+                            if (adapter == null) {
+                                adapter = new PinglunAdapter(DetailActivity.this, datas);
                             }
                             adapter.setDatas(datas);
                             System.out.println("---adapter:" + adapter.getDatas().size());
-
                         }
-                        if (tmp_page == 1) {
+                        if (tmp_page <= 1) {
+                            if (tmp_page == 0) {
+                                tmp_page = 1;
+                            }
+                            System.out.println("---1111" + tmp_page);
                             initPinglun();
                         } else {
+                            System.out.println("---2222");
                             refreshPinglun();
                         }
                     }
@@ -761,6 +770,7 @@ public class DetailActivity extends BaseActivity {
         UserData userData = new Gson().fromJson(sp.select("userData", ""), UserData.class);
 
         params.addBodyParameter("login_token", userData.getLogin_token());
+        System.out.println("---detail:login_token：" + userData.getLogin_token());
         params.addBodyParameter("content", et_pinglun.getText().toString().trim());
         params.addBodyParameter("videoset_id", videoset_id);
         this.httpPost(Constants.SENDPINGLUN, params, new RequestCallBack<String>() {
