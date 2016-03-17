@@ -713,6 +713,9 @@ public class DetailActivity extends BaseActivity {
                         } else {
                             datas = pinglun.getData();
                             System.out.println("---data:" + datas.size());
+                            if (adapter==null){
+                                adapter = new PinglunAdapter(DetailActivity.this,datas);
+                            }
                             adapter.setDatas(datas);
                             System.out.println("---adapter:" + adapter.getDatas().size());
 
@@ -782,7 +785,7 @@ public class DetailActivity extends BaseActivity {
                     } else {
                         getPinglun(true, datas.size() + 2);
                     }
-
+                    et_pinglun.setText("");
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
