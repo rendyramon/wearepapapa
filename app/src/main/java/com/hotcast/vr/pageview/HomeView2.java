@@ -56,8 +56,8 @@ import butterknife.InjectView;
  */
 public class HomeView2 extends BaseView {
 
-    @ViewInject(R.id.top_news_title)
-    private TextView top_news_title;
+//    @ViewInject(R.id.top_news_title)
+//    private TextView top_news_title;
 
     @ViewInject(R.id.dots_ll)
     private LinearLayout dots_ll;
@@ -71,7 +71,7 @@ public class HomeView2 extends BaseView {
     private ProgressBar progressBar4;
     private MyBaseAdapter myBaseAdapter;
     //    需要传递给ViewPager去显示的图片关联文字说明
-    private List<String> titleList = new ArrayList<String>();
+//    private List<String> titleList = new ArrayList<String>();
 
     //    传递图片对应的url地址的集合
     private List<String> urlImgList = new ArrayList<String>();
@@ -130,7 +130,7 @@ public class HomeView2 extends BaseView {
                 Toast.makeText(activity, "下拉刷新了数据", Toast.LENGTH_SHORT).show();
                 // TODO: 15/11/22  在这里执行相应的访问网络的操作
                 urlImgList.clear();
-                titleList.clear();
+//                titleList.clear();
                 getNetData();
                 getSubject();
 
@@ -359,7 +359,8 @@ public class HomeView2 extends BaseView {
                         break;
                     case "web":
                         intent = new Intent(activity,WebViewActivity.class);
-                        intent.putExtra("rec_ur",datasList.get(i).getRec_ur());
+                        intent.putExtra("rec_ur",datasList.get(i).getRec_url());
+                        System.out.println("--rec_ur="+datasList.get(i).getRec_url());
                         activity.startActivity(intent);
                         break;
                 }
@@ -371,7 +372,7 @@ public class HomeView2 extends BaseView {
 //    subjects=homeBean.getHome_subject();
 //        subjects.addAll(homeBean.getHome_subject());
         urlImgList.clear();
-        titleList.clear();
+//        titleList.clear();
         for (int i = 0; i < datasList.size(); i++) {
 //            RollBean homeRoll = datasList.get(i);
             Datas datas = datasList.get(i);
@@ -380,7 +381,7 @@ public class HomeView2 extends BaseView {
 //                Datas subject = datas.getData().get(j);
 
             urlImgList.add(datas.getImage());
-            titleList.add(datas.getTitle());
+//            titleList.add(datas.getTitle());
 //            System.out.println("---349 urlImg = " + datas.getImage());
 //            System.out.println("---350 title = " + datas.getTitle());
 //            }
@@ -391,7 +392,7 @@ public class HomeView2 extends BaseView {
 
         initDot();
 
-        rollViewPager.initTitleList(top_news_title, titleList);
+//        rollViewPager.initTitleList(top_news_title, titleList);
         rollViewPager.initImgUrlList(urlImgList);
         rollViewPager.startRoll();
         ll_top_news_viewpager.removeAllViews();
@@ -446,9 +447,9 @@ public class HomeView2 extends BaseView {
                 view.setBackgroundResource(R.drawable.dot_normal);
             }
 
-            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(10, 10);
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(15, 15);
             view.setLayoutParams(layoutParams);
-            layoutParams.setMargins(5, 0, 10, 0);
+            layoutParams.setMargins(5, 0, 20, 0);
             dots_ll.addView(view);
             viewList.add(view);
         }

@@ -3,10 +3,12 @@ package com.hotcast.vr;
 import android.content.Intent;
 import android.net.http.SslError;
 import android.text.TextUtils;
+import android.view.View;
 import android.webkit.SslErrorHandler;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ImageView;
 
 import butterknife.InjectView;
 
@@ -16,6 +18,8 @@ import butterknife.InjectView;
 public class WebViewActivity extends BaseActivity {
     @InjectView(R.id.web)
     WebView webView;
+    @InjectView(R.id.iv_back)
+    ImageView iv_back;
     String rec_ur;
 
     @Override
@@ -25,6 +29,12 @@ public class WebViewActivity extends BaseActivity {
 
     @Override
     public void init() {
+        iv_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
         webView.getSettings().setJavaScriptCanOpenWindowsAutomatically(false);
         webView.getSettings().setJavaScriptEnabled(true);
         webView.getSettings().setAppCacheEnabled(true);
@@ -57,6 +67,7 @@ public class WebViewActivity extends BaseActivity {
     @Override
     public void getIntentData(Intent intent) {
         rec_ur = intent.getStringExtra("rec_ur");
+        System.out.println("---rec_ur="+rec_ur);
     }
 
 }

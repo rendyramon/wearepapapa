@@ -94,6 +94,10 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".WebViewActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".AboutActivity"
             android:screenOrientation="portrait"
             android:launchMode="singleTask" />

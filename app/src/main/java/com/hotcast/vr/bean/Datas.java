@@ -21,14 +21,14 @@ public class Datas {
     //描述
     String desc;
     //推荐URL，当type为web时使用
-    String rec_ur;
+    String rec_url;
 
-    public String getRec_ur() {
-        return rec_ur;
+    public String getRec_url() {
+        return rec_url;
     }
 
-    public void setRec_ur(String rec_ur) {
-        this.rec_ur = rec_ur;
+    public void setRec_url(String rec_url) {
+        this.rec_url = rec_url;
     }
 
     public String getId() {
@@ -106,7 +106,7 @@ public class Datas {
                 ", image='" + image + '\'' +
                 ", title='" + title + '\'' +
                 ", desc='" + desc + '\'' +
-                ", rec_ur='" + rec_ur + '\'' +
+                ", rec_ur='" + rec_url + '\'' +
                 '}';
     }
 }

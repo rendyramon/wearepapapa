@@ -104,7 +104,7 @@ public class RollViewPager extends ViewPager {
             @Override
             public void onPageSelected(int arg0) {
 //                System.out.println("---切换文字：" + System.currentTimeMillis() + "---" + arg0);
-                top_news_title.setText(titleList.get(arg0));
+//                top_news_title.setText(titleList.get(arg0));
                 for (int i = 0; i < urlImgList.size(); i++) {
 //                    System.out.println("---viewlist:" + viewList.size() + "---i:" + i + "---arg0:" + arg0);
                     if (i == arg0) {
@@ -158,7 +158,7 @@ public class RollViewPager extends ViewPager {
             myAdapter.notifyDataSetChanged();
         }
 //        System.out.println("---startroll执行");
-        mhandler.postDelayed(runnableTask, 4000l);
+        mhandler.postDelayed(runnableTask, 2500l);
     }
 
     class MyAdapter extends PagerAdapter {
