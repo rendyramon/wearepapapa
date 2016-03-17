@@ -786,6 +786,7 @@ public class DetailActivity extends BaseActivity {
                     JSONObject j = new JSONObject(responseInfo.result);
                     String message = j.getString("message");
                     if ("success".equals(message)) {
+                        et_pinglun.setText("");
                         Toast.makeText(DetailActivity.this, "评论成功", Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(DetailActivity.this, message, Toast.LENGTH_SHORT).show();
@@ -795,7 +796,6 @@ public class DetailActivity extends BaseActivity {
                     } else {
                         getPinglun(true, datas.size() + 2);
                     }
-                    et_pinglun.setText("");
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
