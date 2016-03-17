@@ -222,7 +222,7 @@ public class MineView2 extends BaseView implements View.OnClickListener {
                 activity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                 break;
             case R.id.tv_title:
-                logout(userDate.getLogin_token());
+                logout(activity.sp.select("login_token","" ));
                 break;
             case R.id.iv_head:
                 if (BaseApplication.isLogin) {
@@ -295,6 +295,7 @@ public class MineView2 extends BaseView implements View.OnClickListener {
                     activity.sp.delete("userData");
                     activity.sp.delete("username");
                     activity.sp.delete("avatar");
+                    activity.sp.delete("login_token");
                     title.setVisibility(View.GONE);
                     refreshView();
                 } else {

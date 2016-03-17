@@ -343,12 +343,12 @@ public class MainActivity_new extends BaseActivity {
         @Override
         protected String doInBackground(Integer... params) {
             FileUtils.saveBitmap(bitmap, "vrhotcastuser");
-            String login_token = new Gson().fromJson(sp.select("userData", ""), UserData.class).getLogin_token();
+//            String login_token = new Gson().fromJson(sp.select("userData", ""), UserData.class).getLogin_token();
             RequestParams params1 = new RequestParams();
             params1.addBodyParameter("token", TokenUtils.createToken(MainActivity_new.this));
             params1.addBodyParameter("version", BaseApplication.version);
             params1.addBodyParameter("platform", BaseApplication.platform);
-            params1.addBodyParameter("login_token", login_token);
+            params1.addBodyParameter("login_token", sp.select("login_token","" ));
             params1.addBodyParameter("UploadAvatarForm[avatar]", new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + "vrhotcastuser.jpg"));
             HttpUtils httpUtils = new HttpUtils();
             httpUtils.send(HttpRequest.HttpMethod.POST, Constants.UPHEAD, params1, new RequestCallBack<String>() {

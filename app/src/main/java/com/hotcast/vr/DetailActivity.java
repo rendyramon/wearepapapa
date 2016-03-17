@@ -769,8 +769,8 @@ public class DetailActivity extends BaseActivity {
 
         UserData userData = new Gson().fromJson(sp.select("userData", ""), UserData.class);
 
-        params.addBodyParameter("login_token", userData.getLogin_token());
-        System.out.println("---detail:login_token：" + userData.getLogin_token());
+        params.addBodyParameter("login_token", sp.select("login_token","" ));
+        System.out.println("---detail:login_token：" + sp.select("login_token", "" ));
         params.addBodyParameter("content", et_pinglun.getText().toString().trim());
         params.addBodyParameter("videoset_id", videoset_id);
         this.httpPost(Constants.SENDPINGLUN, params, new RequestCallBack<String>() {

@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.hotcast.vr.bean.User2;
+import com.hotcast.vr.bean.UserData;
 import com.hotcast.vr.tools.Constants;
 import com.hotcast.vr.tools.Md5Utils;
 import com.hotcast.vr.tools.TokenUtils;
@@ -177,9 +178,10 @@ public class LoginActivity extends BaseActivity {
                             BaseApplication.isLogin = true;
                             showToast("亲,登录成功了哟，快去看片儿吧*_*");
                             data = j.getJSONObject("data").toString();
+                            sp.add("login_token",user2.getData().getLogin_token());
                             sp.add("userData", data);
                             System.out.println("---1add userData=" + data);
-
+                            System.out.println("---select login_token=" + sp.select("login_token", "**"));
                             System.out.println("---select userData=" + sp.select("userData", "**"));
                             finish();
 

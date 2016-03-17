@@ -165,7 +165,7 @@ public class ReNameActivity extends BaseActivity {
         params.addBodyParameter("token", TokenUtils.createToken(this));
         params.addBodyParameter("version", BaseApplication.version);
         params.addBodyParameter("platform", BaseApplication.platform);
-        params.addBodyParameter("login_token", userData.getLogin_token());
+        params.addBodyParameter("login_token", sp.select("login_token", ""));
         params.addBodyParameter("old_password", oldPassword);
         params.addBodyParameter("new_password", newPassword);
         this.httpPost(mUrl, params, new RequestCallBack<String>() {
@@ -204,9 +204,9 @@ public class ReNameActivity extends BaseActivity {
         params.addBodyParameter("token", TokenUtils.createToken(this));
         params.addBodyParameter("version", BaseApplication.version);
         params.addBodyParameter("platform", BaseApplication.platform);
-        params.addBodyParameter("login_token", userData.getLogin_token());
+        params.addBodyParameter("login_token", sp.select("login_token", ""));
         params.addBodyParameter("username", username);
-        System.out.println("---login_token="+userData.getLogin_token());
+        System.out.println("---login_token="+sp.select("login_token","" ));
         this.httpPost(mUrl, params, new RequestCallBack<String>() {
             @Override
             public void onStart() {

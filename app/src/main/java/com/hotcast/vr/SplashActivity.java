@@ -93,11 +93,12 @@ public class SplashActivity extends BaseActivity {
         L.e("PackageName:" + getPackageName());
         getNetDate();
         String userData = sp.select("userData", "");
+        System.out.println("---userData=" + userData);
         if (!TextUtils.isEmpty(userData)){
             UserData userData1 = new Gson().fromJson(userData, UserData.class);
             if (userData1 != null){
                 System.out.println("---login_token=" + userData1.getLogin_token());
-                getUserData(userData1.getLogin_token());
+                getUserData(sp.select("login_token", ""));
             }
         }
         System.out.println("***sp=" + sp);
