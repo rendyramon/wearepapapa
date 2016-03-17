@@ -354,7 +354,7 @@ public class MainActivity_new extends BaseActivity {
             httpUtils.send(HttpRequest.HttpMethod.POST, Constants.UPHEAD, params1, new RequestCallBack<String>() {
                 @Override
                 public void onSuccess(ResponseInfo<String> responseInfo) {
-                    System.out.println("----------上传头像成功" + responseInfo);
+                    System.out.println("----------上传头像成功" + responseInfo.result);
                     try {
                         JSONObject j = new JSONObject(responseInfo.result);
                         JSONObject data = j.getJSONObject("data");

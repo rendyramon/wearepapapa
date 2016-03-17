@@ -141,6 +141,7 @@ public class RegistActivity extends BaseActivity {
                             showToast("亲,注册成功了哟，快去看片儿吧*_*");
                             System.out.println("---add userData=" + data);
                             sp.add("userData", data);
+                            sp.add("login_token",user2.getData().getLogin_token());
                             System.out.println("---select userData=" + sp.select("userData", ""));
                             finish();
 
