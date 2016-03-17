@@ -71,6 +71,8 @@ public class Constants {
     //    提交评论
     public static final String SENDPINGLUN = SERVER_URL + "/member/comment/send-comment";
     public static final String GETPINGLUN = SERVER_URL + "/member/comment/get-comment";
+//    建议反馈
+    public static final String FEEDBACK = SERVER_URL + "/app/info/feed-back";
 
 //    public static final String URL_HOME = "127.0.0.1/v1.1/";
 }

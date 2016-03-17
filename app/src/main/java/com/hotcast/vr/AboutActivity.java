@@ -13,7 +13,18 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.hotcast.vr.bean.User1;
+import com.hotcast.vr.tools.Constants;
+import com.hotcast.vr.tools.TokenUtils;
+import com.lidroid.xutils.exception.HttpException;
+import com.lidroid.xutils.http.RequestParams;
+import com.lidroid.xutils.http.ResponseInfo;
+import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.view.annotation.event.OnClick;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
@@ -103,10 +114,7 @@ public class AboutActivity extends BaseActivity {
             public void onClick(View v) {
                 String sendMsg = et_advice.getText().toString();
                 if (!TextUtils.isEmpty(sendMsg)){
-
-                    System.out.println("****建议上传成功" + sendMsg);
-                    et_advice.setText("");
-
+                    sendAgreement(sendMsg);
                 }
                 advice.setVisibility(View.GONE);
                 ll_advice.setVisibility(View.GONE);
@@ -120,6 +128,51 @@ public class AboutActivity extends BaseActivity {
                 advice.setVisibility(View.GONE);
                 ll_advice.setVisibility(View.GONE);
                 isEdet = false;
+            }
+        });
+    }
+
+    private void sendAgreement(String sendMsg) {
+        RequestParams params = new RequestParams();
+        params.addBodyParameter("token", TokenUtils.createToken(this));
+        params.addBodyParameter("version", BaseApplication.version);
+        params.addBodyParameter("platform", BaseApplication.platform);
+        params.addBodyParameter("content", sendMsg);
+        params.addBodyParameter("app_version", BaseApplication.version);
+        params.addBodyParameter("package", BaseApplication.packagename);
+        params.addBodyParameter("device", BaseApplication.device);
+        this.httpPost(Constants.FEEDBACK, params, new RequestCallBack<String>() {
+            @Override
+            public void onStart() {
+                super.onStart();
+
+            }
+
+            @Override
+            public void onSuccess(ResponseInfo<String> responseInfo) {
+                System.out.println("---responseInfo.result = " + responseInfo.result);
+                if (!TextUtils.isEmpty(responseInfo.result)) {
+                    JSONObject j = null;
+                    try {
+                        j = new JSONObject(responseInfo.result);
+                        String state = j.getString("state");
+                        if (!TextUtils.isEmpty(state) && "successful".equals(state)) {
+                            System.out.println("****建议上传成功");
+                            et_advice.setText("");
+                            showToast("亲，感谢您的建议反馈，我们会更近努力的^_^");
+                        } else {
+                            showToast("亲，评论上传失败了T_T，请检查网络");
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            }
+
+            @Override
+            public void onFailure(HttpException e, String s) {
+                showToast("亲，建议反馈失败了T_T，请检查网络");
             }
         });
     }
