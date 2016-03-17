@@ -22,7 +22,7 @@
         android:layout_margin="10dp"
         android:background="@null"
         android:visibility="gone"
-        android:inputType="textVisiblePassword"
+        android:inputType="textPassword"
         android:drawableLeft="@mipmap/verificationcode"
         android:hint="请输入旧密码"/>
     <EditText
@@ -32,7 +32,7 @@
         android:layout_margin="10dp"
         android:background="@null"
         android:visibility="gone"
-        android:inputType="textVisiblePassword"
+        android:inputType="textPassword"
         android:enabled="false"
         android:drawableLeft="@mipmap/verificationcode"
         android:hint="请输入新密码"/>

@@ -355,6 +355,7 @@ public class PlayerVRActivityNew extends BaseLanActivity implements PFAssetObser
                 if (null != _pfasset) {
                     _pfasset.pause();
                     isPause = true;
+                    BaseApplication.playbacktime=_pfasset.getPlaybackTime();
                     System.out.println("---213--暂停播放了");
                 }
             }

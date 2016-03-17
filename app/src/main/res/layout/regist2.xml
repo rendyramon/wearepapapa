@@ -48,7 +48,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:textColor="#adadad"
-                android:inputType="textVisiblePassword"
+                android:inputType="textPassword"
                 android:textSize="14sp"
                 android:background="@null"
                 android:hint="请设置至少6位的密码"/>

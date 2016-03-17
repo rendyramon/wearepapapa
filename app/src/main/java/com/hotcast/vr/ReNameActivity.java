@@ -76,17 +76,16 @@ public class ReNameActivity extends BaseActivity {
 
                     @Override
                     public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
                         if (s.length() >= 6) {
                             et_newpassword.setEnabled(true);
                         }else {
                             et_newpassword.setEnabled(false);
                             showToast("亲，密码不能低于6位数*_*");
                         }
-                    }
-
-                    @Override
-                    public void afterTextChanged(Editable s) {
-
                     }
                 });
                 et_newpassword.addTextChangedListener(new TextWatcher() {
@@ -97,6 +96,10 @@ public class ReNameActivity extends BaseActivity {
 
                     @Override
                     public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
                         if (s.length() >= 6) {
                             bt_save.setEnabled(true);
                         }else {
@@ -104,17 +107,33 @@ public class ReNameActivity extends BaseActivity {
                             showToast("亲，密码不能低于6位数*_*");
                         }
                     }
-
-                    @Override
-                    public void afterTextChanged(Editable s) {
-
-                    }
                 });
                 break;
             case "更改用户名":
                 et_username.setVisibility(View.VISIBLE);
                 et_oldpassword.setVisibility(View.GONE);
                 et_newpassword.setVisibility(View.GONE);
+                et_username.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                       if (s.length()>0 && s.length()<15){
+                           bt_save.setEnabled(true);
+                       }else {
+                           showToast("亲这样的用户名朋友们会记不住的呀#_#");
+                           bt_save.setEnabled(false);
+                       }
+                    }
+                });
                 break;
         }
         data = sp.select("userData", "");
@@ -206,7 +225,7 @@ public class ReNameActivity extends BaseActivity {
         params.addBodyParameter("platform", BaseApplication.platform);
         params.addBodyParameter("login_token", sp.select("login_token", ""));
         params.addBodyParameter("username", username);
-        System.out.println("---login_token="+sp.select("login_token","" ));
+        System.out.println("---login_token=" + sp.select("login_token","" ));
         this.httpPost(mUrl, params, new RequestCallBack<String>() {
             @Override
             public void onStart() {
