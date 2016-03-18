@@ -254,14 +254,12 @@ public class PlayerVRActivityNew2 extends BaseLanActivity implements PFAssetObse
 //                                            showLoading("正在缓冲");
                                             showLoadingView("正在缓冲···");
                                         } else {
-                                            Spannable span = new SpannableString("缓冲时间过长请切换底清晰度");
+                                            Spannable span = new SpannableString("若时间过长请切换低清晰度");
                                             span.setSpan(new AbsoluteSizeSpan(20), 0, span.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
 
 //                                            showLoading("正在缓冲\n" + span);
-                                            showLoadingView("正在缓冲\n" + span);
+                                            showLoadingView("正在缓冲...\n" + span);
                                         }
-                                        System.out.println("---缓冲超时System.currentTimeMillis() = " + System.currentTimeMillis());
-//                                        System.out.println("--- " + (System.currentTimeMillis() - loadingTime));
                                         if (System.currentTimeMillis() - loadingTime > 30000l) {
                                             //表示加载超时
 //                                            System.out.println("---缓冲超时，切换低清晰度电影");
@@ -460,7 +458,6 @@ public class PlayerVRActivityNew2 extends BaseLanActivity implements PFAssetObse
 
     public void showLoadingView(String message) {
         if (!isShowing) {
-            System.out.println("---message1"+message);
             this.message = message;
             Message msg = Message.obtain();
             msg.what = 1;
@@ -469,7 +466,7 @@ public class PlayerVRActivityNew2 extends BaseLanActivity implements PFAssetObse
             isShowing = true;
         } else if (!message.equals(this.message)) {
             this.message = message;
-            System.out.println("---message2"+message);
+            System.out.println("---message2" + message);
             Message msg = Message.obtain();
             msg.what = 1;
             msg.obj = message;
