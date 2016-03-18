@@ -6,6 +6,10 @@ import com.hotcast.vr.BaseApplication;
  * Created by liurongzhi on 2016/3/16.
  */
 public class UnityTools {
+    public void startActivity() {
+
+    }
+
     /**
      * 获取设备的ID
      *

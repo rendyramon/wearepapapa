@@ -144,7 +144,6 @@ public class LandscapeActivity_Second extends BaseActivity {
             @Override
             public void onItemSelected(VerticalGalleryAdapterView<?> parent, View view, int position, long id) {
                 nowPage = position;
-                setText(nowPage);
             }
 
             @Override
