@@ -6,7 +6,7 @@
     android:orientation="vertical">
     <include
         android:id="@+id/head"
-        layout="@layout/layout_head" />
+        layout="@layout/head_secod" />
     <EditText
         android:id="@+id/et_username"
         android:layout_width="match_parent"

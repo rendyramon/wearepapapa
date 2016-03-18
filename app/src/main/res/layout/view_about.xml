@@ -7,7 +7,7 @@
 
     <include
         android:id="@+id/head"
-        layout="@layout/layout_head" />
+        layout="@layout/head_secod" />
 
     <LinearLayout
         android:id="@+id/about_log"
@@ -119,54 +119,6 @@
             </LinearLayout>
         </ScrollView>
 
-        <LinearLayout
-            android:id="@+id/ll_advice"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="150dp"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:paddingLeft="50dp"
-            android:paddingRight="50dp">
-
-            <EditText
-                android:id="@+id/et_advice"
-                android:background="@drawable/edittext_background"
-                android:layout_width="match_parent"
-                android:padding="8dp"
-                android:layout_height="150dp" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal"
-                android:padding="10dp"
-                >
-
-                <Button
-                    android:id="@+id/bt_cancel"
-                    android:layout_width="50dp"
-                    android:layout_height="30dp"
-                    android:layout_weight="2"
-                    android:layout_marginRight="40dp"
-                    android:background="@drawable/aboutactivity_button_selector"
-                    android:gravity="center"
-                    android:text="取消"
-                    android:textColor="#444444"
-                    android:textSize="15sp" />
-
-                <Button
-                    android:id="@+id/bt_advice"
-                    android:layout_width="50dp"
-                    android:layout_height="30dp"
-                    android:layout_weight="2"
-                    android:background="@drawable/aboutactivity_button_selector"
-                    android:gravity="center"
-                    android:text="发 送"
-                    android:textColor="#444444"
-                    android:textSize="15sp" />
-            </LinearLayout>
-        </LinearLayout>
 
 
     </FrameLayout>

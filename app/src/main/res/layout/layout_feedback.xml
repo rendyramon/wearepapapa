@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#f5f5f5"
+    android:orientation="vertical">
+    <include
+        layout="@layout/head_secod"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:gravity="center">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textColor="#383838"
+            android:text="您对VR热播的反馈将有专人跟进"/>
+    </RelativeLayout>
+    <LinearLayout
+        android:id="@+id/ll_advice"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp">
+
+        <EditText
+            android:id="@+id/et_advice"
+            android:background="@drawable/edittext_background"
+            android:layout_width="match_parent"
+            android:padding="8dp"
+            android:hint="用的不爽，吐槽一下。"
+            android:gravity="top"
+            android:layout_height="200dp" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:gravity="center_vertical"
+            android:text="请留下您的联系方式"
+            android:textSize="12sp"
+           android:paddingLeft="10dp"
+            android:textColor="#383838"/>
+        <EditText
+            android:id="@+id/et_contact"
+            android:background="@drawable/edittext_background"
+            android:layout_width="match_parent"
+            android:padding="8dp"
+            android:hint="QQ号/邮箱/手机号（选填）"
+            android:layout_height="50dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:padding="10dp"
+            >
+
+            <Button
+                android:id="@+id/bt_cancel"
+                android:layout_width="50dp"
+                android:layout_height="30dp"
+                android:layout_weight="2"
+                android:layout_marginRight="40dp"
+                android:background="@drawable/aboutactivity_button_selector"
+                android:gravity="center"
+                android:text="取消"
+                android:textColor="#444444"
+                android:textSize="15sp" />
+
+            <Button
+                android:id="@+id/bt_advice"
+                android:layout_width="50dp"
+                android:layout_height="30dp"
+                android:layout_weight="2"
+                android:background="@drawable/aboutactivity_button_selector"
+                android:gravity="center"
+                android:text="发 送"
+                android:textColor="#444444"
+                android:textSize="15sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+
+
+</LinearLayout>

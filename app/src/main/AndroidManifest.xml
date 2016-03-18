@@ -102,6 +102,10 @@
             android:screenOrientation="portrait"
             android:launchMode="singleTask" />
         <activity
+            android:name=".FeedBackActivity"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTask" />
+        <activity
             android:name=".HelpActivity"
             android:screenOrientation="portrait"
             android:launchMode="singleTask" />

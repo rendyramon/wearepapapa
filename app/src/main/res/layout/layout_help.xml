@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <include layout="@layout/layout_head"/>
+    <include layout="@layout/head_secod"/>
 
     <ScrollView
         android:id="@+id/item_help"

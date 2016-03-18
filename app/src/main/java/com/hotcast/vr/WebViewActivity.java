@@ -18,7 +18,7 @@ import butterknife.InjectView;
 public class WebViewActivity extends BaseActivity {
     @InjectView(R.id.web)
     WebView webView;
-    @InjectView(R.id.iv_back)
+    @InjectView(R.id.iv_return)
     ImageView iv_back;
     String rec_ur;
 
