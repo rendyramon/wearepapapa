@@ -73,7 +73,7 @@
                     android:id="@+id/progressBar1"
                     style="@style/myProgressBarStyle_play"
                     android:layout_width="50dp"
-                    android:indeterminateDuration="600"
+                    android:indeterminateDuration="1000"
                     android:layout_height="30dp"
                     android:layout_marginBottom="2dp"
                     android:layout_marginTop="4dp"
@@ -121,7 +121,7 @@
                     android:layout_height="30dp"
                     android:layout_marginBottom="2dp"
                     android:layout_marginTop="4dp"
-                    android:indeterminateDuration="600"
+                    android:indeterminateDuration="1000"
                     android:gravity="center"
                     android:textSize="10sp" />
             </LinearLayout>

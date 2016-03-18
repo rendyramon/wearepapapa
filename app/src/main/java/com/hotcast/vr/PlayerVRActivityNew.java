@@ -163,13 +163,12 @@ public class PlayerVRActivityNew extends BaseLanActivity implements PFAssetObser
 
     public void loadVideo(String filename) {
 
-        L.e("filename=" + filename);
         System.out.println("---播放页面接受到的url：" + filename);
         _pfview = PFObjectFactory.view(this);
         _pfview.setMode(curMode, 0);
 
         _pfasset = PFObjectFactory.assetFromUri(this, Uri.parse(filename), this);
-
+        System.out.println("---_pfasset" + _pfasset);
         _pfview.displayAsset(_pfasset);
         _pfview.setNavigationMode(_currentNavigationMode);
 
