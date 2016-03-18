@@ -243,7 +243,7 @@ public class LocalCachelActivity_new extends BaseActivity {
     public void clickItem() {
        int state =  dbList.get(nowPosotion).getCurState();
         if (state == 3){
-            Intent intent = new Intent(LocalCachelActivity_new.this, PlayerVRActivityNew.class);
+            Intent intent = new Intent(LocalCachelActivity_new.this, PlayerVRActivityNew2.class);
             intent.putExtra("play_url", dbList.get(nowPosotion).getLocalurl());
             intent.putExtra("title", dbList.get(nowPosotion).getTitle());
             intent.putExtra("splite_screen", true);

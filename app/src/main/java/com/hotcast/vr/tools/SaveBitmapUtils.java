@@ -15,13 +15,12 @@ import java.io.IOException;
 public class SaveBitmapUtils {
     public static void saveMyBitmap(String name, Bitmap mBitmap) {
         File dir = new File(BaseApplication.ImgCacheUrl);
-        if (!dir.exists()){
+        if (!dir.exists()) {
             dir.mkdirs();
         }
         File f = new File(BaseApplication.ImgCacheUrl + name + ".jpg");
         if (!f.exists()) {
             try {
-                System.out.println("----File:"+f);
                 f.createNewFile();
             } catch (IOException e) {
                 // TODO Auto-generated catch block
@@ -42,6 +41,29 @@ public class SaveBitmapUtils {
                 fOut.close();
             } catch (IOException e) {
                 e.printStackTrace();
+            }
+        } else {
+            if (f.length() < 1) {
+                FileOutputStream fOut = null;
+                try {
+                    fOut = new FileOutputStream(f);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+                if (mBitmap == null) {
+                    return;
+                }
+                mBitmap.compress(Bitmap.CompressFormat.PNG, 50, fOut);
+                try {
+                    fOut.flush();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    fOut.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }

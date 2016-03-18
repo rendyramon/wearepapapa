@@ -71,6 +71,9 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".PlayerVRActivityNew2"
+            android:screenOrientation="landscape" />
+        <activity
             android:name=".PlayerVRActivityNew"
             android:screenOrientation="landscape" />
         <activity

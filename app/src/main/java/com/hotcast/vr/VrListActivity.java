@@ -26,7 +26,6 @@ import com.hotcast.vr.imageView.Image3DView;
 import com.hotcast.vr.pageview.VrListView;
 import com.hotcast.vr.tools.Constants;
 import com.hotcast.vr.tools.L;
-import com.hotcast.vr.tools.Md5Utils;
 import com.hotcast.vr.tools.TokenUtils;
 import com.lidroid.xutils.BitmapUtils;
 import com.lidroid.xutils.DbUtils;
@@ -744,7 +743,7 @@ public class VrListActivity extends BaseActivity {
     }
 
     private void play(String vid) {
-        intent = new Intent(VrListActivity.this, PlayerVRActivityNew.class);
+        intent = new Intent(VrListActivity.this, PlayerVRActivityNew2.class);
         if (isSave){
             intent.putExtra("title", title);
             System.out.println("---title = " + title);

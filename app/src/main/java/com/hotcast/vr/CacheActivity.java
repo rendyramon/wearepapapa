@@ -92,7 +92,7 @@ public class CacheActivity extends BaseActivity{
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 ListBean item = (ListBean) adapter.getItem(i);
-                Intent intent = new Intent(CacheActivity.this, PlayerVRActivityNew.class);
+                Intent intent = new Intent(CacheActivity.this, PlayerVRActivityNew2.class);
                 intent.putExtra("title",item.getName());
                 intent.putExtra("url", item.getLocalPath());
                 intent.putExtra("splite_screen", false);

@@ -7,7 +7,6 @@ import android.content.IntentFilter;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -17,7 +16,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,7 +36,6 @@ import com.hotcast.vr.receiver.DownloadReceiver;
 import com.hotcast.vr.tools.Constants;
 import com.hotcast.vr.tools.DensityUtils;
 import com.hotcast.vr.tools.L;
-import com.hotcast.vr.tools.Md5Utils;
 import com.hotcast.vr.tools.TokenUtils;
 import com.hotcast.vr.tools.Utils;
 import com.lidroid.xutils.BitmapUtils;
@@ -138,7 +135,7 @@ public class DetailActivity extends BaseActivity {
 //                    System.out.println("---playUrl = " + play_url);
 //                    playurl = play_url;
 //                }
-                intent = new Intent(DetailActivity.this, PlayerVRActivityNew.class);
+                intent = new Intent(DetailActivity.this, PlayerVRActivityNew2.class);
                 intent.putExtra("play_url", play_url);
                 intent.putExtra("play", play);
                 intent.putExtra("qingxidu", qingxidu);
@@ -635,7 +632,7 @@ public class DetailActivity extends BaseActivity {
             iv_movie.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(context, PlayerVRActivityNew.class);
+                    Intent intent = new Intent(context, PlayerVRActivityNew2.class);
                     intent.putExtra("vid", relation.getVideos().get(0).getVid());
 //                    intent.putExtra("title", relation.getVname());
                     intent.putExtra("splite_screen", false);
@@ -769,8 +766,8 @@ public class DetailActivity extends BaseActivity {
 
         UserData userData = new Gson().fromJson(sp.select("userData", ""), UserData.class);
 
-        params.addBodyParameter("login_token", sp.select("login_token","" ));
-        System.out.println("---detail:login_token：" + sp.select("login_token", "" ));
+        params.addBodyParameter("login_token", sp.select("login_token", ""));
+        System.out.println("---detail:login_token：" + sp.select("login_token", ""));
         params.addBodyParameter("content", et_pinglun.getText().toString().trim());
         params.addBodyParameter("videoset_id", videoset_id);
         this.httpPost(Constants.SENDPINGLUN, params, new RequestCallBack<String>() {

@@ -17,14 +17,12 @@ import com.hotcast.vr.VerticalGallery.ImageAdapter;
 import com.hotcast.vr.VerticalGallery.VerticalGallery;
 import com.hotcast.vr.VerticalGallery.VerticalGalleryAdapterView;
 import com.hotcast.vr.bean.ChannelList;
-import com.hotcast.vr.bean.LocalBean;
 import com.hotcast.vr.bean.LocalBean2;
 import com.hotcast.vr.bean.Play;
 import com.hotcast.vr.dialog.MyDialog;
 import com.hotcast.vr.pageview.GalleryItemView;
 import com.hotcast.vr.tools.Constants;
 import com.hotcast.vr.tools.L;
-import com.hotcast.vr.tools.Md5Utils;
 import com.hotcast.vr.tools.TokenUtils;
 import com.hotcast.vr.tools.Utils;
 import com.lidroid.xutils.DbUtils;
@@ -379,7 +377,7 @@ public class LandscapeActivity_Second extends BaseActivity {
                         BaseApplication.clarityText = "超清";
                         play_url = play.getUhd_url();
                     }
-                    Intent intent = new Intent(LandscapeActivity_Second.this, PlayerVRActivityNew.class);
+                    Intent intent = new Intent(LandscapeActivity_Second.this, PlayerVRActivityNew2.class);
                     intent.putExtra("play_url", play_url);
                     intent.putExtra("title", play.getTitle());
                     intent.putExtra("splite_screen", true);

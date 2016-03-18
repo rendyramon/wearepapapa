@@ -13,7 +13,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.hotcast.vr.PlayerVRActivityNew;
+import com.hotcast.vr.PlayerVRActivityNew2;
 import com.hotcast.vr.R;
 import com.hotcast.vr.adapter.GalleyAdapter;
 import com.hotcast.vr.bean.ChannelList;
@@ -211,7 +211,7 @@ public class GalleryItemView extends RelativeLayout {
 
     public void clickVideo() {
         String vid = tmpList.get(getSelectedItemPosition()).getVideos().get(0).getVid();
-        Intent intent = new Intent(context, PlayerVRActivityNew.class);
+        Intent intent = new Intent(context, PlayerVRActivityNew2.class);
         intent.putExtra("vid", vid);
         intent.putExtra("splite_screen", true);
         context.startActivity(intent);

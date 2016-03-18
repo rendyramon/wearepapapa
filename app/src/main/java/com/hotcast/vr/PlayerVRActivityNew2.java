@@ -10,28 +10,8 @@
 
 package com.hotcast.vr;
 
-import android.app.Service;
-import android.content.Intent;
-import android.media.AudioManager;
-import android.net.Uri;
-import android.os.Handler;
-import android.os.Message;
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.Spanned;
-import android.text.TextUtils;
-import android.text.style.AbsoluteSizeSpan;
-import android.util.Log;
-import android.view.KeyEvent;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.SeekBar;
-import android.widget.SeekBar.OnSeekBarChangeListener;
-import android.widget.TextView;
+import java.util.*;
+
 
 import com.google.gson.Gson;
 import com.hotcast.vr.bean.LocalBean2;
@@ -47,21 +27,28 @@ import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.RequestParams;
 import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
-import com.panframe.android.lib.PFAsset;
-import com.panframe.android.lib.PFAssetObserver;
-import com.panframe.android.lib.PFAssetStatus;
-import com.panframe.android.lib.PFNavigationMode;
-import com.panframe.android.lib.PFObjectFactory;
-import com.panframe.android.lib.PFView;
+import com.panframe.android.lib.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
+import android.app.Service;
+import android.content.Intent;
+import android.media.AudioManager;
+import android.net.Uri;
+import android.os.Handler;
+import android.os.Message;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.TextUtils;
+import android.text.style.AbsoluteSizeSpan;
+import android.util.Log;
+import android.view.*;
+import android.view.View.*;
+import android.widget.*;
+import android.widget.SeekBar.*;
 
 import butterknife.InjectView;
 
-public class PlayerVRActivityNew extends BaseLanActivity implements PFAssetObserver, OnSeekBarChangeListener {
+public class PlayerVRActivityNew2 extends BaseLanActivity implements PFAssetObserver, OnSeekBarChangeListener {
 
     PFView _pfview;
     PFAsset _pfasset;
@@ -78,16 +65,16 @@ public class PlayerVRActivityNew extends BaseLanActivity implements PFAssetObser
     RelativeLayout controller2;
     @InjectView(R.id.linCtr)
     View linCtr;
-//    @InjectView(R.id.rl_loadin2)
-//    RelativeLayout rl_loadin2;
-//    @InjectView(R.id.rl_loadin1)
-//    RelativeLayout rl_loadin1;
-//    @InjectView(R.id.tv_loadingmessage2)
-//    TextView tv_loadingmessage2;
-//    @InjectView(R.id.tv_loadingmessage1)
-//    TextView tv_loadingmessage1;
-//    @InjectView(R.id.ll_loading)
-//    LinearLayout ll_loading;
+    @InjectView(R.id.rl_loadin2)
+    RelativeLayout rl_loadin2;
+    @InjectView(R.id.rl_loadin1)
+    RelativeLayout rl_loadin1;
+    @InjectView(R.id.tv_loadingmessage2)
+    TextView tv_loadingmessage2;
+    @InjectView(R.id.tv_loadingmessage1)
+    TextView tv_loadingmessage1;
+    @InjectView(R.id.ll_loading)
+    LinearLayout ll_loading;
 
     private PlayerContralView mPlayerContralView1, mPlayerContralView2;
     private PlayerCtrMnger mPlayerContralView;
@@ -273,7 +260,7 @@ public class PlayerVRActivityNew extends BaseLanActivity implements PFAssetObser
 //                                            showLoading("正在缓冲\n" + span);
                                             showLoadingView("正在缓冲\n" + span);
                                         }
-//                                        System.out.println("---缓冲超时System.currentTimeMillis() = " + System.currentTimeMillis());
+                                        System.out.println("---缓冲超时System.currentTimeMillis() = " + System.currentTimeMillis());
 //                                        System.out.println("--- " + (System.currentTimeMillis() - loadingTime));
                                         if (System.currentTimeMillis() - loadingTime > 30000l) {
                                             //表示加载超时
@@ -440,29 +427,63 @@ public class PlayerVRActivityNew extends BaseLanActivity implements PFAssetObser
 
     @Override
     public int getLayoutId() {
-        return R.layout.activity_player_360_old;
+        return R.layout.activity_player_360;
     }
 
     private String title;
     private String titleSplitScreen;
     private AudioManager audioManager; //音频
     long startTime = 0;
+    Handler mhandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case 1:
+                    ll_loading.setVisibility(View.VISIBLE);
+                    if (curMode == MODE_NORMAL) {
+                        rl_loadin1.setVisibility(View.VISIBLE);
+                        rl_loadin2.setVisibility(View.GONE);
+                    } else {
+                        rl_loadin1.setVisibility(View.VISIBLE);
+                        rl_loadin2.setVisibility(View.VISIBLE);
+                    }
+                    tv_loadingmessage1.setText((String) msg.obj);
+                    tv_loadingmessage2.setText((String) msg.obj);
+                    break;
+                case 2:
+                    ll_loading.setVisibility(View.GONE);
+                    break;
+            }
+        }
+    };
+    String message;
 
     public void showLoadingView(String message) {
-//        ll_loading.setVisibility(View.VISIBLE);
-//        if (curMode == MODE_NORMAL) {
-//            rl_loadin1.setVisibility(View.VISIBLE);
-//            rl_loadin2.setVisibility(View.GONE);
-//        } else {
-//            rl_loadin1.setVisibility(View.VISIBLE);
-//            rl_loadin2.setVisibility(View.VISIBLE);
-//        }
-//        tv_loadingmessage1.setText(message);
-//        tv_loadingmessage2.setText(message);
+        if (!isShowing) {
+            System.out.println("---message"+message);
+            this.message = message;
+            Message msg = Message.obtain();
+            msg.what = 1;
+            msg.obj = message;
+            mhandler.sendMessage(msg);
+            isShowing = true;
+        } else if (!message.equals(this.message)) {
+            this.message = message;
+            Message msg = Message.obtain();
+            msg.what = 1;
+            msg.obj = message;
+            mhandler.sendMessage(msg);
+            isShowing = true;
+        }
     }
 
     public void hideLoadingView() {
-//        ll_loading.setVisibility(View.GONE);
+        if (isShowing) {
+            Message msg = Message.obtain();
+            msg.what = 2;
+            mhandler.sendMessage(msg);
+            isShowing = false;
+        }
     }
 
     @Override
@@ -615,7 +636,7 @@ public class PlayerVRActivityNew extends BaseLanActivity implements PFAssetObser
                 play_url = play.getSd_url();
                 if (!TextUtils.isEmpty(play_url)) {
                     BaseApplication.clarityText = "标清";
-                    Intent intent = new Intent(PlayerVRActivityNew.this, PlayerVRActivityNew.class);
+                    Intent intent = new Intent(PlayerVRActivityNew2.this, PlayerVRActivityNew2.class);
                     intent.putExtra("play_url", play_url);
                     intent.putExtra("play", play);
                     intent.putExtra("title", title);
@@ -640,7 +661,7 @@ public class PlayerVRActivityNew extends BaseLanActivity implements PFAssetObser
                 play_url = play.getHd_url();
                 if (!TextUtils.isEmpty(play_url)) {
                     BaseApplication.clarityText = "高清";
-                    Intent intent = new Intent(PlayerVRActivityNew.this, PlayerVRActivityNew.class);
+                    Intent intent = new Intent(PlayerVRActivityNew2.this, PlayerVRActivityNew2.class);
                     intent.putExtra("play_url", play_url);
                     intent.putExtra("play", play);
                     intent.putExtra("title", title);
@@ -665,7 +686,7 @@ public class PlayerVRActivityNew extends BaseLanActivity implements PFAssetObser
                 play_url = play.getUhd_url();
                 if (!TextUtils.isEmpty(play_url)) {
                     BaseApplication.clarityText = "超清";
-                    Intent intent = new Intent(PlayerVRActivityNew.this, PlayerVRActivityNew.class);
+                    Intent intent = new Intent(PlayerVRActivityNew2.this, PlayerVRActivityNew2.class);
                     intent.putExtra("play_url", play_url);
                     intent.putExtra("play", play);
                     intent.putExtra("title", title);

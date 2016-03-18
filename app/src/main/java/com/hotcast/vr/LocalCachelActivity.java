@@ -330,7 +330,7 @@ public class LocalCachelActivity extends BaseActivity {
         }
         if (localurl != null && file.exists()) {
 //                        System.out.println("---本地地址：" + localurl + "---url:" + list.get(i).getUrl());
-            Intent intent = new Intent(LocalCachelActivity.this, PlayerVRActivityNew.class);
+            Intent intent = new Intent(LocalCachelActivity.this, PlayerVRActivityNew2.class);
             intent.putExtra("play_url", localurl);
             intent.putExtra("title", dbList.get(i).getTitle());
             intent.putExtra("splite_screen", true);

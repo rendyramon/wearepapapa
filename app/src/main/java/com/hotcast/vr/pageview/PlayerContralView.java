@@ -2,17 +2,13 @@ package com.hotcast.vr.pageview;
 
 import android.os.Handler;
 import android.os.Message;
-import android.transition.Slide;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.hotcast.vr.BaseActivity;
-import com.hotcast.vr.BaseApplication;
 import com.hotcast.vr.PlayerContrallerInterface;
-import com.hotcast.vr.PlayerVRActivityNew;
 import com.hotcast.vr.R;
 import com.hotcast.vr.tools.DensityUtils;
 import com.hotcast.vr.tools.L;
@@ -20,7 +16,6 @@ import com.hotcast.vr.tools.Utils;
 
 import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
 
-import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 

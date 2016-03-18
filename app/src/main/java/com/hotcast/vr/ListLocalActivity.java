@@ -171,7 +171,7 @@ public class ListLocalActivity extends BaseActivity {
                 }
                 if (!editor) {
                     if (state == 3 && file.exists()) {
-                        Intent intent = new Intent(ListLocalActivity.this, PlayerVRActivityNew.class);
+                        Intent intent = new Intent(ListLocalActivity.this, PlayerVRActivityNew2.class);
                         intent.putExtra("play_url", localurl);
                         intent.putExtra("qingxidu", list.get(i).getQingxidu());
                         intent.putExtra("title", list.get(i).getTitle());
