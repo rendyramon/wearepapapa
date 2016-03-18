@@ -216,7 +216,9 @@ public class MainActivity_new extends BaseActivity {
 
     @Override
     protected void onStart() {
-        ((MineView2) view2).refreshView();
+        if((MineView2) view2 != null){
+            ((MineView2) view2).refreshView();
+        }
         super.onStart();
     }
 

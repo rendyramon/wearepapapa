@@ -460,7 +460,7 @@ public class PlayerVRActivityNew2 extends BaseLanActivity implements PFAssetObse
 
     public void showLoadingView(String message) {
         if (!isShowing) {
-            System.out.println("---message"+message);
+            System.out.println("---message1"+message);
             this.message = message;
             Message msg = Message.obtain();
             msg.what = 1;
@@ -469,6 +469,7 @@ public class PlayerVRActivityNew2 extends BaseLanActivity implements PFAssetObse
             isShowing = true;
         } else if (!message.equals(this.message)) {
             this.message = message;
+            System.out.println("---message2"+message);
             Message msg = Message.obtain();
             msg.what = 1;
             msg.obj = message;
