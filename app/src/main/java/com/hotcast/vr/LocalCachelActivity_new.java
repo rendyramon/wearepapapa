@@ -73,8 +73,12 @@ public class LocalCachelActivity_new extends BaseActivity {
         if (dbList == null || dbList.size() <= 0) {
             view1 = (ViewGroup) findViewById(R.id.delete_window1);
             view2 = (ViewGroup) findViewById(R.id.delete_window2);
+            ll_downloading2 = (LinearLayout) findViewById(R.id.ll_downloading2);
+            ll_downloading1 = (LinearLayout) findViewById(R.id.ll_downloading1);
             view1.setVisibility(View.INVISIBLE);
             view2.setVisibility(View.INVISIBLE);
+            ll_downloading2.setVisibility(View.INVISIBLE);
+            ll_downloading1.setVisibility(View.INVISIBLE);
             noData = false;
             container1.setBackgroundResource(R.mipmap.backgroud_heng_nodata);
             container2.setBackgroundResource(R.mipmap.backgroud_heng_nodata);
