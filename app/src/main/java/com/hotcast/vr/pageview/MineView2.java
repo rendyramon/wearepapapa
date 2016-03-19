@@ -76,6 +76,9 @@ public class MineView2 extends BaseView implements View.OnClickListener {
     Handler handler;
     @InjectView(R.id.rl_change)
     RelativeLayout rl_change;
+    @InjectView(R.id.rl_glasses)
+    RelativeLayout rl_glasses;
+
 
     private UpdateAppManager updateAppManager;
     String spec;
@@ -163,14 +166,18 @@ public class MineView2 extends BaseView implements View.OnClickListener {
         rl_version.setOnClickListener(this);
         rl_help.setOnClickListener(this);
         rl_change.setOnClickListener(this);
+        rl_glasses.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View view) {
         Intent intent;
         switch (view.getId()) {
+            case R.id.rl_glasses:
+                // TODO 点击跳转选择购买眼镜页面
+
+                break;
             case R.id.rl_change:
-                // TODO 点击跳转修改该密码
                 intent = new Intent(activity, ReNameActivity.class);
                 intent.putExtra("title","修改密码");
                 activity.startActivity(intent);

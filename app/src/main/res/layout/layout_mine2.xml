@@ -60,11 +60,42 @@
             android:src="@mipmap/enter"/>
     </RelativeLayout>
     <RelativeLayout
-        android:id="@+id/rl_about"
+        android:id="@+id/rl_glasses"
         android:background="#ffffff"
         android:layout_width="match_parent"
         android:layout_height="43dp"
         android:layout_marginTop="19dp"
+        android:gravity="center_vertical">
+        <ImageView
+            android:id="@+id/iv_glasses"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:paddingLeft="10dp"
+
+            android:src="@mipmap/change_to_vr"/>
+        <TextView
+            android:layout_toRightOf="@id/iv_glasses"
+            android:paddingLeft="6dp"
+            style="@style/mine_text"
+            android:layout_marginTop="7dp"
+            android:text="VR眼镜"/>
+        <ImageView
+            android:id="@+id/enter_glasses"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:paddingRight="10dp"
+            android:src="@mipmap/enter"/>
+    </RelativeLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="#c0c0c0"/>
+    <RelativeLayout
+        android:id="@+id/rl_about"
+        android:background="#ffffff"
+        android:layout_width="match_parent"
+        android:layout_height="43dp"
         android:gravity="center_vertical">
         <ImageView
             android:id="@+id/iv_about"

@@ -119,22 +119,6 @@ public class DetailActivity extends BaseActivity {
                 break;
             case R.id.play:
                 L.e("你点击了播放的按钮");
-
-//                if (TextUtils.isEmpty(play_url)){
-//                if (! TextUtils.isEmpty(play.getSd_url())){
-//                    playurl = play.getSd_url();
-//
-//
-//                }else if (! TextUtils.isEmpty(play.getHd_url())){
-//                    playurl = play.getHd_url();
-//                    BaseApplication.clarityText = "高清";
-//                }else if (! TextUtils.isEmpty(play.getUhd_url())){
-//                    playurl = play.getUhd_url();
-//                    BaseApplication.clarityText = "超清";
-//                }}else {
-//                    System.out.println("---playUrl = " + play_url);
-//                    playurl = play_url;
-//                }
                 intent = new Intent(DetailActivity.this, PlayerVRActivityNew2.class);
                 intent.putExtra("play_url", play_url);
                 intent.putExtra("play", play);
@@ -169,14 +153,6 @@ public class DetailActivity extends BaseActivity {
         params.addBodyParameter("package", BaseApplication.packagename);
         params.addBodyParameter("app_version", BaseApplication.version);
         params.addBodyParameter("device", BaseApplication.device);
-
-//        if (video_ids.size() > 0) {
-//            media_id = video_ids.get(0);
-//
-//            L.e("DetailActivity media_id = " + video_ids.get(0));
-//        } else {
-//            finish();
-//        }
         this.httpPost(mUrl, params, new RequestCallBack<String>() {
             @Override
             public void onStart() {
@@ -213,6 +189,7 @@ public class DetailActivity extends BaseActivity {
                     qingxidu = 2;
                     BaseApplication.clarityText = "超清";
                 }
+                download();
                 initCatch(play_url);
                 saveUrl = play_url;
 //                System.out.println("---play_url:" + play_url);
@@ -329,6 +306,10 @@ public class DetailActivity extends BaseActivity {
                 }
             }
         });
+
+    }
+
+    private void download() {
         ll_download.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
