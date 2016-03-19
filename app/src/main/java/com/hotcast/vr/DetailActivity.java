@@ -800,6 +800,7 @@ public class DetailActivity extends BaseActivity {
 
             @Override
             public void onFailure(HttpException e, String s) {
+                System.out.println(e+"---评论结果：" + s);
             }
         });
     }
