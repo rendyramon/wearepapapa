@@ -229,7 +229,7 @@ public class ListLocalActivity extends BaseActivity {
                 } else {
                     try {
                         if (list.get(i).getLocalurl() != null) {
-                            delete(list.get(i).getLocalurl());
+                            delete(list.get(i).getLocalurl(),list.get(i).getImage());
                         }
                         db.delete(list.get(i));
                         list = db.findAll(LocalBean2.class);
@@ -492,7 +492,7 @@ public class ListLocalActivity extends BaseActivity {
 
     }
 
-    public boolean delete(String fileName) {
+    public boolean delete(String fileName,String img) {
 
         //SDPATH目录路径，fileName文件名
 
@@ -501,7 +501,11 @@ public class ListLocalActivity extends BaseActivity {
             return false;
         }
         file.delete();
-
+        File imgFile = new File(img);
+        if (imgFile == null || !imgFile.exists() || imgFile.isDirectory()) {
+            return false;
+        }
+        imgFile.delete();
         return true;
     }
 
