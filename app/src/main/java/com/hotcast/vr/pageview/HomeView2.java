@@ -333,15 +333,16 @@ public class HomeView2 extends BaseView {
                     datasList.clear();
                 }
                 datasList = roll.getData();
+                System.out.println("---datasList="+datasList);
 
             } catch (IllegalStateException e) {
                 activity.showToast("解析出现错误，请刷新数据");
             }
-            try {
-                db.save(roll);
-            } catch (DbException e) {
-                e.printStackTrace();
-            }
+//            try {
+//                db.save(roll);
+//            } catch (DbException e) {
+//                e.printStackTrace();
+//            }
             //初始化viewpager
 //            L.e("HomeView2 viewList.sixe() = " + viewList.size());
 
@@ -373,19 +374,22 @@ public class HomeView2 extends BaseView {
 //        subjects.addAll(homeBean.getHome_subject());
         urlImgList.clear();
 //        titleList.clear();
-        for (int i = 0; i < datasList.size(); i++) {
+        if (datasList!=null){
+            for (int i = 0; i < datasList.size(); i++) {
 //            RollBean homeRoll = datasList.get(i);
-            Datas datas = datasList.get(i);
+                Datas datas = datasList.get(i);
 //            System.out.println("---343 datas = " + datas);
 //            for (int j = 0; j < datas.getData().size(); j++) {
 //                Datas subject = datas.getData().get(j);
 
-            urlImgList.add(datas.getImage());
+                urlImgList.add(datas.getImage());
 //            titleList.add(datas.getTitle());
 //            System.out.println("---349 urlImg = " + datas.getImage());
 //            System.out.println("---350 title = " + datas.getTitle());
 //            }
+            }
         }
+
 //        System.out.println("---urlImgList = " + urlImgList.size());
 //        System.out.println("---titleList = " + titleList.size());
 
