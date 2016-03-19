@@ -25,6 +25,7 @@ import com.google.gson.Gson;
 import com.hotcast.vr.AboutActivity;
 import com.hotcast.vr.BaseActivity;
 import com.hotcast.vr.BaseApplication;
+import com.hotcast.vr.GlassesActivity;
 import com.hotcast.vr.HelpActivity;
 import com.hotcast.vr.ListLocalActivity;
 import com.hotcast.vr.LoginActivity;
@@ -158,6 +159,7 @@ public class MineView2 extends BaseView implements View.OnClickListener {
             rl_change.setVisibility(View.GONE);
         }
     }
+
     private void initListView() {
         login.setOnClickListener(this);
         regist.setOnClickListener(this);
@@ -174,12 +176,12 @@ public class MineView2 extends BaseView implements View.OnClickListener {
         Intent intent;
         switch (view.getId()) {
             case R.id.rl_glasses:
-                // TODO 点击跳转选择购买眼镜页面
-
+                intent = new Intent(activity, GlassesActivity.class);
+                activity.startActivity(intent);
                 break;
             case R.id.rl_change:
                 intent = new Intent(activity, ReNameActivity.class);
-                intent.putExtra("title","修改密码");
+                intent.putExtra("title", "修改密码");
                 activity.startActivity(intent);
                 activity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                 System.out.println("---你点击了修改该密码");
@@ -229,7 +231,7 @@ public class MineView2 extends BaseView implements View.OnClickListener {
                 activity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                 break;
             case R.id.tv_title:
-                logout(activity.sp.select("login_token","" ));
+                logout(activity.sp.select("login_token", ""));
                 break;
             case R.id.iv_head:
                 if (BaseApplication.isLogin) {

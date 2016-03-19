@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#f1f1f1"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/glasses_head"
+        layout="@layout/head_secod" />
+
+    <ListView
+        android:id="@+id/lv_glasses"
+        android:layout_width="match_parent"
+        android:divider="@null"
+        android:layout_height="match_parent" />
+</LinearLayout>

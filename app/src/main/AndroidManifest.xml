@@ -125,6 +125,10 @@
             android:screenOrientation="portrait"
             android:launchMode="singleTask" />
         <activity
+            android:name=".GlassesActivity"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTask" />
+        <activity
             android:name=".LandscapeActivity"
             android:launchMode="singleTop"
             android:screenOrientation="landscape"

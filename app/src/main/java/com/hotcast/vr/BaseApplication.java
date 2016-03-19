@@ -86,7 +86,7 @@ public class BaseApplication extends Application {
         this.startService(new Intent(this, FileCacheService.class));
         initMeta();
         getIMEI(this);
-        System.out.println("--deviceID:" + device + "--"+Md5Utils.getMd5(device));
+        System.out.println("--deviceID:" + device + "--" + Md5Utils.getMd5(device));
         packageManager = this.getPackageManager();
         try {
             info = packageManager.getPackageInfo(this.getPackageName(), 0);
