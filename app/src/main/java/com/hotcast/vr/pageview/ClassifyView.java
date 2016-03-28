@@ -65,7 +65,7 @@ public class ClassifyView extends BaseView {
     public ClassifyView(BaseActivity activity){
         super(activity, R.layout.layout_classify);
         requestUrl = Constants.CHANNEL_LIST;
-        title.setText("分类");
+        title.setText(activity.getResources().getString(R.string.main_classify));
         init();
     }
     @Override

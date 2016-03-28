@@ -40,7 +40,7 @@
         android:layout_height="49dp"
         android:layout_marginLeft="5dp"
         android:gravity="center"
-        android:text="视频名字占卜公寓"
+        android:text=""
         android:textColor="#383838"
         android:textSize="15dp" />
 
@@ -54,7 +54,7 @@
             android:layout_height="25dp"
             android:layout_marginLeft="5dp"
             android:gravity="center"
-            android:text="更新至第1集"
+            android:text=""
             android:textColor="#767676"
             android:textSize="11dp" />
 
@@ -66,7 +66,7 @@
             android:layout_alignParentTop="true"
             android:layout_alignRight="@+id/tv_datetime"
             android:gravity="center"
-            android:text="片长20：20"
+            android:text=""
             android:singleLine="true"
             android:ellipsize="end"
             android:visibility="gone"
@@ -80,7 +80,7 @@
             android:layout_below="@id/tv_updatecount"
             android:layout_marginLeft="5dp"
             android:gravity="center"
-            android:text="上传时间 2015—12-12 20：43"
+            android:text=""
             android:textColor="#767676"
             android:textSize="11dp" />
 
@@ -118,7 +118,7 @@
                     android:layout_height="0dp"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="缓存"
+                    android:text="@string/cach"
                     android:textSize="10sp" />
             </LinearLayout>
 
@@ -142,7 +142,7 @@
                     android:layout_height="0dp"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="分享"
+                    android:text="@string/share"
                     android:textSize="10sp" />
             </LinearLayout>
 

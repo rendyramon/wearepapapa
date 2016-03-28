@@ -106,7 +106,7 @@ public class ListLocalActivity extends BaseActivity {
         registerReceiver(receiver, filter);
         speeds = new HashMap<>();
         bu = new BitmapUtils(ListLocalActivity.this);
-        title.setText("离线缓存");
+        title.setText(getResources().getString(R.string.mine_cache));
         iv_return.setVisibility(View.VISIBLE);
         initListView();
     }

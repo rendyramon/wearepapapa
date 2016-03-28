@@ -54,7 +54,7 @@ public class CacheActivity extends BaseActivity{
     };
     @Override
     public void init() {
-        title.setText("离线缓存");
+        title.setText(getResources().getString(R.string.mine_cache));
         back.setVisibility(View.VISIBLE);
         back.setOnClickListener(new View.OnClickListener() {
             @Override

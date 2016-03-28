@@ -15,7 +15,7 @@
             android:layout_height="wrap_content"
             android:textSize="16sp"
             android:textColor="#383838"
-            android:text="您对VR热播的反馈将有专人跟进"/>
+            android:text="@string/your_feedback"/>
     </RelativeLayout>
     <LinearLayout
         android:id="@+id/ll_advice"
@@ -31,14 +31,14 @@
             android:background="@drawable/edittext_background"
             android:layout_width="match_parent"
             android:padding="8dp"
-            android:hint="用的不爽，吐槽一下。"
+            android:hint="@string/with_bad"
             android:gravity="top"
             android:layout_height="200dp" />
         <TextView
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:gravity="center_vertical"
-            android:text="请留下您的联系方式"
+            android:text="@string/contact"
             android:textSize="12sp"
            android:paddingLeft="10dp"
             android:textColor="#383838"/>
@@ -47,7 +47,7 @@
             android:background="@drawable/edittext_background"
             android:layout_width="match_parent"
             android:padding="8dp"
-            android:hint="QQ号/邮箱/手机号（选填）"
+            android:hint="@string/address"
             android:layout_height="50dp" />
 
         <LinearLayout
@@ -65,7 +65,7 @@
                 android:layout_marginRight="40dp"
                 android:background="@drawable/aboutactivity_button_selector"
                 android:gravity="center"
-                android:text="取消"
+                android:text="@string/cancel"
                 android:textColor="#444444"
                 android:textSize="15sp" />
 
@@ -76,7 +76,7 @@
                 android:layout_weight="2"
                 android:background="@drawable/aboutactivity_button_selector"
                 android:gravity="center"
-                android:text="发 送"
+                android:text="@string/send"
                 android:textColor="#444444"
                 android:textSize="15sp" />
         </LinearLayout>

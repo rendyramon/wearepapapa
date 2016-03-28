@@ -29,7 +29,7 @@
 
         <TextView
             style="@style/about_text"
-            android:text="关注微信账号：VR热播" />
+            android:text="@string/weicat" />
     </LinearLayout>
 
     <RelativeLayout
@@ -44,7 +44,7 @@
             style="@style/mine_text"
             android:layout_toRightOf="@id/iv_about"
             android:paddingLeft="6dp"
-            android:text="用户协议" />
+            android:text="@string/userAgreement" />
 
         <ImageView
             android:id="@+id/enter_user_agreement"
@@ -68,7 +68,7 @@
             style="@style/mine_text"
             android:layout_toRightOf="@id/iv_about"
             android:paddingLeft="6dp"
-            android:text="建议反馈" />
+            android:text="@string/advice_feedback" />
 
         <ImageView
             android:id="@+id/enter_feedback"

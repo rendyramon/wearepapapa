@@ -41,7 +41,7 @@ public class HelpActivity extends BaseActivity {
 
     @Override
     public void init() {
-        title.setText("帮助");
+        title.setText(getResources().getString(R.string.mine_help));
         iv_return.setVisibility(View.VISIBLE);
 
     }

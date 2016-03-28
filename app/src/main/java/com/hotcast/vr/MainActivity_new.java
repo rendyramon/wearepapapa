@@ -118,9 +118,9 @@ public class MainActivity_new extends BaseActivity {
             vs.add(view2.getRootView());
             adapter = new MyPagerAdapter(vs);
             titles = new ArrayList<String>();
-            titles.add("热播");
-            titles.add("分类");
-            titles.add("我的");
+            titles.add(getResources().getString(R.string.homw_title));
+            titles.add(getResources().getString(R.string.main_classify));
+            titles.add(getResources().getString(R.string.main_mine));
             radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
@@ -228,7 +228,7 @@ public class MainActivity_new extends BaseActivity {
     public void onBackPressed() {
         if (!bExitting) {
             bExitting = true;
-            showToast("再按一次退出");
+            showToast(getResources().getString(R.string.again_exit));
             new Timer().schedule(new TimerTask() {
                 @Override
                 public void run() {

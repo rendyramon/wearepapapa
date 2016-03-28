@@ -17,7 +17,7 @@
         android:layout_margin="10dp"
         android:textSize="20sp"
         android:layout_gravity="center_vertical"
-        android:text="热播"/>
+        android:text="@string/homw_title"/>
 
 
 </LinearLayout>

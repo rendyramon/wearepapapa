@@ -60,15 +60,11 @@ import butterknife.InjectView;
  */
 public class HomeView2 extends BaseView {
 
-//    @ViewInject(R.id.top_news_title)
-//    private TextView top_news_title;
 
     @ViewInject(R.id.dots_ll)
     private LinearLayout dots_ll;
     @ViewInject(R.id.iv_noNet)
     ImageView iv_noNet;
-//    @InjectView(R.id.tv_title)
-//    TextView title;
 
 
     private FloatingActionButton fab_home;
@@ -87,18 +83,14 @@ public class HomeView2 extends BaseView {
     private View layout_roll_view;
     private LinearLayout ll_top_news_viewpager;
     private com.hotcast.vr.pullrefreshview.PullToRefreshListView ptrlv_lv_item_news;
-    //    private ItemView itemView;
     private String requestUrl;
-    //    private boolean bPullDown = true;
     List<ItemView> itemViews;
     DbUtils db;
 
     public HomeView2(BaseActivity activity) {
         super(activity, R.layout.layout_home);//根布局
-//        requestUrl = Constants.URL_HOME;
         requestUrl = Constants.ROLL;
         db = DbUtils.create(activity);
-//        title.setText("首页");
         init();
     }
 
@@ -110,7 +102,7 @@ public class HomeView2 extends BaseView {
         ll_top_news_viewpager = (LinearLayout) layout_roll_view.findViewById(R.id.ll_top_news_viewpager);
         rootView = View.inflate(activity, R.layout.frag_item_news, null);
         TextView title = (TextView) rootView.findViewById(R.id.tv_title);
-        title.setText("热播");
+        title.setText(activity.getResources().getString(R.string.homw_title));
         ViewUtils.inject(this, rootView);
         fab_home = (FloatingActionButton) rootView.findViewById(R.id.fab_home);
         progressBar4 = (ProgressBar) rootView.findViewById(R.id.progressBar4);

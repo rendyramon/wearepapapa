@@ -22,7 +22,7 @@
         android:layout_marginRight="5dp"
         android:layout_marginTop="5dp"
         android:paddingRight="5dp"
-        android:text="热播"
+        android:text="@string/homw_title"
         android:textColor="#ffffff"
         android:textSize="20sp"
         android:visibility="gone" />
@@ -60,7 +60,7 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="11dp"
             android:background="@mipmap/login_bg"
-            android:text="登录"
+            android:text="@string/login"
             android:textColor="#ffffff"
             android:textSize="15sp" />
 
@@ -70,7 +70,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="11dp"
             android:background="@mipmap/login_bg"
-            android:text="注册"
+            android:text="@string/registered"
             android:textColor="#ffffff"
             android:textSize="15sp" />
 
@@ -85,7 +85,7 @@
         android:layout_marginTop="14dp"
         android:background="@mipmap/username"
         android:gravity="center"
-        android:text="热波科技用户名"
+        android:text="@string/username"
         android:textColor="#ffffff"
         android:textSize="14sp" />
 </RelativeLayout>

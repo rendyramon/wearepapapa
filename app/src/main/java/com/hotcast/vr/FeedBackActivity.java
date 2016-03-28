@@ -54,7 +54,7 @@ public class FeedBackActivity extends BaseActivity {
                 finish();
             }
         });
-        tv_title.setText("反馈");
+        tv_title.setText(getResources().getString(R.string.advice_feedback));
         InputMethodManager inputMethodManager = (InputMethodManager)et_advice.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         inputMethodManager.toggleSoftInput(0,InputMethodManager.SHOW_FORCED);
         bt_advice.setOnClickListener(new View.OnClickListener() {

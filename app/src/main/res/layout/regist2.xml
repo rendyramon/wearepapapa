@@ -18,13 +18,13 @@
                 android:layout_height="wrap_content"
                 android:textSize="18sp"
                 android:textColor="#38383c"
-                android:text="VR热播  "/>
+                android:text="@string/app_name"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="15sp"
                 android:textColor="#38383c"
-                android:text="给你 “观” 的自由"/>
+                android:text="@string/regist"/>
         </LinearLayout>
 
         <View
@@ -51,7 +51,7 @@
                 android:inputType="textPassword"
                 android:textSize="14sp"
                 android:background="@null"
-                android:hint="请设置至少6位的密码"/>
+                android:hint="@string/et_password"/>
         </RelativeLayout>
         <View
             android:layout_width="match_parent"
@@ -66,7 +66,7 @@
             android:textSize="17sp"
             android:textColor="#ffffff"
             android:enabled="false"
-            android:text="确认"
+            android:text="@string/confirm"
             android:background="@drawable/regist_selector"/>
     </LinearLayout>
 

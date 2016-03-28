@@ -69,8 +69,8 @@ public class PinglunAdapter extends BaseAdapter {
         }
         bitmapUtils.display(holder.iv_head, datas.get(position).getPicture());
         holder.tv_name.setText(datas.get(position).getUser());
-        holder.tv_lou.setText(position + 1 + "楼");
-        holder.tv_time.setText(new SimpleDateFormat("MM月dd日 HH:mm").format(new Date(datas.get(position).getTime())));
+        holder.tv_lou.setText(position + 1 + context.getResources().getString(R.string.floor));
+        holder.tv_time.setText(new SimpleDateFormat(context.getResources().getString(R.string.comments_time)).format(new Date(datas.get(position).getTime())));
         holder.tv_content.setText(datas.get(position).getContent());
         return convertView;
     }

@@ -185,15 +185,15 @@ public class DetailActivity extends BaseActivity {
                 if (!TextUtils.isEmpty(play.getSd_url())) {
                     play_url = play.getSd_url();
                     qingxidu = 0;
-                    BaseApplication.clarityText = "标清";
+                    BaseApplication.clarityText = getResources().getString(R.string.standard_definition);
                 } else if (!TextUtils.isEmpty(play.getHd_url())) {
                     play_url = play.getHd_url();
                     qingxidu = 1;
-                    BaseApplication.clarityText = "高清";
+                    BaseApplication.clarityText = getResources().getString(R.string.hd);
                 } else if (!TextUtils.isEmpty(play.getUhd_url())) {
                     play_url = play.getUhd_url();
                     qingxidu = 2;
-                    BaseApplication.clarityText = "超清";
+                    BaseApplication.clarityText = getResources().getString(R.string.super_clear);
                 }
                 download();
                 initCatch(play_url);
@@ -225,7 +225,7 @@ public class DetailActivity extends BaseActivity {
                 }
                 if (isdownLoad) {
                     BaseApplication.isDownLoad = true;
-                    tv_cache.setText("已缓存");
+                    tv_cache.setText("");
                     ll_download.setFocusable(false);
                     setPlayUrl();
                 }
@@ -370,8 +370,8 @@ public class DetailActivity extends BaseActivity {
                     System.out.println("---play.getUhd_url() = " + play.getUhd_url());
                     builder.setIsFocusable3(true);
                 }
-                builder.setTitle("  请 选 择 下 载 清 晰 度 : ");
-                builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                builder.setTitle(getResources().getString(R.string.select_downlod));
+                builder.setPositiveButton(getResources().getString(R.string.determine), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         System.out.println("---您选择确定");
                         BaseApplication.detailsList.add(details);
@@ -406,7 +406,7 @@ public class DetailActivity extends BaseActivity {
                     }
                 });
 
-                builder.setNegativeButton("取消",
+                builder.setNegativeButton(getResources().getString(R.string.cancel),
                         new android.content.DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 System.out.println("---您选择取消");
@@ -439,15 +439,15 @@ public class DetailActivity extends BaseActivity {
         if (details.getUpdate_time() != null) {
             long datetime = Long.parseLong(details.getUpdate_time()) * 1000l;
             System.out.println("***datetime = " + new Date(datetime));
-            String date = new SimpleDateFormat("yyyy年MM月dd日").format(new Date(datetime));
-            tv_datetime.setText("更新时间：" + date);
+            String date = new SimpleDateFormat(getResources().getString(R.string.datetime)).format(new Date(datetime));
+            tv_datetime.setText(getResources().getString(R.string.update_time)+ date);
         }
         introduced.setText(details.getDesc());
         System.out.println("---" + details.getUpdate_time() + "**" + details.getId() + "**" + Integer.parseInt(details.getUpdate_time()));
     }
 
     public void refreshPinglun() {
-        tv_count.setText("评 论 (" + count + ")");
+        tv_count.setText(getResources().getString(R.string.evaluation)+ count + getResources().getString(R.string.evaluation2));
         ViewGroup.LayoutParams params = lv_pinglun.getLayoutParams();
         params.height = DensityUtils.dp2px(this, 68 * datas.size() + 40);
         lv_pinglun.setLayoutParams(params);

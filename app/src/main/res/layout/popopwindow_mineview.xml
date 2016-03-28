@@ -9,7 +9,7 @@
         android:id="@+id/bt_camera"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="拍 照"
+        android:text="@string/take_pictures"
         android:textSize="15sp" />
 
     <Button
@@ -18,7 +18,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="15dp"
         android:layout_marginTop="5dp"
-        android:text="相 册"
+        android:text="@string/photo"
         android:textSize="15sp" />
 
 </LinearLayout>

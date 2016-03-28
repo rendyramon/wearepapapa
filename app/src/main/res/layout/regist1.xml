@@ -7,6 +7,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="62dp"
@@ -17,13 +18,13 @@
                 android:layout_height="wrap_content"
                 android:textSize="18sp"
                 android:textColor="#38383c"
-                android:text="VR热播  "/>
+                android:text="@string/app_name"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="15sp"
                 android:textColor="#38383c"
-                android:text="给你 “观” 的自由"/>
+                android:text="@string/regist"/>
         </LinearLayout>
         <TextView
             android:id="@+id/tv_findpw"
@@ -33,7 +34,7 @@
             android:layout_margin="10dp"
             android:visibility="gone"
             android:textColor="#000000"
-            android:text="请在下面输入您要找回的账号："/>
+            android:text="@string/retrieve_account"/>
 
         <View
             android:layout_width="match_parent"
@@ -57,7 +58,7 @@
                 android:layout_height="match_parent"
                 android:inputType="number"
                 android:background="@null"
-                android:hint="请输入手机号"/>
+                android:hint="@string/enter_phone"/>
         </RelativeLayout>
         <View
             android:layout_width="match_parent"
@@ -81,7 +82,7 @@
                 android:layout_height="match_parent"
                 android:inputType="number"
                 android:background="@null"
-                android:hint="请输入验证码"/>
+                android:hint="@string/enter_verification"/>
             <Button
                 android:id="@+id/bt_verificationcode"
                 android:layout_width="wrap_content"
@@ -107,13 +108,13 @@
                 android:layout_height="wrap_content"
                 android:textColor="#ef38383c"
                 android:textSize="10dp"
-                android:text="注册即视为同意 "/>
+                android:text="@string/regist_agreed"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="#1d98d8"
                 android:textSize="10dp"
-                android:text="《VR热播app用户协议》"/>
+                android:text="@string/app_agreement"/>
 
         </LinearLayout>
         <Button
@@ -125,7 +126,7 @@
             android:textSize="17sp"
             android:enabled="false"
             android:textColor="#ffffff"
-            android:text="下一步"
+            android:text="@string/next_step"
             android:background="@drawable/regist_selector"/>
     </LinearLayout>
 

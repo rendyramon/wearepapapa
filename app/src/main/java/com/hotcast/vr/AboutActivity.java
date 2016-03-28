@@ -88,7 +88,7 @@ public class AboutActivity extends BaseActivity {
 
     @Override
     public void init() {
-        tv_title.setText("关于");
+        tv_title.setText(getResources().getString(R.string.mine_about));
         tv_version.setText(BaseApplication.version);
         iv_return.setVisibility(View.VISIBLE);
         user_agreement.setOnClickListener(this);

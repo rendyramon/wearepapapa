@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="homw_title">hotcast</string>
+    <string name="app_name">VRhotcast</string>
+    <string name="mine_cache">Offline caching</string>
+    <string name="mine_change">Change the password</string>
+    <string name="mine_about">About us</string>
+    <string name="mine_version">Check for Update</string>
+    <string name="mine_help">Help</string>
+    <string name="main_home">Home</string>
+    <string name="main_classify">Classify</string>
+    <string name="main_mine">Me</string>
+    <string name="home_newest">The latest release</string>
+    <string name="home_hottest">The hottest concern</string>
+    <string name="classify_1">占星公寓</string>
+    <string name="classify_2">体育</string>
+    <string name="classify_3">动漫</string>
+    <string name="classify_4">旅游</string>
+    <string name="classify_5">现场</string>
+    <string name="editor">The editor</string>
+    <string name="send">send</string>
+    <string name="your_comment">Say Something...</string>
+    <string name="related">Related series</string>
+    <string name="comments">Comments (0)</string>
+    <string name="series">The series</string>
+    <string name="address">QQ/email/phone (optional)</string>
+    <string name="contact">Please leave your contact information</string>
+    <string name="with_bad">Please describe your issue</string>
+    <string name="your_feedback">Your feedback on VR热播 there will follow up</string>
+    <string name="floor">#</string>
+    <string name="comments_time">MM/dd/ HH:mm</string>
+
+
+    <string name="cancellation">Log Out</string>
+    <string name="registered">Registered</string>
+    <string name="login">Login</string>
+    <string name="retrieve_password">Retrieve password</string>
+    <string name="new_username">Please enter a new username</string>
+    <string name="old_password">Please enter the old password</string>
+    <string name="new_password">Please enter a new password</string>
+    <string name="save">Save</string>
+    <string name="change_password">Change the password</string>
+    <string name="change_username">Change the username</string>
+    <string name="latest_version">You have is the latest version</string>
+    <string name="not_landed">Hey,you have not login</string>
+    <string name="take_pictures">Taking pictures</string>
+    <string name="photo">Photo album</string>
+    <string name="standard_definition">sd</string>
+    <string name="hd">hd</string>
+    <string name="super_clear">Super clear</string>
+    <string name="cached">cached</string>
+    <string name="select_downlod">Please select a download definition:</string>
+    <string name="determine">Confirm</string>
+    <string name="cancel">cancel</string>
+    <string name="update_time">Update time: </string>
+    <string name="evaluation">Evaluation theory (</string>
+    <string name="evaluation2"> )</string>
+    <string name="datetime">yyyy/MM/dd</string>
+    <string name="cach">The cache</string>
+    <string name="share">share</string>
+
+    <string name="userAgreement">User agreement</string>
+    <string name="weicat">Focus on WeChat account: VR热播</string>
+    <string name="advice_feedback">Advice feedback</string>
+    <string name="username">Nickname</string>
+    <string name="VRglasses">VR glasses</string>
+    <string name="again_exit">Again according to the exit</string>
+    <string name="retrieve_account">Please input you want to retrieve account below:</string>
+    <string name="enter_phone">Enter your phone number</string>
+    <string name="enter_verification">Verifiy code</string>
+    <string name="regist_agreed"> Be deemed to have agreed to</string>
+    <string name="app_agreement">《VR popular app user agreement》</string>
+    <string name="next_step">The next step</string>
+    <string name="et_password">Please set the password of at least 6</string>
+    <string name="confirm">confirm</string>
+    <string name="forgot_password">Forgot password</string>
+    <string name="et_phone">Phone number</string>
+    <string name="et_enterPs">Enter your password</string>
+
+
+    <string name="pushmsg_center_no_more_msg">Is over!</string>
+    <string name="pushmsg_center_pull_up_text">Loosen the load more</string>
+    <string name="pushmsg_center_pull_down_text">The drop-down to refresh</string>
+    <string name="pushmsg_center_pull_release_text">Loosen for more</string>
+    <string name="pushmsg_center_pull_down_update_time">The last time the refresh time:</string>
+    <string name="pushmsg_center_load_more_ongoing_text">Being loaded in</string>
+
+    <string name="regist">  "View" of free for you</string>
+    <string name="xsearch_loading">Is refreshing...</string>
+    <string name="user_agreement">在使用“VR热播”（以下简称本应用）前，请您务必仔细阅读并透彻理解本声明。您可以选择不使用本应用，但如果您使用本应用，您的使用行为将被视为对本声明全部内容的认可。本应用中收录的视频内容中包含部分他人制作或提供的全景视频，您可以通过第三方网站上获取视频及享用服务，本应用对其合法性概不负责，亦不承担任何法律责任。除本应用注明之服务条款外，其他一切因使用本应用而可能遭致的意外，疏忽，侵权及其造成的损失，本应用对齐概不负责，亦不承担任何法律责任。本应用尊重并保护所有使用本应用用户的个人隐私权，您注册的用户名，电子邮件地址等个人资料，非经您亲自许可或根据相关法律，法规的强制规定，本应用不会主动地泄露给第三方。任何网站或者个人的视频内容不想被本应用收录，应该及时向本应用反映，或者在其网站页面中加注拒绝收录的标记，否则本应用将依照惯例视其为可收录网站。任何单位或个人认为通过本应用获得到的内容可能涉及侵犯其信息网络传播权，应该及时提出书面权利通知，并提供身份证明，权属证明及详细侵权情况证明。本应用在收到上述法律文件后，将会依法尽快下线相关内容。</string>
+
+    <!-- 加载图片失败时的提示文本 -->
+    <string name="picture_load_image_failed">Click on the screen, reload</string>
+    <!-- 加载中提示 -->
+    <string name="picture_image_loading">Being loaded...</string>
+
+    <!-- 下拉刷新和上拉加载更多的文本 -->
+    <string name="pull_to_refresh_header_hint_normal">The drop-down to refresh</string>
+    <string name="pull_to_refresh_header_hint_normal2">Pull to refresh</string>
+    <string name="pull_to_refresh_header_hint_ready">Loosen the refresh after</string>
+    <string name="pull_to_refresh_header_hint_loading">Being loaded in</string>
+    <string name="pull_to_refresh_header_last_time">The last time the refresh time:</string>
+    <string name="pull_to_refresh_footer_hint_ready">Loosen the load more</string>
+    <string name="pull_to_refresh_refreshing_label">Being loaded in</string>
+    <string name="pull_to_refresh_no_more_data">Is over!</string>
+    <string name="pull_to_refresh_network_error">Network not to force, please check the network</string>
+
+
+</resources>

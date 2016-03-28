@@ -102,7 +102,7 @@ public class LoginActivity extends BaseActivity {
 
             }
         });
-        tv_login.setText("登录");
+        tv_login.setText(getResources().getString(R.string.login));
     }
 
     @Override
@@ -143,7 +143,7 @@ public class LoginActivity extends BaseActivity {
                 break;
             case R.id.tv_forgot:
                 intent = new Intent(this, RegistActivity.class);
-                intent.putExtra("title", "找回密码");
+                intent.putExtra("title", getResources().getString(R.string.retrieve_password));
                 startActivity(intent);
                 finish();
                 break;

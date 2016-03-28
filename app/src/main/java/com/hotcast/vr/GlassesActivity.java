@@ -47,7 +47,7 @@ public class GlassesActivity extends Activity implements View.OnClickListener {
         TextView tv = (TextView) glasses_head.findViewById(R.id.tv_title);
         iv_return = (ImageView) glasses_head.findViewById(R.id.iv_return);
         iv_return.setOnClickListener(this);
-        tv.setText("VR眼镜");
+        tv.setText(getResources().getString(R.string.VRglasses));
         glasses = new ArrayList<>();
         lv_glasses = (ListView) findViewById(R.id.lv_glasses);
         adapter = new GlassesAdapter();

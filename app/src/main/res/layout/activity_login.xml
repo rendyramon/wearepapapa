@@ -22,13 +22,13 @@
                 android:layout_height="wrap_content"
                 android:textSize="18sp"
                 android:textColor="#38383c"
-                android:text="VR热播  "/>
+                android:text="@string/app_name"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="15sp"
                 android:textColor="#38383c"
-                android:text="给你 “观” 的自由"/>
+                android:text="@string/regist"/>
         </LinearLayout>
 
         <View
@@ -55,7 +55,7 @@
                 android:inputType="phone"
                 android:autoLink="phone"
                 android:background="@null"
-                android:hint="手机号"/>
+                android:hint="@string/et_phone"/>
         </RelativeLayout>
         <View
             android:layout_width="match_parent"
@@ -79,7 +79,7 @@
                 android:layout_height="match_parent"
                 android:inputType="textPassword"
                 android:background="@null"
-                android:hint="请输入密码"/>
+                android:hint="@string/et_enterPs"/>
             <ImageView
                 android:id="@+id/iv_look"
                 android:layout_width="wrap_content"
@@ -104,13 +104,13 @@
             android:textSize="17sp"
             android:textColor="#ffffff"
             android:enabled="false"
-            android:text="登录"
+            android:text="@string/login"
             android:background="@drawable/regist_selector"/>
         <TextView
             android:id="@+id/tv_forgot"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="忘记密码"
+            android:text="@string/forgot_password"
             android:textSize="14sp"
             android:textColor="#adadad"
             android:layout_margin="20dp"

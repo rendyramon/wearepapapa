@@ -63,6 +63,7 @@ public class ReNameActivity extends BaseActivity {
         iv_return.setOnClickListener(this);
         bt_save.setOnClickListener(this);
         switch (title) {
+            case "Change the password":
             case "修改密码":
                 et_oldpassword.setVisibility(View.VISIBLE);
                 et_newpassword.setVisibility(View.VISIBLE);
@@ -84,7 +85,7 @@ public class ReNameActivity extends BaseActivity {
                             et_newpassword.setEnabled(true);
                         }else {
                             et_newpassword.setEnabled(false);
-                            showToast("亲，密码不能低于6位数*_*");
+                            showToast(getResources().getString(R.string.et_password));
                         }
                     }
                 });
@@ -104,11 +105,12 @@ public class ReNameActivity extends BaseActivity {
                             bt_save.setEnabled(true);
                         }else {
                             bt_save.setEnabled(false);
-                            showToast("亲，密码不能低于6位数*_*");
+                            showToast(getResources().getString(R.string.et_password));
                         }
                     }
                 });
                 break;
+            case "Change the username":
             case "更改用户名":
                 et_username.setVisibility(View.VISIBLE);
                 et_oldpassword.setVisibility(View.GONE);

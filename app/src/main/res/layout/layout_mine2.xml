@@ -78,7 +78,7 @@
             android:paddingLeft="6dp"
             style="@style/mine_text"
             android:layout_marginTop="7dp"
-            android:text="VR眼镜"/>
+            android:text="@string/VRglasses"/>
         <ImageView
             android:id="@+id/enter_glasses"
             android:layout_width="wrap_content"

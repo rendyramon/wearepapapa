@@ -99,7 +99,7 @@ public class MineView2 extends BaseView implements View.OnClickListener {
 //        date = activity.sp.select("userData","");
 
         refreshView();
-        title.setText("注销");
+        title.setText(activity.getResources().getString(R.string.cancellation));
         spec = activity.sp.select("spec", "");
         is_force = activity.sp.select("is_force", "");
         newFeatures = activity.sp.select("newFeatures", "");
@@ -181,14 +181,14 @@ public class MineView2 extends BaseView implements View.OnClickListener {
                 break;
             case R.id.rl_change:
                 intent = new Intent(activity, ReNameActivity.class);
-                intent.putExtra("title", "修改密码");
+                intent.putExtra("title", activity.getResources().getString(R.string.change_password));
                 activity.startActivity(intent);
                 activity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                 System.out.println("---你点击了修改该密码");
                 break;
             case R.id.tv_username:
                 intent = new Intent(activity, ReNameActivity.class);
-                intent.putExtra("title", "更改用户名");
+                intent.putExtra("title", activity.getResources().getString(R.string.change_username));
                 activity.startActivity(intent);
                 activity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                 System.out.println("---您点击了用户名，你可以修改用户名");
@@ -222,7 +222,7 @@ public class MineView2 extends BaseView implements View.OnClickListener {
                     updateAppManager = new UpdateAppManager(activity, spec, is_force, newFeatures);
                     updateAppManager.checkUpdateInfo();
                 } else {
-                    activity.showToast("您已经是最新版本");
+                    activity.showToast(activity.getResources().getString(R.string.latest_version));
                 }
                 break;
             case R.id.rl_help:
@@ -237,7 +237,7 @@ public class MineView2 extends BaseView implements View.OnClickListener {
                 if (BaseApplication.isLogin) {
                     showPopupWinow();
                 } else {
-                    Toast.makeText(activity, "亲，您还没有登陆哟~", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity,activity.getResources().getString(R.string.not_landed), Toast.LENGTH_SHORT).show();
                 }
                 break;
             case R.id.bt_pictue:
