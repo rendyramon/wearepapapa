@@ -17,8 +17,10 @@ import com.hotcast.vr.VerticalGallery.ImageAdapter;
 import com.hotcast.vr.VerticalGallery.VerticalGallery;
 import com.hotcast.vr.VerticalGallery.VerticalGalleryAdapterView;
 import com.hotcast.vr.bean.ChannelList;
+import com.hotcast.vr.bean.ChannelLister;
 import com.hotcast.vr.bean.LocalBean2;
 import com.hotcast.vr.bean.Play;
+import com.hotcast.vr.bean.PlayerBean;
 import com.hotcast.vr.dialog.MyDialog;
 import com.hotcast.vr.pageview.GalleryItemView;
 import com.hotcast.vr.tools.Constants;
@@ -36,7 +38,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LandscapeActivity_Second extends BaseActivity {
-    List<ChannelList> tmpList;
     String channel_id;//当前频道的ID
     boolean isloading;
     boolean nodata = true;//是否有数据
@@ -287,7 +288,7 @@ public class LandscapeActivity_Second extends BaseActivity {
             }
         }
     };
-
+    List<ChannelList> tmpList;
     public void getNetData(final String channel_id, int page, boolean nOrp) {
         final String mUlr = Constants.PROGRAM_LIST;
         System.out.println("***VrListActivity *** getNetData()" + mUlr);
@@ -315,18 +316,10 @@ public class LandscapeActivity_Second extends BaseActivity {
                     System.out.println("---最后一页");
                     return;
                 } else {
-                    List<ChannelList> tmpList;
-                    tmpList = new Gson().fromJson(responseInfo.result, new TypeToken<List<ChannelList>>() {
-                    }.getType());
-//                    GalleryItemView itemView1 = new GalleryItemView(LandscapeActivity_Second.this, tmpList);
-//                    GalleryItemView itemView2 = new GalleryItemView(LandscapeActivity_Second.this, tmpList);
-//                    itemView1.setHandler(mhandler);
-//                    itemView2.setHandler(mhandler);
-//                    views1.add(itemView1);
-//                    views2.add(itemView2);
-//                    adapter1.notifyDataSetChanged();
-//                    adapter2.notifyDataSetChanged();
-//                    System.out.println("---页数" + views1.size());
+                    ChannelLister channelLister = new Gson().fromJson(responseInfo.result,ChannelLister.class);
+                    if ("success".equals(channelLister.getMessage())||0 <= channelLister.getCode() && channelLister.getCode() <= 10){
+                        tmpList =channelLister.getData();
+                    }
                 }
             }
 
@@ -362,44 +355,50 @@ public class LandscapeActivity_Second extends BaseActivity {
             @Override
             public void onSuccess(ResponseInfo<String> responseInfo) {
                 L.e("---DetailActivity responseInfo:" + responseInfo.result);
-                Play play = new Gson().fromJson(responseInfo.result, Play.class);
-                play.setImgurl(img);
-                if (flag) {
-                    String play_url = null;
-                    if (!TextUtils.isEmpty(play.getSd_url())) {
-                        BaseApplication.clarityText = "标清";
-                        play_url = play.getSd_url();
-                    } else if (!TextUtils.isEmpty(play.getHd_url())) {
-                        BaseApplication.clarityText = "高清";
-                        play_url = play.getHd_url();
+                if (!TextUtils.isEmpty(responseInfo.result)){
+                    PlayerBean playerBean = new Gson().fromJson(responseInfo.result,PlayerBean.class);
+                    if ("success".equals(playerBean.getMessage())||0 <= playerBean.getCode() && playerBean.getCode() <= 10){
+                        Play play =playerBean.getData();
+                        play.setImgurl(img);
+                        if (flag) {
+                            String play_url = null;
+                            if (!TextUtils.isEmpty(play.getSd_url())) {
+                                BaseApplication.clarityText = "标清";
+                                play_url = play.getSd_url();
+                            } else if (!TextUtils.isEmpty(play.getHd_url())) {
+                                BaseApplication.clarityText = "高清";
+                                play_url = play.getHd_url();
 
-                    } else if (!TextUtils.isEmpty(play.getUhd_url())) {
-                        BaseApplication.clarityText = "超清";
-                        play_url = play.getUhd_url();
+                            } else if (!TextUtils.isEmpty(play.getUhd_url())) {
+                                BaseApplication.clarityText = "超清";
+                                play_url = play.getUhd_url();
+                            }
+                            Intent intent = new Intent(LandscapeActivity_Second.this, PlayerVRActivityNew2.class);
+                            intent.putExtra("play_url", play_url);
+                            intent.putExtra("title", play.getTitle());
+                            intent.putExtra("splite_screen", true);
+                            startActivity(intent);
+                        } else {
+                            String urls[] = new String[3];
+                            urls[0] = play.getSd_url();
+                            urls[1] = play.getHd_url();
+                            urls[2] = play.getUhd_url();
+                            if (!TextUtils.isEmpty(urls[0])) {
+                                saveUrl = urls[0];
+                            } else if (!TextUtils.isEmpty(urls[1])) {
+                                System.out.println("---默认选择高清：" + urls[1]);
+                                saveUrl = urls[1];
+                            } else if (!TextUtils.isEmpty(urls[2])) {
+                                saveUrl = urls[2];
+                            } else {
+                                return;
+                            }
+                            showDialog(urls, play, vid);
+                        }
+                        showOrHideLoadingBar(false);
                     }
-                    Intent intent = new Intent(LandscapeActivity_Second.this, PlayerVRActivityNew2.class);
-                    intent.putExtra("play_url", play_url);
-                    intent.putExtra("title", play.getTitle());
-                    intent.putExtra("splite_screen", true);
-                    startActivity(intent);
-                } else {
-                    String urls[] = new String[3];
-                    urls[0] = play.getSd_url();
-                    urls[1] = play.getHd_url();
-                    urls[2] = play.getUhd_url();
-                    if (!TextUtils.isEmpty(urls[0])) {
-                        saveUrl = urls[0];
-                    } else if (!TextUtils.isEmpty(urls[1])) {
-                        System.out.println("---默认选择高清：" + urls[1]);
-                        saveUrl = urls[1];
-                    } else if (!TextUtils.isEmpty(urls[2])) {
-                        saveUrl = urls[2];
-                    } else {
-                        return;
-                    }
-                    showDialog(urls, play, vid);
                 }
-                showOrHideLoadingBar(false);
+
             }
 
             @Override
@@ -410,6 +409,10 @@ public class LandscapeActivity_Second extends BaseActivity {
                 showNoDataDialog("网络异常，下载失败");
             }
         });
+    }
+
+    private void initPlayUrl(String result) {
+
     }
 
     public void startDownLoad(String play_url, Play play, String vid, int qingxidu) {

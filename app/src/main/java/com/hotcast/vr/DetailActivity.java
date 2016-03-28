@@ -23,10 +23,13 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.hotcast.vr.adapter.PinglunAdapter;
 import com.hotcast.vr.bean.Details;
+import com.hotcast.vr.bean.Detailser;
 import com.hotcast.vr.bean.LocalBean2;
 import com.hotcast.vr.bean.Pinglun;
 import com.hotcast.vr.bean.Play;
+import com.hotcast.vr.bean.PlayerBean;
 import com.hotcast.vr.bean.Relation;
+import com.hotcast.vr.bean.Relationer;
 import com.hotcast.vr.bean.Urls;
 import com.hotcast.vr.bean.UserData;
 import com.hotcast.vr.bean.VideosNew;
@@ -157,25 +160,28 @@ public class DetailActivity extends BaseActivity {
             @Override
             public void onStart() {
                 super.onStart();
-
                 L.e("DetailActivity onStart ");
             }
 
             @Override
             public void onSuccess(ResponseInfo<String> responseInfo) {
                 L.e("---DetailActivity responseInfo:" + responseInfo.result);
+                initPlayUrl(responseInfo.result);
+            }
+            @Override
+            public void onFailure(HttpException e, String s) {
+                L.e("DetailActivity onFailure ");
+            }
+        });
 
-//                               List<Play> playUrls = new Gson().fromJson(responseInfo.result, new TypeToken<List<Play>>() {
-//                }.getType());
-//                size = playUrls.size();
-//                L.e("DetailActivity playUrls:" + playUrls + "***size = " + size);
 
+    }
 
-//                for (int i = 0; i < size; i++) {
-//                    playUrl.add(playUrls.get(i).getUrls());
-//                    playTitle.add(playUrls.get(i).getTitle());
-//                }
-                play = new Gson().fromJson(responseInfo.result, Play.class);
+    private void initPlayUrl(String result) {
+        if (!TextUtils.isEmpty(result)){
+            PlayerBean playerBean = new Gson().fromJson(result, PlayerBean.class);
+            if ("success".equals(playerBean.getMessage())||0 <= playerBean.getCode() && playerBean.getCode() <= 10){
+                play = playerBean.getData();
                 if (!TextUtils.isEmpty(play.getSd_url())) {
                     play_url = play.getSd_url();
                     qingxidu = 0;
@@ -194,16 +200,9 @@ public class DetailActivity extends BaseActivity {
                 saveUrl = play_url;
 //                System.out.println("---play_url:" + play_url);
                 title = play.getTitle();
-                progressBar5.setVisibility(View.GONE);
+
             }
-
-            @Override
-            public void onFailure(HttpException e, String s) {
-                L.e("DetailActivity onFailure ");
-            }
-        });
-
-
+        }
     }
 
     DbUtils db;
@@ -350,10 +349,6 @@ public class DetailActivity extends BaseActivity {
                         }
                     }
                 };
-//                builder.setMessage("这个就是自定义的提示框");
-//                builder.setColor1(50);
-//                builder.setColor2(1);
-//                builder.setColor3(443215);
                 if (TextUtils.isEmpty(play.getSd_url())) {
                     System.out.println("---标清无");
                     builder.setIsFocusable1(false);
@@ -435,30 +430,20 @@ public class DetailActivity extends BaseActivity {
         L.e("***填充数据***" + details.getId());
         bitmapUtils = new BitmapUtils(this);
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-//        img_movie.setLayoutParams(params);
-//        bitmapUtils.
         if (details.getImage() != null) {
             bitmapUtils.display(rl_movieimg, details.getImage().get(0));
         }
         if (details.getTitle() != null) {
             movie_name.setText(details.getTitle());
         }
-//        if (details.getId() != null) {
-//            movietime.setText("片长：" + details.getVideo_length());
-//        }
         if (details.getUpdate_time() != null) {
             long datetime = Long.parseLong(details.getUpdate_time()) * 1000l;
             System.out.println("***datetime = " + new Date(datetime));
             String date = new SimpleDateFormat("yyyy年MM月dd日").format(new Date(datetime));
-//            Date d = new Date(Integer.parseInt(details.getUpdate_at()));
-//            SimpleDateFormat sf = new SimpleDateFormat("yyyy年MM月dd日");
-////            sf.format(d);
-//            tv_datetime.setText("更新时间：" + sf.format(d));
             tv_datetime.setText("更新时间：" + date);
         }
         introduced.setText(details.getDesc());
         System.out.println("---" + details.getUpdate_time() + "**" + details.getId() + "**" + Integer.parseInt(details.getUpdate_time()));
-//        Integer.parseInt(details.getUpdate_at());
     }
 
     public void refreshPinglun() {
@@ -513,26 +498,27 @@ public class DetailActivity extends BaseActivity {
         if (Utils.textIsNull(json)) {
             finish();
             return;
-        }
-
-        details = new Gson().fromJson(json, Details.class);
-//        size = detailses.size();
-//        Details details = new Gson().fromJson(json,new );
-        videoses = (ArrayList<VideosNew>) details.getVideos();
-        L.e("DetailActivity details.getVideo() =" + details.getVideos());
-        L.e("DetailActivity videoses =" + videoses);
-        if (videoses != null && videoses.size() > 0) {
-            for (int i = 0; i < videoses.size(); i++) {
-                video_ids.add(videoses.get(i).getVid());
+        }else {
+            Detailser detailser = new Gson().fromJson(json, Detailser.class);
+            if ("success".equals(detailser.getMessage())||0 <= detailser.getCode() && detailser.getCode() <= 10){
+                details = detailser.getData();
+                videoses = (ArrayList<VideosNew>) details.getVideos();
+                L.e("DetailActivity details.getVideo() =" + details.getVideos());
+                L.e("DetailActivity videoses =" + videoses);
+                if (videoses != null && videoses.size() > 0) {
+                    for (int i = 0; i < videoses.size(); i++) {
+                        video_ids.add(videoses.get(i).getVid());
+                    }
+                    L.e("DetailActivity detailses = " + details + videoses.size());
+                    L.e("DetailActivity video_ids = " + video_ids);
+                    initView();
+                } else {
+                    finish();
+                }
+                getplayUrl();
+                getRelationDate();
             }
-            L.e("DetailActivity detailses = " + details + videoses.size());
-            L.e("DetailActivity video_ids = " + video_ids);
-            initView();
-        } else {
-            finish();
         }
-        getplayUrl();
-        getRelationDate();
     }
 
     @Override
@@ -564,17 +550,17 @@ public class DetailActivity extends BaseActivity {
                 L.e("---getRelationDate responseInfo:" + responseInfo.result);
                 if (Utils.textIsNull(responseInfo.result)) {
                     return;
-                }
-                try {
-                    relations = new Gson().fromJson(responseInfo.result, new TypeToken<List<Relation>>() {
-                    }.getType());
-                } catch (IllegalStateException e) {
-                    DetailActivity.this.showToast("解析出现错误，请刷新数据");
-                    finish();
-                }
+                }else {
+                    Relationer relationer = new Gson().fromJson(responseInfo.result,Relationer.class);
+                    if ("success".equals(relationer.getMessage())||0 <= relationer.getCode() && relationer.getCode() <= 10){
+                        relations = relationer.getData();
+                        progressBar5.setVisibility(View.GONE);
+                        setItemMovies(DetailActivity.this, relations);
+                    }else {
+                        showToast("亲，获取网络数据失败了T_T");
+                    }
 
-                setItemMovies(DetailActivity.this, relations);
-
+                }
             }
 
             @Override
@@ -665,7 +651,6 @@ public class DetailActivity extends BaseActivity {
         params.addBodyParameter("token", TokenUtils.createToken(this));
         params.addBodyParameter("version", BaseApplication.version);
         params.addBodyParameter("platform", BaseApplication.platform);
-
         params.addBodyParameter("per_page", number + "");
         params.addBodyParameter("tmp_page", tmp_page + 1 + "");
         params.addBodyParameter("videoset_id", videoset_id);
@@ -684,6 +669,7 @@ public class DetailActivity extends BaseActivity {
                     total_page = 0;
                     if (data != null && !"".equals(data) && data.length() > 3) {
                         pinglun = new Gson().fromJson(data, Pinglun.class);
+                        System.out.println("---pinglun"+pinglun);
                         total_page = pinglun.getTotal_page();
                         count = pinglun.getCount();
                         if (datas == null) {
@@ -744,9 +730,7 @@ public class DetailActivity extends BaseActivity {
         params.addBodyParameter("token", TokenUtils.createToken(this));
         params.addBodyParameter("version", BaseApplication.version);
         params.addBodyParameter("platform", BaseApplication.platform);
-
         UserData userData = new Gson().fromJson(sp.select("userData", ""), UserData.class);
-
         params.addBodyParameter("login_token", sp.select("login_token", ""));
         System.out.println("---detail:login_token：" + sp.select("login_token", ""));
         params.addBodyParameter("content", et_pinglun.getText().toString().trim());

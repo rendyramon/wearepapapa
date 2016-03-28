@@ -18,6 +18,7 @@ import com.hotcast.vr.bean.LocalBean;
 import com.hotcast.vr.bean.LocalBean1;
 import com.hotcast.vr.bean.LocalBean2;
 import com.hotcast.vr.bean.Update;
+import com.hotcast.vr.bean.Updater;
 import com.hotcast.vr.bean.User2;
 import com.hotcast.vr.bean.UserData;
 import com.hotcast.vr.tools.Constants;
@@ -236,14 +237,18 @@ public class SplashActivity extends BaseActivity {
     private void setViewData(String json) {
         if (Utils.textIsNull(json)) {
             return;
+        }else {
+            Updater updater = new Gson().fromJson(json,Updater.class);
+            if ("success".equals(updater.getMessage())||0 <= updater.getCode() && updater.getCode() <= 10){
+                Update update = updater.getData();
+                spec = update.getUrl();
+                is_force = update.getIs_force();
+                version = update.getVersion();
+                System.out.println("--update = " + update);
+                newFeatures = update.getLog();
+            }
+
         }
-        Update update = new Gson().fromJson(json, Update.class);
-        spec = update.getUrl();
-        is_force = update.getIs_force();
-        version = update.getVersion();
-        System.out.println("--update = " + update);
-        newFeatures = update.getLog();
-//        System.out.println("***SplashActivity spec:" + spec + ",force:" + force);
     }
 
     @Override

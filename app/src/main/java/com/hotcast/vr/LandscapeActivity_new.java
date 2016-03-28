@@ -23,6 +23,7 @@ import com.hotcast.vr.adapter.GalleyAdapter;
 import com.hotcast.vr.bean.ChanelData;
 import com.hotcast.vr.bean.Channel;
 import com.hotcast.vr.bean.ChannelList;
+import com.hotcast.vr.bean.ChannelLister;
 import com.hotcast.vr.bean.LocalBean;
 import com.hotcast.vr.bean.LocalBean2;
 import com.hotcast.vr.bean.noDataFirst;
@@ -332,16 +333,18 @@ public class LandscapeActivity_new extends BaseActivity {
                 System.out.println("***VrListActivity *** onSuccess()" + responseInfo.result);
                 if (Utils.textIsNull(responseInfo.result)) {
                     return;
+                } else {
+                    ChannelLister channelLister = new Gson().fromJson(responseInfo.result, ChannelLister.class);
+                    if ("success".equals(channelLister.getMessage()) || 0 <= channelLister.getCode() && channelLister.getCode() <= 10) {
+                        tmpList = channelLister.getData();
+                        Intent intent = new Intent(LandscapeActivity_new.this, LandscapeActivity_Second.class);
+                        intent.putExtra("channel_id", channel_id);
+                        intent.putExtra("tmpList", (Serializable) tmpList);
+                        LandscapeActivity_new.this.startActivity(intent);
+                        BaseApplication.size = tmpList.size();
+                    }
                 }
-                tmpList = new Gson().fromJson(responseInfo.result, new TypeToken<List<ChannelList>>() {
-                }.getType());
-                Intent intent = new Intent(LandscapeActivity_new.this, LandscapeActivity_Second.class);
-                intent.putExtra("channel_id", channel_id);
-                intent.putExtra("tmpList", (Serializable) tmpList);
-                LandscapeActivity_new.this.startActivity(intent);
-                BaseApplication.size = tmpList.size();
             }
-
             @Override
             public void onFailure(HttpException e, String s) {
                 showOrHideLoadingBar(false);

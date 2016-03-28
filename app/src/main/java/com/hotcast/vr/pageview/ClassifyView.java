@@ -13,6 +13,7 @@ import com.hotcast.vr.R;
 import com.hotcast.vr.adapter.MyPagerAdapter;
 import com.hotcast.vr.bean.ChanelData;
 import com.hotcast.vr.bean.Channel;
+import com.hotcast.vr.bean.Channeler;
 import com.hotcast.vr.bean.Classify;
 import com.hotcast.vr.bean.HomeRoll;
 import com.hotcast.vr.pagerindicator.TabPageIndicator;
@@ -196,12 +197,18 @@ public class ClassifyView extends BaseView {
         if (Utils.textIsNull(json)) {
             iv_noNet.setVisibility(View.VISIBLE);
         }else {
-            channel = new Gson().fromJson(json, Channel.class);
-            classifies = channel.getData();
-            BaseApplication.channel = channel;
-            size = classifies.size();
-            L.e("---adapter size=" + classifies.size());
-            initListView();
+            Channeler channeler = new Gson().fromJson(json, Channeler.class);
+            if ("success".equals(channeler.getMessage())||0 <= channeler.getCode() && channeler.getCode() <= 10){
+                channel = channeler.getData();
+                classifies = channel.getData();
+                BaseApplication.channel = channel;
+                size = classifies.size();
+                L.e("---adapter size=" + classifies.size());
+                initListView();
+            }else {
+                activity.showToast("亲，获取网络数据错误T_T");
+            }
+
         }
     }
 

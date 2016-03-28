@@ -26,6 +26,8 @@ import com.hotcast.vr.bean.HomeBean;
 import com.hotcast.vr.bean.HomeRoll;
 import com.hotcast.vr.bean.HomeSubject;
 import com.hotcast.vr.bean.RollBean;
+import com.hotcast.vr.bean.RollLister;
+import com.hotcast.vr.bean.Roller;
 import com.hotcast.vr.pullrefreshview.PullToRefreshBase;
 import com.hotcast.vr.pullrefreshview.PullToRefreshListView;
 import com.hotcast.vr.tools.Constants;
@@ -43,6 +45,8 @@ import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.view.annotation.ViewInject;
 import com.melnykov.fab.FloatingActionButton;
+
+import org.json.JSONObject;
 
 import java.lang.reflect.TypeVariable;
 import java.util.ArrayList;
@@ -226,6 +230,7 @@ public class HomeView2 extends BaseView {
                     iv_noNet.setVisibility(View.VISIBLE);
                 }
                 activity.showToast("网络连接异常");
+                System.out.println("---onFailure "+s);
                 hideRefreshView();
 
             }
@@ -237,33 +242,33 @@ public class HomeView2 extends BaseView {
     List<RollBean> rollBeans;
 
     private void setViewSubject(String json) {
-
         //填充listView
         if (itemViews == null) {
             itemViews = new ArrayList<>();
         } else {
             itemViews.clear();
         }
-        rollBeans = new Gson().fromJson(json, new TypeToken<List<RollBean>>() {
-        }.getType());
-
-        for (int i = 0; i < rollBeans.size(); i++) {
-            ItemView itemView = new ItemView(activity);
-            itemView.setItemList(activity, rollBeans.get(i),i);
-            itemViews.add(itemView);
-        }
-
-        if (myBaseAdapter == null) {
-            if (rollBeans != null) {
-                myBaseAdapter = new MyBaseAdapter();
+        RollLister rollLister = new Gson().fromJson(json,RollLister.class);
+        if ("success".equals(rollLister.getMessage())||0 <= rollLister.getCode() && rollLister.getCode() <= 10){
+            rollBeans = rollLister.getData();
+            for (int i = 0; i < rollBeans.size(); i++) {
+                ItemView itemView = new ItemView(activity);
+                itemView.setItemList(activity, rollBeans.get(i),i);
+                itemViews.add(itemView);
             }
-            ptrlv_lv_item_news.getRefreshableView().setAdapter(myBaseAdapter);
-        } else {
-            myBaseAdapter.notifyDataSetChanged();
-        }
-//        ptrlv_lv_item_news.getRefreshableView().setOnScrollListener(new PauseOnScrollListener(BaseApplication.bu, false, true));
-        progressBar4.setVisibility(View.GONE);
 
+            if (myBaseAdapter == null) {
+                if (rollBeans != null) {
+                    myBaseAdapter = new MyBaseAdapter();
+                }
+                ptrlv_lv_item_news.getRefreshableView().setAdapter(myBaseAdapter);
+            } else {
+                myBaseAdapter.notifyDataSetChanged();
+            }
+            progressBar4.setVisibility(View.GONE);
+        }else {
+         activity.showToast("亲，网络数据获取失败了T_T");
+        }
     }
 
 
@@ -291,11 +296,13 @@ public class HomeView2 extends BaseView {
                 //隐藏底部加载更多 、顶部刷新的ui；
                 hideRefreshView();
                 L.e("HomeView2 responseInfo:" + responseInfo.result);
+                System.out.println("---HomeView2 responseInfo:" + responseInfo.result);
                 setViewData(responseInfo.result);
             }
 
             @Override
             public void onFailure(HttpException e, String s) {
+                System.out.println("---HomeView2 getNetData onFailure "+s);
                 bDataProcessed = false;
                 bProcessing = false;
                 //隐藏底部加载更多 、顶部刷新的ui；
@@ -323,10 +330,9 @@ public class HomeView2 extends BaseView {
             iv_noNet.setVisibility(View.VISIBLE);
 //            return;
         } else {
-            try {
-                roll = new Gson().fromJson(json, RollBean.class);
-//                homeRolls = homeBean.getHome_roll();
-                //        HomeSubject的集合
+            Roller roller = new Gson().fromJson(json, Roller.class);
+            if ("success".equals(roller.getMessage())||0 <= roller.getCode() && roller.getCode() <= 10){
+                roll = roller.getData();
                 if (datasList == null) {
                     datasList = new ArrayList<>();
                 } else {
@@ -334,76 +340,48 @@ public class HomeView2 extends BaseView {
                 }
                 datasList = roll.getData();
                 System.out.println("---datasList="+datasList);
+                RollViewPager rollViewPager = new RollViewPager(activity, viewList, new RollViewPager.onPageClick() {
+                    @Override
+                    public void onclick(int i) {
+                        Intent intent;
+                        switch (datasList.get(i).getType()){
+                            case "videoset":
+                                intent = new Intent(activity, DetailActivity.class);
+                                intent.putExtra("videoset_id", datasList.get(i).getMedia_id());
+                                activity.startActivity(intent);
+                                break;
+                            case "web":
+                                intent = new Intent(activity,WebViewActivity.class);
+                                intent.putExtra("rec_ur",datasList.get(i).getRec_url());
+                                System.out.println("--rec_ur="+datasList.get(i).getRec_url());
+                                activity.startActivity(intent);
+                                break;
+                        }
 
-            } catch (IllegalStateException e) {
-                activity.showToast("解析出现错误，请刷新数据");
-            }
-//            try {
-//                db.save(roll);
-//            } catch (DbException e) {
-//                e.printStackTrace();
-//            }
-            //初始化viewpager
-//            L.e("HomeView2 viewList.sixe() = " + viewList.size());
 
-        }
+                    }
+                });
 
-        RollViewPager rollViewPager = new RollViewPager(activity, viewList, new RollViewPager.onPageClick() {
-            @Override
-            public void onclick(int i) {
-                Intent intent;
-                switch (datasList.get(i).getType()){
-                    case "videoset":
-                        intent = new Intent(activity, DetailActivity.class);
-                        intent.putExtra("videoset_id", datasList.get(i).getMedia_id());
-                        activity.startActivity(intent);
-                        break;
-                    case "web":
-                        intent = new Intent(activity,WebViewActivity.class);
-                        intent.putExtra("rec_ur",datasList.get(i).getRec_url());
-                        System.out.println("--rec_ur="+datasList.get(i).getRec_url());
-                        activity.startActivity(intent);
-                        break;
+                urlImgList.clear();
+                if (datasList!=null){
+                    for (int i = 0; i < datasList.size(); i++) {
+                        Datas datas = datasList.get(i);
+                        urlImgList.add(datas.getImage());
+                    }
                 }
+                initDot();
 
-
+                rollViewPager.initImgUrlList(urlImgList);
+                rollViewPager.startRoll();
+                ll_top_news_viewpager.removeAllViews();
+                ll_top_news_viewpager.addView(rollViewPager);
+                //就是个listView
+                if (ptrlv_lv_item_news.getRefreshableView().getHeaderViewsCount() < 1) {
+                    ptrlv_lv_item_news.getRefreshableView().addHeaderView(layout_roll_view);
+                }
+            }else {
+                activity.showToast("亲，网络数据获取失败啦T_T");
             }
-        });
-//        System.out.println("---335 datasList = " + datasList);
-//    subjects=homeBean.getHome_subject();
-//        subjects.addAll(homeBean.getHome_subject());
-        urlImgList.clear();
-//        titleList.clear();
-        if (datasList!=null){
-            for (int i = 0; i < datasList.size(); i++) {
-//            RollBean homeRoll = datasList.get(i);
-                Datas datas = datasList.get(i);
-//            System.out.println("---343 datas = " + datas);
-//            for (int j = 0; j < datas.getData().size(); j++) {
-//                Datas subject = datas.getData().get(j);
-
-                urlImgList.add(datas.getImage());
-//            titleList.add(datas.getTitle());
-//            System.out.println("---349 urlImg = " + datas.getImage());
-//            System.out.println("---350 title = " + datas.getTitle());
-//            }
-            }
-        }
-
-//        System.out.println("---urlImgList = " + urlImgList.size());
-//        System.out.println("---titleList = " + titleList.size());
-
-
-        initDot();
-
-//        rollViewPager.initTitleList(top_news_title, titleList);
-        rollViewPager.initImgUrlList(urlImgList);
-        rollViewPager.startRoll();
-        ll_top_news_viewpager.removeAllViews();
-        ll_top_news_viewpager.addView(rollViewPager);
-        //就是个listView
-        if (ptrlv_lv_item_news.getRefreshableView().getHeaderViewsCount() < 1) {
-            ptrlv_lv_item_news.getRefreshableView().addHeaderView(layout_roll_view);
         }
     }
 

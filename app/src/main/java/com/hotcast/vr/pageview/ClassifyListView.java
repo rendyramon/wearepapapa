@@ -24,6 +24,7 @@ import com.hotcast.vr.R;
 import com.hotcast.vr.adapter.BaseAdapterHelper;
 import com.hotcast.vr.adapter.QuickAdapter;
 import com.hotcast.vr.bean.ChannelList;
+import com.hotcast.vr.bean.ChannelLister;
 import com.hotcast.vr.bean.HomeRoll;
 import com.hotcast.vr.tools.Constants;
 import com.hotcast.vr.tools.L;
@@ -191,7 +192,6 @@ public class ClassifyListView extends BaseView {
                 if (iv_noNet == null) {
                     iv_noNet = (ImageView) getRootView().findViewById(R.id.iv_noNet);
                 }
-                iv_noNet.setVisibility(View.GONE);
                 bDataProcessed = true;
                 bProcessing = false;
                 list.onRefreshComplete();
@@ -219,15 +219,16 @@ public class ClassifyListView extends BaseView {
     private void setViewData(String json) {
         if (Utils.textIsNull(json)) {
             return;
+        }else {
+            ChannelLister channelLister = new Gson().fromJson(json,ChannelLister.class);
+            if ("success".equals(channelLister.getMessage())||0 <= channelLister.getCode() && channelLister.getCode() <= 10){
+                tmpList = channelLister.getData();
+                iv_noNet.setVisibility(View.GONE);
+                progressBar3.setVisibility(View.GONE);
+            }else {
+                activity.showToast("解析出现错误，请刷新数据");
+            }
         }
-
-        try {
-            tmpList = new Gson().fromJson(json, new TypeToken<List<ChannelList>>() {
-            }.getType());
-        }catch (IllegalStateException e){
-            activity.showToast("解析出现错误，请刷新数据");
-        }
-
         DbUtils db = DbUtils.create(activity);
         try {
             db.delete(ChannelList.class, WhereBuilder.b("id", "==", channel_id));
@@ -240,13 +241,6 @@ public class ClassifyListView extends BaseView {
             } catch (DbException e) {
                 e.printStackTrace();
             }
-//            ChannelList channelList = tmpList.get(i);
-////            channelList.setChannel_id(channel_id);
-//            try {
-//                db.save(channelList);
-//            } catch (DbException e) {
-//                e.printStackTrace();
-//            }
         }
         if(bPullDown){
             adapter.addNewAll(tmpList);
@@ -256,6 +250,6 @@ public class ClassifyListView extends BaseView {
         }
 
         L.e("adapter size=" + adapter.getCount());
-        progressBar3.setVisibility(View.GONE);
+
     }
 }

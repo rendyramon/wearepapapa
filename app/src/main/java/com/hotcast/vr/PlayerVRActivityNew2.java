@@ -16,6 +16,7 @@ import java.util.*;
 import com.google.gson.Gson;
 import com.hotcast.vr.bean.LocalBean2;
 import com.hotcast.vr.bean.Play;
+import com.hotcast.vr.bean.PlayerBean;
 import com.hotcast.vr.pageview.ChangeModeListener;
 import com.hotcast.vr.pageview.PlayerContralView;
 import com.hotcast.vr.tools.Constants;
@@ -115,17 +116,30 @@ public class PlayerVRActivityNew2 extends BaseLanActivity implements PFAssetObse
             @Override
             public void onStart() {
                 super.onStart();
-
                 L.e("DetailActivity onStart ");
             }
 
             @Override
             public void onSuccess(ResponseInfo<String> responseInfo) {
                 L.e("---DetailActivity responseInfo:" + responseInfo.result);
+                initPlayUrl(responseInfo.result);
+            }
 
-                play = new Gson().fromJson(responseInfo.result, Play.class);
+            @Override
+            public void onFailure(HttpException e, String s) {
+                L.e("DetailActivity onFailure ");
+                finish();
+            }
+        });
 
 
+    }
+
+    private void initPlayUrl(String result) {
+        if (!TextUtils.isEmpty(result)){
+            PlayerBean playerBean = new Gson().fromJson(result,PlayerBean.class);
+            if ("success".equals(playerBean.getMessage())||0 <= playerBean.getCode() && playerBean.getCode() <= 10){
+                play = playerBean.getData();
                 if (!TextUtils.isEmpty(play.getSd_url())) {
                     play_url = play.getSd_url();
                     BaseApplication.clarityText = "标清";
@@ -140,15 +154,7 @@ public class PlayerVRActivityNew2 extends BaseLanActivity implements PFAssetObse
                 title = play.getTitle();
                 initView();
             }
-
-            @Override
-            public void onFailure(HttpException e, String s) {
-                L.e("DetailActivity onFailure ");
-                finish();
-            }
-        });
-
-
+        }
     }
 
     /**
@@ -486,16 +492,9 @@ public class PlayerVRActivityNew2 extends BaseLanActivity implements PFAssetObse
 
     @Override
     public void init() {
-//        if (getIntent().getStringExtra("title").length() > 4){
-//            title = getIntent().getStringExtra("title").substring(0,4);
-//            System.out.println("---length = " + title.length());
-//        }else {
-
-//        }
         audioManager = (AudioManager) getSystemService(Service.AUDIO_SERVICE);
         startTime = System.currentTimeMillis();
         System.out.println("---104--开始加载的时间 = " + System.currentTimeMillis());
-//        showLoading("正在加载");
         showLoadingView("正在加载···");
         System.out.println("---" + vid + "---");
         if (vid == null || TextUtils.isEmpty(vid)) {
@@ -522,8 +521,6 @@ public class PlayerVRActivityNew2 extends BaseLanActivity implements PFAssetObse
             e.printStackTrace();
         }
 
-//        mPlayerContralView1 = new PlayerContralView(this, PlayerContralView.TYPE_360);
-//        mPlayerContralView2 = new PlayerContralView(this, PlayerContralView.TYPE_360);
         mPlayerContralView1 = new PlayerContralView(this, PlayerContralView.TYPE_360, BaseApplication.clarityText);
         mPlayerContralView2 = new PlayerContralView(this, PlayerContralView.TYPE_360, BaseApplication.clarityText);
         mPlayerContralView = new PlayerCtrMnger(mPlayerContralView1, mPlayerContralView2);
@@ -548,11 +545,6 @@ public class PlayerVRActivityNew2 extends BaseLanActivity implements PFAssetObse
         System.out.println("***PlaylerVRActivity***setPlayerContralView()");
         controller1.addView(mPlayerContralView1.getRootView(), ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         controller2.addView(mPlayerContralView2.getRootView(), ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-
-//            loadVideo(getIntent().getData().getPath());
-//            System.out.println("***PlayerVRActivity***filename " + getIntent().getData().getPath());
-//        mPlayerContralView1.setTitle(title);
-//        mPlayerContralView2.setTitle(title);
         if (curMode == MODE_NORMAL) {
             mPlayerContralView1.setTitle(title);
             mPlayerContralView2.setTitle(title);
@@ -560,11 +552,13 @@ public class PlayerVRActivityNew2 extends BaseLanActivity implements PFAssetObse
             mPlayerContralView2.setSplitScreen(true);
             controller2.setVisibility(View.GONE);
         } else {
-            if (title.length() > 4) {
-                titleSplitScreen = title.substring(0, 4);
-                System.out.println("---length = " + titleSplitScreen.length());
-            } else {
-                titleSplitScreen = title;
+            if(!TextUtils.isEmpty(title)){
+                if (title.length() > 4) {
+                    titleSplitScreen = title.substring(0, 4);
+                    System.out.println("---length = " + titleSplitScreen.length());
+                } else {
+                    titleSplitScreen = title;
+                }
             }
             mPlayerContralView1.setSplitScreen(false);
             mPlayerContralView2.setSplitScreen(false);
