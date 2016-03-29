@@ -206,7 +206,7 @@ public class ClassifyView extends BaseView {
                 L.e("---adapter size=" + classifies.size());
                 initListView();
             }else {
-                activity.showToast("亲，获取网络数据错误T_T");
+                activity.showToast(activity.getResources().getString(R.string.st_error));
             }
 
         }

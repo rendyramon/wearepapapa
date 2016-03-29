@@ -109,16 +109,16 @@ public class FeedBackActivity extends BaseActivity {
                         System.out.println("****建议上传成功");
                         et_advice.setText("");
                         et_contact.setText("");
-                        showToast("亲，感谢您的建议反馈，我们会更加努力的^_^");
+                        showToast(getResources().getString(R.string.st_feedback));
                     } else {
-                        showToast("亲，评论上传失败了T_T，请重新上传一下下哟");
+                        showToast(getResources().getString(R.string.st_feedback_f));
                     }
                 }
             }
 
             @Override
             public void onFailure(HttpException e, String s) {
-                showToast("亲，建议反馈失败了T_T，请检查网络");
+                showToast(getResources().getString(R.string.st_feedback_f));
             }
         });
     }

@@ -78,6 +78,9 @@
     <string name="floor">楼</string>
     <string name="comments_time">MM月dd日 HH:mm</string>
 
+    <string name="st_feedback">亲，感谢您的建议反馈，我们会更加努力的^_^</string>
+    <string name="st_feedback_f">亲，评论上传失败了T_T，请重新上传一下下哟</string>
+    <string name="st_error">网络异常，请刷新数据</string>
 
     <string name="pushmsg_center_no_more_msg">已经到底啦</string>
     <string name="pushmsg_center_pull_up_text">松开加载更多</string>

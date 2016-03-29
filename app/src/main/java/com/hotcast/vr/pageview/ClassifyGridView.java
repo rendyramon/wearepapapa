@@ -217,7 +217,7 @@ public class ClassifyGridView extends BaseView {
                 tmpList = channelLister.getData();
                 progressBar2.setVisibility(View.GONE);
             }else {
-                activity.showToast("解析出现错误，请刷新数据");
+                activity.showToast(activity.getResources().getString(R.string.st_error));
             }
         }
 

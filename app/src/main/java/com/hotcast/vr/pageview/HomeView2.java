@@ -221,7 +221,7 @@ public class HomeView2 extends BaseView {
                 } else {
                     iv_noNet.setVisibility(View.VISIBLE);
                 }
-                activity.showToast("网络连接异常");
+                activity.showToast(activity.getResources().getString(R.string.st_error));
                 System.out.println("---onFailure "+s);
                 hideRefreshView();
 
@@ -259,7 +259,7 @@ public class HomeView2 extends BaseView {
             }
             progressBar4.setVisibility(View.GONE);
         }else {
-         activity.showToast("亲，网络数据获取失败了T_T");
+         activity.showToast(activity.getResources().getString(R.string.st_error));
         }
     }
 
@@ -304,7 +304,7 @@ public class HomeView2 extends BaseView {
                 }else {
                     iv_noNet.setVisibility(View.VISIBLE);
                 }
-                activity.showToast("网络连接异常");
+                activity.showToast(activity.getResources().getString(R.string.st_error));
                 hideRefreshView();
 
             }
@@ -372,7 +372,7 @@ public class HomeView2 extends BaseView {
                     ptrlv_lv_item_news.getRefreshableView().addHeaderView(layout_roll_view);
                 }
             }else {
-                activity.showToast("亲，网络数据获取失败啦T_T");
+                activity.showToast(activity.getResources().getString(R.string.st_error));
             }
         }
     }

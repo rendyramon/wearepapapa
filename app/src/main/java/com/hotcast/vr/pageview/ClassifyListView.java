@@ -226,7 +226,7 @@ public class ClassifyListView extends BaseView {
                 iv_noNet.setVisibility(View.GONE);
                 progressBar3.setVisibility(View.GONE);
             }else {
-                activity.showToast("解析出现错误，请刷新数据");
+                activity.showToast(activity.getResources().getString(R.string.st_error));
             }
         }
         DbUtils db = DbUtils.create(activity);
