@@ -25,7 +25,7 @@ public class LocalBean2 implements Serializable {
     String vid;//新添加
     String title;
     String image;
-    String url;
+    String url; //下载地址
     Bitmap localBitmap;//新添加
     boolean isDownloading = false;//下载中，暂停
 
@@ -74,7 +74,7 @@ public class LocalBean2 implements Serializable {
 
     String state = WAITING;
 
-    String localurl;
+    String localurl;//本地地址
     private boolean downloadSuccessed;
 
     public boolean isDownloadSuccessed() {

@@ -100,13 +100,13 @@
     <string name="picture_image_loading">Being loaded...</string>
 
     <!-- 下拉刷新和上拉加载更多的文本 -->
-    <string name="pull_to_refresh_header_hint_normal">The drop-down to refresh</string>
+    <string name="pull_to_refresh_header_hint_normal">Drop down to refresh</string>
     <string name="pull_to_refresh_header_hint_normal2">Pull to refresh</string>
     <string name="pull_to_refresh_header_hint_ready">Loosen the refresh after</string>
-    <string name="pull_to_refresh_header_hint_loading">Being loaded in</string>
-    <string name="pull_to_refresh_header_last_time">The last time the refresh time:</string>
+    <string name="pull_to_refresh_header_hint_loading">Being loadeing</string>
+    <string name="pull_to_refresh_header_last_time">The last time of refreshed time:</string>
     <string name="pull_to_refresh_footer_hint_ready">Loosen the load more</string>
-    <string name="pull_to_refresh_refreshing_label">Being loaded in</string>
+    <string name="pull_to_refresh_refreshing_label">Being loading</string>
     <string name="pull_to_refresh_no_more_data">Is over!</string>
     <string name="pull_to_refresh_network_error">Network not to force, please check the network</string>
 

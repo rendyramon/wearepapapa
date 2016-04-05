@@ -24,6 +24,7 @@ import com.lidroid.xutils.BitmapUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 
 public class BaseApplication extends Application {
@@ -62,7 +63,7 @@ public class BaseApplication extends Application {
     public static List<Classify> classifies = new ArrayList<>();
     public static List<String> playUrls = new ArrayList<>();//需要下載的電影地址
     public static List<Details> detailsList = new ArrayList<>();//需要下載的電影地址
-    SharedPreferences sp;
+    public static SharedPreferences sp;
     public static BitmapUtils bu;
 
     public static BitmapUtils getDisplay(Context context, int failedImgId) {
@@ -85,6 +86,7 @@ public class BaseApplication extends Application {
         this.startService(new Intent(this, DownLoadService.class));
         this.startService(new Intent(this, FileCacheService.class));
         initMeta();
+        sp = getSharedPreferences("cache_config", Context.MODE_PRIVATE);
         getIMEI(this);
         System.out.println("--deviceID:" + device + "--" + Md5Utils.getMd5(device));
         packageManager = this.getPackageManager();
@@ -93,7 +95,6 @@ public class BaseApplication extends Application {
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
-        sp = getSharedPreferences("cache_config", Context.MODE_PRIVATE);
         BaseApplication.cacheFileChange = sp.getBoolean("cacheFileCache", false);
         BaseApplication.version = info.versionName;
         BaseApplication.platform = getAppMetaData(this, "UMENG_CHANNEL");
@@ -119,7 +120,18 @@ public class BaseApplication extends Application {
 
     public static void getIMEI(Context context) {
         TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-        device = tm.getDeviceId();
+        try {
+            device = tm.getDeviceId();
+        } catch (Exception e) {
+            device = sp.getString("device", "");
+            if (device == null || device.length() < 5) {
+                device = System.currentTimeMillis() + (int) (Math.random() * 100) + "";
+                System.out.println("---DeviceId获取失败:随机生成：" + device);
+                sp.edit().putString("device", device).commit();
+            } else {
+
+            }
+        }
 
     }
 

@@ -129,6 +129,7 @@ public class DownLoadService extends Service {
                 LocalBean2 localBean = db.findById(LocalBean2.class, sqlDownLoadInfo.getTaskID());
                 if (localBean != null) {
                     localBean.setCurState(4);
+                    localBean.setDownloading(false);
                     localBean.setLocalurl(BaseApplication.VedioCacheUrl + localBean.getTitle() + ".mp4");
                     db.saveOrUpdate(localBean);
                 }
