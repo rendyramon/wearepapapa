@@ -1,11 +1,13 @@
 package com.hotcast.vr.pageview;
 
 import android.annotation.TargetApi;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
 import android.os.Handler;
+import android.os.Message;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.view.Gravity;
@@ -36,8 +38,10 @@ import com.hotcast.vr.UpdateAppManager;
 import com.hotcast.vr.bean.User1;
 import com.hotcast.vr.bean.User2;
 import com.hotcast.vr.bean.UserData;
+import com.hotcast.vr.dialog.GlassesDialog;
 import com.hotcast.vr.tools.Constants;
 import com.hotcast.vr.tools.Md5Utils;
+import com.hotcast.vr.tools.SharedPreUtil;
 import com.hotcast.vr.tools.TokenUtils;
 import com.lidroid.xutils.BitmapUtils;
 import com.lidroid.xutils.exception.HttpException;
@@ -79,6 +83,8 @@ public class MineView2 extends BaseView implements View.OnClickListener {
     RelativeLayout rl_change;
     @InjectView(R.id.rl_glasses)
     RelativeLayout rl_glasses;
+    @InjectView(R.id.rl_glasses2)
+    RelativeLayout rl_glasses2;
 
 
     private UpdateAppManager updateAppManager;
@@ -169,6 +175,7 @@ public class MineView2 extends BaseView implements View.OnClickListener {
         rl_help.setOnClickListener(this);
         rl_change.setOnClickListener(this);
         rl_glasses.setOnClickListener(this);
+        rl_glasses2.setOnClickListener(this);
     }
 
     @Override
@@ -178,6 +185,40 @@ public class MineView2 extends BaseView implements View.OnClickListener {
             case R.id.rl_glasses:
                 intent = new Intent(activity, GlassesActivity.class);
                 activity.startActivity(intent);
+                break;
+            case R.id.rl_glasses2:
+                SharedPreUtil sp = SharedPreUtil.getInstance(activity);
+                ;
+                int g = sp.select("glass", -1);
+                final GlassesDialog.Builder builder = new GlassesDialog.Builder(activity) {
+                    @Override
+                    public void YouCanDo() {
+                        System.out.println("---" + "点击了");
+                    }
+                };
+                builder.setNegativeButton(activity.getResources().getString(R.string.cancel),
+                        new android.content.DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                System.out.println("---您选择取消");
+                                dialog.dismiss();
+                            }
+                        });
+                builder.setPositiveButton(activity.getResources().getString(R.string.determine), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        int g = builder.getChooseItem();
+                        if (g == -1) {
+                            Toast.makeText(activity, "您还未选择眼镜", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Message msg = Message.obtain();
+                            msg.obj = g;
+                            msg.what = 3;
+                            handler.sendMessage(msg);
+                            dialog.dismiss();
+                        }
+                    }
+                });
+                builder.create().show();
+                builder.setChooseItem(g);
                 break;
             case R.id.rl_change:
                 intent = new Intent(activity, ReNameActivity.class);
@@ -237,7 +278,7 @@ public class MineView2 extends BaseView implements View.OnClickListener {
                 if (BaseApplication.isLogin) {
                     showPopupWinow();
                 } else {
-                    Toast.makeText(activity,activity.getResources().getString(R.string.not_landed), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity, activity.getResources().getString(R.string.not_landed), Toast.LENGTH_SHORT).show();
                 }
                 break;
             case R.id.bt_pictue:

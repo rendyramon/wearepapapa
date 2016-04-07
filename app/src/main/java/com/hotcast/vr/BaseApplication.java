@@ -17,17 +17,21 @@ import com.hotcast.vr.bean.Classify;
 import com.hotcast.vr.bean.Details;
 import com.hotcast.vr.download.DownLoadManager;
 import com.hotcast.vr.download.DownLoadService;
+import com.hotcast.vr.services.AndroidService;
 import com.hotcast.vr.services.FileCacheService;
+import com.hotcast.vr.services.UnityService;
 import com.hotcast.vr.tools.L;
 import com.hotcast.vr.tools.Md5Utils;
+import com.hotcast.vr.tools.UnityTools;
 import com.lidroid.xutils.BitmapUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 
 public class BaseApplication extends Application {
+    public static List<String> downLoadings = new ArrayList<>();
+
     public static boolean doAsynctask = false;//本地视频同步数据库处理
     public static List<String> strs = new ArrayList<>();
     public static int size;
@@ -49,7 +53,7 @@ public class BaseApplication extends Application {
         return instance;
     }
 
-    public static String version = "v1.0.4";//版本号
+    public static String version = "v1.0.5";//版本号
     public static String platform;//平台号
     public static String device = "weihuoqu";//设备号
     public static String packagename;//包名
@@ -79,12 +83,15 @@ public class BaseApplication extends Application {
     @Override
     public void onCreate() {
 //        updateDb();
+        UnityTools.context = getApplicationContext();
         Thread.currentThread().setUncaughtExceptionHandler(new MyExecptionHandler());
         super.onCreate();
         bu = new BitmapUtils(this);
         instance = this;
         this.startService(new Intent(this, DownLoadService.class));
         this.startService(new Intent(this, FileCacheService.class));
+        this.startService(new Intent(this, AndroidService.class));
+        this.startService(new Intent(this, UnityService.class));
         initMeta();
         sp = getSharedPreferences("cache_config", Context.MODE_PRIVATE);
         getIMEI(this);
@@ -132,13 +139,12 @@ public class BaseApplication extends Application {
 
             }
         }
-
     }
 
     private void initMeta() {
         try {
 
-            android.content.pm.ApplicationInfo appInfo = getPackageManager().getApplicationInfo(getPackageName(), PackageManager.GET_META_DATA);
+            ApplicationInfo appInfo = getPackageManager().getApplicationInfo(getPackageName(), PackageManager.GET_META_DATA);
             if (appInfo != null && appInfo.metaData != null) {
                 L.mAddLog = appInfo.metaData.getBoolean("DEBUG");
             }

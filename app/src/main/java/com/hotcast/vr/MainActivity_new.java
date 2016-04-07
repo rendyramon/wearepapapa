@@ -216,7 +216,7 @@ public class MainActivity_new extends BaseActivity {
 
     @Override
     protected void onStart() {
-        if((MineView2) view2 != null){
+        if ((MineView2) view2 != null) {
             ((MineView2) view2).refreshView();
         }
         super.onStart();
@@ -258,6 +258,10 @@ public class MainActivity_new extends BaseActivity {
                     break;
                 case 2:
                     ((MineView2) view2).refreshView();
+                    break;
+                case 3:
+                    int g = (int) msg.obj;
+                    sp.add("glass", g);
                     break;
             }
         }
@@ -350,7 +354,7 @@ public class MainActivity_new extends BaseActivity {
             params1.addBodyParameter("token", TokenUtils.createToken(MainActivity_new.this));
             params1.addBodyParameter("version", BaseApplication.version);
             params1.addBodyParameter("platform", BaseApplication.platform);
-            params1.addBodyParameter("login_token", sp.select("login_token","" ));
+            params1.addBodyParameter("login_token", sp.select("login_token", ""));
             params1.addBodyParameter("UploadAvatarForm[avatar]", new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + "vrhotcastuser.jpg"));
             HttpUtils httpUtils = new HttpUtils();
             httpUtils.send(HttpRequest.HttpMethod.POST, Constants.UPHEAD, params1, new RequestCallBack<String>() {
@@ -361,7 +365,7 @@ public class MainActivity_new extends BaseActivity {
                         JSONObject j = new JSONObject(responseInfo.result);
                         JSONObject data = j.getJSONObject("data");
                         String avatar = data.getString("avatar_url");
-                        sp.add("avatar",avatar);
+                        sp.add("avatar", avatar);
                         mhandler.sendEmptyMessage(2);
                     } catch (JSONException e) {
                         e.printStackTrace();

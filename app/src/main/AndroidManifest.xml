@@ -1,10 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.hotcast.vr"
+    android:installLocation="preferExternal"
     android:versionCode="1">
 
-    <uses-sdk android:minSdkVersion="4" />
+    <uses-sdk
+        android:minSdkVersion="16"
+        android:targetSdkVersion="23" />
 
+    <uses-feature android:glEsVersion="0x00020000" />
+
+    <uses-permission android:name="android.permission.NFC" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -26,17 +32,35 @@
     <uses-permission android:name="android.permission.GET_TASKS" />
     <uses-permission android:name="android.permission.READ_LOGS" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.BATTERY_STATS" />
     <!-- 微信支付 -->
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
     <!-- 【必须】 信鸽SDK所需权限 -->
     <uses-permission android:name="android.permission.RESTART_PACKAGES" />
 
+    <uses-feature
+        android:name="android.hardware.sensor.accelerometer"
+        android:required="true" />
+    <uses-feature
+        android:name="android.hardware.sensor.gyroscope"
+        android:required="true" />
+    <uses-feature
+        android:name="android.hardware.touchscreen"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.touchscreen.multitouch"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.touchscreen.multitouch.distinct"
+        android:required="false" />
+
     <!-- <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT" /> -->
     <application
         android:name=".BaseApplication"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
+        android:isGame="true"
         android:label="@string/app_name"
         android:largeHeap="true"
         android:theme="@style/ThemeActivity">
@@ -50,10 +74,8 @@
             android:name=".SplashActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
@@ -70,6 +92,10 @@
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
+
+            <meta-data
+                android:name="unityplayer.UnityActivity"
+                android:value="true" />
         </activity>
         <activity
             android:name=".PlayerVRActivityNew2"
@@ -81,7 +107,7 @@
             android:name=".VRcateActivity"
             android:launchMode="singleTask"
             android:screenOrientation="landscape"
-            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"></activity>
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" />
         <activity
             android:name=".VrListActivity"
             android:screenOrientation="landscape"
@@ -133,17 +159,7 @@
             android:name=".LandscapeActivity"
             android:launchMode="singleTop"
             android:screenOrientation="landscape"
-            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"></activity>
-        <!--<activity-->
-        <!--android:name=".SplashScapeActivity"-->
-        <!--android:screenOrientation="landscape"-->
-        <!--android:theme="@android:style/Theme.NoTitleBar.Fullscreen">-->
-        <!--<intent-filter>-->
-        <!--<action android:name="android.intent.action.MAIN" />-->
-
-        <!--<category android:name="android.intent.category.LAUNCHER" />-->
-        <!--</intent-filter>-->
-        <!--</activity>-->
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" />
 
         <meta-data
             android:name="UMENG_APPKEY"
@@ -183,7 +199,71 @@
         <activity
             android:name=".LandscapeActivity_Second"
             android:screenOrientation="landscape"
-            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"></activity>
-    </application>
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" />
+        <activity
+            android:name="com.google.unity.GoogleUnityActivity"
+            android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale"
+            android:launchMode="singleTask"
+            android:process=":Unity"
+            android:screenOrientation="landscape">
+            <intent-filter>
 
+                <!-- <action android:name="android.intent.action.MAIN" /> -->
+
+
+                <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+                <category android:name="com.google.intent.category.CARDBOARD" />
+                <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
+            </intent-filter>
+
+            <meta-data
+                android:name="unityplayer.UnityActivity"
+                android:value="true" />
+        </activity>
+
+        <!-- 多朵Activity-->
+        <activity
+            android:name="com.dlodlo.dvr.sdk.unity.DvrUnityActivity"
+            android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale"
+            android:label="@string/app_name"
+            android:launchMode="singleTask"
+            android:process=":Unity"
+            android:screenOrientation="landscape">
+            <intent-filter>
+                <!--<action android:name="android.intent.action.MAIN" />-->
+
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+                <category android:name="com.dlodlo.intent.category.DVR" />
+                <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
+            </intent-filter>
+
+            <meta-data
+                android:name="unityplayer.UnityActivity"
+                android:value="true" />
+            <meta-data
+                android:name="unityplayer.ForwardNativeEventsToDalvik"
+                android:value="false" />
+        </activity>
+
+        <meta-data
+            android:name="IMMERSIVE_MODE"
+            android:value="true" />
+
+        <service
+            android:name=".services.UnityService"
+            android:enabled="true"
+            android:exported="true"
+            android:process=":Unity" />
+        <service
+            android:name=".services.AndroidService"
+            android:enabled="true"
+            android:exported="true"></service>
+    </application>
+    <!-- 多朵配置-->
+    <supports-screens
+        android:anyDensity="true"
+        android:largeScreens="true"
+        android:normalScreens="true"
+        android:smallScreens="true"
+        android:xlargeScreens="true" />
 </manifest>

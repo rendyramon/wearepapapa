@@ -24,6 +24,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.hotcast.vr.bean.Classify;
+import com.hotcast.vr.dialog.GlassesDialog;
 import com.hotcast.vr.pageview.LandscapeView;
 import com.hotcast.vr.tools.Constants;
 import com.hotcast.vr.tools.L;
@@ -63,7 +64,7 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
     public static final int CODE_GET_PIC_FOR_SCHOOL = 103;
     public static final int CODE_GET_PIC_FOR_DORM = 104;
     public static final int CODE_GET_PIC_FOR_CHSI = 105;
-   public SimpleDateFormat format;
+    public SimpleDateFormat format;
 
     public SharedPreUtil sp;
 
@@ -103,6 +104,7 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
      */
     long loadingTime = 0;
     boolean isShowing = false;
+
     public void showLoading(String message) {
         if (!isShowing) {
             Message msg = new Message();
@@ -110,12 +112,13 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
             msg.what = MESSAGE_SHOWLOADING;
             isShowing = true;
             messageHandler.sendMessage(msg);
-            loadingTime=System.currentTimeMillis();
+            loadingTime = System.currentTimeMillis();
         }
 
     }
 
 //    public boolean getI
+
     /**
      * 关闭loading
      */
@@ -332,12 +335,13 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
                     InputMethodManager.HIDE_NOT_ALWAYS);
         }
     }
-    public boolean isMobileNo(String phone){
+
+    public boolean isMobileNo(String phone) {
         Pattern p = Pattern.compile("^((13[0-9])|(15[^4,\\D])|(18[0,5-9]))\\d{8}$");
 
         Matcher m = p.matcher(phone);
 
-        System.out.println(m.matches()+"---");
+        System.out.println(m.matches() + "---");
 
         return m.matches();
     }
@@ -388,20 +392,52 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
 
 
     public void clickVrMode() {
-//        spec = activity.sp.select("spec","");
-//        is_force = activity.sp.select("is_force","");
-//        newFeatures = activity.sp.select("newFeatures","");
+        int g = sp.select("glass", -1);
+        if (g == -1) {
+            final GlassesDialog.Builder builder = new GlassesDialog.Builder(this) {
+                @Override
+                public void YouCanDo() {
+                    System.out.println("---" + "点击了");
+                }
+            };
+            builder.setNegativeButton(getResources().getString(R.string.cancel),
+                    new android.content.DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            System.out.println("---您选择取消");
+                            dialog.dismiss();
+                        }
+                    });
+            builder.setPositiveButton(getResources().getString(R.string.determine), new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    int g = builder.getChooseItem();
+                    if (g == -1) {
+                        Toast.makeText(BaseActivity.this, "您还未选择眼镜", Toast.LENGTH_SHORT).show();
+                    } else {
+                        sp.add("glass", g);
+                        startGoInUnity();
+                        dialog.dismiss();
+                    }
+                }
+            });
+            builder.create().show();
+        }else{
+            System.out.println("---当前选择眼镜为："+g);
+            startGoInUnity();
+        }
+    }
+
+    public void startGoInUnity() {
         Intent intent = new Intent(this, LandscapeActivity_new.class);
         if (!BaseApplication.info.versionName.equals(BaseApplication.version)) {
             BaseApplication.isUpdate = true;
-            intent.putExtra("spec", this.sp.select("spec",""));
-            intent.putExtra("is_force", this.sp.select("is_force",""));
-            intent.putExtra("newFeatures",this.sp.select("newFeatures",""));
+            intent.putExtra("spec", this.sp.select("spec", ""));
+            intent.putExtra("is_force", this.sp.select("is_force", ""));
+            intent.putExtra("newFeatures", this.sp.select("newFeatures", ""));
         }
         intent.putExtra("classifies", BaseApplication.channel);
 
         startActivity(intent);
-       overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
     }
 
     //    判断是否有个网络连接

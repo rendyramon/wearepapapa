@@ -59,7 +59,7 @@
     <string name="datetime">yyyy/MM/dd</string>
     <string name="cach">The cache</string>
     <string name="share">share</string>
-
+    <string name="selectVRglasses">Choose glasses</string>
     <string name="userAgreement">User agreement</string>
     <string name="weicat">Focus on WeChat account: VR热播</string>
     <string name="advice_feedback">Advice feedback</string>
@@ -77,11 +77,11 @@
     <string name="forgot_password">Forgot password</string>
     <string name="et_phone">Phone number</string>
     <string name="et_enterPs">Enter your password</string>
-
+    <string name="qingxidu">Please check your definition:</string>
     <string name="st_feedback">Thank you for your suggestions feedback, we will do more to</string>
     <string name="st_feedback_f">Comment upload failed,please re-upload under a</string>
     <string name="st_error">Parse error, please refresh the data</string>
-
+    <string name="chooseglass">Please choose your glasses:</string>
 
     <string name="pushmsg_center_no_more_msg">Is over!</string>
     <string name="pushmsg_center_pull_up_text">Loosen the load more</string>

@@ -39,9 +39,9 @@
     <string name="not_landed">亲，您还没有登陆哟~</string>
     <string name="take_pictures">拍 照</string>
     <string name="photo">相 册</string>
-    <string name="standard_definition">标清</string>
-    <string name="hd">高清</string>
-    <string name="super_clear">超清</string>
+    <string name="standard_definition">标 清</string>
+    <string name="hd">高 清</string>
+    <string name="super_clear">超 清</string>
     <string name="cached">已缓存</string>
     <string name="cach">缓存</string>
     <string name="share">分享</string>
@@ -56,13 +56,14 @@
     <string name="contact">请留下您的联系方式</string>
     <string name="with_bad">用的不爽，吐槽一下。</string>
     <string name="your_feedback">您对VR热播的反馈将有专人跟进</string>
-
-
+    <string name="qingxidu">请选择您的清晰度：</string>
+    <string name="chooseglass">请 选 择 眼 镜：</string>
     <string name="userAgreement">用户协议</string>
     <string name="weicat">关注微信账号：VR热播</string>
     <string name="advice_feedback">建议反馈</string>
     <string name="username">热波科技用户名</string>
     <string name="VRglasses">VR眼镜</string>
+    <string name="selectVRglasses">选择眼镜</string>
     <string name="again_exit">再按一次退出</string>
     <string name="retrieve_account">请在下面输入您要找回的账号：</string>
     <string name="enter_phone">请输入手机号</string>

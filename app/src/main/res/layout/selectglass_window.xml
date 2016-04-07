@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/dialog_juxing"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:paddingBottom="15dp"
+    android:paddingLeft="12dp"
+    android:paddingRight="12dp"
+    android:paddingTop="15dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="18dp"
+        android:text="@string/chooseglass"
+        android:textColor="#bb000000"
+        android:textSize="18sp" />
+
+    <RadioGroup
+        android:id="@+id/rg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <RadioButton
+            android:id="@+id/bt_dlodlo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:button="@drawable/radiobutton"
+            android:padding="5dp"
+            android:text="多 哚 Dlodlo"
+            android:textColor="#bb000000"
+            android:textSize="15sp" />
+        <RadioButton
+            android:id="@+id/bt_google"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:button="@drawable/radiobutton"
+            android:padding="5dp"
+            android:text="Google_Cardbord"
+            android:textColor="#bb000000"
+            android:textSize="15sp" />
+
+        <RadioButton
+            android:id="@+id/bt_xiaozha"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:button="@drawable/radiobutton"
+            android:padding="5dp"
+            android:text="小 宅 Z4"
+            android:textColor="#bb000000"
+            android:textSize="15sp" />
+        <RadioButton
+            android:id="@+id/bt_baofen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:button="@drawable/radiobutton"
+            android:padding="5dp"
+            android:text="暴 风 魔 镜"
+            android:textColor="#bb000000"
+            android:textSize="15sp" />
+    </RadioGroup>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/positiveButton"
+            android:layout_width="65dp"
+            android:layout_height="40dp"
+            android:layout_marginRight="8dp"
+            android:text="确定"
+            android:textSize="15sp" />
+
+        <Button
+            android:id="@+id/negativeButton"
+            android:layout_width="65dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:text="取消"
+            android:textSize="15sp" />
+    </LinearLayout>
+</LinearLayout>

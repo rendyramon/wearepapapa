@@ -77,7 +77,7 @@
     <string name="et_enterPs">请输入密码</string>
     <string name="floor">楼</string>
     <string name="comments_time">MM月dd日 HH:mm</string>
-
+    <string name="selectVRglasses">选择眼镜</string>
 
     <string name="pushmsg_center_no_more_msg">已经到底啦</string>
     <string name="pushmsg_center_pull_up_text">松开加载更多</string>
