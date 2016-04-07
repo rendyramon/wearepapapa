@@ -92,7 +92,7 @@ public class AboutActivity extends BaseActivity {
         tv_version.setText(BaseApplication.version);
         iv_return.setVisibility(View.VISIBLE);
         user_agreement.setOnClickListener(this);
-        iv_return.setOnClickListener(new View.OnClickListener() {
+        iv_return.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
