@@ -420,8 +420,8 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
                 }
             });
             builder.create().show();
-        }else{
-            System.out.println("---当前选择眼镜为："+g);
+        } else {
+            System.out.println("---当前选择眼镜为：" + g);
             startGoInUnity();
         }
     }

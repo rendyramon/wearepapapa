@@ -2,12 +2,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/dialog_juxing"
+    android:background="@drawable/dialog_juxing_2"
     android:gravity="center"
     android:orientation="vertical"
-    android:paddingBottom="15dp"
-    android:paddingLeft="12dp"
-    android:paddingRight="12dp"
     android:paddingTop="15dp">
 
     <TextView
@@ -18,71 +15,99 @@
         android:textColor="#bb000000"
         android:textSize="18sp" />
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5px"
+        android:background="#66000000" />
+
     <RadioGroup
         android:id="@+id/rg"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp">
 
         <RadioButton
             android:id="@+id/bt_dlodlo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:button="@drawable/radiobutton"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:button="@null"
+            android:drawableRight="@drawable/select_glasses_nomal"
             android:padding="5dp"
             android:text="多 哚 Dlodlo"
             android:textColor="#bb000000"
             android:textSize="15sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5px"
+            android:background="#66000000" />
+
         <RadioButton
             android:id="@+id/bt_google"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:button="@drawable/radiobutton"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:button="@null"
+            android:drawableRight="@drawable/select_glasses_nomal"
             android:padding="5dp"
             android:text="Google_Cardbord"
             android:textColor="#bb000000"
             android:textSize="15sp" />
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5px"
+            android:background="#66000000" />
+
         <RadioButton
             android:id="@+id/bt_xiaozha"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:button="@drawable/radiobutton"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:button="@null"
+            android:drawableRight="@drawable/select_glasses_nomal"
             android:padding="5dp"
             android:text="小 宅 Z4"
             android:textColor="#bb000000"
             android:textSize="15sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5px"
+            android:background="#66000000" />
+
         <RadioButton
             android:id="@+id/bt_baofen"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:button="@drawable/radiobutton"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:button="@null"
+            android:drawableRight="@drawable/select_glasses_nomal"
             android:padding="5dp"
             android:text="暴 风 魔 镜"
             android:textColor="#bb000000"
             android:textSize="15sp" />
     </RadioGroup>
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="10dp"
-        android:orientation="horizontal">
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="#66000000" />
 
-        <Button
-            android:id="@+id/positiveButton"
-            android:layout_width="65dp"
-            android:layout_height="40dp"
-            android:layout_marginRight="8dp"
-            android:text="确定"
-            android:textSize="15sp" />
+    <Button
+        android:id="@+id/positiveButton"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@drawable/dialog_juxing_bt"
+        android:gravity="center"
+        android:text="确定"
+        android:textColor="#fafafa"
+        android:textSize="20sp" />
 
-        <Button
-            android:id="@+id/negativeButton"
-            android:layout_width="65dp"
-            android:layout_height="40dp"
-            android:layout_marginLeft="10dp"
-            android:text="取消"
-            android:textSize="15sp" />
-    </LinearLayout>
+    <Button
+        android:id="@+id/negativeButton"
+        android:layout_width="65dp"
+        android:layout_height="40dp"
+        android:layout_marginLeft="10dp"
+        android:text="取消"
+        android:textSize="15sp"
+        android:visibility="gone" />
 </LinearLayout>

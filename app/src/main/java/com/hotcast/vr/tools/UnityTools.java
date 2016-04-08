@@ -119,7 +119,7 @@ public class UnityTools {
     /**
      * 获取应用的包名
      *
-     * @return
+     * @return 包名字符串
      */
     public static String getPackagename() {
         return BaseApplication.packagename;

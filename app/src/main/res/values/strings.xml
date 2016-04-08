@@ -57,12 +57,12 @@
     <string name="with_bad">用的不爽，吐槽一下。</string>
     <string name="your_feedback">您对VR热播的反馈将有专人跟进</string>
     <string name="qingxidu">请选择您的清晰度：</string>
-    <string name="chooseglass">请 选 择 眼 镜：</string>
+    <string name="chooseglass">请 选 择 眼 镜 型 号：</string>
     <string name="userAgreement">用户协议</string>
     <string name="weicat">关注微信账号：VR热播</string>
     <string name="advice_feedback">建议反馈</string>
     <string name="username">热波科技用户名</string>
-    <string name="VRglasses">VR眼镜</string>
+    <string name="VRglasses">眼镜商店</string>
     <string name="selectVRglasses">选择眼镜</string>
     <string name="again_exit">再按一次退出</string>
     <string name="retrieve_account">请在下面输入您要找回的账号：</string>

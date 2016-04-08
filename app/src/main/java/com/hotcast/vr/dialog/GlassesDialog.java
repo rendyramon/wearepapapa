@@ -3,6 +3,7 @@ package com.hotcast.vr.dialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,6 +43,47 @@ public class GlassesDialog extends Dialog {
         }
 
         public abstract void YouCanDo();
+
+        public void refresh(int id) {
+            Drawable choose = context.getResources().getDrawable(R.drawable.select_glasses_choose);
+            Drawable nomal = context.getResources().getDrawable(R.drawable.select_glasses_nomal);
+            choose.setBounds(0, 0, choose.getMinimumWidth(), choose.getMinimumHeight());
+            nomal.setBounds(0, 0, nomal.getMinimumWidth(), nomal.getMinimumHeight());
+            switch (id) {
+                case R.id.bt_dlodlo:
+                    bt_dlodlo.setCompoundDrawables(null, null, choose, null);
+                    bt_google.setCompoundDrawables(null, null, nomal, null);
+                    bt_xiaozha.setCompoundDrawables(null, null, nomal, null);
+                    bt_baofen.setCompoundDrawables(null, null, nomal, null);
+                    break;
+                case R.id.bt_google:
+                    System.out.println("---2222");
+                    bt_dlodlo.setCompoundDrawables(null, null, nomal, null);
+                    bt_google.setCompoundDrawables(null, null, choose, null);
+                    bt_xiaozha.setCompoundDrawables(null, null, nomal, null);
+                    bt_baofen.setCompoundDrawables(null, null, nomal, null);
+                    break;
+                case R.id.bt_xiaozha:
+                    System.out.println("---3333");
+                    bt_dlodlo.setCompoundDrawables(null, null, nomal, null);
+                    bt_google.setCompoundDrawables(null, null, nomal, null);
+                    bt_xiaozha.setCompoundDrawables(null, null, choose, null);
+                    bt_baofen.setCompoundDrawables(null, null, nomal, null);
+                    break;
+                case R.id.bt_baofen:
+                    System.out.println("---4444");
+                    bt_dlodlo.setCompoundDrawables(null, null, nomal, null);
+                    bt_google.setCompoundDrawables(null, null, nomal, null);
+                    bt_xiaozha.setCompoundDrawables(null, null, nomal, null);
+                    bt_baofen.setCompoundDrawables(null, null, choose, null);
+                    break;
+                default:
+                    break;
+            }
+
+        }
+
+        ;
 
         /**
          * Set the Dialog message from resource
@@ -174,6 +216,7 @@ public class GlassesDialog extends Dialog {
             rg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(RadioGroup group, int checkedId) {
+                    refresh(rg.getCheckedRadioButtonId());
                     switch (checkedId) {
                         case R.id.bt_dlodlo:
                             YouCanDo();
