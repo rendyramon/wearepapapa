@@ -1,29 +1,13 @@
 package com.hotcast.vr;
 
-import android.content.Context;
 import android.content.Intent;
-import android.text.TextUtils;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
-import com.hotcast.vr.bean.User1;
-import com.hotcast.vr.tools.Constants;
-import com.hotcast.vr.tools.TokenUtils;
-import com.lidroid.xutils.exception.HttpException;
-import com.lidroid.xutils.http.RequestParams;
-import com.lidroid.xutils.http.ResponseInfo;
-import com.lidroid.xutils.http.callback.RequestCallBack;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
@@ -59,25 +43,13 @@ public class AboutActivity extends BaseActivity {
             case R.id.user_agreement:
                 advice.setVisibility(View.VISIBLE);
                 ll_tv.setVisibility(View.VISIBLE);
-//                ll_advice.setVisibility(View.GONE);
                 isagreement = true;
                 break;
             case R.id.feedback:
                 isEdet = true;
                 Intent intent = new Intent(AboutActivity.this,FeedBackActivity.class);
                 startActivity(intent);
-//                advice.setVisibility(View.VISIBLE);
-//                ll_advice.setVisibility(View.VISIBLE);
-//
-
-
                 break;
-//            case R.id.et_advice:
-//
-//                break;
-//            case R.id.bt_advice:
-//                System.out.println("****你点击了发送信息");
-//                break;
         }
     }
 
