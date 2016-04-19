@@ -204,7 +204,7 @@ public class PlayerVRActivityNew2 extends BaseLanActivity implements PFAssetObse
             case DOWNLOADING:
                 Log.d("SimplePlayer", "Downloading 360� movie: " + _pfasset.getDownloadProgress() + " percent complete");
                 System.out.println("---123--Downloading 360� movie: " + _pfasset.getDownloadProgress() + " percent complete");
-                ;
+
                 break;
             case DOWNLOADED:
 //                System.out.println("---126--Downloaded to " + asset.getUrl());
