@@ -53,7 +53,7 @@ public class ListLocalActivity extends BaseActivity {
     TextView tv_downloded;
     @InjectView(R.id.tv_downloding)
     TextView tv_downloding;
-
+    public boolean isFirstR = true;
     private boolean editor = false;
     int edit = 1;
 
@@ -95,6 +95,7 @@ public class ListLocalActivity extends BaseActivity {
     final String FINISH = "FINISH";
     final String PAUSE = "PAUSE";
     List<String> ids;
+
     @Override
     public void init() {
         receiver = new DetailReceiver();
@@ -133,7 +134,7 @@ public class ListLocalActivity extends BaseActivity {
             } else {
                 ids = new ArrayList<>();
                 for (int i = 0; i < list.size(); i++) {
-                    System.out.println("---本地数据获取："+list.get(i).getVid());
+                    System.out.println("---本地数据获取：" + list.get(i).getVid());
                     ids.add(list.get(i).getUrl());
                 }
                 tv_downloded.setVisibility(View.VISIBLE);
@@ -229,7 +230,7 @@ public class ListLocalActivity extends BaseActivity {
                 } else {
                     try {
                         if (list.get(i).getLocalurl() != null) {
-                            delete(list.get(i).getLocalurl(),list.get(i).getImage());
+                            delete(list.get(i).getLocalurl(), list.get(i).getImage());
                         }
                         db.delete(list.get(i));
                         list = db.findAll(LocalBean2.class);
@@ -326,26 +327,31 @@ public class ListLocalActivity extends BaseActivity {
             holder.tv_huancun_downspeed.setVisibility(View.VISIBLE);
             holder.tv_huancun_downpecent.setVisibility(View.VISIBLE);
 //            System.out.println("---adapter：" + speed);
-            if (speed != null) {
-                if ("FINISH".equals(speed)) {
-                    holder.tv_finish.setVisibility(View.VISIBLE);
-                    holder.iv_huancun_sd.setVisibility(View.GONE);
-                    holder.tv_huancun_downspeed.setVisibility(View.GONE);
-                    holder.tv_huancun_downpecent.setVisibility(View.GONE);
-                } else if (speed.contains("PAUSE")) {
-                    String[] strs = speed.split(" ");
-                    holder.iv_huancun_sd.setVisibility(View.VISIBLE);
-                    holder.iv_huancun_sd.setBackgroundResource(R.mipmap.huancun_sb);
-                    holder.tv_huancun_downspeed.setText("0KB/S");
-                    if (strs.length > 2) {
-                        holder.tv_huancun_downpecent.setText(strs[2]);
+            if (isFirstR) {
+                holder.tv_huancun_downpecent.setText("已下载" + bean.getPecent() + "%");
+                isFirstR = false;
+            } else {
+                if (speed != null) {
+                    if ("FINISH".equals(speed)) {
+                        holder.tv_finish.setVisibility(View.VISIBLE);
+                        holder.iv_huancun_sd.setVisibility(View.GONE);
+                        holder.tv_huancun_downspeed.setVisibility(View.GONE);
+                        holder.tv_huancun_downpecent.setVisibility(View.GONE);
+                    } else if (speed.contains("PAUSE")) {
+                        String[] strs = speed.split(" ");
+                        holder.iv_huancun_sd.setVisibility(View.VISIBLE);
+                        holder.iv_huancun_sd.setBackgroundResource(R.mipmap.huancun_sb);
+                        holder.tv_huancun_downspeed.setText("0KB/S");
+                        if (strs.length > 2) {
+                            holder.tv_huancun_downpecent.setText(strs[2]);
+                        } else {
+                            holder.tv_huancun_downpecent.setText("已下载0%");
+                        }
                     } else {
-                        holder.tv_huancun_downpecent.setText("已下载0%");
+                        String[] strs = speed.split(" ");
+                        holder.tv_huancun_downspeed.setText(strs[0]);
+                        holder.tv_huancun_downpecent.setText(strs[1]);
                     }
-                } else {
-                    String[] strs = speed.split(" ");
-                    holder.tv_huancun_downspeed.setText(strs[0]);
-                    holder.tv_huancun_downpecent.setText(strs[1]);
                 }
             }
             if (bean.getCurState() == 3) {
@@ -492,7 +498,7 @@ public class ListLocalActivity extends BaseActivity {
 
     }
 
-    public boolean delete(String fileName,String img) {
+    public boolean delete(String fileName, String img) {
 
         //SDPATH目录路径，fileName文件名
 

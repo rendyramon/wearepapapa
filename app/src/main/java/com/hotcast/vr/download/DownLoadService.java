@@ -10,6 +10,7 @@ import android.net.NetworkInfo;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
+import android.text.TextUtils;
 
 import com.hotcast.vr.BaseApplication;
 import com.hotcast.vr.bean.LocalBean2;
@@ -139,6 +140,10 @@ public class DownLoadService extends Service {
                     localBean.setDownloading(true);
                     localBean.setTotal(sqlDownLoadInfo.getFileSize());
                     localBean.setLocalurl(BaseApplication.VedioCacheUrl + localBean.getTitle() + ".mp4");
+                    if (TextUtils.isEmpty(localBean.getPecent())) {
+                        localBean.setSpeed("100");
+                        localBean.setPecent("0");
+                    }
                     db.saveOrUpdate(localBean);
                 }
             } catch (DbException e) {
@@ -276,7 +281,7 @@ public class DownLoadService extends Service {
      * @param s      速度
      */
     public void sendMessageToUnity(String url, String state, String pecnet, long s) {
-        String speed = (s / 1024)+"";
+        String speed = (s / 1024) + "";
         System.out.println("---发送消息到unity1");
         if (unitydoing) {
             System.out.println("---发送消息到unity2");

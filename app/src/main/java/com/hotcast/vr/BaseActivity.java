@@ -25,6 +25,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.hotcast.vr.bean.Classify;
 import com.hotcast.vr.dialog.GlassesDialog;
+import com.hotcast.vr.download.DownLoadService;
 import com.hotcast.vr.pageview.LandscapeView;
 import com.hotcast.vr.tools.Constants;
 import com.hotcast.vr.tools.L;
@@ -436,6 +437,7 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
         }
         intent.putExtra("classifies", BaseApplication.channel);
 
+        DownLoadService.unitydoing = true;
         startActivity(intent);
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
     }
