@@ -30,9 +30,9 @@ public class UnityTools {
     /**
      * 获取眼镜型号
      *
-     * @return -1 表示没有选择（这种情况不会出现），1 多朵，2.cardboard 3.小宅
+     * @return -1 表示没有选择（这种情况不会出现），1 多朵，2.cardboard 3.小宅，4暴风魔镜
      */
-    public String getGlasses() {
+    public static String getGlasses() {
         SharedPreUtil sp = SharedPreUtil.getInstance(context);
         int g = sp.select("glass", -1);
         return g + "";
