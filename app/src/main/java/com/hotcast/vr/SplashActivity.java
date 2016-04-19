@@ -3,6 +3,7 @@ package com.hotcast.vr;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.view.PagerAdapter;
@@ -102,6 +103,7 @@ public class SplashActivity extends BaseActivity {
                 getUserData(sp.select("login_token", ""));
             }
         }
+
         System.out.println("***sp=" + sp);
 
     }
@@ -207,6 +209,7 @@ public class SplashActivity extends BaseActivity {
             e.printStackTrace();
         }
     }
+
 
     private void getNetDate() {
         requestUrl = Constants.URL_UPDATE;
