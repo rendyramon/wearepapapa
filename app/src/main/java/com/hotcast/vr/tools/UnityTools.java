@@ -205,6 +205,11 @@ public class UnityTools {
         UnityPlayer.currentActivity.sendBroadcast(intent);
     }
 
+    public static boolean TestPhone() {
+        boolean islow = SharedPreUtil.getInstance(UnityPlayer.currentActivity).select("islow", false);
+        return islow;
+    }
+
     /**
      * @return
      */
