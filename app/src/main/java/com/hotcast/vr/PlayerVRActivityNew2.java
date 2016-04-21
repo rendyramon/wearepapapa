@@ -21,6 +21,7 @@ import com.hotcast.vr.pageview.ChangeModeListener;
 import com.hotcast.vr.pageview.PlayerContralView;
 import com.hotcast.vr.tools.Constants;
 import com.hotcast.vr.tools.L;
+import com.hotcast.vr.tools.SharedPreUtil;
 import com.hotcast.vr.tools.TokenUtils;
 import com.lidroid.xutils.DbUtils;
 import com.lidroid.xutils.exception.DbException;
@@ -140,19 +141,36 @@ public class PlayerVRActivityNew2 extends BaseLanActivity implements PFAssetObse
             PlayerBean playerBean = new Gson().fromJson(result,PlayerBean.class);
             if ("success".equals(playerBean.getMessage())||0 <= playerBean.getCode() && playerBean.getCode() <= 10){
                 play = playerBean.getData();
-                if (!TextUtils.isEmpty(play.getSd_url())) {
-                    play_url = play.getSd_url();
-                    BaseApplication.clarityText = "标清";
-                } else if (!TextUtils.isEmpty(play.getHd_url())) {
-                    play_url = play.getHd_url();
-                    BaseApplication.clarityText = "高清";
-                } else if (!TextUtils.isEmpty(play.getUhd_url())) {
-                    play_url = play.getUhd_url();
-                    BaseApplication.clarityText = "超清";
+                if (SharedPreUtil.getBooleanData(this,"islow",true)){
+                    if (!TextUtils.isEmpty(play.getSd_url())) {
+                        play_url = play.getSd_url();
+                        BaseApplication.clarityText = "标清";
+                    } else if (!TextUtils.isEmpty(play.getHd_url())) {
+                        play_url = play.getHd_url();
+                        BaseApplication.clarityText = "高清";
+                    } else if (!TextUtils.isEmpty(play.getUhd_url())) {
+                        play_url = play.getUhd_url();
+                        BaseApplication.clarityText = "超清";
+                    }
+                    System.out.println("---play_url:" + play_url);
+                    title = play.getTitle();
+                    initView();
+                }else {
+                    if (!TextUtils.isEmpty(play.getHd_url())) {
+                        play_url = play.getHd_url();
+                        BaseApplication.clarityText = "高清";
+                    } else if (!TextUtils.isEmpty(play.getSd_url())) {
+                        play_url = play.getSd_url();
+                        BaseApplication.clarityText = "标清";
+                    } else if (!TextUtils.isEmpty(play.getUhd_url())) {
+                        play_url = play.getUhd_url();
+                        BaseApplication.clarityText = "超清";
+                    }
+                    System.out.println("---play_url:" + play_url);
+                    title = play.getTitle();
+                    initView();
                 }
-                System.out.println("---play_url:" + play_url);
-                title = play.getTitle();
-                initView();
+
             }
         }
     }
@@ -525,18 +543,36 @@ public class PlayerVRActivityNew2 extends BaseLanActivity implements PFAssetObse
         mPlayerContralView2 = new PlayerContralView(this, PlayerContralView.TYPE_360, BaseApplication.clarityText);
         mPlayerContralView = new PlayerCtrMnger(mPlayerContralView1, mPlayerContralView2);
         if (play != null) {
-            if (!TextUtils.isEmpty(play.getSd_url())) {
-                mPlayerContralView1.setCanclick1(true);
-                mPlayerContralView2.setCanclick1(true);
+            if (!SharedPreUtil.getBooleanData(this, "islow", true)){
+                if (!TextUtils.isEmpty(play.getSd_url())) {
+                    mPlayerContralView1.setCanclick1(true);
+                    mPlayerContralView2.setCanclick1(true);
+                }
+                if (!TextUtils.isEmpty(play.getHd_url())) {
+                    mPlayerContralView1.setCanclick2(true);
+                    mPlayerContralView2.setCanclick2(true);
+                }
+                if (!TextUtils.isEmpty(play.getUhd_url())) {
+                    mPlayerContralView1.setCanclick3(true);
+                    mPlayerContralView2.setCanclick3(true);
+                }
+            }else {
+                if (!TextUtils.isEmpty(play.getSd_url())) {
+                    mPlayerContralView1.setCanclick1(true);
+                    mPlayerContralView2.setCanclick1(true);
+                }else {
+                    if (!TextUtils.isEmpty(play.getHd_url())) {
+                        mPlayerContralView1.setCanclick2(true);
+                        mPlayerContralView2.setCanclick2(true);
+                    }
+                }
+
+//                if (!TextUtils.isEmpty(play.getUhd_url())) {
+//                    mPlayerContralView1.setCanclick3(true);
+//                    mPlayerContralView2.setCanclick3(true);
+//                }
             }
-            if (!TextUtils.isEmpty(play.getHd_url())) {
-                mPlayerContralView1.setCanclick2(true);
-                mPlayerContralView2.setCanclick2(true);
-            }
-            if (!TextUtils.isEmpty(play.getUhd_url())) {
-                mPlayerContralView1.setCanclick3(true);
-                mPlayerContralView2.setCanclick3(true);
-            }
+
         } else {
             mPlayerContralView1.setCanclick(false);
             mPlayerContralView2.setCanclick(false);

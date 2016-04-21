@@ -39,6 +39,7 @@ import com.hotcast.vr.receiver.DownloadReceiver;
 import com.hotcast.vr.tools.Constants;
 import com.hotcast.vr.tools.DensityUtils;
 import com.hotcast.vr.tools.L;
+import com.hotcast.vr.tools.SharedPreUtil;
 import com.hotcast.vr.tools.TokenUtils;
 import com.hotcast.vr.tools.Utils;
 import com.lidroid.xutils.BitmapUtils;
@@ -182,24 +183,46 @@ public class DetailActivity extends BaseActivity {
             PlayerBean playerBean = new Gson().fromJson(result, PlayerBean.class);
             if ("success".equals(playerBean.getMessage())||0 <= playerBean.getCode() && playerBean.getCode() <= 10){
                 play = playerBean.getData();
-                if (!TextUtils.isEmpty(play.getSd_url())) {
-                    play_url = play.getSd_url();
-                    qingxidu = 0;
-                    BaseApplication.clarityText = getResources().getString(R.string.standard_definition);
-                } else if (!TextUtils.isEmpty(play.getHd_url())) {
-                    play_url = play.getHd_url();
-                    qingxidu = 1;
-                    BaseApplication.clarityText = getResources().getString(R.string.hd);
-                } else if (!TextUtils.isEmpty(play.getUhd_url())) {
-                    play_url = play.getUhd_url();
-                    qingxidu = 2;
-                    BaseApplication.clarityText = getResources().getString(R.string.super_clear);
-                }
-                download();
-                initCatch(play_url);
-                saveUrl = play_url;
+                if (SharedPreUtil.getBooleanData(this,"islow",true)){
+                    if (!TextUtils.isEmpty(play.getSd_url())) {
+                        play_url = play.getSd_url();
+                        qingxidu = 0;
+                        BaseApplication.clarityText = getResources().getString(R.string.standard_definition);
+                    } else if (!TextUtils.isEmpty(play.getHd_url())) {
+                        play_url = play.getHd_url();
+                        qingxidu = 1;
+                        BaseApplication.clarityText = getResources().getString(R.string.hd);
+                    } else if (!TextUtils.isEmpty(play.getUhd_url())) {
+                        play_url = play.getUhd_url();
+                        qingxidu = 2;
+                        BaseApplication.clarityText = getResources().getString(R.string.super_clear);
+                    }
+                    download();
+                    initCatch(play_url);
+                    saveUrl = play_url;
 //                System.out.println("---play_url:" + play_url);
-                title = play.getTitle();
+                    title = play.getTitle();
+                }else {
+                    if (!TextUtils.isEmpty(play.getHd_url())) {
+                        play_url = play.getHd_url();
+                        qingxidu = 1;
+                        BaseApplication.clarityText = getResources().getString(R.string.hd);
+                    } else if (!TextUtils.isEmpty(play.getSd_url())) {
+                        play_url = play.getSd_url();
+                        qingxidu = 0;
+                        BaseApplication.clarityText = getResources().getString(R.string.standard_definition);
+                    } else if (!TextUtils.isEmpty(play.getUhd_url())) {
+                        play_url = play.getUhd_url();
+                        qingxidu = 2;
+                        BaseApplication.clarityText = getResources().getString(R.string.super_clear);
+                    }
+                    download();
+                    initCatch(play_url);
+                    saveUrl = play_url;
+//                System.out.println("---play_url:" + play_url);
+                    title = play.getTitle();
+                }
+
 
             }
         }
@@ -356,20 +379,26 @@ public class DetailActivity extends BaseActivity {
                     System.out.println("---play.getSd_url() = " + play.getSd_url());
                     builder.setIsFocusable1(true);
                 }
-                if (TextUtils.isEmpty(play.getHd_url())) {
-                    System.out.println("---高清无");
+                if ((!TextUtils.isEmpty(play.getSd_url()))  && SharedPreUtil.getBooleanData(DetailActivity.this, "islow", true)){
                     builder.setIsFocusable2(false);
-                } else {
-                    System.out.println("---play.getHd_url() = " + play.getHd_url());
-                    builder.setIsFocusable2(true);
-                }
-                if (TextUtils.isEmpty(play.getUhd_url())) {
-                    System.out.println("---超清无");
                     builder.setIsFocusable3(false);
-                } else {
-                    System.out.println("---play.getUhd_url() = " + play.getUhd_url());
-                    builder.setIsFocusable3(true);
+                }else {
+                    if (TextUtils.isEmpty(play.getHd_url())) {
+                        System.out.println("---高清无");
+                        builder.setIsFocusable2(false);
+                    } else {
+                        System.out.println("---play.getHd_url() = " + play.getHd_url());
+                        builder.setIsFocusable2(true);
+                    }
+                    if (TextUtils.isEmpty(play.getUhd_url())) {
+                        System.out.println("---超清无");
+                        builder.setIsFocusable3(false);
+                    } else {
+                        System.out.println("---play.getUhd_url() = " + play.getUhd_url());
+                        builder.setIsFocusable3(true);
+                    }
                 }
+
                 builder.setTitle(getResources().getString(R.string.select_downlod));
                 builder.setPositiveButton(getResources().getString(R.string.determine), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
@@ -414,13 +443,6 @@ public class DetailActivity extends BaseActivity {
                             }
                         });
                 builder.create().show();
-
-//                DetailActivity.this.showDialog(null, "是否下载影片?", null, null, new BaseActivity.OnAlertSureClickListener() {
-//                    @Override
-//                    public void onclick() {
-//
-//                    }
-//                });
             }
         });
     }

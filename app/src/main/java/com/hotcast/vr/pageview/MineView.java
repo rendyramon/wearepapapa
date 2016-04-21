@@ -34,6 +34,7 @@ import butterknife.InjectView;
 
 /**
  * Created by lostnote on 15/11/17.
+ *
  */
 public class MineView extends BaseView implements View.OnClickListener {
     @InjectView(R.id.rl_cache)
@@ -46,16 +47,6 @@ public class MineView extends BaseView implements View.OnClickListener {
     RelativeLayout rl_help;
     @InjectView(R.id.tv_title)
     TextView title;
-//    @InjectView(R.id.iv_head)
-//    ImageView iv_head;
-//    @InjectView(R.id.ll_login)
-//    LinearLayout ll_login;
-//    @InjectView(R.id.login)
-//    Button login;
-//    @InjectView(R.id.regist)
-//    Button regist;
-//    @InjectView(R.id.tv_username)
-//    TextView tv_username;
 
 
     private UpdateAppManager updateAppManager;
@@ -70,10 +61,6 @@ public class MineView extends BaseView implements View.OnClickListener {
 
     @Override
     public void init() {
-//        bitmapUtils = new BitmapUtils(activity);
-//        date = activity.sp.select("userData","");
-
-//        refreshView();
         title.setText("我的");
         spec = activity.sp.select("spec", "");
         is_force = activity.sp.select("is_force", "");
@@ -88,41 +75,7 @@ public class MineView extends BaseView implements View.OnClickListener {
     BitmapUtils bitmapUtils;
     String date;
     String username;
-//    private void showMasseg() {
-//        if (!TextUtils.isEmpty(date)){
-//            userDate = new Gson().fromJson(date, UserData.class);
-//            username = activity.sp.select("username","");
-//            if (!TextUtils.isEmpty(username)){
-//                tv_username.setText(username);
-//            }else {
-//                tv_username.setText(userDate.getUsername());
-//            }
-//            bitmapUtils.display(iv_head,userDate.getAvatar());
-//        }
-//    }
-
-//    public void refreshView(){
-//        date = activity.sp.select("userData","");
-//        bitmapUtils = new BitmapUtils(activity);
-//        if (!TextUtils.isEmpty(date)){
-//            BaseApplication.isLogin = true;
-//        }
-//    if (BaseApplication.isLogin){
-//        ll_login.setVisibility(View.GONE);
-//        tv_username.setVisibility(View.VISIBLE);
-//        title.setVisibility(View.VISIBLE);
-//        title.setOnClickListener(this);
-//        tv_username.setOnClickListener(this);
-//        showMasseg();
-//    }else {
-//        ll_login.setVisibility(View.VISIBLE);
-//        tv_username.setVisibility(View.GONE);
-//        title.setVisibility(View.GONE);
-//    }
-//}
     private void initListView() {
-//        login.setOnClickListener(this);
-//        regist.setOnClickListener(this);
         rl_cache.setOnClickListener(this);
         rl_about.setOnClickListener(this);
         rl_version.setOnClickListener(this);
@@ -133,28 +86,7 @@ public class MineView extends BaseView implements View.OnClickListener {
     public void onClick(View view) {
         Intent intent;
         switch (view.getId()) {
-//            case R.id.tv_username:
-//                intent = new Intent(activity, ReNameActivity.class);
-//                intent.putExtra("title","更改用户名");
-//                activity.startActivity(intent);
-//                activity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-//                System.out.println("---您点击了用户名，你可以修改用户名");
-//                break;
-//            case R.id.login:
-//                intent = new Intent(activity, LoginActivity.class);
-//                activity.startActivity(intent);
-//                activity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-//                System.out.println("---您点击了登录按钮");
-//                break;
-//            case R.id.regist:
-//                intent = new Intent(activity, RegistActivity.class);
-//                activity.startActivity(intent);
-//                activity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-//                System.out.println("---您点击了注册按钮");
-//                break;
-
             case R.id.rl_cache:
-
                 intent = new Intent(activity, ListLocalActivity.class);
                 activity.startActivity(intent);
                 activity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
@@ -178,47 +110,6 @@ public class MineView extends BaseView implements View.OnClickListener {
                 activity.startActivity(intent);
                 activity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                 break;
-//            case R.id.tv_title:
-//                logout(userDate.getLogin_token());
-//                break;
         }
     }
-
-//    private void logout(String login_token) {
-//        String mUrl = Constants.LOGOUT;
-//        RequestParams params = new RequestParams();
-//        String str = activity.format.format(System.currentTimeMillis());
-//        params.addBodyParameter("token", Md5Utils.getMd5("hotcast-" + str + "-hotcast"));
-//        params.addBodyParameter("version", BaseApplication.version);
-//        params.addBodyParameter("platform", BaseApplication.platform);
-//        params.addBodyParameter("login_token", login_token);
-//        activity.httpPost(mUrl, params, new RequestCallBack<String>() {
-//            @Override
-//            public void onStart() {
-//                super.onStart();
-//
-//            }
-//
-//            @Override
-//            public void onSuccess(ResponseInfo<String> responseInfo) {
-//                System.out.println("---responseInfo.result = " + responseInfo.result);
-//                User1 user1 = new Gson().fromJson(responseInfo.result,User1.class);
-//                if ("user1".equals(user1.getMessage()) || 0<=user1.getCode()&& 10>=user1.getCode()){
-//                    BaseApplication.isLogin = false;
-//                    iv_head.setImageResource(R.mipmap.head);
-//                    activity.sp.delete("userData");
-//                    activity.sp.delete("username");
-//                    title.setVisibility(View.GONE);
-//                    refreshView();
-//                }else {
-//                    activity.showToast("亲，"+user1.getMessage()+"T_T");
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(HttpException e, String s) {
-//                activity.showToast("亲,注销失败了T_T，请检查一下网络");
-//            }
-//        });
-//    }
 }
