@@ -21,6 +21,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.dlodlo.dvr.sdk.unity.DvrUnityActivity;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.hotcast.vr.bean.Classify;
@@ -402,7 +403,7 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
                 }
             };
             builder.setNegativeButton(getResources().getString(R.string.cancel),
-                    new android.content.DialogInterface.OnClickListener() {
+                    new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             System.out.println("---您选择取消");
                             dialog.dismiss();
@@ -428,7 +429,7 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
     }
 
     public void startGoInUnity() {
-        Intent intent = new Intent(this, LandscapeActivity_new.class);
+        Intent intent = new Intent(this, DvrUnityActivity.class);
         if (!BaseApplication.info.versionName.equals(BaseApplication.version)) {
             BaseApplication.isUpdate = true;
             intent.putExtra("spec", this.sp.select("spec", ""));

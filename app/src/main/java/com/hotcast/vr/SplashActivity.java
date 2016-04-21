@@ -14,6 +14,7 @@ import android.widget.ImageView;
 
 import com.google.gson.Gson;
 import com.hotcast.vr.asynctask.LocalVideosAsynctask;
+import com.hotcast.vr.asynctask.TestMediaAsynctask;
 import com.hotcast.vr.bean.LocalBean;
 import com.hotcast.vr.bean.LocalBean1;
 import com.hotcast.vr.bean.LocalBean2;
@@ -91,6 +92,7 @@ public class SplashActivity extends BaseActivity {
 
         DbdateSave();
         new LocalVideosAsynctask(this).execute();
+        new TestMediaAsynctask(this).execute();
         L.e("PackageName:" + getPackageName());
         getNetDate();
         String userData = sp.select("userData", "");

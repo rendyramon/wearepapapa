@@ -15,6 +15,7 @@ import com.lidroid.xutils.DbUtils;
 import com.lidroid.xutils.exception.DbException;
 import com.unity3d.player.UnityPlayer;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -98,12 +99,40 @@ public class UnityTools {
         context.startActivity(intent);
     }
 
+    public static int getPlayTime(String mUri) {
+        String duration = "0";
+        android.media.MediaMetadataRetriever mmr = new android.media.MediaMetadataRetriever();
+        try {
+            if (mUri != null) {
+                HashMap<String, String> headers = null;
+                if (headers == null) {
+                    headers = new HashMap<String, String>();
+                    headers.put("User-Agent", "Mozilla/5.0 (Linux; U; Android 4.4.2; zh-CN; MW-KW-001 Build/JRO03C) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 UCBrowser/1.0.0.001 U4/0.8.0 Mobile Safari/533.1");
+                }
+                mmr.setDataSource(mUri, headers);
+            } else {
+                //mmr.setDataSource(mFD, mOffset, mLength);
+            }
+
+            duration = mmr.extractMetadata(android.media.MediaMetadataRetriever.METADATA_KEY_DURATION);//时长(毫秒)
+//            String width = mmr.extractMetadata(android.media.MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH);//宽
+//            String height = mmr.extractMetadata(android.media.MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT);//高
+
+        } catch (Exception ex) {
+            System.out.println("---时长获取失败");
+        } finally {
+            mmr.release();
+            return Integer.parseInt(duration);
+        }
+    }
+
     /**
      * 获取设备的ID
      *
      * @return
      */
     public static String getDeviceID() {
+        System.out.println("---device:" + BaseApplication.device);
         return BaseApplication.device;
     }
 
