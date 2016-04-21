@@ -60,10 +60,12 @@ public class BaseApplication extends Application {
 
 
     public static final String IMG_DISCCACHE_DIR = "/mnt/sdcard/jarvis/imgcache";
-    public static final String VedioCacheUrl = Environment.getExternalStorageDirectory().getAbsolutePath() + "/hostcast/vr/";
-    public static final String ImgCacheUrl = Environment.getExternalStorageDirectory().getAbsolutePath() + "/hostcast/vr/vedioImg/";
     public static boolean pagerf = false;
     public static boolean cacheFileChange = false;
+    public static  String VedioCacheUrl;
+    public static String ImgCacheUrl ;
+
+
     public static List<Classify> classifies = new ArrayList<>();
     public static List<String> playUrls = new ArrayList<>();//需要下載的電影地址
     public static List<Details> detailsList = new ArrayList<>();//需要下載的電影地址
@@ -82,6 +84,13 @@ public class BaseApplication extends Application {
 
     @Override
     public void onCreate() {
+        if (hasSDCard()){
+            VedioCacheUrl = Environment.getExternalStorageDirectory().getAbsolutePath() + "/hostcast/vr/";
+            ImgCacheUrl = Environment.getExternalStorageDirectory().getAbsolutePath() + "/hostcast/vr/vedioImg/";
+        }else {
+            VedioCacheUrl = Environment.getDataDirectory() + "/hostcast/vr/";
+            ImgCacheUrl = Environment.getDataDirectory()+ "/hostcast/vr/vedioImg/";
+        }
 //        updateDb();
         UnityTools.context = getApplicationContext();
         Thread.currentThread().setUncaughtExceptionHandler(new MyExecptionHandler());
@@ -124,6 +133,16 @@ public class BaseApplication extends Application {
             android.os.Process.killProcess(android.os.Process.myPid());
         }
     }
+    /**
+     * 判断手机是否有SD卡。
+     *
+     * @return 有SD卡返回true，没有返回false。
+     */
+    public static boolean hasSDCard() {
+        return Environment.MEDIA_MOUNTED.equals(Environment
+                .getExternalStorageState());
+    }
+
 
     public static void getIMEI(Context context) {
         TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);

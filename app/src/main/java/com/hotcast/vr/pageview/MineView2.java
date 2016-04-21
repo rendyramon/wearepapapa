@@ -188,7 +188,6 @@ public class MineView2 extends BaseView implements View.OnClickListener {
                 break;
             case R.id.rl_glasses2:
                 SharedPreUtil sp = SharedPreUtil.getInstance(activity);
-                ;
                 int g = sp.select("glass", -1);
                 final GlassesDialog.Builder builder = new GlassesDialog.Builder(activity) {
                     @Override
