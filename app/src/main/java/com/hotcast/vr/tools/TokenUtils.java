@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import com.hotcast.vr.BaseApplication;
 
 import java.text.SimpleDateFormat;
+import java.util.TimeZone;
 
 /**
  * Created by liurongzhi on 2016/3/9.
@@ -16,6 +17,8 @@ public class TokenUtils {
     public static SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHH");
 
     public static String createToken(Context context) {
+        //国际化时间
+        format.setTimeZone(TimeZone.getTimeZone("GMT+8"));
         String token = null;
         if (BaseApplication.platform == null || BaseApplication.platform.equals("")) {
             BaseApplication.platform = getAppMetaData(context, "UMENG_CHANNEL");
