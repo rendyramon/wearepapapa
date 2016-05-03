@@ -19,7 +19,10 @@
         android:layout_width="match_parent"
         android:layout_height="0.5px"
         android:background="#66000000" />
-
+<ScrollView
+    android:layout_width="250dp"
+    android:layout_height="248dp"
+    android:gravity="center">
     <RadioGroup
         android:id="@+id/rg"
         android:layout_width="250dp"
@@ -76,7 +79,7 @@
             android:background="#66000000" />
 
         <RadioButton
-            android:id="@+id/bt_baofen"
+            android:id="@+id/bt_baofen1"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:button="@null"
@@ -85,8 +88,114 @@
             android:text="暴 风 魔 镜"
             android:textColor="#bb000000"
             android:textSize="15sp" />
-    </RadioGroup>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5px"
+            android:background="#66000000" />
 
+        <RadioButton
+            android:id="@+id/bt_baofen3"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:button="@null"
+            android:drawableRight="@drawable/select_glasses_nomal"
+            android:padding="5dp"
+            android:text="Pico VR"
+            android:textColor="#bb000000"
+            android:textSize="15sp" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5px"
+            android:background="#66000000" />
+
+        <RadioButton
+            android:id="@+id/bt_baofen4"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:button="@null"
+            android:drawableRight="@drawable/select_glasses_nomal"
+            android:padding="5dp"
+            android:text="VR BOX"
+            android:textColor="#bb000000"
+            android:textSize="15sp" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5px"
+            android:background="#66000000" />
+
+        <RadioButton
+            android:id="@+id/bt_baofen5"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:button="@null"
+            android:drawableRight="@drawable/select_glasses_nomal"
+            android:padding="5dp"
+            android:text="GUOER"
+            android:textColor="#bb000000"
+            android:textSize="15sp" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5px"
+            android:background="#66000000" />
+
+        <RadioButton
+            android:id="@+id/bt_baofen6"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:button="@null"
+            android:drawableRight="@drawable/select_glasses_nomal"
+            android:padding="5dp"
+            android:text="魔壳"
+            android:textColor="#bb000000"
+            android:textSize="15sp" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5px"
+            android:background="#66000000" />
+
+        <RadioButton
+            android:id="@+id/bt_baofen7"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:button="@null"
+            android:drawableRight="@drawable/select_glasses_nomal"
+            android:padding="5dp"
+            android:text=" 索 尼 "
+            android:textColor="#bb000000"
+            android:textSize="15sp" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5px"
+            android:background="#66000000" />
+
+        <RadioButton
+            android:id="@+id/bt_baofen8"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:button="@null"
+            android:drawableRight="@drawable/select_glasses_nomal"
+            android:padding="5dp"
+            android:text=" 亿 美 视 "
+            android:textColor="#bb000000"
+            android:textSize="15sp" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5px"
+            android:background="#66000000" />
+
+        <RadioButton
+            android:id="@+id/bt_baofen9"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:button="@null"
+            android:drawableRight="@drawable/select_glasses_nomal"
+            android:padding="5dp"
+            android:text=" 博 思 尼 "
+            android:textColor="#bb000000"
+            android:textSize="15sp" />
+
+    </RadioGroup>
+</ScrollView>
     <View
         android:layout_width="match_parent"
         android:layout_height="1px"

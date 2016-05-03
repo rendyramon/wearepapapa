@@ -31,6 +31,7 @@ import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.panframe.android.lib.*;
 
+import android.app.Application;
 import android.app.Service;
 import android.content.Intent;
 import android.media.AudioManager;
@@ -58,6 +59,7 @@ public class PlayerVRActivityNew2 extends BaseLanActivity implements PFAssetObse
     private boolean ctr_vist = true;//控制条为显示状态
     boolean _updateThumb = true;
     Timer _scrubberMonitorTimer;
+
 
     @InjectView(R.id.framecontainer)
     ViewGroup _frameContainer;
@@ -351,6 +353,7 @@ public class PlayerVRActivityNew2 extends BaseLanActivity implements PFAssetObse
                 }
                 BaseApplication.playbacktime = 0;
                 finish();
+
 //		        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
                 break;
             case ERROR:
