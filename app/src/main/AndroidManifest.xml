@@ -119,6 +119,11 @@
             android:name=".ListLocalActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".LocalVideoActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".DetailActivity"
             android:launchMode="singleTop"

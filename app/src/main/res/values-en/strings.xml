@@ -4,6 +4,7 @@
     <string name="homw_title">hotcast</string>
     <string name="app_name">VRhotcast</string>
     <string name="mine_cache">Offline caching</string>
+    <string name="local_video">Local video</string>
     <string name="mine_change">Change the password</string>
     <string name="mine_about">About us</string>
     <string name="mine_version">Check for Update</string>

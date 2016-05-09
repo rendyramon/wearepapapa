@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "23.0.1"
+    buildToolsVersion "23.0.3"
     useLibrary 'org.apache.http.legacy'
     lintOptions {
         checkReleaseBuilds false
@@ -44,4 +44,5 @@ dependencies {
     compile files('libs/unity-classes.jar')
     compile files('libs/unityvractivity.jar')
     compile files('libs/libammsdk.jar')
+    compile 'com.google.android.gms:play-services-appindexing:8.1.0'
 }
