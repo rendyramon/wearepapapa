@@ -1,28 +1,20 @@
 package com.hotcast.vr.tools;
 
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.media.ThumbnailUtils;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.provider.MediaStore;
 import android.text.TextUtils;
 
 import com.google.gson.Gson;
 import com.hotcast.vr.BaseApplication;
 import com.hotcast.vr.PlayerVRActivityNew2;
 import com.hotcast.vr.bean.LocalBean2;
-import com.hotcast.vr.bean.LocalVideoBean;
 import com.hotcast.vr.download.DownLoadService;
 import com.lidroid.xutils.DbUtils;
 import com.lidroid.xutils.exception.DbException;
 import com.unity3d.player.UnityPlayer;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -36,57 +28,22 @@ public class UnityTools {
 
     }
 
-    public static ArrayList<LocalVideoBean> getLocalVideo(Context context){
-        final BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inDither = false;
-        switch (options.inPreferredConfig = Bitmap.Config.ARGB_8888) {
+    public static String[] getPlayUrl() {
+        String[] urls = new String[5];
+        String url = SharedPreUtil.getInstance(UnityPlayer.currentActivity).select("sdplayUrl", "");
+        if (!url.contains("http") && !url.contains("file")) {
+            url = "file://" + url;
         }
-        ArrayList<LocalVideoBean> list=new ArrayList<>();
-        final ContentResolver contentResolver = context.getContentResolver();
-        String[] projection = new String[] { MediaStore.Video.Media.DATA,MediaStore.Video.Media.SIZE };
-        Cursor cursor = contentResolver.query(
-                MediaStore.Video.Media.EXTERNAL_CONTENT_URI, projection, null,
-                null, MediaStore.Video.Media.DEFAULT_SORT_ORDER);
-        cursor.moveToFirst();
-        int fileNum = cursor.getCount();
-
-        for (int counter = 0; counter < fileNum; counter++) {
-            final LocalVideoBean localVideoBean=new LocalVideoBean();
-            final String path=cursor.getString(0);
-            int size=Integer.parseInt(cursor.getString(1))/(1024*1024);
-            if(path.endsWith(".mp4")&&size>10){
-                localVideoBean.setVideoPath(path);
-                localVideoBean.setVideoName(cursor.getString(3).replace(".mp4",""));
-                final long videoId=Long.parseLong(cursor.getString(2));
-                list.add(localVideoBean);
-                new Thread(){
-                    @Override
-                    public void run() {
-                        Bitmap  bitmap = MediaStore.Video.Thumbnails.getThumbnail(contentResolver, videoId,
-                                MediaStore.Images.Thumbnails.MICRO_KIND, options);
-                        localVideoBean.setVideoImage(bitmap);
-
-                    }
-                }.start();
-            }
-
-            cursor.moveToNext();
-        }
-
-        cursor.close();
-        return list;
+        urls[0] = url;
+        urls[1] = "0";//清晰度
+        urls[2] = url;
+        urls[3] = "";
+        urls[4] = "";
+        return urls;
     }
 
-
-    public static String[] getScene() {
-        String unitystr[] = new String[6];
-        unitystr[0] = SharedPreUtil.getInstance(UnityPlayer.currentActivity).select("targetSceneID","0");
-        unitystr[1] = SharedPreUtil.getInstance(UnityPlayer.currentActivity).select("currentURL","");
-        unitystr[2] = SharedPreUtil.getInstance(UnityPlayer.currentActivity).select("currentDefi","0");
-        unitystr[3] = SharedPreUtil.getInstance(UnityPlayer.currentActivity).select("sdURL","");
-        unitystr[4] = SharedPreUtil.getInstance(UnityPlayer.currentActivity).select("hdURL","");
-        unitystr[5] = SharedPreUtil.getInstance(UnityPlayer.currentActivity).select("udURL","");
-        return unitystr;
+    public static int getSence() {
+        return SharedPreUtil.getInstance(UnityPlayer.currentActivity).select("sence", 0);
     }
 
     /**
