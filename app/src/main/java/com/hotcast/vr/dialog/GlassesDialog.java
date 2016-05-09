@@ -311,7 +311,6 @@ public class GlassesDialog extends Dialog {
                     return 10;
                 case R.id.bt_baofen9:
                     return 11;
-
                 default:
                     return -1;
             }
