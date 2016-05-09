@@ -51,20 +51,20 @@ public class UnityTools {
         int fileNum = cursor.getCount();
 
         for (int counter = 0; counter < fileNum; counter++) {
-            final LocalVideoBean localBean2=new LocalVideoBean();
+            final LocalVideoBean localVideoBean=new LocalVideoBean();
             final String path=cursor.getString(0);
             int size=Integer.parseInt(cursor.getString(1))/(1024*1024);
             if(path.endsWith(".mp4")&&size>10){
-                localBean2.setVideoPath(path);
-                localBean2.setVideoName(cursor.getString(3).replace(".mp4",""));
+                localVideoBean.setVideoPath(path);
+                localVideoBean.setVideoName(cursor.getString(3).replace(".mp4",""));
                 final long videoId=Long.parseLong(cursor.getString(2));
-                list.add(localBean2);
+                list.add(localVideoBean);
                 new Thread(){
                     @Override
                     public void run() {
                         Bitmap  bitmap = MediaStore.Video.Thumbnails.getThumbnail(contentResolver, videoId,
                                 MediaStore.Images.Thumbnails.MICRO_KIND, options);
-                        localBean2.setVideoImage(bitmap);
+                        localVideoBean.setVideoImage(bitmap);
 
                     }
                 }.start();
