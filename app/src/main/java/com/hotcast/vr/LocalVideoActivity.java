@@ -74,7 +74,7 @@ public class LocalVideoActivity extends BaseActivity {
                     file = new File(" ");
                 }
                     if (file.exists()) {
-                            Intent intent = new Intent(LocalVideoActivity.this, PlayerVRActivityNew2.class);
+                        Intent intent = new Intent(LocalVideoActivity.this, PlayerVRActivityNew2.class);
                         intent.putExtra("play_url", localurl);
                         intent.putExtra("qingxidu", 0);
                         intent.putExtra("title", list.get(i).getVideoName());
