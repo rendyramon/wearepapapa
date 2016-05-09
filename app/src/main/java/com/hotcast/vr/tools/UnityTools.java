@@ -1,20 +1,27 @@
 package com.hotcast.vr.tools;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.provider.MediaStore;
 import android.text.TextUtils;
 
 import com.google.gson.Gson;
 import com.hotcast.vr.BaseApplication;
 import com.hotcast.vr.PlayerVRActivityNew2;
 import com.hotcast.vr.bean.LocalBean2;
+import com.hotcast.vr.bean.LocalVideoBean;
 import com.hotcast.vr.download.DownLoadService;
 import com.lidroid.xutils.DbUtils;
 import com.lidroid.xutils.exception.DbException;
 import com.unity3d.player.UnityPlayer;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -27,23 +34,67 @@ public class UnityTools {
     public static void startActivity(Context context) {
 
     }
+    /**
+     * 获取手机本地视频
+     * content 上下文环境
+     * misSize 用于过滤小视屏的最小值，单位MB；
+     *
+     * @return LocalVideoBean的list集合；
+     */
+    public static ArrayList<LocalVideoBean> getLocalVideo(Context context, int minSize) {
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inDither = false;
+        switch (options.inPreferredConfig = Bitmap.Config.ARGB_8888) {
+        }
+        ArrayList<LocalVideoBean> list = new ArrayList<>();
+        final ContentResolver contentResolver = context.getContentResolver();
+        String[] projection = new String[]{MediaStore.Video.Media.DATA, MediaStore.Video.Media.SIZE, MediaStore.Video.Media._ID, MediaStore.Video.Media.DISPLAY_NAME};
+        Cursor cursor = contentResolver.query(
+                MediaStore.Video.Media.EXTERNAL_CONTENT_URI, projection, MediaStore.Video.Media.MIME_TYPE + "='video/mp4'",
+                null, MediaStore.Video.Media.DEFAULT_SORT_ORDER);
+        cursor.moveToFirst();
+        int fileNum = cursor.getCount();
+        for (int counter = 0; counter < fileNum; counter++) {
+            int size = Integer.parseInt(cursor.getString(1)) / (1024 * 1024);
+            String path = cursor.getString(0);
+//         如果视频大于最小大小并且路径不包含"/hostcast/vr/",则将此视频添加进list
+            if (size > minSize&&!path.contains("/hostcast/vr/")) {
+                LocalVideoBean localVideoBean = new LocalVideoBean();
+
+                localVideoBean.setVideoPath(path);
+                localVideoBean.setVideoName(cursor.getString(3).replace(".mp4", ""));
+                final long videoId = Long.parseLong(cursor.getString(2));
+//                通过viewID获取该video的缩略图
+                Bitmap bitmap = MediaStore.Video.Thumbnails.getThumbnail(contentResolver, videoId,
+                        MediaStore.Images.Thumbnails.MINI_KIND, options);
+                localVideoBean.setVideoImage(bitmap);
+
+                list.add(localVideoBean);
+            }
+
+            cursor.moveToNext();
+        }
+        cursor.close();
+        return list;
+    }
 
     public static String[] getPlayUrl() {
-        String[] urls = new String[5];
-        String url = SharedPreUtil.getInstance(UnityPlayer.currentActivity).select("sdplayUrl", "");
-        if (!url.contains("http") && !url.contains("file")) {
-            url = "file://" + url;
+        String[] var0 = new String[5];
+        String var1 = (String)SharedPreUtil.getInstance(UnityPlayer.currentActivity).select("sdplayUrl", "");
+        if(!var1.contains("http") && !var1.contains("file")) {
+            var1 = "file://" + var1;
         }
-        urls[0] = url;
-        urls[1] = "0";//清晰度
-        urls[2] = url;
-        urls[3] = "";
-        urls[4] = "";
-        return urls;
+
+        var0[0] = var1;
+        var0[1] = "0";
+        var0[2] = var1;
+        var0[3] = "";
+        var0[4] = "";
+        return var0;
     }
 
     public static int getSence() {
-        return SharedPreUtil.getInstance(UnityPlayer.currentActivity).select("sence", 0);
+        return ((Integer)SharedPreUtil.getInstance(UnityPlayer.currentActivity).select("sence", Integer.valueOf(0))).intValue();
     }
 
     /**
