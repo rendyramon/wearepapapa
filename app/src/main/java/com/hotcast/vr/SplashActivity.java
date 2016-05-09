@@ -98,9 +98,9 @@ public class SplashActivity extends BaseActivity {
         getNetDate();
         String userData = sp.select("userData", "");
         System.out.println("---userData=" + userData);
-        if (!TextUtils.isEmpty(userData)){
+        if (!TextUtils.isEmpty(userData)) {
             UserData userData1 = new Gson().fromJson(userData, UserData.class);
-            if (userData1 != null){
+            if (userData1 != null) {
                 System.out.println("---login_token=" + userData1.getLogin_token());
                 getUserData(sp.select("login_token", ""));
             }
@@ -117,7 +117,7 @@ public class SplashActivity extends BaseActivity {
         params.addBodyParameter("version", BaseApplication.version);
         params.addBodyParameter("platform", BaseApplication.platform);
         params.addBodyParameter("login_token", login_token);
-        System.out.println("---login_token="+login_token);
+        System.out.println("---login_token=" + login_token);
         this.httpPost(requestUrl, params, new RequestCallBack<String>() {
             @Override
             public void onStart() {
@@ -242,9 +242,9 @@ public class SplashActivity extends BaseActivity {
     private void setViewData(String json) {
         if (Utils.textIsNull(json)) {
             return;
-        }else {
-            Updater updater = new Gson().fromJson(json,Updater.class);
-            if ("success".equals(updater.getMessage())||0 <= updater.getCode() && updater.getCode() <= 10){
+        } else {
+            Updater updater = new Gson().fromJson(json, Updater.class);
+            if ("success".equals(updater.getMessage()) || 0 <= updater.getCode() && updater.getCode() <= 10) {
                 Update update = updater.getData();
                 spec = update.getUrl();
                 is_force = update.getIs_force();

@@ -19,15 +19,11 @@ import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.ScrollView;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import com.hotcast.vr.adapter.MyPagerAdapter;
-import com.hotcast.vr.bean.UserData;
 import com.hotcast.vr.pageview.BaseView;
 import com.hotcast.vr.pageview.ClassifyView;
 import com.hotcast.vr.pageview.HomeView2;
 
-import com.hotcast.vr.pageview.MineView;
 import com.hotcast.vr.pageview.MineView2;
 import com.hotcast.vr.tools.Constants;
 import com.hotcast.vr.tools.FileUtils;

@@ -30,6 +30,7 @@ import com.hotcast.vr.BaseApplication;
 import com.hotcast.vr.GlassesActivity;
 import com.hotcast.vr.HelpActivity;
 import com.hotcast.vr.ListLocalActivity;
+import com.hotcast.vr.LocalVideoActivity;
 import com.hotcast.vr.LoginActivity;
 import com.hotcast.vr.R;
 import com.hotcast.vr.ReNameActivity;
@@ -60,6 +61,8 @@ import butterknife.InjectView;
 public class MineView2 extends BaseView implements View.OnClickListener {
     @InjectView(R.id.rl_cache)
     RelativeLayout rl_cache;
+    @InjectView(R.id.rl_localvideo)
+    RelativeLayout rl_localvideo;
     @InjectView(R.id.rl_about)
     RelativeLayout rl_about;
     @InjectView(R.id.rl_version)
@@ -170,6 +173,7 @@ public class MineView2 extends BaseView implements View.OnClickListener {
         login.setOnClickListener(this);
         regist.setOnClickListener(this);
         rl_cache.setOnClickListener(this);
+        rl_localvideo.setOnClickListener(this);
         rl_about.setOnClickListener(this);
         rl_version.setOnClickListener(this);
         rl_help.setOnClickListener(this);
@@ -222,10 +226,10 @@ public class MineView2 extends BaseView implements View.OnClickListener {
             case R.id.rl_change:
                 intent = new Intent(activity, ReNameActivity.class);
                 intent.putExtra("title", activity.getResources().getString(R.string.change_password));
-                activity.startActivity(intent);
-                activity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                System.out.println("---你点击了修改该密码");
-                break;
+            activity.startActivity(intent);
+            activity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+            System.out.println("---你点击了修改该密码");
+            break;
             case R.id.tv_username:
                 intent = new Intent(activity, ReNameActivity.class);
                 intent.putExtra("title", activity.getResources().getString(R.string.change_username));
@@ -248,6 +252,12 @@ public class MineView2 extends BaseView implements View.OnClickListener {
 
             case R.id.rl_cache:
                 intent = new Intent(activity, ListLocalActivity.class);
+                activity.startActivity(intent);
+                activity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                break;
+
+            case R.id.rl_localvideo:
+                intent = new Intent(activity, LocalVideoActivity.class);
                 activity.startActivity(intent);
                 activity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                 break;
