@@ -1,6 +1,7 @@
 package com.hotcast.vr;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -40,6 +41,7 @@ import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.security.Signature;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;

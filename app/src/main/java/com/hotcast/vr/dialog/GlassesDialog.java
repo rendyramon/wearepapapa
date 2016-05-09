@@ -55,6 +55,13 @@ public class GlassesDialog extends Dialog {
                     bt_google.setCompoundDrawables(null, null, nomal, null);
                     bt_xiaozha.setCompoundDrawables(null, null, nomal, null);
                     bt_baofen.setCompoundDrawables(null, null, nomal, null);
+                    bt_baofen2.setCompoundDrawables(null, null, nomal, null);
+                    bt_baofen3.setCompoundDrawables(null, null, nomal, null);
+                    bt_baofen4.setCompoundDrawables(null, null, nomal, null);
+                    bt_baofen5.setCompoundDrawables(null, null, nomal, null);
+                    bt_baofen6.setCompoundDrawables(null, null, nomal, null);
+                    bt_baofen7.setCompoundDrawables(null, null, nomal, null);
+                    bt_baofen8.setCompoundDrawables(null, null, nomal, null);
                     break;
                 case R.id.bt_google:
                     System.out.println("---2222");
@@ -62,6 +69,13 @@ public class GlassesDialog extends Dialog {
                     bt_google.setCompoundDrawables(null, null, choose, null);
                     bt_xiaozha.setCompoundDrawables(null, null, nomal, null);
                     bt_baofen.setCompoundDrawables(null, null, nomal, null);
+                    bt_baofen2.setCompoundDrawables(null, null, nomal, null);
+                    bt_baofen3.setCompoundDrawables(null, null, nomal, null);
+                    bt_baofen4.setCompoundDrawables(null, null, nomal, null);
+                    bt_baofen5.setCompoundDrawables(null, null, nomal, null);
+                    bt_baofen6.setCompoundDrawables(null, null, nomal, null);
+                    bt_baofen7.setCompoundDrawables(null, null, nomal, null);
+                    bt_baofen8.setCompoundDrawables(null, null, nomal, null);
                     break;
                 case R.id.bt_xiaozha:
                     System.out.println("---3333");
@@ -69,13 +83,126 @@ public class GlassesDialog extends Dialog {
                     bt_google.setCompoundDrawables(null, null, nomal, null);
                     bt_xiaozha.setCompoundDrawables(null, null, choose, null);
                     bt_baofen.setCompoundDrawables(null, null, nomal, null);
+                    bt_baofen2.setCompoundDrawables(null, null, nomal, null);
+                    bt_baofen3.setCompoundDrawables(null, null, nomal, null);
+                    bt_baofen4.setCompoundDrawables(null, null, nomal, null);
+                    bt_baofen5.setCompoundDrawables(null, null, nomal, null);
+                    bt_baofen6.setCompoundDrawables(null, null, nomal, null);
+                    bt_baofen7.setCompoundDrawables(null, null, nomal, null);
+                    bt_baofen8.setCompoundDrawables(null, null, nomal, null);
                     break;
-                case R.id.bt_baofen:
+                case R.id.bt_baofen1:
                     System.out.println("---4444");
                     bt_dlodlo.setCompoundDrawables(null, null, nomal, null);
                     bt_google.setCompoundDrawables(null, null, nomal, null);
                     bt_xiaozha.setCompoundDrawables(null, null, nomal, null);
                     bt_baofen.setCompoundDrawables(null, null, choose, null);
+                    bt_baofen2.setCompoundDrawables(null, null, nomal, null);
+                    bt_baofen3.setCompoundDrawables(null, null, nomal, null);
+                    bt_baofen4.setCompoundDrawables(null, null, nomal, null);
+                    bt_baofen5.setCompoundDrawables(null, null, nomal, null);
+                    bt_baofen6.setCompoundDrawables(null, null, nomal, null);
+                    bt_baofen7.setCompoundDrawables(null, null, nomal, null);
+                    bt_baofen8.setCompoundDrawables(null, null, nomal, null);
+                    break;
+                case R.id.bt_baofen3:
+                    System.out.println("---4444");
+                    bt_dlodlo.setCompoundDrawables(null, null, nomal, null);
+                    bt_google.setCompoundDrawables(null, null, nomal, null);
+                    bt_xiaozha.setCompoundDrawables(null, null, nomal, null);
+                    bt_baofen2.setCompoundDrawables(null, null, choose, null);
+                    bt_baofen.setCompoundDrawables(null, null, nomal, null);
+                    bt_baofen3.setCompoundDrawables(null, null, nomal, null);
+                    bt_baofen4.setCompoundDrawables(null, null, nomal, null);
+                    bt_baofen5.setCompoundDrawables(null, null, nomal, null);
+                    bt_baofen6.setCompoundDrawables(null, null, nomal, null);
+                    bt_baofen7.setCompoundDrawables(null, null, nomal, null);
+                    bt_baofen8.setCompoundDrawables(null, null, nomal, null);
+
+                    break;
+                case R.id.bt_baofen4:
+                    System.out.println("---4444");
+                    bt_dlodlo.setCompoundDrawables(null, null, nomal, null);
+                    bt_google.setCompoundDrawables(null, null, nomal, null);
+                    bt_xiaozha.setCompoundDrawables(null, null, nomal, null);
+                    bt_baofen3.setCompoundDrawables(null, null, choose, null);
+                    bt_baofen2.setCompoundDrawables(null, null, nomal, null);
+                    bt_baofen.setCompoundDrawables(null, null, nomal, null);
+                    bt_baofen4.setCompoundDrawables(null, null, nomal, null);
+                    bt_baofen5.setCompoundDrawables(null, null, nomal, null);
+                    bt_baofen6.setCompoundDrawables(null, null, nomal, null);
+                    bt_baofen7.setCompoundDrawables(null, null, nomal, null);
+                    bt_baofen8.setCompoundDrawables(null, null, nomal, null);
+                    break;
+                case R.id.bt_baofen5:
+                    System.out.println("---4444");
+                    bt_dlodlo.setCompoundDrawables(null, null, nomal, null);
+                    bt_google.setCompoundDrawables(null, null, nomal, null);
+                    bt_xiaozha.setCompoundDrawables(null, null, nomal, null);
+                    bt_baofen4.setCompoundDrawables(null, null, choose, null);
+                    bt_baofen2.setCompoundDrawables(null, null, nomal, null);
+                    bt_baofen3.setCompoundDrawables(null, null, nomal, null);
+                    bt_baofen.setCompoundDrawables(null, null, nomal, null);
+                    bt_baofen5.setCompoundDrawables(null, null, nomal, null);
+                    bt_baofen6.setCompoundDrawables(null, null, nomal, null);
+                    bt_baofen7.setCompoundDrawables(null, null, nomal, null);
+                    bt_baofen8.setCompoundDrawables(null, null, nomal, null);
+                    break;
+                case R.id.bt_baofen6:
+                    System.out.println("---4444");
+                    bt_dlodlo.setCompoundDrawables(null, null, nomal, null);
+                    bt_google.setCompoundDrawables(null, null, nomal, null);
+                    bt_xiaozha.setCompoundDrawables(null, null, nomal, null);
+                    bt_baofen5.setCompoundDrawables(null, null, choose, null);
+                    bt_baofen2.setCompoundDrawables(null, null, nomal, null);
+                    bt_baofen3.setCompoundDrawables(null, null, nomal, null);
+                    bt_baofen4.setCompoundDrawables(null, null, nomal, null);
+                    bt_baofen.setCompoundDrawables(null, null, nomal, null);
+                    bt_baofen6.setCompoundDrawables(null, null, nomal, null);
+                    bt_baofen7.setCompoundDrawables(null, null, nomal, null);
+                    bt_baofen8.setCompoundDrawables(null, null, nomal, null);
+                    break;
+                case R.id.bt_baofen7:
+                    System.out.println("---4444");
+                    bt_dlodlo.setCompoundDrawables(null, null, nomal, null);
+                    bt_google.setCompoundDrawables(null, null, nomal, null);
+                    bt_xiaozha.setCompoundDrawables(null, null, nomal, null);
+                    bt_baofen6.setCompoundDrawables(null, null, choose, null);
+                    bt_baofen2.setCompoundDrawables(null, null, nomal, null);
+                    bt_baofen3.setCompoundDrawables(null, null, nomal, null);
+                    bt_baofen4.setCompoundDrawables(null, null, nomal, null);
+                    bt_baofen5.setCompoundDrawables(null, null, nomal, null);
+                    bt_baofen.setCompoundDrawables(null, null, nomal, null);
+                    bt_baofen7.setCompoundDrawables(null, null, nomal, null);
+                    bt_baofen8.setCompoundDrawables(null, null, nomal, null);
+                    break;
+                case R.id.bt_baofen8:
+                    System.out.println("---4444");
+                    bt_dlodlo.setCompoundDrawables(null, null, nomal, null);
+                    bt_google.setCompoundDrawables(null, null, nomal, null);
+                    bt_xiaozha.setCompoundDrawables(null, null, nomal, null);
+                    bt_baofen7.setCompoundDrawables(null, null, choose, null);
+                    bt_baofen2.setCompoundDrawables(null, null, nomal, null);
+                    bt_baofen3.setCompoundDrawables(null, null, nomal, null);
+                    bt_baofen4.setCompoundDrawables(null, null, nomal, null);
+                    bt_baofen5.setCompoundDrawables(null, null, nomal, null);
+                    bt_baofen6.setCompoundDrawables(null, null, nomal, null);
+                    bt_baofen.setCompoundDrawables(null, null, nomal, null);
+                    bt_baofen8.setCompoundDrawables(null, null, nomal, null);
+                    break;
+                case R.id.bt_baofen9:
+                    System.out.println("---4444");
+                    bt_dlodlo.setCompoundDrawables(null, null, nomal, null);
+                    bt_google.setCompoundDrawables(null, null, nomal, null);
+                    bt_xiaozha.setCompoundDrawables(null, null, nomal, null);
+                    bt_baofen8.setCompoundDrawables(null, null, choose, null);
+                    bt_baofen2.setCompoundDrawables(null, null, nomal, null);
+                    bt_baofen3.setCompoundDrawables(null, null, nomal, null);
+                    bt_baofen4.setCompoundDrawables(null, null, nomal, null);
+                    bt_baofen5.setCompoundDrawables(null, null, nomal, null);
+                    bt_baofen6.setCompoundDrawables(null, null, nomal, null);
+                    bt_baofen7.setCompoundDrawables(null, null, nomal, null);
+                    bt_baofen.setCompoundDrawables(null, null, nomal, null);
                     break;
                 default:
                     break;
@@ -168,8 +295,23 @@ public class GlassesDialog extends Dialog {
                     return 2;
                 case R.id.bt_xiaozha:
                     return 3;
-                case R.id.bt_baofen:
+                case R.id.bt_baofen1:
                     return 4;
+                case R.id.bt_baofen3:
+                    return 5;
+                case R.id.bt_baofen4:
+                    return 6;
+                case R.id.bt_baofen5:
+                    return 7;
+                case R.id.bt_baofen6:
+                    return 8;
+                case R.id.bt_baofen7:
+                    return 9;
+                case R.id.bt_baofen8:
+                    return 10;
+                case R.id.bt_baofen9:
+                    return 11;
+
                 default:
                     return -1;
             }
@@ -187,8 +329,30 @@ public class GlassesDialog extends Dialog {
                     rg.check(R.id.bt_xiaozha);
                     break;
                 case 4:
-                    rg.check(R.id.bt_baofen);
+                    rg.check(R.id.bt_baofen1);
                     break;
+                case 5:
+                    rg.check(R.id.bt_baofen3);
+                    break;
+                case 6:
+                    rg.check(R.id.bt_baofen4);
+                    break;
+                case 7:
+                    rg.check(R.id.bt_baofen5);
+                    break;
+                case 8:
+                    rg.check(R.id.bt_baofen6);
+                    break;
+                case 9:
+                    rg.check(R.id.bt_baofen7);
+                    break;
+                case 10:
+                    rg.check(R.id.bt_baofen8);
+                    break;
+                case 11:
+                    rg.check(R.id.bt_baofen9);
+                    break;
+
             }
         }
 
@@ -196,6 +360,13 @@ public class GlassesDialog extends Dialog {
         RadioButton bt_google;
         RadioButton bt_xiaozha;
         RadioButton bt_baofen;
+        RadioButton bt_baofen2;
+        RadioButton bt_baofen3;
+        RadioButton bt_baofen4;
+        RadioButton bt_baofen5;
+        RadioButton bt_baofen6;
+        RadioButton bt_baofen7;
+        RadioButton bt_baofen8;
         RadioGroup rg;
         Window window;
 
@@ -211,7 +382,16 @@ public class GlassesDialog extends Dialog {
             bt_dlodlo = (RadioButton) layout.findViewById(R.id.bt_dlodlo);
             bt_google = (RadioButton) layout.findViewById(R.id.bt_google);
             bt_xiaozha = (RadioButton) layout.findViewById(R.id.bt_xiaozha);
-            bt_baofen = (RadioButton) layout.findViewById(R.id.bt_baofen);
+            bt_baofen = (RadioButton) layout.findViewById(R.id.bt_baofen1);
+            bt_baofen2 = (RadioButton) layout.findViewById(R.id.bt_baofen3);
+            bt_baofen3 = (RadioButton) layout.findViewById(R.id.bt_baofen4);
+            bt_baofen4 = (RadioButton) layout.findViewById(R.id.bt_baofen5);
+            bt_baofen5 = (RadioButton) layout.findViewById(R.id.bt_baofen6);
+            bt_baofen6 = (RadioButton) layout.findViewById(R.id.bt_baofen7);
+            bt_baofen7 = (RadioButton) layout.findViewById(R.id.bt_baofen8);
+            bt_baofen8 = (RadioButton) layout.findViewById(R.id.bt_baofen9);
+
+
             rg = (RadioGroup) layout.findViewById(R.id.rg);
             rg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                 @Override
@@ -264,7 +444,6 @@ public class GlassesDialog extends Dialog {
                             });
                 }
             } else {
-                // if no confirm button just set the visibility to GONE
                 layout.findViewById(R.id.negativeButton).setVisibility(
                         View.GONE);
             }
