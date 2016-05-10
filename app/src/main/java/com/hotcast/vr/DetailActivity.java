@@ -151,6 +151,7 @@ public class DetailActivity extends BaseActivity {
         mUrl = Constants.PLAY_URL;
         RequestParams params = new RequestParams();
         params.addBodyParameter("token", TokenUtils.createToken(this));
+        System.out.println("---token:"+TokenUtils.createToken(this));
         params.addBodyParameter("version", BaseApplication.version);
         params.addBodyParameter("platform", BaseApplication.platform);
         params.addBodyParameter("vid", details.getVideos().get(0).getVid());

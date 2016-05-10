@@ -47,7 +47,7 @@ public class UnityTools {
      */
     public static ArrayList<LocalVideoBean> getLocalVideo() {
         int minSize = 10;
-        if (context !=null){
+        if (context != null) {
             context = UnityPlayer.currentActivity;
         }
         final BitmapFactory.Options options = new BitmapFactory.Options();
@@ -63,7 +63,7 @@ public class UnityTools {
         cursor.moveToFirst();
         int fileNum = cursor.getCount();
         for (int counter = 0; counter < fileNum; counter++) {
-            long size=Long.parseLong(cursor.getString(1))/(1024*1024);
+            long size = Long.parseLong(cursor.getString(1)) / (1024 * 1024);
             String path = cursor.getString(0);
 //         如果视频大于最小大小并且路径不包含"/hostcast/vr/",则将此视频添加进list
             if (size > minSize && !path.contains("/hostcast/vr/")) {
@@ -91,9 +91,10 @@ public class UnityTools {
         ArrayList<LocalVideoBean> list = getLocalVideo();
         if (list.size() > 0) {
             for (int i = 0; i < list.size(); i++) {
-                json = json + "{" + "videoPath:" + "\"" + list.get(i).getVideoPath() + "\"" + "," + "videoName:" + "\"" + list.get(i).getVideoName() + "\"" + "},";
-                if (i == list.size()){
-                    json= json+"]";
+                if (i < list.size() - 1) {
+                    json = json + "{" + "\"videoPath\":" + "\"" + "file://"+list.get(i).getVideoPath() + "\"" + "," + "\"videoName\":" + "\"" + list.get(i).getVideoName() + "\"" + "},";
+                }else {
+                    json = json + "{" + "\"videoPath\":" + "\"" +"file://"+ list.get(i).getVideoPath() + "\"" + "," + "\"videoName\":" + "\"" + list.get(i).getVideoName() + "\"" + "}]";
                 }
             }
         }
@@ -191,16 +192,21 @@ public class UnityTools {
     }
 
     public static int getPlayTime(String mUri) {
+        System.out.println("---地址：" + mUri);
         String duration = "0";
         android.media.MediaMetadataRetriever mmr = new android.media.MediaMetadataRetriever();
         try {
             if (mUri != null) {
-                HashMap<String, String> headers = null;
-                if (headers == null) {
-                    headers = new HashMap<String, String>();
-                    headers.put("User-Agent", "Mozilla/5.0 (Linux; U; Android 4.4.2; zh-CN; MW-KW-001 Build/JRO03C) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 UCBrowser/1.0.0.001 U4/0.8.0 Mobile Safari/533.1");
+                if (mUri.contains("file://")) {
+                    mmr.setDataSource(mUri.replace("file://", ""));
+                } else {
+                    HashMap<String, String> headers = null;
+                    if (headers == null) {
+                        headers = new HashMap<String, String>();
+                        headers.put("User-Agent", "Mozilla/5.0 (Linux; U; Android 4.4.2; zh-CN; MW-KW-001 Build/JRO03C) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 UCBrowser/1.0.0.001 U4/0.8.0 Mobile Safari/533.1");
+                    }
+                    mmr.setDataSource(mUri, headers);
                 }
-                mmr.setDataSource(mUri, headers);
             } else {
                 //mmr.setDataSource(mFD, mOffset, mLength);
             }
@@ -213,6 +219,9 @@ public class UnityTools {
             System.out.println("---时长获取失败");
         } finally {
             mmr.release();
+            if (duration != null && Integer.parseInt(duration) < 100) {
+                duration = "0";
+            }
             return Integer.parseInt(duration);
         }
     }
@@ -250,6 +259,7 @@ public class UnityTools {
     static String imgurl;
     static String vid;
     static int qingxidu;
+
     public static String getPlatform() {
         String platform = SharedPreUtil.getInstance(UnityPlayer.currentActivity).select("platform", "android");
         System.out.println("---getPlatform:" + platform);
@@ -261,6 +271,7 @@ public class UnityTools {
         System.out.println("---getOpenangle:" + degree);
         return degree;
     }
+
     /**
      * 开始下载新的任务
      */
@@ -282,6 +293,10 @@ public class UnityTools {
         } else {
             System.out.println("---无网络" + imgurl);
         }
+    }
+
+    public static String getToken() {
+        return TokenUtils.createToken(UnityPlayer.currentActivity);
     }
 
     /**

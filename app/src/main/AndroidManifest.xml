@@ -98,7 +98,7 @@
                 android:value="true" />
         </activity>
         <activity
-            android:name=".PlayLocalActivity"
+            android:name=".PlayerVRActivityNew2"
             android:screenOrientation="landscape">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
