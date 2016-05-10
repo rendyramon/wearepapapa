@@ -47,7 +47,8 @@ public class UnityTools {
      */
     public static ArrayList<LocalVideoBean> getLocalVideo() {
         int minSize = 10;
-        if (context != null) {
+
+        if (context == null) {
             context = UnityPlayer.currentActivity;
         }
         final BitmapFactory.Options options = new BitmapFactory.Options();

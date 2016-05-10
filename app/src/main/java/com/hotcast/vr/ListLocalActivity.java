@@ -386,42 +386,44 @@ public class ListLocalActivity extends BaseActivity {
     long refreshTime = 0;
 
     public void adapterRefresh(String play_url, long current, long total) {
-        if (System.currentTimeMillis() - refreshTime > 1000) {
-            refreshTime = System.currentTimeMillis();
-            if (adapter != null) {
-                adapter.notifyDataSetChanged();
-            } else {
-                adapter = new HuancunAdapter();
-                lv.setAdapter(adapter);
+//        if (System.currentTimeMillis() - refreshTime > 1000) {
+//
+//        }
+        refreshTime = System.currentTimeMillis();
+        if (adapter != null) {
+            adapter.notifyDataSetChanged();
+        } else {
+            adapter = new HuancunAdapter();
+            lv.setAdapter(adapter);
+        }
+        int index = ids.indexOf(play_url);
+        LocalBean2 localBean = null;
+        try {
+            localBean = db.findById(LocalBean2.class, play_url);
+            if (localBean != null) {
+                localBean.setSpeed((current - localBean.getCurrent()) / 1024 + "");
+                localBean.setCurrent(current);
+                localBean.setPecent(((current * 100) / total) + "");
+                db.saveOrUpdate(localBean);
+                list.get(index).setSpeed(localBean.getSpeed());
+                list.get(index).setPecent(localBean.getPecent());
+                list.get(index).setCurrent(current);
             }
-            int index = ids.indexOf(play_url);
-            LocalBean2 localBean = null;
-            try {
-                localBean = db.findById(LocalBean2.class, play_url);
-                if (localBean != null) {
-                    localBean.setSpeed((current - localBean.getCurrent()) / 1024 + "");
-                    localBean.setCurrent(current);
-                    localBean.setPecent(((current * 100) / total) + "");
-                    db.saveOrUpdate(localBean);
-                    list.get(index).setSpeed(localBean.getSpeed());
-                    list.get(index).setPecent(localBean.getPecent());
-                    list.get(index).setCurrent(current);
-                }
-            } catch (DbException e) {
-                e.printStackTrace();
-            }
+        } catch (DbException e) {
+            e.printStackTrace();
         }
     }
 
     public void adapterRefresh() {
-        if (System.currentTimeMillis() - refreshTime > 1000) {
-            refreshTime = System.currentTimeMillis();
-            if (adapter != null) {
-                adapter.notifyDataSetChanged();
-            } else {
-                adapter = new HuancunAdapter();
-                lv.setAdapter(adapter);
-            }
+//        if (System.currentTimeMillis() - refreshTime > 1000) {
+//
+//        }
+        refreshTime = System.currentTimeMillis();
+        if (adapter != null) {
+            adapter.notifyDataSetChanged();
+        } else {
+            adapter = new HuancunAdapter();
+            lv.setAdapter(adapter);
         }
     }
 
