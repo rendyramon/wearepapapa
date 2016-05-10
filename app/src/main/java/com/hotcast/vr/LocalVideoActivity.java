@@ -107,12 +107,14 @@ public class LocalVideoActivity extends BaseActivity {
             long size=Long.parseLong(cursor.getString(1))/(1024*1024);
             if(size>10&& !path.contains("/hostcast/vr/")){
                 localBean2.setVideoPath(path);
-                localBean2.setVideoName(cursor.getString(3).replace(".mp4",""));
+                final String VideoName=cursor.getString(3);
+                localBean2.setVideoName(VideoName.replace(".mp4",""));
                 final long videoId=Long.parseLong(cursor.getString(2));
 
-                Bitmap bitmap = MediaStore.Video.Thumbnails.getThumbnail(contentResolver, videoId,
+                final Bitmap bitmap = MediaStore.Video.Thumbnails.getThumbnail(contentResolver, videoId,
                         MediaStore.Images.Thumbnails.MINI_KIND, options);
                 localBean2.setVideoImage(bitmap);
+                localBean2.setImagePath(BaseApplication.ImgCacheUrl+VideoName.replace(".mp4",".jpg"));
                 list.add(localBean2);
             }
 
