@@ -12,7 +12,6 @@ public class LocalVideoBean implements Serializable {
     private String videoName;
     private long videoSize;
     private Bitmap videoImage;
-
     public String getVideoPath() {
         return videoPath;
     }

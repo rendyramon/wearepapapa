@@ -32,6 +32,7 @@ import com.hotcast.vr.tools.Constants;
 import com.hotcast.vr.tools.L;
 import com.hotcast.vr.tools.SharedPreUtil;
 import com.hotcast.vr.tools.Utils;
+import com.hotcast.vr.u3d.UnityPlayerActivity;
 import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.RequestParams;
@@ -429,7 +430,7 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
     }
 
     public void startGoInUnity() {
-        Intent intent = new Intent(this, DvrUnityActivity.class);
+        Intent intent = new Intent(this, UnityPlayerActivity.class);
         if (!BaseApplication.info.versionName.equals(BaseApplication.version)) {
             BaseApplication.isUpdate = true;
             intent.putExtra("spec", this.sp.select("spec", ""));

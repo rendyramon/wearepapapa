@@ -8,12 +8,14 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 
 import com.google.gson.Gson;
 import com.hotcast.vr.BaseApplication;
 import com.hotcast.vr.PlayerVRActivityNew2;
+import com.hotcast.vr.bean.LocalBean;
 import com.hotcast.vr.bean.LocalBean2;
 import com.hotcast.vr.bean.LocalVideoBean;
 import com.hotcast.vr.download.DownLoadService;
@@ -21,6 +23,7 @@ import com.lidroid.xutils.DbUtils;
 import com.lidroid.xutils.exception.DbException;
 import com.unity3d.player.UnityPlayer;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -34,6 +37,7 @@ public class UnityTools {
     public static void startActivity(Context context) {
 
     }
+
     /**
      * 获取手机本地视频
      * content 上下文环境
@@ -41,7 +45,11 @@ public class UnityTools {
      *
      * @return LocalVideoBean的list集合；
      */
-    public static ArrayList<LocalVideoBean> getLocalVideo(Context context, int minSize) {
+    public static ArrayList<LocalVideoBean> getLocalVideo() {
+        int minSize = 10;
+        if (context !=null){
+            context = UnityPlayer.currentActivity;
+        }
         final BitmapFactory.Options options = new BitmapFactory.Options();
         options.inDither = false;
         switch (options.inPreferredConfig = Bitmap.Config.ARGB_8888) {
@@ -55,10 +63,10 @@ public class UnityTools {
         cursor.moveToFirst();
         int fileNum = cursor.getCount();
         for (int counter = 0; counter < fileNum; counter++) {
-            int size = Integer.parseInt(cursor.getString(1)) / (1024 * 1024);
+            long size=Long.parseLong(cursor.getString(1))/(1024*1024);
             String path = cursor.getString(0);
 //         如果视频大于最小大小并且路径不包含"/hostcast/vr/",则将此视频添加进list
-            if (size > minSize&&!path.contains("/hostcast/vr/")) {
+            if (size > minSize && !path.contains("/hostcast/vr/")) {
                 LocalVideoBean localVideoBean = new LocalVideoBean();
 
                 localVideoBean.setVideoPath(path);
@@ -78,10 +86,24 @@ public class UnityTools {
         return list;
     }
 
+    public static String getlocal() {
+        String json = "[";
+        ArrayList<LocalVideoBean> list = getLocalVideo();
+        if (list.size() > 0) {
+            for (int i = 0; i < list.size(); i++) {
+                json = json + "{" + "videoPath:" + "\"" + list.get(i).getVideoPath() + "\"" + "," + "videoName:" + "\"" + list.get(i).getVideoName() + "\"" + "},";
+                if (i == list.size()){
+                    json= json+"]";
+                }
+            }
+        }
+        return json;
+    }
+
     public static String[] getPlayUrl() {
         String[] var0 = new String[5];
-        String var1 = (String)SharedPreUtil.getInstance(UnityPlayer.currentActivity).select("sdplayUrl", "");
-        if(!var1.contains("http") && !var1.contains("file")) {
+        String var1 = (String) SharedPreUtil.getInstance(UnityPlayer.currentActivity).select("sdplayUrl", "");
+        if (!var1.contains("http") && !var1.contains("file")) {
             var1 = "file://" + var1;
         }
 
@@ -94,7 +116,7 @@ public class UnityTools {
     }
 
     public static int getSence() {
-        return ((Integer)SharedPreUtil.getInstance(UnityPlayer.currentActivity).select("sence", Integer.valueOf(0))).intValue();
+        return ((Integer) SharedPreUtil.getInstance(UnityPlayer.currentActivity).select("sence", Integer.valueOf(0))).intValue();
     }
 
     /**
@@ -228,7 +250,17 @@ public class UnityTools {
     static String imgurl;
     static String vid;
     static int qingxidu;
+    public static String getPlatform() {
+        String platform = SharedPreUtil.getInstance(UnityPlayer.currentActivity).select("platform", "android");
+        System.out.println("---getPlatform:" + platform);
+        return platform;
+    }
 
+    public static int getOpenangle() {
+        int degree = SharedPreUtil.getInstance(UnityPlayer.currentActivity).select("degree", 60);
+        System.out.println("---getOpenangle:" + degree);
+        return degree;
+    }
     /**
      * 开始下载新的任务
      */

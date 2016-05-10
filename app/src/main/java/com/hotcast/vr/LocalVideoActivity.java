@@ -104,7 +104,7 @@ public class LocalVideoActivity extends BaseActivity {
         for (int counter = 0; counter < fileNum; counter++) {
             final LocalVideoBean localBean2=new LocalVideoBean();
             final String path=cursor.getString(0);
-            int size=Integer.parseInt(cursor.getString(1))/(1024*1024);
+            long size=Long.parseLong(cursor.getString(1))/(1024*1024);
             if(path.endsWith(".mp4")&&size>10){
                 localBean2.setVideoPath(path);
                 localBean2.setVideoName(cursor.getString(3).replace(".mp4",""));

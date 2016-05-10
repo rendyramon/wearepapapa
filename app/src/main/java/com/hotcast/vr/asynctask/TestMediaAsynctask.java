@@ -65,8 +65,10 @@ public class TestMediaAsynctask extends AsyncTask<Integer, Integer, Bitmap> {
                 e.printStackTrace();
             } finally {
                 try {
-                    outputStream.close();
-                    in.close();
+                    if (outputStream != null) {
+                        outputStream.close();
+                        in.close();
+                    }
                     System.out.println("---结束");
 
                 } catch (IOException e) {
