@@ -96,7 +96,7 @@ public class LocalVideoActivity extends BaseActivity {
         final ContentResolver contentResolver = getContentResolver();
         String[] projection = new String[] {  MediaStore.Video.Media.DATA,MediaStore.Video.Media.SIZE ,MediaStore.Video.Media._ID,MediaStore.Video.Media.DISPLAY_NAME};
         final Cursor cursor = contentResolver.query(
-                MediaStore.Video.Media.EXTERNAL_CONTENT_URI, projection, null,
+                MediaStore.Video.Media.EXTERNAL_CONTENT_URI, projection, MediaStore.Video.Media.MIME_TYPE + "='video/mp4'",
                 null, MediaStore.Video.Media.DEFAULT_SORT_ORDER);
         cursor.moveToFirst();
         int fileNum = cursor.getCount();
@@ -105,20 +105,15 @@ public class LocalVideoActivity extends BaseActivity {
             final LocalVideoBean localBean2=new LocalVideoBean();
             final String path=cursor.getString(0);
             long size=Long.parseLong(cursor.getString(1))/(1024*1024);
-            if(path.endsWith(".mp4")&&size>10){
+            if(size>10&& !path.contains("/hostcast/vr/")){
                 localBean2.setVideoPath(path);
                 localBean2.setVideoName(cursor.getString(3).replace(".mp4",""));
                 final long videoId=Long.parseLong(cursor.getString(2));
-                list.add(localBean2);
-                new Thread(){
-                    @Override
-                    public void run() {
-                        Bitmap  bitmap = MediaStore.Video.Thumbnails.getThumbnail(contentResolver, videoId,
-                                MediaStore.Images.Thumbnails.MICRO_KIND, options);
-                      localBean2.setVideoImage(bitmap);
 
-                    }
-                }.start();
+                Bitmap bitmap = MediaStore.Video.Thumbnails.getThumbnail(contentResolver, videoId,
+                        MediaStore.Images.Thumbnails.MINI_KIND, options);
+                localBean2.setVideoImage(bitmap);
+                list.add(localBean2);
             }
 
             cursor.moveToNext();
@@ -172,7 +167,7 @@ public class LocalVideoActivity extends BaseActivity {
             holder.tv_huancun_downspeed.setVisibility(View.INVISIBLE);
             holder.tv_huancun_downpecent.setVisibility(View.INVISIBLE);
             if(bean.getVideoImage()!=null){
-                holder.iv_huancun_img.setScaleType(ImageView.ScaleType.FIT_XY);
+                holder.iv_huancun_img.setScaleType(ImageView.ScaleType.FIT_CENTER);
                 holder.iv_huancun_img.setImageBitmap(bean.getVideoImage());
             }
             return convertView;
