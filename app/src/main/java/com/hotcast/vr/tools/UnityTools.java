@@ -47,7 +47,7 @@ public class UnityTools {
      */
     public static ArrayList<LocalVideoBean> getLocalVideo() {
         int minSize = 10;
-        if (context !=null){
+        if (context == null) {
             context = UnityPlayer.currentActivity;
         }
         final BitmapFactory.Options options = new BitmapFactory.Options();
@@ -63,7 +63,7 @@ public class UnityTools {
         cursor.moveToFirst();
         int fileNum = cursor.getCount();
         for (int counter = 0; counter < fileNum; counter++) {
-            long size=Long.parseLong(cursor.getString(1))/(1024*1024);
+            long size = Long.parseLong(cursor.getString(1)) / (1024 * 1024);
             String path = cursor.getString(0);
 //         如果视频大于最小大小并且路径不包含"/hostcast/vr/",则将此视频添加进list
             if (size > minSize && !path.contains("/hostcast/vr/")) {
@@ -92,8 +92,8 @@ public class UnityTools {
         if (list.size() > 0) {
             for (int i = 0; i < list.size(); i++) {
                 json = json + "{" + "videoPath:" + "\"" + list.get(i).getVideoPath() + "\"" + "," + "videoName:" + "\"" + list.get(i).getVideoName() + "\"" + "},";
-                if (i == list.size()){
-                    json= json+"]";
+                if (i == list.size()) {
+                    json = json + "]";
                 }
             }
         }
@@ -250,6 +250,7 @@ public class UnityTools {
     static String imgurl;
     static String vid;
     static int qingxidu;
+
     public static String getPlatform() {
         String platform = SharedPreUtil.getInstance(UnityPlayer.currentActivity).select("platform", "android");
         System.out.println("---getPlatform:" + platform);
@@ -261,6 +262,7 @@ public class UnityTools {
         System.out.println("---getOpenangle:" + degree);
         return degree;
     }
+
     /**
      * 开始下载新的任务
      */
@@ -282,6 +284,10 @@ public class UnityTools {
         } else {
             System.out.println("---无网络" + imgurl);
         }
+    }
+
+    public static String getToken() {
+    return TokenUtils.createToken(UnityPlayer.currentActivity);
     }
 
     /**
