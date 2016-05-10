@@ -248,8 +248,8 @@ public class DetailActivity extends BaseActivity {
                 }
                 if (isdownLoad) {
                     BaseApplication.isDownLoad = true;
-                    tv_cache.setText("");
-                    ll_download.setFocusable(false);
+                    tv_cache.setText(getResources().getString(R.string.cached));
+                    ll_download.setEnabled(false);
                     setPlayUrl();
                 }
             }
@@ -428,7 +428,7 @@ public class DetailActivity extends BaseActivity {
                         System.out.println("---加入任务返回值：" + i);
                         System.out.println("---详情下载的信息：" + saveUrl + "---本地：" + BaseApplication.VedioCacheUrl + title + ".mp4");
                         showToast("已经加入下载列表");
-                        tv_cache.setText("已缓存");
+                        tv_cache.setText(getResources().getString(R.string.cached));
                         dialog.dismiss();
 
                         //设置你的操作事项
