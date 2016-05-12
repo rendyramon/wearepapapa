@@ -22,7 +22,7 @@ public class UnityReceiver extends BroadcastReceiver {
                 String pecnet = intent.getStringExtra("pecnet");
                 String speed = intent.getStringExtra("speed");
                 UnityPlayer.UnitySendMessage("HuanCunYe", "ShuaXin", url + "H_U_3D" + state + "H_U_3D" + pecnet + "H_U_3D" + speed);
-                break;
+            break;
         }
     }
 }

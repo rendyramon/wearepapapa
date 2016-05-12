@@ -28,13 +28,15 @@ import static android.graphics.BitmapFactory.*;
 /**
  * Created by liurongzhi on 2016/2/2.
  */
-public class LocalVideosAsynctask extends AsyncTask<Integer, Integer, List<LocalBean2>>{
+public class LocalVideosAsynctask extends AsyncTask<Integer, Integer, List<LocalBean2>> {
     Context context;
     private List<LocalBean2> dbList;
-    public LocalVideosAsynctask(Context context){
+
+    public LocalVideosAsynctask(Context context) {
         super();
         this.context = context;
     }
+
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
@@ -59,15 +61,15 @@ public class LocalVideosAsynctask extends AsyncTask<Integer, Integer, List<Local
         if (localNames != null) {
             int size = dbList.size();
             List<String> titles = new ArrayList<>();
-            for (LocalBean2 localBean : dbList){
+            for (LocalBean2 localBean : dbList) {
                 titles.add(localBean.getTitle());
             }
             for (int i = 0; i < localNames.length; i++) {
                 String title = localNames[i];
-                String title1 = title.replace(".mp4","");
+                String title1 = title.replace(".mp4", "");
 
                 if (size == 0) {
-                    System.out.println("---title1"+title1);
+                    System.out.println("---title1" + title1);
                     LocalBean2 localBean = new LocalBean2();
                     localBean.setLocalurl(BaseApplication.VedioCacheUrl + localNames[i]);
                     localBean.setCurState(3);
@@ -84,8 +86,8 @@ public class LocalVideosAsynctask extends AsyncTask<Integer, Integer, List<Local
                         e.printStackTrace();
                     }
                 } else {
-                    if (!titles.contains(title1)){
-                        System.out.println("---不为空title1"+title1);
+                    if (!titles.contains(title1)) {
+                        System.out.println("---不为空title1" + title1);
                         LocalBean2 localBean = new LocalBean2();
                         localBean.setLocalurl(BaseApplication.VedioCacheUrl + localNames[i]);
                         localBean.setCurState(3);
@@ -100,7 +102,7 @@ public class LocalVideosAsynctask extends AsyncTask<Integer, Integer, List<Local
                         } catch (DbException e) {
                             e.printStackTrace();
                         }
-                        System.out.println("--"+title);
+                        System.out.println("--" + title);
                     }
                 }
             }
@@ -110,28 +112,32 @@ public class LocalVideosAsynctask extends AsyncTask<Integer, Integer, List<Local
         return dbList;
     }
 
-    public void saveLocalVideoImage(){
+    public void saveLocalVideoImage() {
+        File file = new File(BaseApplication.ImgCacheUrl);
+        if (!file.exists()) {
+            file.mkdirs();
+        }
         final Options options = new Options();
         options.inDither = false;
         switch (options.inPreferredConfig = Bitmap.Config.ARGB_8888) {
         }
         final ContentResolver contentResolver = context.getContentResolver();
-        String[] projection = new String[] {  MediaStore.Video.Media.DATA,MediaStore.Video.Media.SIZE ,MediaStore.Video.Media._ID,MediaStore.Video.Media.DISPLAY_NAME};
+        String[] projection = new String[]{MediaStore.Video.Media.DATA, MediaStore.Video.Media.SIZE, MediaStore.Video.Media._ID, MediaStore.Video.Media.DISPLAY_NAME};
         final Cursor cursor = contentResolver.query(
                 MediaStore.Video.Media.EXTERNAL_CONTENT_URI, projection, MediaStore.Video.Media.MIME_TYPE + "='video/mp4'",
                 null, MediaStore.Video.Media.DEFAULT_SORT_ORDER);
         cursor.moveToFirst();
         int fileNum = cursor.getCount();
         for (int counter = 0; counter < fileNum; counter++) {
-            final String path=cursor.getString(0);
-            long size=Long.parseLong(cursor.getString(1))/(1024*1024);
-            if(size>10&& !path.contains("/hostcast/vr/")){
-                final String VideoName=cursor.getString(3);
-                final long videoId=Long.parseLong(cursor.getString(2));
+            final String path = cursor.getString(0);
+            long size = Long.parseLong(cursor.getString(1)) / (1024 * 1024);
+            if (size > 10 && !path.contains("/hostcast/vr/")) {
+                final String VideoName = cursor.getString(3);
+                final long videoId = Long.parseLong(cursor.getString(2));
 
                 final Bitmap bitmap = MediaStore.Video.Thumbnails.getThumbnail(contentResolver, videoId,
                         MediaStore.Images.Thumbnails.MINI_KIND, options);
-                saveBitmap(VideoName.replace(".mp4",".jpg"),bitmap);
+                saveBitmap(VideoName.replace(".mp4", ".jpg"), bitmap);
             }
 
             cursor.moveToNext();
@@ -140,7 +146,12 @@ public class LocalVideosAsynctask extends AsyncTask<Integer, Integer, List<Local
         cursor.close();
 
     }
-    public void saveBitmap(String name,Bitmap bitmap) {
+
+    public void saveBitmap(String name, Bitmap bitmap) {
+        if (bitmap == null) {
+            return;
+        }
+        System.out.println("---保存图片：" + name);
         File f = new File(BaseApplication.ImgCacheUrl, name);
         if (f.exists()) {
             return;

@@ -93,9 +93,9 @@ public class UnityTools {
         if (list.size() > 0) {
             for (int i = 0; i < list.size(); i++) {
                 if (i < list.size() - 1) {
-                    json = json + "{" + "\"videoPath\":" + "\"" + "file://"+list.get(i).getVideoPath() + "\"" + "," + "\"videoName\":" + "\"" + list.get(i).getVideoName() + "\"" + "},";
-                }else {
-                    json = json + "{" + "\"videoPath\":" + "\"" +"file://"+ list.get(i).getVideoPath() + "\"" + "," + "\"videoName\":" + "\"" + list.get(i).getVideoName() + "\"" + "}]";
+                    json = json + "{" + "\"videoPath\":" + "\"" + "file://" + list.get(i).getVideoPath() + "\"" + "," + "\"videoName\":" + "\"" + list.get(i).getVideoName() + "\"" + "," + "\"imagePath\":" + "\"" + BaseApplication.ImgCacheUrl + list.get(i).getVideoName() + ".jpg" + "\"" + "},";
+                } else {
+                    json = json + "{" + "\"videoPath\":" + "\"" + "file://" + list.get(i).getVideoPath() + "\"" + "," + "\"videoName\":" + "\"" + list.get(i).getVideoName() + "\"" + "," + "\"imagePath\":" + "\"" + BaseApplication.ImgCacheUrl + list.get(i).getVideoName() + ".jpg" + "\"" + "}]";
                 }
             }
         }
@@ -103,21 +103,28 @@ public class UnityTools {
     }
 
     public static String[] getPlayUrl() {
-        String[] var0 = new String[5];
-        String var1 = (String) SharedPreUtil.getInstance(UnityPlayer.currentActivity).select("sdplayUrl", "");
-        if (!var1.contains("http") && !var1.contains("file")) {
-            var1 = "file://" + var1;
+        String[] urls = new String[6];
+        String urlnow = SharedPreUtil.getInstance(UnityPlayer.currentActivity).select("nowplayUrl", "");
+        String qingxidu = SharedPreUtil.getInstance(UnityPlayer.currentActivity).select("qingxidu", "0");
+        String sdurl = SharedPreUtil.getInstance(UnityPlayer.currentActivity).select("sdurl", "");
+        String hdrul = SharedPreUtil.getInstance(UnityPlayer.currentActivity).select("hdrul", "");
+        String uhdrul = SharedPreUtil.getInstance(UnityPlayer.currentActivity).select("uhdrul", "");
+        String type = SharedPreUtil.getInstance(UnityPlayer.currentActivity).select("type", "");
+        if (!urlnow.contains("http") && !urlnow.contains("file") && urlnow.length() > 1) {
+            urlnow = "file://" + urlnow;
         }
-
-        var0[0] = var1;
-        var0[1] = "0";
-        var0[2] = var1;
-        var0[3] = "";
-        var0[4] = "";
-        return var0;
+        urls[0] = urlnow;
+        urls[1] = qingxidu;//0标，1 高。2超
+        urls[2] = sdurl;
+        urls[3] = hdrul;
+        urls[4] = uhdrul;
+        urls[5] = type;
+        System.out.println("---地址传递：" + urls[0] + "-11-" + urls[1] + "-11-" + urls[2] + "-11-" + urls[3] + "-11-" + urls[4] + "-11-" + urls[5]);
+        return urls;
     }
 
     public static int getSence() {
+        // 0:首页，1：vr播放器  2：vr互动播放器  3：3d互动播放器
         return ((Integer) SharedPreUtil.getInstance(UnityPlayer.currentActivity).select("sence", Integer.valueOf(0))).intValue();
     }
 
@@ -276,19 +283,33 @@ public class UnityTools {
     /**
      * 开始下载新的任务
      */
-    public static void startDownLoad(String u, String t, String i, String v, int q) {
+    public static void startDownLoad(String u, String t, String i, String v, int q, String type) {
         if (isNetworkConnected()) {
             url = u;
-            title = t;
             imgurl = i;
             vid = v;
             qingxidu = q;
+            System.out.println("---下载类别" + type);
             Intent intent = new Intent("startDownLoad");
+            if ("3d".equals(type)) {
+                intent.putExtra("type", "_3d_interaction");
+                title = t + "_3d_interaction";
+            } else if ("vr_interaction".equals(type)) {
+                intent.putExtra("type", "_vr_interaction");
+                title = t + "_vr_interaction";
+            } else if ("3d_noteraction".equals(type)) {
+                intent.putExtra("type", "_3d_noteraction");
+                title = t + "_3d_noteraction";
+            } else {
+                intent.putExtra("type", "");
+                title = t;
+            }
             intent.putExtra("url", url);
             intent.putExtra("imgurl", imgurl);
             intent.putExtra("title", title);
             intent.putExtra("vid", vid);
             intent.putExtra("qingxidu", qingxidu);
+
             UnityPlayer.currentActivity.sendBroadcast(intent);
             System.out.println("---点击了下载" + imgurl);
         } else {
