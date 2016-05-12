@@ -91,7 +91,7 @@ public class MainActivity_new extends BaseActivity {
     @Override
     public void init() {
         L.e("是否有网络" + isNetworkConnected(this) + "---" + isWifiConnected(this) + "---" + isMobileConnected(this));
-        if ((isWifiConnected(this) || isMobileConnected(this)) && isNetworkConnected(this)) {
+//        if ((isWifiConnected(this) || isMobileConnected(this)) && isNetworkConnected(this)) {
             nonet.setVisibility(View.GONE);
             content.setVisibility(View.VISIBLE);
             if (!TextUtils.isEmpty(spec)) {
@@ -168,18 +168,18 @@ public class MainActivity_new extends BaseActivity {
                     rl_agreement.setVisibility(View.GONE);
                 }
             });
-        } else {
-            nonet.setVisibility(View.VISIBLE);
-            content.setVisibility(View.GONE);
-            nonet.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-//                    getLayoutId();
-//                    getIntent();
-                    init();
-                }
-            });
-        }
+//        } else {
+//            nonet.setVisibility(View.VISIBLE);
+//            content.setVisibility(View.GONE);
+//            nonet.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+////                    getLayoutId();
+////                    getIntent();
+//                    init();
+//                }
+//            });
+//        }
     }
 
     private void clickTab(int index) {
