@@ -22,6 +22,7 @@ public class Constants {
     public static final String SENDMESSAG = SERVER_URL + "/member/sms/send-message";
     //    验证注册码
     public static final String CHECKMESSAG = SERVER_URL + "/member/sms/check-message";
+
     //    注册
     public static final String REGIST = SERVER_URL + "/member/user/register";
     //    登录

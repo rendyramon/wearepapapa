@@ -26,10 +26,12 @@ public class AndroidReceiver extends BroadcastReceiver {
                 String imgurl = intent.getStringExtra("imgurl");
                 String vid = intent.getStringExtra("vid");
                 int qingxidu = intent.getIntExtra("qingxidu", 1);
-
+                String type = intent.getStringExtra("type");//视频种类
+                System.out.println("---接收到的种类：" + type);
                 DbUtils db = DbUtils.create(context);
                 LocalBean2 localBean = new LocalBean2();
                 localBean.setTitle(title);
+                System.out.println("---接收到的title：" + title);
                 localBean.setImage(imgurl);
                 localBean.setId(url);
                 localBean.setVid(vid);

@@ -39,22 +39,12 @@
     <!-- 【必须】 信鸽SDK所需权限 -->
     <uses-permission android:name="android.permission.RESTART_PACKAGES" />
 
-    <uses-feature
-        android:name="android.hardware.sensor.accelerometer"
-        android:required="true" />
-    <uses-feature
-        android:name="android.hardware.sensor.gyroscope"
-        android:required="true" />
-    <uses-feature
-        android:name="android.hardware.touchscreen"
-        android:required="false" />
-    <uses-feature
-        android:name="android.hardware.touchscreen.multitouch"
-        android:required="false" />
-    <uses-feature
-        android:name="android.hardware.touchscreen.multitouch.distinct"
-        android:required="false" />
-
+    <!--<uses-feature-->
+        <!--android:name="android.hardware.sensor.accelerometer"-->
+        <!--android:required="true" />-->
+    <!--<uses-feature-->
+        <!--android:name="android.hardware.sensor.gyroscope"-->
+        <!--android:required="true" />-->
     <!-- <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT" /> -->
     <application
         android:name=".BaseApplication"
@@ -345,7 +335,7 @@
 
         </activity>
         <activity
-            android:name=".PlayerVRActivityNew"
+            android:name=".PlayerVRActivityNew2"
             android:screenOrientation="landscape" />
         <activity
             android:name=".VRcateActivity"
@@ -422,11 +412,6 @@
                 <action android:name="android.intent.action.DOWNLOAD_COMPLETE" />
             </intent-filter>
         </receiver>
-
-        <service
-            android:name=".services.DownLoadingService"
-            android:enabled="true"
-            android:exported="true" />
         <service android:name=".download.DownLoadService" />
         <service android:name=".services.FileCacheService" />
 
@@ -464,35 +449,6 @@
                 android:name="unityplayer.UnityActivity"
                 android:value="true" />
         </activity>
-
-        <!-- 多朵Activity-->
-        <activity
-            android:name="com.dlodlo.dvr.sdk.unity.DvrUnityActivity"
-            android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale"
-            android:label="@string/app_name"
-            android:launchMode="singleTask"
-            android:process=":Unity"
-            android:screenOrientation="landscape">
-            <intent-filter>
-                <!--<action android:name="android.intent.action.MAIN" />-->
-
-                <!--<category android:name="android.intent.category.LAUNCHER" />-->
-                <category android:name="com.dlodlo.intent.category.DVR" />
-                <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
-            </intent-filter>
-
-            <meta-data
-                android:name="unityplayer.UnityActivity"
-                android:value="true" />
-            <meta-data
-                android:name="unityplayer.ForwardNativeEventsToDalvik"
-                android:value="false" />
-        </activity>
-
-        <meta-data
-            android:name="IMMERSIVE_MODE"
-            android:value="true" />
-
         <service
             android:name=".services.UnityService"
             android:enabled="true"
@@ -503,11 +459,13 @@
             android:enabled="true"
             android:exported="true"></service>
     </application>
-    <!-- 多朵配置-->
-    <supports-screens
-        android:anyDensity="true"
-        android:largeScreens="true"
-        android:normalScreens="true"
-        android:smallScreens="true"
-        android:xlargeScreens="true" />
+    <uses-feature
+        android:name="android.hardware.touchscreen"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.touchscreen.multitouch"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.touchscreen.multitouch.distinct"
+        android:required="false" />
 </manifest>

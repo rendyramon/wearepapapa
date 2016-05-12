@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -17,6 +18,8 @@ import android.widget.TextView;
 
 import com.hotcast.vr.bean.LocalBean2;
 import com.hotcast.vr.bean.MediaDownloadManager;
+import com.hotcast.vr.tools.SharedPreUtil;
+import com.hotcast.vr.u3d.UnityPlayerActivity;
 import com.lidroid.xutils.BitmapUtils;
 import com.lidroid.xutils.DbUtils;
 import com.lidroid.xutils.exception.DbException;
@@ -167,18 +170,38 @@ public class ListLocalActivity extends BaseActivity {
                 File file;
                 if (localurl != null) {
                     file = new File(localurl);
+                    System.out.println("---文件存在" + editor);
                 } else {
                     file = new File(" ");
+                    System.out.println("---文件不存在");
                 }
                 if (!editor) {
-                    if (state == 3 && file.exists()) {
-                        Intent intent = new Intent(ListLocalActivity.this, PlayerVRActivityNew2.class);
-                        intent.putExtra("play_url", localurl);
-                        intent.putExtra("qingxidu", list.get(i).getQingxidu());
-                        intent.putExtra("title", list.get(i).getTitle());
-                        intent.putExtra("splite_screen", false);
+                    if (state == 3) {
+//                        Intent intent = new Intent(ListLocalActivity.this, PlayerVRActivityNew2.class);
+//                        intent.putExtra("play_url", localurl);
+//                        intent.putExtra("qingxidu", list.get(i).getQingxidu());
+//                        intent.putExtra("title", list.get(i).getTitle());
+//                        intent.putExtra("splite_screen", false);
+//                        ListLocalActivity.this.startActivity(intent);
+//                        System.out.println("---开始播放");
+//                        System.out.println("***播放：" + localurl);
+
+                        Intent intent = new Intent(ListLocalActivity.this, UnityPlayerActivity.class);
+                        SharedPreUtil.getInstance(ListLocalActivity.this).add("nowplayUrl", localurl);
+                        SharedPreUtil.getInstance(ListLocalActivity.this).add("qingxidu", list.get(i).getQingxidu() + "");
+                        SharedPreUtil.getInstance(ListLocalActivity.this).add("sdurl", "");
+                        SharedPreUtil.getInstance(ListLocalActivity.this).add("hdrul", "");
+                        SharedPreUtil.getInstance(ListLocalActivity.this).add("uhdrul", "");
+                        if (localurl.contains("_3d_interaction")) {
+                            SharedPreUtil.getInstance(ListLocalActivity.this).add("type", "3d");
+                        } else if (localurl.contains("_vr_interaction")) {
+                            SharedPreUtil.getInstance(ListLocalActivity.this).add("type", "vr_interaction");
+                        } else if (localurl.contains("_3d_noteraction")) {
+                            SharedPreUtil.getInstance(ListLocalActivity.this).add("type", "3d_noteraction");
+                        } else {
+                            SharedPreUtil.getInstance(ListLocalActivity.this).add("type", "vr");
+                        }
                         ListLocalActivity.this.startActivity(intent);
-                        System.out.println("***播放：" + localurl);
                     } else if (state == 2) {
                         LocalBean2 localBean = list.get(i);
                         System.out.println("***开始" + list.get(i).getUrl());

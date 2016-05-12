@@ -86,7 +86,11 @@ public class LocalBean2 implements Serializable {
     }
 
     public void setLocalurl(String localurl) {
-        this.localurl = localurl;
+        if (localurl.contains("file://")){
+            this.localurl =localurl;
+        }else {
+            this.localurl = "file://" + localurl;
+        }
     }
 
     public String getLocalurl() {

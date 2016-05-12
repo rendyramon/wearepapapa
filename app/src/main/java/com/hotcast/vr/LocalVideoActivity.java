@@ -20,15 +20,18 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import com.hotcast.vr.BaseActivity;
 import com.hotcast.vr.R;
 import com.hotcast.vr.bean.ListBean;
 import com.hotcast.vr.bean.LocalBean2;
 import com.hotcast.vr.bean.LocalVideoBean;
+import com.lidroid.xutils.BitmapUtils;
 import com.lidroid.xutils.exception.DbException;
 
 import java.io.File;
 import java.util.ArrayList;
+
 import butterknife.InjectView;
 import butterknife.OnClick;
 
@@ -45,17 +48,22 @@ public class LocalVideoActivity extends BaseActivity {
     @InjectView(R.id.bt_editor)
     Button bt_editor;
     ArrayList<LocalVideoBean> list;
+    BitmapUtils bitmapUtils;
+
     @OnClick(R.id.iv_return)
     void onReturn() {
         finish();
     }
+
     @Override
     public int getLayoutId() {
         return R.layout.view_local_list;
     }
+
     @Override
     public void init() {
-        list=new ArrayList<>();
+        bitmapUtils = new BitmapUtils(this);
+        list = new ArrayList<>();
         bt_editor.setVisibility(View.GONE);
         title.setText(getResources().getString(R.string.local_video));
         iv_return.setVisibility(View.VISIBLE);
@@ -73,28 +81,27 @@ public class LocalVideoActivity extends BaseActivity {
                 } else {
                     file = new File(" ");
                 }
-                    if (file.exists()) {
-                        Intent intent = new Intent(LocalVideoActivity.this, PlayerVRActivityNew2.class);
-                        intent.putExtra("play_url", localurl);
-                        intent.putExtra("qingxidu", 0);
-                        intent.putExtra("title", list.get(i).getVideoName());
-                        intent.putExtra("splite_screen", false);
-                        LocalVideoActivity.this.startActivity(intent);
-                        System.out.println("***播放：" + localurl);
-                    }
+                if (file.exists()) {
+                    Intent intent = new Intent(LocalVideoActivity.this, PlayerVRActivityNew2.class);
+                    intent.putExtra("play_url", localurl);
+                    intent.putExtra("qingxidu", 0);
+                    intent.putExtra("title", list.get(i).getVideoName());
+                    intent.putExtra("splite_screen", false);
+                    LocalVideoActivity.this.startActivity(intent);
+                    System.out.println("***播放：" + localurl);
+                }
             }
         });
     }
 
 
-
-    public void getLocalVideo(){
+    public void getLocalVideo() {
         final BitmapFactory.Options options = new BitmapFactory.Options();
         options.inDither = false;
         switch (options.inPreferredConfig = Bitmap.Config.ARGB_8888) {
         }
         final ContentResolver contentResolver = getContentResolver();
-        String[] projection = new String[] {  MediaStore.Video.Media.DATA,MediaStore.Video.Media.SIZE ,MediaStore.Video.Media._ID,MediaStore.Video.Media.DISPLAY_NAME};
+        String[] projection = new String[]{MediaStore.Video.Media.DATA, MediaStore.Video.Media.SIZE, MediaStore.Video.Media._ID, MediaStore.Video.Media.DISPLAY_NAME};
         final Cursor cursor = contentResolver.query(
                 MediaStore.Video.Media.EXTERNAL_CONTENT_URI, projection, MediaStore.Video.Media.MIME_TYPE + "='video/mp4'",
                 null, MediaStore.Video.Media.DEFAULT_SORT_ORDER);
@@ -102,17 +109,14 @@ public class LocalVideoActivity extends BaseActivity {
         int fileNum = cursor.getCount();
 
         for (int counter = 0; counter < fileNum; counter++) {
-            final LocalVideoBean localBean2=new LocalVideoBean();
-            final String path=cursor.getString(0);
-            long size=Long.parseLong(cursor.getString(1))/(1024*1024);
-            if(size>10&& !path.contains("/hostcast/vr/")){
+            final LocalVideoBean localBean2 = new LocalVideoBean();
+            final String path = cursor.getString(0);
+            long size = Long.parseLong(cursor.getString(1)) / (1024 * 1024);
+            if (size > 10 && !path.contains(BaseApplication.VedioCacheUrl)) {
                 localBean2.setVideoPath(path);
-                localBean2.setVideoName(cursor.getString(3).replace(".mp4",""));
-                final long videoId=Long.parseLong(cursor.getString(2));
-
-                Bitmap bitmap = MediaStore.Video.Thumbnails.getThumbnail(contentResolver, videoId,
-                        MediaStore.Images.Thumbnails.MINI_KIND, options);
-                localBean2.setVideoImage(bitmap);
+                final String VideoName = cursor.getString(3);
+                localBean2.setVideoName(VideoName.replace(".mp4", ""));
+                localBean2.setImagePath(BaseApplication.ImgCacheUrl + VideoName.replace(".mp4", ".jpg"));
                 list.add(localBean2);
             }
 
@@ -154,7 +158,7 @@ public class LocalVideoActivity extends BaseActivity {
                 holder.tv_huancun_downpecent = (TextView) convertView.findViewById(R.id.tv_huancun_downpecent);
                 holder.tv_huancun_downspeed = (TextView) convertView.findViewById(R.id.tv_huancun_downspeed);
                 holder.tv_huancun_moviename = (TextView) convertView.findViewById(R.id.tv_huancun_moviename);
-                holder.ll_huancun_down= (LinearLayout) convertView.findViewById(R.id.ll_huancun_down);
+                holder.ll_huancun_down = (LinearLayout) convertView.findViewById(R.id.ll_huancun_down);
                 convertView.setTag(holder);
             } else {
                 holder = (ViewHolder) convertView.getTag();
@@ -166,10 +170,8 @@ public class LocalVideoActivity extends BaseActivity {
             holder.iv_huancun_sd.setBackgroundResource(R.mipmap.huancun_sb);
             holder.tv_huancun_downspeed.setVisibility(View.INVISIBLE);
             holder.tv_huancun_downpecent.setVisibility(View.INVISIBLE);
-            if(bean.getVideoImage()!=null){
-                holder.iv_huancun_img.setScaleType(ImageView.ScaleType.FIT_CENTER);
-                holder.iv_huancun_img.setImageBitmap(bean.getVideoImage());
-            }
+            holder.iv_huancun_img.setScaleType(ImageView.ScaleType.FIT_CENTER);
+            bitmapUtils.display(holder.iv_huancun_img, bean.getImagePath());
             return convertView;
         }
     }
@@ -184,6 +186,7 @@ public class LocalVideoActivity extends BaseActivity {
         ImageView ib_delete;
         LinearLayout ll_huancun_down;
     }
+
     @Override
     public void getIntentData(Intent intent) {
 

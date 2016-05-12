@@ -438,7 +438,7 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
             intent.putExtra("newFeatures", this.sp.select("newFeatures", ""));
         }
         intent.putExtra("classifies", BaseApplication.channel);
-
+        SharedPreUtil.getInstance(this).add("nowplayUrl","");
         DownLoadService.unitydoing = true;
         startActivity(intent);
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
