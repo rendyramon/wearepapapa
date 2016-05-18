@@ -89,7 +89,7 @@ public class ClassifyView extends BaseView {
         iv_noNetCollect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                    getNetData();
+                getNetData();
             }
         });
         if (checkRequest()) {
