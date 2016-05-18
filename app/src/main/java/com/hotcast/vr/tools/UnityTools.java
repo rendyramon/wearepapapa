@@ -13,6 +13,7 @@ import android.provider.MediaStore;
 import android.text.TextUtils;
 
 import com.google.gson.Gson;
+import com.google.unity.GoogleUnityActivity;
 import com.hotcast.vr.BaseApplication;
 import com.hotcast.vr.PlayerVRActivityNew2;
 import com.hotcast.vr.bean.LocalBean;
@@ -80,7 +81,6 @@ public class UnityTools {
 
                 list.add(localVideoBean);
             }
-
             cursor.moveToNext();
         }
         cursor.close();
@@ -113,12 +113,12 @@ public class UnityTools {
         if (!urlnow.contains("http") && !urlnow.contains("file") && urlnow.length() > 1) {
             urlnow = "file://" + urlnow;
         }
-        urls[0] = urlnow;
+        urls[0] = urlnow; //默认的播放地址
         urls[1] = qingxidu;//0标，1 高。2超
         urls[2] = sdurl;
         urls[3] = hdrul;
         urls[4] = uhdrul;
-        urls[5] = type;
+        urls[5] = type;//
         System.out.println("---地址传递：" + urls[0] + "-11-" + urls[1] + "-11-" + urls[2] + "-11-" + urls[3] + "-11-" + urls[4] + "-11-" + urls[5]);
         return urls;
     }
@@ -167,36 +167,6 @@ public class UnityTools {
         } else {
             return l.getLocalurl();
         }
-    }
-
-    /**
-     * 播放影片
-     *
-     * @param play_url 播放地址
-     * @param title    影片标题
-     * @param flag     是否横屏
-     */
-    public static void startPlay(String play_url, String title, boolean flag) {
-        Intent intent = new Intent(context, PlayerVRActivityNew2.class);
-        intent.putExtra("play_url", play_url);
-        intent.putExtra("title", title);
-        intent.putExtra("splite_screen", flag);
-        context.startActivity(intent);
-    }
-
-    /**
-     * 播放影片
-     *
-     * @param play_url 播放地址
-     * @param title    影片标题
-     */
-    public static void startPlayLanscape(String play_url, String title) {
-        Intent intent = new Intent(context, PlayerVRActivityNew2.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.putExtra("play_url", play_url);
-        intent.putExtra("title", title);
-        intent.putExtra("splite_screen", true);
-        context.startActivity(intent);
     }
 
     public static int getPlayTime(String mUri) {

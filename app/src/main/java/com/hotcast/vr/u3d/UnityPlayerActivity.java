@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.Window;
+import android.widget.FrameLayout;
 
 import com.unity3d.player.UnityPlayer;
 

@@ -524,11 +524,13 @@ public class ListLocalActivity extends BaseActivity {
     }
 
     public boolean delete(String fileName, String img) {
+        System.out.println("---filename:" + fileName);
 
         //SDPATH目录路径，fileName文件名
 
-        File file = new File(fileName);
+        File file = new File(fileName.replace("file://",""));
         if (file == null || !file.exists() || file.isDirectory()) {
+            System.out.println("---文件没有删除" + fileName);
             return false;
         }
         file.delete();
