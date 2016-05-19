@@ -16,9 +16,11 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.dlodlo.dvr.sdk.unity.DvrUnityActivity;
 import com.hotcast.vr.bean.LocalBean2;
 import com.hotcast.vr.bean.MediaDownloadManager;
 import com.hotcast.vr.tools.SharedPreUtil;
+import com.hotcast.vr.tools.UnityTools;
 import com.hotcast.vr.u3d.UnityPlayerActivity;
 import com.lidroid.xutils.BitmapUtils;
 import com.lidroid.xutils.DbUtils;
@@ -186,7 +188,12 @@ public class ListLocalActivity extends BaseActivity {
 //                        System.out.println("---开始播放");
 //                        System.out.println("***播放：" + localurl);
 
-                        Intent intent = new Intent(ListLocalActivity.this, UnityPlayerActivity.class);
+                        Intent intent;
+                        if (UnityTools.getGlasses().equals("1")) {
+                            intent = new Intent(ListLocalActivity.this, DvrUnityActivity.class);
+                        } else {
+                            intent = new Intent(ListLocalActivity.this, UnityPlayerActivity.class);
+                        }
                         SharedPreUtil.getInstance(ListLocalActivity.this).add("nowplayUrl", localurl);
                         SharedPreUtil.getInstance(ListLocalActivity.this).add("qingxidu", list.get(i).getQingxidu() + "");
                         SharedPreUtil.getInstance(ListLocalActivity.this).add("sdurl", "");

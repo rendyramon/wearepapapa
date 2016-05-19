@@ -153,7 +153,8 @@
             android:layout_height="wrap_content"
             android:id="@+id/progressBar5"
             android:layout_alignBottom="@+id/tv_datetime"
-            android:layout_centerHorizontal="true" />
+            android:layout_centerHorizontal="true"
+            android:indeterminate="false" />
 
     </RelativeLayout>
 

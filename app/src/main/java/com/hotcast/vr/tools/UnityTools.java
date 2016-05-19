@@ -135,7 +135,7 @@ public class UnityTools {
      */
     public static String getGlasses() {
         SharedPreUtil sp = SharedPreUtil.getInstance(context);
-        int g = sp.select("glass", -1);
+        int g = sp.select("glass", 2);
         return g + "";
     }
 

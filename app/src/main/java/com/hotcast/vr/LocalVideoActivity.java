@@ -21,11 +21,15 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.dlodlo.dvr.sdk.unity.DvrUnityActivity;
 import com.hotcast.vr.BaseActivity;
 import com.hotcast.vr.R;
 import com.hotcast.vr.bean.ListBean;
 import com.hotcast.vr.bean.LocalBean2;
 import com.hotcast.vr.bean.LocalVideoBean;
+import com.hotcast.vr.tools.SharedPreUtil;
+import com.hotcast.vr.tools.UnityTools;
+import com.hotcast.vr.u3d.UnityPlayerActivity;
 import com.lidroid.xutils.BitmapUtils;
 import com.lidroid.xutils.exception.DbException;
 
@@ -81,14 +85,29 @@ public class LocalVideoActivity extends BaseActivity {
                 } else {
                     file = new File(" ");
                 }
+                System.out.println("==="+localurl);
                 if (file.exists()) {
-                    Intent intent = new Intent(LocalVideoActivity.this, PlayerVRActivityNew2.class);
-                    intent.putExtra("play_url", localurl);
-                    intent.putExtra("qingxidu", 0);
-                    intent.putExtra("title", list.get(i).getVideoName());
-                    intent.putExtra("splite_screen", false);
+                    Intent intent;
+                    if (UnityTools.getGlasses().equals("1")) {
+                        intent = new Intent(LocalVideoActivity.this, DvrUnityActivity.class);
+                    } else {
+                        intent = new Intent(LocalVideoActivity.this, UnityPlayerActivity.class);
+                    }
+                    SharedPreUtil.getInstance(LocalVideoActivity.this).add("nowplayUrl", "file://"+localurl);
+                    SharedPreUtil.getInstance(LocalVideoActivity.this).add("qingxidu", "0");
+                    SharedPreUtil.getInstance(LocalVideoActivity.this).add("sdurl", "");
+                    SharedPreUtil.getInstance(LocalVideoActivity.this).add("hdrul", "");
+                    SharedPreUtil.getInstance(LocalVideoActivity.this).add("uhdrul", "");
+                    if (localurl.contains("_3d_interaction")) {
+                        SharedPreUtil.getInstance(LocalVideoActivity.this).add("type", "3d");
+                    } else if (localurl.contains("_vr_interaction")) {
+                        SharedPreUtil.getInstance(LocalVideoActivity.this).add("type", "vr_interaction");
+                    } else if (localurl.contains("_3d_noteraction")) {
+                        SharedPreUtil.getInstance(LocalVideoActivity.this).add("type", "3d_noteraction");
+                    } else {
+                        SharedPreUtil.getInstance(LocalVideoActivity.this).add("type", "vr");
+                    }
                     LocalVideoActivity.this.startActivity(intent);
-                    System.out.println("***播放：" + localurl);
                 }
             }
         });

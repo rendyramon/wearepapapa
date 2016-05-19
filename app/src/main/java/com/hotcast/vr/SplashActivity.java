@@ -23,11 +23,14 @@ import com.hotcast.vr.bean.Update;
 import com.hotcast.vr.bean.Updater;
 import com.hotcast.vr.bean.User2;
 import com.hotcast.vr.bean.UserData;
+import com.hotcast.vr.download.DownLoadService;
 import com.hotcast.vr.tools.Constants;
 import com.hotcast.vr.tools.L;
 import com.hotcast.vr.tools.Md5Utils;
+import com.hotcast.vr.tools.SharedPreUtil;
 import com.hotcast.vr.tools.TokenUtils;
 import com.hotcast.vr.tools.Utils;
+import com.hotcast.vr.u3d.UnityPlayerActivity;
 import com.lidroid.xutils.DbUtils;
 import com.lidroid.xutils.exception.DbException;
 import com.lidroid.xutils.exception.HttpException;
@@ -282,6 +285,13 @@ public class SplashActivity extends BaseActivity {
 
     private void startJmp() {
         timer = new Timer();
+//        timer.schedule(new TimerTask() {
+//            @Override
+//            public void run() {
+//                System.out.println("---启动unity");
+//                startGoInUnity();
+//            }
+//        }, 2500);
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
@@ -291,10 +301,18 @@ public class SplashActivity extends BaseActivity {
 
                 } else {
                     vp_guide.setVisibility(View.GONE);
+                    System.out.println("---启动mainactivity");
                     pageJump();
                 }
             }
         }, 3000);
+    }
+
+    public void startGoInUnity() {
+        Intent intent = new Intent(this, UnityPlayerActivity.class);
+        SharedPreUtil.getInstance(this).add("nowplayUrl", "");
+        startActivity(intent);
+        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
     }
 
     private void pageJump() {
