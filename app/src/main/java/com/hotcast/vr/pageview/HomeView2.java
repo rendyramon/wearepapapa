@@ -161,7 +161,15 @@ public class HomeView2 extends BaseView {
 
     @Override
     public void init() {
+        iv_noNet= (ImageView) rootView.findViewById(R.id.iv_noNet);
 //        initListView();
+        iv_noNet.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getNetData();
+                getSubject();
+            }
+        });
         getNetData();
         getSubject();
         if (bFirstInit) {

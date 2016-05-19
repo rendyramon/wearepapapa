@@ -31,6 +31,7 @@ import com.hotcast.vr.pageview.LandscapeView;
 import com.hotcast.vr.tools.Constants;
 import com.hotcast.vr.tools.L;
 import com.hotcast.vr.tools.SharedPreUtil;
+import com.hotcast.vr.tools.UnityTools;
 import com.hotcast.vr.tools.Utils;
 import com.hotcast.vr.u3d.UnityPlayerActivity;
 import com.lidroid.xutils.HttpUtils;
@@ -430,15 +431,13 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
     }
 
     public void startGoInUnity() {
-        Intent intent = new Intent(this, UnityPlayerActivity.class);
-        if (!BaseApplication.info.versionName.equals(BaseApplication.version)) {
-            BaseApplication.isUpdate = true;
-            intent.putExtra("spec", this.sp.select("spec", ""));
-            intent.putExtra("is_force", this.sp.select("is_force", ""));
-            intent.putExtra("newFeatures", this.sp.select("newFeatures", ""));
+        Intent intent;
+        if (UnityTools.getGlasses().equals("1")) {
+            intent = new Intent(this, DvrUnityActivity.class);
+        } else {
+            intent = new Intent(this, UnityPlayerActivity.class);
         }
-        intent.putExtra("classifies", BaseApplication.channel);
-        SharedPreUtil.getInstance(this).add("nowplayUrl","");
+        SharedPreUtil.getInstance(this).add("nowplayUrl", "");
         DownLoadService.unitydoing = true;
         startActivity(intent);
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);

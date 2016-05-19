@@ -3,6 +3,7 @@ package com.hotcast.vr.pageview;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -30,6 +31,7 @@ import com.lidroid.xutils.http.RequestParams;
 import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.view.annotation.ViewInject;
+import com.melnykov.fab.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,10 +51,15 @@ public class ClassifyView extends BaseView {
     ImageView iv_noNet;
     @InjectView(R.id.tv_title)
     TextView title;
+    @ViewInject(R.id.iv_noNetCollect)
+    ImageView iv_noNetCollect;
+
+    @ViewInject(R.id.ll_container)
+    LinearLayout ll_container;
 
     private MyPagerAdapter adapter;
     private int curTabIndex = -1;
-
+    private FloatingActionButton fab_home;
 
     private List<ChanelData> classifies;
     private int size;
@@ -70,6 +77,21 @@ public class ClassifyView extends BaseView {
     }
     @Override
     public void init() {
+        fab_home = (FloatingActionButton) rootView.findViewById(R.id.fab_home);
+        fab_home.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                activity.clickVrMode();
+            }
+        });
+        iv_noNetCollect = (ImageView) rootView.findViewById(R.id.iv_noNetCollect);
+        ll_container= (LinearLayout) rootView.findViewById(R.id.ll_container);
+        iv_noNetCollect.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getNetData();
+            }
+        });
         if (checkRequest()) {
             getNetData();
         }
@@ -177,6 +199,8 @@ public class ClassifyView extends BaseView {
             public void onSuccess(ResponseInfo<String> responseInfo) {
                 bDataProcessed = true;
                 bProcessing = false;
+                ll_container.setVisibility(View.VISIBLE);
+                iv_noNetCollect.setVisibility(View.GONE);
                 L.e("---ClassifyView  responseInfo:" + responseInfo.result);
                 setViewData(responseInfo.result);
 
@@ -186,6 +210,7 @@ public class ClassifyView extends BaseView {
             public void onFailure(HttpException e, String s) {
                 bDataProcessed = false;
                 bProcessing = false;
+                activity.showToast(activity.getResources().getString(R.string.st_error));
                 System.out.println("---请求数据失败 classifyView");
             }
         });

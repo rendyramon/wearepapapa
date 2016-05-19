@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.Window;
+import android.widget.FrameLayout;
 
 import com.unity3d.player.UnityPlayer;
 
@@ -17,6 +18,7 @@ public class UnityPlayerActivity extends Activity
 	// Setup activity layout
 	@Override protected void onCreate (Bundle savedInstanceState)
 	{
+		System.out.println("---谷歌初始化了");
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 

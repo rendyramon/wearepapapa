@@ -146,19 +146,19 @@ public class BaseApplication extends Application {
 
     public static void getIMEI(Context context) {
         TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-        device = "123456789-777878";
-//        try {
-//            device = tm.getDeviceId();
-//        } catch (Exception e) {
-//            device = sp.getString("device", "");
-//            if (device == null || device.length() < 5) {
-//                device = System.currentTimeMillis() + (int) (Math.random() * 100) + "";
-//                System.out.println("---DeviceId获取失败:随机生成：" + device);
-//                sp.edit().putString("device", device).commit();
-//            } else {
-//
-//            }
-//        }
+//        device = "123456789-777878";
+        try {
+            device = tm.getDeviceId();
+        } catch (Exception e) {
+            device = sp.getString("device", "");
+            if (device == null || device.length() < 5) {
+                device = System.currentTimeMillis() + (int) (Math.random() * 100) + "";
+                System.out.println("---DeviceId获取失败:随机生成：" + device);
+                sp.edit().putString("device", device).commit();
+            } else {
+
+            }
+        }
     }
 
     private void initMeta() {

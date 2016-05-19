@@ -19,6 +19,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.dlodlo.dvr.sdk.unity.DvrUnityActivity;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.hotcast.vr.adapter.PinglunAdapter;
@@ -41,6 +42,7 @@ import com.hotcast.vr.tools.DensityUtils;
 import com.hotcast.vr.tools.L;
 import com.hotcast.vr.tools.SharedPreUtil;
 import com.hotcast.vr.tools.TokenUtils;
+import com.hotcast.vr.tools.UnityTools;
 import com.hotcast.vr.tools.Utils;
 import com.hotcast.vr.u3d.UnityPlayerActivity;
 import com.lidroid.xutils.BitmapUtils;
@@ -124,37 +126,39 @@ public class DetailActivity extends BaseActivity {
                 break;
             case R.id.play:
                 L.e("你点击了播放的按钮");
-                intent = new Intent(DetailActivity.this, UnityPlayerActivity.class);
-//                intent.putExtra("play_url", play_url);
-//                intent.putExtra("play", play);
-//                intent.putExtra("qingxidu", qingxidu);
-//                intent.putExtra("title", title);
-//                intent.putExtra("splite_screen", false);
-//                System.out.println("---play_url = " + play_url);
-                SharedPreUtil.getInstance(this).add("nowplayUrl", play_url);
-                SharedPreUtil.getInstance(this).add("qingxidu", qingxidu + "");
-                if (!TextUtils.isEmpty(play.getSd_url())) {
-                    SharedPreUtil.getInstance(this).add("sdurl", play.getSd_url());
-                } else {
-                    SharedPreUtil.getInstance(this).add("sdurl", "");
-                }
-                if (!TextUtils.isEmpty(play.getHd_url())) {
-                    SharedPreUtil.getInstance(this).add("hdrul", play.getHd_url());
-                } else {
-                    SharedPreUtil.getInstance(this).add("hdrul", "");
-                }
-                if (!TextUtils.isEmpty(play.getUhd_url())) {
-                    SharedPreUtil.getInstance(this).add("uhdrul", play.getUhd_url());
-                } else {
-                    SharedPreUtil.getInstance(this).add("uhdrul", "");
-                }
-                SharedPreUtil.getInstance(this).add("type", type);
-                DetailActivity.this.startActivity(intent);
+                startPlay(play_url, qingxidu, play);
                 break;
             case R.id.ll_share:
 //                TODO 弹出一个框放第三方的图标
                 break;
         }
+    }
+
+    private void startPlay(String play_url, int qingxidu, Play play) {
+        if (UnityTools.getGlasses().equals("1")) {
+            intent = new Intent(this, DvrUnityActivity.class);
+        } else {
+            intent = new Intent(this, UnityPlayerActivity.class);
+        }
+        SharedPreUtil.getInstance(this).add("nowplayUrl", play_url);//默认播放地址
+        SharedPreUtil.getInstance(this).add("qingxidu", qingxidu + "");//清晰度
+        if (!TextUtils.isEmpty(play.getSd_url())) {
+            SharedPreUtil.getInstance(this).add("sdurl", play.getSd_url());
+        } else {
+            SharedPreUtil.getInstance(this).add("sdurl", "");
+        }
+        if (!TextUtils.isEmpty(play.getHd_url())) {
+            SharedPreUtil.getInstance(this).add("hdrul", play.getHd_url());
+        } else {
+            SharedPreUtil.getInstance(this).add("hdrul", "");
+        }
+        if (!TextUtils.isEmpty(play.getUhd_url())) {
+            SharedPreUtil.getInstance(this).add("uhdrul", play.getUhd_url());
+        } else {
+            SharedPreUtil.getInstance(this).add("uhdrul", "");
+        }
+        SharedPreUtil.getInstance(this).add("type", type);
+        DetailActivity.this.startActivity(intent);
     }
 
     class ViewHolder {
@@ -166,14 +170,14 @@ public class DetailActivity extends BaseActivity {
     String media_id;
     Play play;
 
-    public void getplayUrl() {
+    public void getplayUrl(String vid, final boolean flag) {
         mUrl = Constants.PLAY_URL;
         RequestParams params = new RequestParams();
         params.addBodyParameter("token", TokenUtils.createToken(this));
         System.out.println("---token:" + TokenUtils.createToken(this));
         params.addBodyParameter("version", BaseApplication.version);
         params.addBodyParameter("platform", BaseApplication.platform);
-        params.addBodyParameter("vid", details.getVideos().get(0).getVid());
+        params.addBodyParameter("vid", vid);
         params.addBodyParameter("package", BaseApplication.packagename);
         params.addBodyParameter("app_version", BaseApplication.version);
         params.addBodyParameter("device", BaseApplication.device);
@@ -187,11 +191,63 @@ public class DetailActivity extends BaseActivity {
             @Override
             public void onSuccess(ResponseInfo<String> responseInfo) {
                 L.e("---DetailActivity responseInfo:" + responseInfo.result);
-                initPlayUrl(responseInfo.result);
+                if (flag) {
+                    initPlayUrl(responseInfo.result);
+                } else {
+                    progressBar5.setVisibility(View.GONE);
+                    if (!TextUtils.isEmpty(responseInfo.result)) {
+                        Play play = new Play();
+                        String play_url = "";
+                        int qingxidu = 1;
+                        PlayerBean playerBean = new Gson().fromJson(responseInfo.result, PlayerBean.class);
+                        if ("success".equals(playerBean.getMessage()) || 0 <= playerBean.getCode() && playerBean.getCode() <= 10) {
+                            play = playerBean.getData();
+                            type = play.getType();
+                            if (SharedPreUtil.getBooleanData(DetailActivity.this, "islow", false)) {
+                                if (!TextUtils.isEmpty(play.getSd_url())) {
+                                    play_url = play.getSd_url();
+                                    qingxidu = 0;
+                                    BaseApplication.clarityText = getResources().getString(R.string.standard_definition);
+                                } else if (!TextUtils.isEmpty(play.getHd_url())) {
+                                    play_url = play.getHd_url();
+                                    qingxidu = 1;
+                                    BaseApplication.clarityText = getResources().getString(R.string.hd);
+                                } else if (!TextUtils.isEmpty(play.getUhd_url())) {
+                                    play_url = play.getUhd_url();
+                                    qingxidu = 2;
+                                    BaseApplication.clarityText = getResources().getString(R.string.super_clear);
+                                }
+                            } else {
+                                if (!TextUtils.isEmpty(play.getHd_url())) {
+                                    play_url = play.getHd_url();
+                                    qingxidu = 1;
+                                    BaseApplication.clarityText = getResources().getString(R.string.hd);
+                                } else if (!TextUtils.isEmpty(play.getSd_url())) {
+                                    play_url = play.getSd_url();
+                                    qingxidu = 0;
+                                    BaseApplication.clarityText = getResources().getString(R.string.standard_definition);
+                                } else if (!TextUtils.isEmpty(play.getUhd_url())) {
+                                    play_url = play.getUhd_url();
+                                    qingxidu = 2;
+                                    BaseApplication.clarityText = getResources().getString(R.string.super_clear);
+                                }
+                            }
+                        }
+                        if (play_url.length() > 1) {
+                            startPlay(play_url, qingxidu, play);
+                        }
+                    }
+                }
+
             }
 
             @Override
             public void onFailure(HttpException e, String s) {
+                if (!flag) {
+                    progressBar5.setVisibility(View.GONE);
+                }
+
+                Toast.makeText(DetailActivity.this, "加载失败", Toast.LENGTH_SHORT).show();
                 L.e("DetailActivity onFailure ");
             }
         });
@@ -572,7 +628,7 @@ public class DetailActivity extends BaseActivity {
                 } else {
                     finish();
                 }
-                getplayUrl();
+                getplayUrl(details.getVideos().get(0).getVid(),true);
                 getRelationDate();
             }
         }
@@ -656,12 +712,14 @@ public class DetailActivity extends BaseActivity {
             iv_movie.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(context, PlayerVRActivityNew2.class);
-                    intent.putExtra("vid", relation.getVideos().get(0).getVid());
-//                    intent.putExtra("title", relation.getVname());
-                    intent.putExtra("splite_screen", false);
-                    MobclickAgent.onEvent(DetailActivity.this, "play_start");
-                    context.startActivity(intent);
+                    progressBar5.setVisibility(View.VISIBLE);
+                    getplayUrl(relation.getVideos().get(0).getVid(),false);
+//                    Intent intent = new Intent(context, PlayerVRActivityNew2.class);
+//                    intent.putExtra("vid", relation.getVideos().get(0).getVid());
+////                    intent.putExtra("title", relation.getVname());
+//                    intent.putExtra("splite_screen", false);
+//                    MobclickAgent.onEvent(DetailActivity.this, "play_start");
+//                    context.startActivity(intent);
 //                    System.out.println("---ItemView 条目被点击了---");
                 }
             });
