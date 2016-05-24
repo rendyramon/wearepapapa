@@ -513,7 +513,7 @@ public class LandscapeActivity_Second extends BaseActivity {
         });
 
         builder.setNegativeButton("取消",
-                new android.content.DialogInterface.OnClickListener() {
+                new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         System.out.println("---您选择取消");
                         dialog.dismiss();

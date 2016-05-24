@@ -57,19 +57,19 @@ public class ClassifyListView extends BaseView {
 
     @InjectView(R.id.list)
     PullToRefreshListView list;
-    @InjectView(R.id.fab)
-    FloatingActionButton fab;
+//    @InjectView(R.id.fab)
+//    FloatingActionButton fab;
     @InjectView(R.id.progressBar3)
     ProgressBar progressBar3;
     @ViewInject(R.id.iv_noNet)
     ImageView iv_noNet;
 
-    @OnClick(R.id.fab)
-    void clickfab(){
-        if (BaseApplication.classifies != null){
-            activity.clickVrMode();
-        }
-    }
+//    @OnClick(R.id.fab)
+//    void clickfab(){
+//        if (BaseApplication.classifies != null){
+//            activity.clickVrMode();
+//        }
+//    }
 
     private QuickAdapter adapter;
     private String requestUrl;
@@ -149,7 +149,7 @@ public class ClassifyListView extends BaseView {
             }
         });
 
-        fab.attachToListView(list.getRefreshableView());
+//        fab.attachToListView(list.getRefreshableView());
     }
 
     @Override

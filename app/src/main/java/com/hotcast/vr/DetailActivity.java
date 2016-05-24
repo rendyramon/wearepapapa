@@ -511,7 +511,7 @@ public class DetailActivity extends BaseActivity {
                 });
 
                 builder.setNegativeButton(getResources().getString(R.string.cancel),
-                        new android.content.DialogInterface.OnClickListener() {
+                        new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();
                             }

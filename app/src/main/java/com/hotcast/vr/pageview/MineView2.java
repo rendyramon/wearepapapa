@@ -200,7 +200,7 @@ public class MineView2 extends BaseView implements View.OnClickListener {
                     }
                 };
                 builder.setNegativeButton(activity.getResources().getString(R.string.cancel),
-                        new android.content.DialogInterface.OnClickListener() {
+                        new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 System.out.println("---您选择取消");
                                 dialog.dismiss();

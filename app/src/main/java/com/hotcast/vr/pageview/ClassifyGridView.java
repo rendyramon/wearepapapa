@@ -49,8 +49,8 @@ import butterknife.OnClick;
 public class ClassifyGridView extends BaseView {
     @InjectView(R.id.grid)
     PullToRefreshGridView grid;
-    @InjectView(R.id.fab)
-    FloatingActionButton fab;
+//    @InjectView(R.id.fab)
+//    FloatingActionButton fab;
     @InjectView(R.id.progressBar2)
     ProgressBar progressBar2;
     @ViewInject(R.id.iv_noNet)
@@ -64,12 +64,12 @@ public class ClassifyGridView extends BaseView {
 //    private int n = 1;
     private  int page = 1;
     private Intent intent;
-    @OnClick(R.id.fab)
-    void clickfab(){
-        if (BaseApplication.classifies != null){
-            activity.clickVrMode();
-        }
-    }
+//    @OnClick(R.id.fab)
+//    void clickfab(){
+//        if (BaseApplication.classifies != null){
+//            activity.clickVrMode();
+//        }
+//    }
     BitmapUtils bitmapUtils;
     public ClassifyGridView(BaseActivity activity,String channel_id){
         super(activity, R.layout.layout_classify_grid);
@@ -136,7 +136,7 @@ public class ClassifyGridView extends BaseView {
         });
 
         // init fab
-        fab.attachToListView(grid.getRefreshableView());
+//        fab.attachToListView(grid.getRefreshableView());
     }
 
     @Override

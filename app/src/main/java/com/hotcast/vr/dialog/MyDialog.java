@@ -35,8 +35,8 @@ public class MyDialog extends Dialog {
         private boolean isFocusable1;
         private boolean isFocusable2;
         private boolean isFocusable3;
-        private DialogInterface.OnClickListener positiveButtonClickListener;
-        private DialogInterface.OnClickListener negativeButtonClickListener;
+        private OnClickListener positiveButtonClickListener;
+        private OnClickListener negativeButtonClickListener;
         //        private
         public Builder(Context context) {
             this.context = context;
@@ -103,7 +103,7 @@ public class MyDialog extends Dialog {
          * @return
          */
         public Builder setPositiveButton(int positiveButtonText,
-                                         DialogInterface.OnClickListener listener) {
+                                         OnClickListener listener) {
             this.positiveButtonText = (String) context
                     .getText(positiveButtonText);
             this.positiveButtonClickListener = listener;
@@ -111,14 +111,14 @@ public class MyDialog extends Dialog {
         }
 
         public Builder setPositiveButton(String positiveButtonText,
-                                         DialogInterface.OnClickListener listener) {
+                                         OnClickListener listener) {
             this.positiveButtonText = positiveButtonText;
             this.positiveButtonClickListener = listener;
             return this;
         }
 
         public Builder setNegativeButton(int negativeButtonText,
-                                         DialogInterface.OnClickListener listener) {
+                                         OnClickListener listener) {
             this.negativeButtonText = (String) context
                     .getText(negativeButtonText);
             this.negativeButtonClickListener = listener;
@@ -126,7 +126,7 @@ public class MyDialog extends Dialog {
         }
 
         public Builder setNegativeButton(String negativeButtonText,
-                                         DialogInterface.OnClickListener listener) {
+                                         OnClickListener listener) {
             this.negativeButtonText = negativeButtonText;
             this.negativeButtonClickListener = listener;
             return this;

@@ -46,7 +46,7 @@ public class LocalCachelActivity extends BaseActivity {
     RelativeLayout container2;
 
     private LocalListView view1, view2;
-    private com.hotcast.vr.imageView.Image3DSwitchView img3D, img3D2;
+    private Image3DSwitchView img3D, img3D2;
     private String requestUrl;
     private int type;
     Spannable span;
@@ -767,7 +767,7 @@ public class LocalCachelActivity extends BaseActivity {
     private float mLastMotionX;
 
     private VelocityTracker mVelocityTracker;
-    public com.hotcast.vr.imageView.Image3DSwitchView.OnMovechangeListener changeLisener;
+    public Image3DSwitchView.OnMovechangeListener changeLisener;
 
     int downX, downY;
     int upX, upY;
