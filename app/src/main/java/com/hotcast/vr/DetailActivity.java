@@ -174,7 +174,6 @@ public class DetailActivity extends BaseActivity {
         mUrl = Constants.PLAY_URL;
         RequestParams params = new RequestParams();
         params.addBodyParameter("token", TokenUtils.createToken(this));
-        System.out.println("---token:" + TokenUtils.createToken(this));
         params.addBodyParameter("version", BaseApplication.version);
         params.addBodyParameter("platform", BaseApplication.platform);
         params.addBodyParameter("vid", vid);
@@ -190,7 +189,6 @@ public class DetailActivity extends BaseActivity {
 
             @Override
             public void onSuccess(ResponseInfo<String> responseInfo) {
-                L.e("---DetailActivity responseInfo:" + responseInfo.result);
                 if (flag) {
                     initPlayUrl(responseInfo.result);
                 } else {
@@ -246,7 +244,6 @@ public class DetailActivity extends BaseActivity {
                 if (!flag) {
                     progressBar5.setVisibility(View.GONE);
                 }
-
                 Toast.makeText(DetailActivity.this, "加载失败", Toast.LENGTH_SHORT).show();
                 L.e("DetailActivity onFailure ");
             }
@@ -278,7 +275,6 @@ public class DetailActivity extends BaseActivity {
                     download();
                     initCatch(play_url);
                     saveUrl = play_url;
-//                System.out.println("---play_url:" + play_url);
                     title = play.getTitle();
                 } else {
                     if (!TextUtils.isEmpty(play.getHd_url())) {
@@ -297,7 +293,6 @@ public class DetailActivity extends BaseActivity {
                     download();
                     initCatch(play_url);
                     saveUrl = play_url;
-//                System.out.println("---play_url:" + play_url);
                     title = play.getTitle();
                 }
 
@@ -316,7 +311,6 @@ public class DetailActivity extends BaseActivity {
             if (list != null && list.size() > 0) {
                 for (int i = 0; i < list.size(); i++) {
                     if (!TextUtils.isEmpty(play_url)) {
-                        System.out.println("---play_url:" + play_url + " -list.get(i).getUrl():" + list.get(i).getId());
                         if (play_url.equals(list.get(i).getUrl())) {
                             isdownLoad = true;
                         }
@@ -343,7 +337,6 @@ public class DetailActivity extends BaseActivity {
             if (bean != null) {
                 play_url = bean.getLocalurl();
                 qingxidu = bean.getQingxidu();
-                System.out.println("---playUrl = " + play_url);
             }
         } catch (DbException e) {
             e.printStackTrace();
@@ -454,7 +447,6 @@ public class DetailActivity extends BaseActivity {
                     System.out.println("---标清无");
                     builder.setIsFocusable1(false);
                 } else {
-                    System.out.println("---play.getSd_url() = " + play.getSd_url());
                     builder.setIsFocusable1(true);
                 }
                 if ((!TextUtils.isEmpty(play.getSd_url())) && SharedPreUtil.getBooleanData(DetailActivity.this, "islow", true)) {
@@ -462,17 +454,13 @@ public class DetailActivity extends BaseActivity {
                     builder.setIsFocusable3(false);
                 } else {
                     if (TextUtils.isEmpty(play.getHd_url())) {
-                        System.out.println("---高清无");
                         builder.setIsFocusable2(false);
                     } else {
-                        System.out.println("---play.getHd_url() = " + play.getHd_url());
                         builder.setIsFocusable2(true);
                     }
                     if (TextUtils.isEmpty(play.getUhd_url())) {
-                        System.out.println("---超清无");
                         builder.setIsFocusable3(false);
                     } else {
-                        System.out.println("---play.getUhd_url() = " + play.getUhd_url());
                         builder.setIsFocusable3(true);
                     }
                 }
@@ -510,14 +498,10 @@ public class DetailActivity extends BaseActivity {
                         localBean.setCurState(0);//還沒下載，準備下載
                         try {
                             db.saveOrUpdate(localBean);
-                            System.out.println("---新添加的Vid：" + db.findById(LocalBean2.class, saveUrl).getVid());
                         } catch (DbException e) {
-                            System.out.println("---新添加的失败：" + e);
                             e.printStackTrace();
                         }
                         int i = BaseApplication.downLoadManager.addTask(saveUrl, saveUrl, title + str + ".mp4", BaseApplication.VedioCacheUrl + title + str + ".mp4");
-                        System.out.println("---加入任务返回值：" + i);
-                        System.out.println("---详情下载的信息：" + saveUrl + "---本地：" + BaseApplication.VedioCacheUrl + title + ".mp4");
                         showToast("已经加入下载列表");
                         tv_cache.setText(getResources().getString(R.string.cached));
                         dialog.dismiss();
@@ -529,7 +513,6 @@ public class DetailActivity extends BaseActivity {
                 builder.setNegativeButton(getResources().getString(R.string.cancel),
                         new android.content.DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                System.out.println("---您选择取消");
                                 dialog.dismiss();
                             }
                         });
@@ -540,7 +523,6 @@ public class DetailActivity extends BaseActivity {
 
 
     private void initView() {
-        L.e("***填充数据***" + details.getId());
         bitmapUtils = new BitmapUtils(this);
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         if (details.getImage() != null) {
@@ -556,7 +538,6 @@ public class DetailActivity extends BaseActivity {
             tv_datetime.setText(getResources().getString(R.string.update_time) + date);
         }
         introduced.setText(details.getDesc());
-        System.out.println("---" + details.getUpdate_time() + "**" + details.getId() + "**" + Integer.parseInt(details.getUpdate_time()));
     }
 
     public void refreshPinglun() {
@@ -565,11 +546,9 @@ public class DetailActivity extends BaseActivity {
         params.height = DensityUtils.dp2px(this, 68 * datas.size() + 40);
         lv_pinglun.setLayoutParams(params);
         if (adapter == null) {
-            System.out.println("---33333");
             adapter = new PinglunAdapter(this, datas);
             lv_pinglun.setAdapter(adapter);
         } else {
-            System.out.println("---44444" + datas.size());
             lv_pinglun.setAdapter(adapter);
             adapter.setDatas(datas);
             adapter.notifyDataSetChanged();
@@ -584,7 +563,6 @@ public class DetailActivity extends BaseActivity {
         params.addBodyParameter("version", BaseApplication.version);
         params.addBodyParameter("platform", BaseApplication.platform);
         params.addBodyParameter("videoset_id", videoset_id);
-        System.out.println("---videoset_id = " + videoset_id);
         this.httpPost(requestUrl, params, new RequestCallBack<String>() {
             @Override
             public void onStart() {
@@ -593,7 +571,6 @@ public class DetailActivity extends BaseActivity {
 
             @Override
             public void onSuccess(ResponseInfo<String> responseInfo) {
-                L.e("****getNateDate *** DetailActivity responseInfo:" + responseInfo.result);
                 setViewData(responseInfo.result);
                 getPinglun(false, 10);
             }
@@ -628,7 +605,7 @@ public class DetailActivity extends BaseActivity {
                 } else {
                     finish();
                 }
-                getplayUrl(details.getVideos().get(0).getVid(),true);
+                getplayUrl(details.getVideos().get(0).getVid(), true);
                 getRelationDate();
             }
         }
@@ -637,8 +614,6 @@ public class DetailActivity extends BaseActivity {
     @Override
     public void getIntentData(Intent intent) {
         videoset_id = intent.getStringExtra("videoset_id");
-//        resource = intent.getStringExtra("resource");
-        L.e("---DetailActivity responseInfo:" + videoset_id);
     }
 
     List<Relation> relations;
@@ -650,17 +625,14 @@ public class DetailActivity extends BaseActivity {
         params.addBodyParameter("version", BaseApplication.version);
         params.addBodyParameter("platform", BaseApplication.platform);
         params.addBodyParameter("videoset_id", videoset_id);
-        System.out.println("---getRelationDate videoset_id = " + videoset_id);
         this.httpPost(url, params, new RequestCallBack<String>() {
             @Override
             public void onStart() {
                 super.onStart();
-                L.e("---getRelationDate onStart:");
             }
 
             @Override
             public void onSuccess(ResponseInfo<String> responseInfo) {
-                L.e("---getRelationDate responseInfo:" + responseInfo.result);
                 if (Utils.textIsNull(responseInfo.result)) {
                     return;
                 } else {
@@ -690,7 +662,6 @@ public class DetailActivity extends BaseActivity {
         params.setMargins(0, 0, 30, 0);
         for (int i = 0; i < relations.size(); i++) {
             final Relation relation = relations.get(i);
-//            System.out.println("---ItemView  roll---" + relation);
 
             LinearLayout contentView = (LinearLayout) View.inflate(context,
                     R.layout.item_item_img, null);
@@ -703,8 +674,6 @@ public class DetailActivity extends BaseActivity {
             }
             TextView tv_movie = (TextView) contentView
                     .findViewById(R.id.tv_movie);
-//            System.out.println("---relation = " + relation);
-//            System.out.println("---relation.getVideos() = " + relation.getVideos());
             if (relation != null && relation.getVideos().size() > 0) {
                 tv_movie.setText(relation.getVideos().get(0).getVname());
             }
@@ -713,14 +682,7 @@ public class DetailActivity extends BaseActivity {
                 @Override
                 public void onClick(View v) {
                     progressBar5.setVisibility(View.VISIBLE);
-                    getplayUrl(relation.getVideos().get(0).getVid(),false);
-//                    Intent intent = new Intent(context, PlayerVRActivityNew2.class);
-//                    intent.putExtra("vid", relation.getVideos().get(0).getVid());
-////                    intent.putExtra("title", relation.getVname());
-//                    intent.putExtra("splite_screen", false);
-//                    MobclickAgent.onEvent(DetailActivity.this, "play_start");
-//                    context.startActivity(intent);
-//                    System.out.println("---ItemView 条目被点击了---");
+                    getplayUrl(relation.getVideos().get(0).getVid(), false);
                 }
             });
             contentView.setLayoutParams(params);
@@ -777,40 +739,33 @@ public class DetailActivity extends BaseActivity {
 
             @Override
             public void onSuccess(ResponseInfo<String> responseInfo) {
-                System.out.println("---评论列表：" + responseInfo.result);
                 try {
                     JSONObject j = new JSONObject(responseInfo.result);
                     String data = j.getString("data");
                     total_page = 0;
                     if (data != null && !"".equals(data) && data.length() > 3) {
                         pinglun = new Gson().fromJson(data, Pinglun.class);
-                        System.out.println("---pinglun" + pinglun);
                         total_page = pinglun.getTotal_page();
                         count = pinglun.getCount();
                         if (datas == null) {
                             datas = new ArrayList<Pinglun.Data>();
                         }
-                        System.out.println("---data:" + pinglun.getData().size());
                         if (!isrefresh) {
                             tmp_page++;
                             datas.addAll(pinglun.getData());
                         } else {
                             datas = pinglun.getData();
-                            System.out.println("---data:" + datas.size());
                             if (adapter == null) {
                                 adapter = new PinglunAdapter(DetailActivity.this, datas);
                             }
                             adapter.setDatas(datas);
-                            System.out.println("---adapter:" + adapter.getDatas().size());
                         }
                         if (tmp_page <= 1) {
                             if (tmp_page == 0) {
                                 tmp_page = 1;
                             }
-                            System.out.println("---1111" + tmp_page);
                             initPinglun();
                         } else {
-                            System.out.println("---2222");
                             refreshPinglun();
                         }
                     }
@@ -847,7 +802,6 @@ public class DetailActivity extends BaseActivity {
         params.addBodyParameter("platform", BaseApplication.platform);
         UserData userData = new Gson().fromJson(sp.select("userData", ""), UserData.class);
         params.addBodyParameter("login_token", sp.select("login_token", ""));
-        System.out.println("---detail:login_token：" + sp.select("login_token", ""));
         params.addBodyParameter("content", et_pinglun.getText().toString().trim());
         params.addBodyParameter("videoset_id", videoset_id);
         this.httpPost(Constants.SENDPINGLUN, params, new RequestCallBack<String>() {
@@ -858,7 +812,6 @@ public class DetailActivity extends BaseActivity {
 
             @Override
             public void onSuccess(ResponseInfo<String> responseInfo) {
-                System.out.println("---评论结果：" + responseInfo.result);
                 try {
                     JSONObject j = new JSONObject(responseInfo.result);
                     String message = j.getString("message");
@@ -880,7 +833,6 @@ public class DetailActivity extends BaseActivity {
 
             @Override
             public void onFailure(HttpException e, String s) {
-                System.out.println(e + "---评论结果：" + s);
             }
         });
     }
