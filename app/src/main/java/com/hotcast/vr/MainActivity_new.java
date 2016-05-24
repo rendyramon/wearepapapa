@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.ScrollView;
 
+import com.dlodlo.utils.FileUtil;
 import com.hotcast.vr.adapter.MyPagerAdapter;
 import com.hotcast.vr.pageview.BaseView;
 import com.hotcast.vr.pageview.ClassifyView;
@@ -92,82 +93,82 @@ public class MainActivity_new extends BaseActivity {
     public void init() {
         L.e("是否有网络" + isNetworkConnected(this) + "---" + isWifiConnected(this) + "---" + isMobileConnected(this));
 //        if ((isWifiConnected(this) || isMobileConnected(this)) && isNetworkConnected(this)) {
-            nonet.setVisibility(View.GONE);
-            content.setVisibility(View.VISIBLE);
-            if (!TextUtils.isEmpty(spec)) {
-                updateAppManager = new UpdateAppManager(this, spec, is_force, newFeatures);
-                updateAppManager.checkUpdateInfo();
-            }
-            if (isFrist1) {
-                System.out.println("***显示免责声明同时提示用户操作帮助");
-                rl_agreement.setVisibility(View.VISIBLE);
+        nonet.setVisibility(View.GONE);
+        content.setVisibility(View.VISIBLE);
+        if (!TextUtils.isEmpty(spec)) {
+            updateAppManager = new UpdateAppManager(this, spec, is_force, newFeatures);
+            updateAppManager.checkUpdateInfo();
+        }
+        if (isFrist1) {
+            System.out.println("***显示免责声明同时提示用户操作帮助");
+            rl_agreement.setVisibility(View.VISIBLE);
 
-            }
-            view0 = new HomeView2(this);
-            view1 = new ClassifyView(this);
-            view2 = new MineView2(this, mhandler);
-            views[0] = view0;
-            views[1] = view1;
-            views[2] = view2;
+        }
+        view0 = new HomeView2(this);
+        view1 = new ClassifyView(this);
+        view2 = new MineView2(this, mhandler);
+        views[0] = view0;
+        views[1] = view1;
+        views[2] = view2;
 
-            vs = new ArrayList<View>();
-            vs.add(view0.getRootView());
-            vs.add(view1.getRootView());
-            vs.add(view2.getRootView());
-            adapter = new MyPagerAdapter(vs);
-            titles = new ArrayList<String>();
-            titles.add(getResources().getString(R.string.homw_title));
-            titles.add(getResources().getString(R.string.main_classify));
-            titles.add(getResources().getString(R.string.main_mine));
-            radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
-                    switch (checkedId) {
-                        case R.id.page_home:
+        vs = new ArrayList<View>();
+        vs.add(view0.getRootView());
+        vs.add(view1.getRootView());
+        vs.add(view2.getRootView());
+        adapter = new MyPagerAdapter(vs);
+        titles = new ArrayList<String>();
+        titles.add(getResources().getString(R.string.homw_title));
+        titles.add(getResources().getString(R.string.main_classify));
+        titles.add(getResources().getString(R.string.main_mine));
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
+                switch (checkedId) {
+                    case R.id.page_home:
 //                            title.setText(titles.get(0));
-                            content.setCurrentItem(0);
-                            break;
-                        case R.id.page_classify:
+                        content.setCurrentItem(0);
+                        break;
+                    case R.id.page_classify:
 //                            title.setText(titles.get(1));
-                            content.setCurrentItem(1);
-                            break;
-                        case R.id.page_mine:
+                        content.setCurrentItem(1);
+                        break;
+                    case R.id.page_mine:
 //                            title.setText(titles.get(2));
-                            content.setCurrentItem(2);
-                            break;
-                    }
+                        content.setCurrentItem(2);
+                        break;
                 }
-            });
-            radioGroup.check(R.id.page_home);
-            content.setAdapter(adapter);
+            }
+        });
+        radioGroup.check(R.id.page_home);
+        content.setAdapter(adapter);
 
-            content.setOnPageChangeListener(new LazyViewPager.OnPageChangeListener() {
-                @Override
-                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                    BaseView baseView = views[position];
-                    baseView.getRootView();
+        content.setOnPageChangeListener(new LazyViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                BaseView baseView = views[position];
+                baseView.getRootView();
 
-                }
+            }
 
-                @Override
-                public void onPageSelected(int position) {
+            @Override
+            public void onPageSelected(int position) {
 //                    title.setText(titles.get(position));
-                    radioGroup.check(checkedId[position]);
-                    clickTab(position);
-                }
+                radioGroup.check(checkedId[position]);
+                clickTab(position);
+            }
 
-                @Override
-                public void onPageScrollStateChanged(int state) {
+            @Override
+            public void onPageScrollStateChanged(int state) {
 
-                }
-            });
-            clickTab(0);
-            cb_agreement.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    rl_agreement.setVisibility(View.GONE);
-                }
-            });
+            }
+        });
+        clickTab(0);
+        cb_agreement.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                rl_agreement.setVisibility(View.GONE);
+            }
+        });
 //        } else {
 //            nonet.setVisibility(View.VISIBLE);
 //            content.setVisibility(View.GONE);
@@ -250,8 +251,7 @@ public class MainActivity_new extends BaseActivity {
                     break;
                 case 1:
                     Intent intent2 = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                    intent2.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(new File(Environment.
-                            getExternalStorageDirectory(), "vrhotcastuser.jpg")));
+                    intent2.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(new File(BaseApplication.ImgCacheUrl, "vrhotcastuser.jpg")));
                     startActivityForResult(intent2, CAMERA_REQUEST_CODE);
                     break;
                 case 2:
@@ -283,7 +283,7 @@ public class MainActivity_new extends BaseActivity {
                 break;
             case CAMERA_REQUEST_CODE:
                 Log.i(TAG, "相机, 开始裁剪");
-                File picture = new File(Environment.getExternalStorageDirectory()
+                File picture = new File(BaseApplication.ImgCacheUrl
                         + "/vrhotcastuser.jpg");
                 startCrop(Uri.fromFile(picture));
                 break;
@@ -353,7 +353,7 @@ public class MainActivity_new extends BaseActivity {
             params1.addBodyParameter("version", BaseApplication.version);
             params1.addBodyParameter("platform", BaseApplication.platform);
             params1.addBodyParameter("login_token", sp.select("login_token", ""));
-            params1.addBodyParameter("UploadAvatarForm[avatar]", new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + "vrhotcastuser.jpg"));
+            params1.addBodyParameter("UploadAvatarForm[avatar]", new File(BaseApplication.ImgCacheUrl + "vrhotcastuser.jpg"));
             HttpUtils httpUtils = new HttpUtils();
             httpUtils.send(HttpRequest.HttpMethod.POST, Constants.UPHEAD, params1, new RequestCallBack<String>() {
                 @Override
@@ -364,6 +364,7 @@ public class MainActivity_new extends BaseActivity {
                         JSONObject data = j.getJSONObject("data");
                         String avatar = data.getString("avatar_url");
                         sp.add("avatar", avatar);
+                        FileUtils.delFile(BaseApplication.ImgCacheUrl + "vrhotcastuser.jpg");
                         mhandler.sendEmptyMessage(2);
                     } catch (JSONException e) {
                         e.printStackTrace();
