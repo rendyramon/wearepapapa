@@ -104,7 +104,6 @@ public class BaseApplication extends Application {
         initMeta();
         sp = getSharedPreferences("cache_config", Context.MODE_PRIVATE);
         getIMEI(this);
-        System.out.println("--deviceID:" + device + "--" + Md5Utils.getMd5(device));
         packageManager = this.getPackageManager();
         try {
             info = packageManager.getPackageInfo(this.getPackageName(), 0);
@@ -115,7 +114,6 @@ public class BaseApplication extends Application {
         BaseApplication.version = info.versionName;
         BaseApplication.platform = getAppMetaData(this, "UMENG_CHANNEL");
         BaseApplication.packagename = info.packageName;
-        System.out.println("---" + getAppMetaData(this, "UMENG_CHANNEL"));
     }
 
     private class MyExecptionHandler implements Thread.UncaughtExceptionHandler {
@@ -153,7 +151,6 @@ public class BaseApplication extends Application {
             device = sp.getString("device", "");
             if (device == null || device.length() < 5) {
                 device = System.currentTimeMillis() + (int) (Math.random() * 100) + "";
-                System.out.println("---DeviceId获取失败:随机生成：" + device);
                 sp.edit().putString("device", device).commit();
             } else {
 
