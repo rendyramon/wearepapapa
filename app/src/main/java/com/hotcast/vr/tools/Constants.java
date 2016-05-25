@@ -1,6 +1,7 @@
 package com.hotcast.vr.tools;
 
 public class Constants {
+    public static final  String WX_APP_ID = "wxe14dd397a074cc6d";
     //    地址前缀
     public static final String SERVER_URL = "http://api2.hotcast.cn/index.php?r=";
     //    频道列表
