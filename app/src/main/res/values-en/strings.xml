@@ -111,5 +111,6 @@
     <string name="pull_to_refresh_no_more_data">Is over!</string>
     <string name="pull_to_refresh_network_error">Network not to force, please check the network</string>
 
-
+    <string name="OK">OK</string>
+    <string name="cancle">Cancle</string>
 </resources>
