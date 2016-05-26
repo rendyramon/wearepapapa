@@ -144,7 +144,7 @@ public class DetailActivity extends BaseActivity {
     Intent intent;
     private IWXAPI wxApi;
 
-    @OnClick({R.id.back, R.id.play,R.id.bt_qx,R.id.iv_weixin,R.id.iv_friends})
+    @OnClick({R.id.back, R.id.play, R.id.bt_qx, R.id.iv_weixin, R.id.iv_friends})
     void clickType(View v) {
         switch (v.getId()) {
             case R.id.back:
@@ -399,7 +399,7 @@ public class DetailActivity extends BaseActivity {
     @Override
     public void init() {
         //实例化微信分享
-        wxApi = WXAPIFactory.createWXAPI(DetailActivity.this,Constants.WX_APP_ID);
+        wxApi = WXAPIFactory.createWXAPI(DetailActivity.this, Constants.WX_APP_ID);
         wxApi.registerApp(Constants.WX_APP_ID);
 
         db = DbUtils.create(DetailActivity.this);
@@ -488,36 +488,32 @@ public class DetailActivity extends BaseActivity {
 
     /**
      * 得到本地或者网络上的bitmap url - 网络或者本地图片的绝对路径,比如:
-     *
+     * <p/>
      * A.网络路径: url="http://blog.foreverlove.us/girl2.png" ;
-     *
+     * <p/>
      * B.本地路径:url="file://mnt/sdcard/photo/image.png";
-     *
+     * <p/>
      * C.支持的图片格式 ,png, jpg,bmp,gif等等
      *
      * @param url
      * @return
      */
-    public static Bitmap GetLocalOrNetBitmap(String url)
-    {
+    public static Bitmap GetLocalOrNetBitmap(String url) {
         Bitmap bitmap = null;
         InputStream in = null;
         BufferedOutputStream out = null;
-        try
-        {
-            in = new BufferedInputStream(new URL(url).openStream(), 2*1024);
+        try {
+            in = new BufferedInputStream(new URL(url).openStream(), 2 * 1024);
             final ByteArrayOutputStream dataStream = new ByteArrayOutputStream();
-            out = new BufferedOutputStream(dataStream, 2*1024);
+            out = new BufferedOutputStream(dataStream, 2 * 1024);
             copy(in, out);
             out.flush();
             byte[] data = dataStream.toByteArray();
             bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
 //            data = null;
-            System.out.println("---bitmap="+bitmap);
+            System.out.println("---bitmap=" + bitmap);
             return bitmap;
-        }
-        catch (IOException e)
-        {
+        } catch (IOException e) {
             e.printStackTrace();
             return null;
         }
@@ -526,41 +522,53 @@ public class DetailActivity extends BaseActivity {
 
     private static void copy(InputStream in, OutputStream out)
             throws IOException {
-        byte[] b = new byte[2*1024];
+        byte[] b = new byte[2 * 1024];
         int read;
         while ((read = in.read(b)) != -1) {
             out.write(b, 0, read);
         }
     }
 
-
+    Bitmap bitmap;
     /**
      * 微信分享 （这里仅提供一个分享网页的示例，其它请参看官网示例代码）
+     *
      * @param flag(0:分享到微信好友，1：分享到微信朋友圈)
      */
     WXWebpageObject webpage;
     WXMediaMessage msg;
-    private void wechatShare(int flag){
-        webpage = new WXWebpageObject();
 
-        webpage.webpageUrl = "http://m.hotcast.cn/Home/Play/play?set_id="+videoset_id;
-        msg = new WXMediaMessage(webpage);
-        msg.title = details.getTitle();
-        msg.description =details.getDesc();
-        //这里替换一张自己工程里的图片资源
-        Bitmap bitmap =BitmapFactory.decodeResource(getResources(),R.drawable.ic_launcher) ;
-//new BtAsyncTask(details.getImage().get(0),flag).execute();
-        msg.setThumbImage(bitmap);
-        SendMessageToWX.Req req = new SendMessageToWX.Req();
-        req.transaction = String.valueOf(System.currentTimeMillis());
-        req.message = msg;
-        req.scene = flag==0?SendMessageToWX.Req.WXSceneSession:SendMessageToWX.Req.WXSceneTimeline;
-        wxApi.sendReq(req);
+    private void wechatShare(final int f) {
+        new Thread(new Runnable() {
+            int flag = f;
+            @Override
+            public void run() {
+                bitmap = GetLocalOrNetBitmap(details.getImage().get(0));
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        webpage = new WXWebpageObject();
 
+                        webpage.webpageUrl = "http://m.hotcast.cn/Home/Play/play?set_id=" + videoset_id;
+                        msg = new WXMediaMessage(webpage);
+                        msg.title = details.getTitle();
+                        msg.description = details.getDesc();
+                        //这里替换一张自己工程里的图片资源
+                        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher);
+                        msg.setThumbImage(bitmap);
+                        SendMessageToWX.Req req = new SendMessageToWX.Req();
+                        req.transaction = String.valueOf(System.currentTimeMillis());
+                        req.message = msg;
+                        req.scene = flag == 0 ? SendMessageToWX.Req.WXSceneSession : SendMessageToWX.Req.WXSceneTimeline;
+                        wxApi.sendReq(req);
+                    }
+                });
+            }
+        }).start();
     }
 
 
-    private void share(){
+    private void share() {
         ll_share.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -694,7 +702,7 @@ public class DetailActivity extends BaseActivity {
         bitmapUtils = new BitmapUtils(this);
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         if (details.getImage() != null) {
-            System.out.println("---details.getImage().get(0)="+details.getImage().get(0));
+            System.out.println("---details.getImage().get(0)=" + details.getImage().get(0));
             bitmapUtils.display(rl_movieimg, details.getImage().get(0));
         }
         if (details.getTitle() != null) {
