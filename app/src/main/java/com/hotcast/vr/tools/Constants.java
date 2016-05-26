@@ -3,23 +3,23 @@ package com.hotcast.vr.tools;
 public class Constants {
     public static final  String WX_APP_ID = "wxe14dd397a074cc6d";
     //    地址前缀
-//    public static final String SERVER_URL = "http://api2.hotcast.cn/index.php?r=";
-    public static final String SERVER_URL = "http://test.hotcast.cn/index.php?r=";
+    public static final String SERVER_URL = "http://api2.hotcast.cn/index.php?r=";
+//    public static final String SERVER_URL = "http://test.hotcast.cn/index.php?r=";
     //    频道列表
-    public static final String CHANNEL_LIST = SERVER_URL + "/app/channel/get-list";
+    public static final String CHANNEL_LIST = SERVER_URL + "/app2/channel/get-list";
     //    频道下节目集列表
-    public static final String PROGRAM_LIST = SERVER_URL + "/app/channel/get-video";
+    public static final String PROGRAM_LIST = SERVER_URL + "/app2/channel/get-video";
     //    节目详情
-    public static final String DETAIL = SERVER_URL + "/app/videoset/get-detail";
+    public static final String DETAIL = SERVER_URL + "/app2/videoset/get-detail";
     //    播放地址
-    public static final String PLAY_URL = SERVER_URL + "/app/videoset/play";
+    public static final String PLAY_URL = SERVER_URL + "/app2/videoset/play";
     //    轮播推荐位
-    public static final String ROLL = SERVER_URL + "/app/recommend/get-roll";
+    public static final String ROLL = SERVER_URL + "/app2/recommend/get-roll";
     //    专题推荐位
-    public static final String SPECIAL = SERVER_URL + "/app/recommend/get-subjects";
+    public static final String SPECIAL = SERVER_URL + "/app2/recommend/get-subjects";
     //    版本更新接口
-    public static final String URL_UPDATE = SERVER_URL + "/app/info/update";
-    public static final String RELATION = SERVER_URL + "/app/videoset/get-relation";
+    public static final String URL_UPDATE = SERVER_URL + "/app2/info/update";
+    public static final String RELATION = SERVER_URL + "/app2/videoset/get-relation";
     //  发送短信
     public static final String SENDMESSAG = SERVER_URL + "/member/sms/send-message";
     //    验证注册码
