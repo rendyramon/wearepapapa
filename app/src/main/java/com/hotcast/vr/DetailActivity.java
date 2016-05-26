@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -45,6 +47,7 @@ import com.hotcast.vr.tools.TokenUtils;
 import com.hotcast.vr.tools.UnityTools;
 import com.hotcast.vr.tools.Utils;
 import com.hotcast.vr.u3d.UnityPlayerActivity;
+import com.hotcast.vr.wxapi.WXEntryActiviy;
 import com.lidroid.xutils.BitmapUtils;
 import com.lidroid.xutils.DbUtils;
 import com.lidroid.xutils.exception.DbException;
@@ -52,11 +55,22 @@ import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.RequestParams;
 import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
+import com.tencent.mm.sdk.modelmsg.SendMessageToWX;
+import com.tencent.mm.sdk.modelmsg.WXMediaMessage;
+import com.tencent.mm.sdk.modelmsg.WXWebpageObject;
+import com.tencent.mm.sdk.openapi.IWXAPI;
+import com.tencent.mm.sdk.openapi.WXAPIFactory;
 import com.umeng.analytics.MobclickAgent;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -87,6 +101,18 @@ public class DetailActivity extends BaseActivity {
     LinearLayout ll_correlation;
     @InjectView(R.id.ll_download)
     LinearLayout ll_download;
+    @InjectView(R.id.ll_share)
+    LinearLayout ll_share;
+
+    @InjectView(R.id.rl_share)
+    RelativeLayout rl_share;
+    @InjectView(R.id.iv_weixin)
+    ImageView iv_weixin;
+    @InjectView(R.id.iv_friends)
+    ImageView iv_friends;
+    @InjectView(R.id.bt_qx)
+    Button bt_qx;
+
     @InjectView(R.id.progressBar5)
     ProgressBar progressBar5;
     @InjectView(R.id.et_pinglun)
@@ -116,20 +142,29 @@ public class DetailActivity extends BaseActivity {
     String type;
     ViewHolder holder;
     Intent intent;
+    private IWXAPI wxApi;
 
-
-    @OnClick({R.id.back, R.id.play, R.id.ll_share})
+    @OnClick({R.id.back, R.id.play,R.id.bt_qx,R.id.iv_weixin,R.id.iv_friends})
     void clickType(View v) {
         switch (v.getId()) {
             case R.id.back:
                 finish();
                 break;
             case R.id.play:
-                L.e("你点击了播放的按钮");
+                L.e("---你点击了播放的按钮");
                 startPlay(play_url, qingxidu, play);
                 break;
-            case R.id.ll_share:
-//                TODO 弹出一个框放第三方的图标
+            case R.id.bt_qx:
+                L.e("---你点击了取消按钮");
+                rl_share.setVisibility(View.GONE);
+                break;
+            case R.id.iv_weixin:
+                L.e("---你点击了分享到微信");
+                wechatShare(0);//分享到微信好友
+                break;
+            case R.id.iv_friends:
+                L.e("---你点击了分享到朋友圈");
+                wechatShare(1);//分享到微信好友
                 break;
         }
     }
@@ -361,6 +396,9 @@ public class DetailActivity extends BaseActivity {
 
     @Override
     public void init() {
+        //实例化微信分享
+        wxApi = WXAPIFactory.createWXAPI(DetailActivity.this,Constants.WX_APP_ID);
+        wxApi.registerApp(Constants.WX_APP_ID);
 
         db = DbUtils.create(DetailActivity.this);
         requestUrl = Constants.DETAIL;
@@ -400,6 +438,60 @@ public class DetailActivity extends BaseActivity {
             }
         });
 
+    }
+    /**
+     * @param urlpath
+     * @return Bitmap
+     * 根据图片url获取图片对象
+     */
+    public static Bitmap getBitMBitmap(String urlpath) {
+        Bitmap map = null;
+        try {
+            URL url = new URL(urlpath);
+            URLConnection conn = url.openConnection();
+            conn.connect();
+            InputStream in;
+            in = conn.getInputStream();
+            map = BitmapFactory.decodeStream(in);
+            // TODO Auto-generated catch block
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return map;
+    }
+    /**
+     * 微信分享 （这里仅提供一个分享网页的示例，其它请参看官网示例代码）
+     * @param flag(0:分享到微信好友，1：分享到微信朋友圈)
+     */
+    private void wechatShare(int flag){
+        WXWebpageObject webpage = new WXWebpageObject();
+
+        webpage.webpageUrl = "http://m.hotcast.cn/Home/Play/play?set_id="+videoset_id;
+        WXMediaMessage msg = new WXMediaMessage(webpage);
+        msg.title = details.getTitle();
+        msg.description =details.getDesc();
+        //这里替换一张自己工程里的图片资源
+//        Bitmap thumb = BitmapFactory.decodeResource(getResources(),details.getImage().get(0));
+
+
+//            msg.setThumbImage(getBitMBitmap(details.getImage().get(0)));
+
+        SendMessageToWX.Req req = new SendMessageToWX.Req();
+        req.transaction = String.valueOf(System.currentTimeMillis());
+        req.message = msg;
+        req.scene = flag==0?SendMessageToWX.Req.WXSceneSession:SendMessageToWX.Req.WXSceneTimeline;
+        wxApi.sendReq(req);
+    }
+
+
+    private void share(){
+        ll_share.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                rl_share.setVisibility(View.VISIBLE);
+//                wechatShare(0);//分享到微信好友
+            }
+        });
     }
 
     private void download() {
@@ -511,7 +603,7 @@ public class DetailActivity extends BaseActivity {
                 });
 
                 builder.setNegativeButton(getResources().getString(R.string.cancel),
-                        new android.content.DialogInterface.OnClickListener() {
+                        new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();
                             }
@@ -640,6 +732,7 @@ public class DetailActivity extends BaseActivity {
                     if ("success".equals(relationer.getMessage()) || 0 <= relationer.getCode() && relationer.getCode() <= 10) {
                         relations = relationer.getData();
                         progressBar5.setVisibility(View.GONE);
+                        share();
                         setItemMovies(DetailActivity.this, relations);
                     } else {
                         showToast("亲，获取网络数据失败了T_T");

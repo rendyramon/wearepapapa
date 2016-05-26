@@ -13,7 +13,7 @@ public class UnityPlayerProxyActivity extends Activity
 	{
 		super.onCreate(savedInstanceState);
 
-		Intent intent = new Intent(this, com.hotcast.vr.u3d.UnityPlayerActivity.class);
+		Intent intent = new Intent(this, UnityPlayerActivity.class);
 		intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
 		Bundle extras = getIntent().getExtras();
 		if (extras != null)
