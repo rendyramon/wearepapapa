@@ -141,7 +141,6 @@ public class SplashActivity extends BaseActivity {
             @Override
             public void onSuccess(ResponseInfo<String> responseInfo) {
                 System.out.println("---responseInfo.result = " + responseInfo.result);
-
                 try {
                     JSONObject j = new JSONObject(responseInfo.result);
                     String data = j.getString("data");
