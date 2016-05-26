@@ -83,6 +83,14 @@ public class Utils {
 
     String[] phone_d = new String[8];
 
+    /**
+     * 判断手机是否有SD卡
+     *
+     */
+    public static boolean hasSDCard() {
+        return Environment.MEDIA_MOUNTED.equals(Environment
+                .getExternalStorageState());
+    }
 
     /**
      * 获取 cotent的MD5值

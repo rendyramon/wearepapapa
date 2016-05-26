@@ -30,6 +30,7 @@ import com.hotcast.vr.tools.Constants;
 import com.hotcast.vr.tools.FileUtils;
 import com.hotcast.vr.tools.L;
 import com.hotcast.vr.tools.TokenUtils;
+import com.hotcast.vr.tools.Utils;
 import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.RequestParams;
@@ -83,6 +84,7 @@ public class MainActivity_new extends BaseActivity {
     private int[] checkedId = {R.id.page_home, R.id.page_classify, R.id.page_mine};
     private UpdateAppManager updateAppManager;
     String newFeatures;
+    String userpath;
 
     @Override
     public int getLayoutId() {
@@ -91,6 +93,11 @@ public class MainActivity_new extends BaseActivity {
 
     @Override
     public void init() {
+        if (Utils.hasSDCard()) {
+            userpath = Environment.getExternalStorageDirectory().getAbsolutePath();
+        } else {
+            userpath = Environment.getDataDirectory().getAbsolutePath();
+        }
         L.e("是否有网络" + isNetworkConnected(this) + "---" + isWifiConnected(this) + "---" + isMobileConnected(this));
 //        if ((isWifiConnected(this) || isMobileConnected(this)) && isNetworkConnected(this)) {
         nonet.setVisibility(View.GONE);
@@ -235,6 +242,8 @@ public class MainActivity_new extends BaseActivity {
                 }
             }, 2000);
         } else {
+            Intent intent = new Intent("finishUnity");
+            sendBroadcast(intent);
             super.onBackPressed();
 
         }
@@ -251,7 +260,7 @@ public class MainActivity_new extends BaseActivity {
                     break;
                 case 1:
                     Intent intent2 = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                    intent2.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(new File(BaseApplication.ImgCacheUrl, "vrhotcastuser.jpg")));
+                    intent2.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(new File(userpath, "vrhotcastuser.jpg")));
                     startActivityForResult(intent2, CAMERA_REQUEST_CODE);
                     break;
                 case 2:
@@ -283,8 +292,8 @@ public class MainActivity_new extends BaseActivity {
                 break;
             case CAMERA_REQUEST_CODE:
                 Log.i(TAG, "相机, 开始裁剪");
-                File picture = new File(BaseApplication.ImgCacheUrl
-                        + "/vrhotcastuser.jpg");
+                File picture = new File(userpath
+                        ,"vrhotcastuser.jpg");
                 startCrop(Uri.fromFile(picture));
                 break;
             case CROP_REQUEST_CODE:
@@ -353,7 +362,7 @@ public class MainActivity_new extends BaseActivity {
             params1.addBodyParameter("version", BaseApplication.version);
             params1.addBodyParameter("platform", BaseApplication.platform);
             params1.addBodyParameter("login_token", sp.select("login_token", ""));
-            params1.addBodyParameter("UploadAvatarForm[avatar]", new File(BaseApplication.ImgCacheUrl + "vrhotcastuser.jpg"));
+            params1.addBodyParameter("UploadAvatarForm[avatar]", new File(userpath,"vrhotcastuser.jpg"));
             HttpUtils httpUtils = new HttpUtils();
             httpUtils.send(HttpRequest.HttpMethod.POST, Constants.UPHEAD, params1, new RequestCallBack<String>() {
                 @Override
@@ -364,7 +373,7 @@ public class MainActivity_new extends BaseActivity {
                         JSONObject data = j.getJSONObject("data");
                         String avatar = data.getString("avatar_url");
                         sp.add("avatar", avatar);
-                        FileUtils.delFile(BaseApplication.ImgCacheUrl + "vrhotcastuser.jpg");
+                        FileUtils.delFile(userpath+"/vrhotcastuser.jpg");
                         mhandler.sendEmptyMessage(2);
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -385,3 +394,4 @@ public class MainActivity_new extends BaseActivity {
         }
     }
 }
+
