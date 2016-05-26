@@ -498,7 +498,9 @@ public class DetailActivity extends BaseActivity {
      * @param url
      * @return
      */
-    public static Bitmap GetLocalOrNetBitmap(String url) {
+    public  Bitmap GetLocalOrNetBitmap(String url) {
+//        progressBar5.setVisibility(View.VISIBLE);
+//        showToast("正在处理图片，请稍等");
         Bitmap bitmap = null;
         InputStream in = null;
         BufferedOutputStream out = null;
@@ -511,12 +513,16 @@ public class DetailActivity extends BaseActivity {
             byte[] data = dataStream.toByteArray();
             bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
 //            data = null;
-            System.out.println("---bitmap=" + bitmap);
+            System.out.println("---bitmap=" + bitmap.getRowBytes());
+
             return bitmap;
         } catch (IOException e) {
             e.printStackTrace();
             return null;
+        }finally {
+//            progressBar5.setVisibility(View.GONE);
         }
+
     }
 
 
@@ -529,7 +535,6 @@ public class DetailActivity extends BaseActivity {
         }
     }
 
-    Bitmap bitmap;
     /**
      * 微信分享 （这里仅提供一个分享网页的示例，其它请参看官网示例代码）
      *
@@ -543,7 +548,8 @@ public class DetailActivity extends BaseActivity {
             int flag = f;
             @Override
             public void run() {
-                bitmap = GetLocalOrNetBitmap(details.getImage().get(0));
+                final Bitmap bitmap = GetLocalOrNetBitmap(details.getImage().get(0));
+
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -554,13 +560,16 @@ public class DetailActivity extends BaseActivity {
                         msg.title = details.getTitle();
                         msg.description = details.getDesc();
                         //这里替换一张自己工程里的图片资源
-                        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher);
+//                        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher);
                         msg.setThumbImage(bitmap);
+//                        showToast("---bitmap="+bitmap);
+                        showToast("bitmap="+bitmap.getRowBytes());
                         SendMessageToWX.Req req = new SendMessageToWX.Req();
                         req.transaction = String.valueOf(System.currentTimeMillis());
                         req.message = msg;
                         req.scene = flag == 0 ? SendMessageToWX.Req.WXSceneSession : SendMessageToWX.Req.WXSceneTimeline;
                         wxApi.sendReq(req);
+                        showToast("发送微信分享，跳转到微信"+flag);
                     }
                 });
             }
