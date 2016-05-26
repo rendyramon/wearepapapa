@@ -1,8 +1,10 @@
 package com.hotcast.vr;
 
 
+import android.Manifest;
 import android.content.ContentResolver;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -10,6 +12,8 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.media.ThumbnailUtils;
 import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +28,7 @@ import android.widget.TextView;
 import com.dlodlo.dvr.sdk.unity.DvrUnityActivity;
 import com.hotcast.vr.BaseActivity;
 import com.hotcast.vr.R;
+import com.hotcast.vr.asynctask.LocalVideosAsynctask;
 import com.hotcast.vr.bean.ListBean;
 import com.hotcast.vr.bean.LocalBean2;
 import com.hotcast.vr.bean.LocalVideoBean;
@@ -42,7 +47,7 @@ import butterknife.OnClick;
 /**
  * Created by zhangjunjun on 2016/5/9.
  */
-public class LocalVideoActivity extends BaseActivity {
+public class LocalVideoActivity extends BaseActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
     @InjectView(R.id.tv_title)
     TextView title;
     @InjectView(R.id.iv_return)
@@ -71,46 +76,19 @@ public class LocalVideoActivity extends BaseActivity {
         bt_editor.setVisibility(View.GONE);
         title.setText(getResources().getString(R.string.local_video));
         iv_return.setVisibility(View.VISIBLE);
-        getLocalVideo();
-        lv.setAdapter(new LocalVideoAdapter());
-        lv.setSelector(new ColorDrawable(Color.TRANSPARENT));
-        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                String localurl = list.get(i).getVideoPath();
 
-                File file;
-                if (localurl != null) {
-                    file = new File(localurl);
-                } else {
-                    file = new File(" ");
-                }
-                System.out.println("==="+localurl);
-                if (file.exists()) {
-                    Intent intent;
-                    if (UnityTools.getGlasses().equals("1")) {
-                        intent = new Intent(LocalVideoActivity.this, DvrUnityActivity.class);
-                    } else {
-                        intent = new Intent(LocalVideoActivity.this, UnityPlayerActivity.class);
-                    }
-                    SharedPreUtil.getInstance(LocalVideoActivity.this).add("nowplayUrl", "file://"+localurl);
-                    SharedPreUtil.getInstance(LocalVideoActivity.this).add("qingxidu", "0");
-                    SharedPreUtil.getInstance(LocalVideoActivity.this).add("sdurl", "");
-                    SharedPreUtil.getInstance(LocalVideoActivity.this).add("hdrul", "");
-                    SharedPreUtil.getInstance(LocalVideoActivity.this).add("uhdrul", "");
-                    if (localurl.contains("_3d_interaction")) {
-                        SharedPreUtil.getInstance(LocalVideoActivity.this).add("type", "3d");
-                    } else if (localurl.contains("_vr_interaction")) {
-                        SharedPreUtil.getInstance(LocalVideoActivity.this).add("type", "vr_interaction");
-                    } else if (localurl.contains("_3d_noteraction")) {
-                        SharedPreUtil.getInstance(LocalVideoActivity.this).add("type", "3d_noteraction");
-                    } else {
-                        SharedPreUtil.getInstance(LocalVideoActivity.this).add("type", "vr");
-                    }
-                    LocalVideoActivity.this.startActivity(intent);
-                }
-            }
-        });
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    100);
+        } else {
+            getLocalVideo();
+            initListView();
+        }
+
+
     }
 
 
@@ -121,6 +99,8 @@ public class LocalVideoActivity extends BaseActivity {
         }
         final ContentResolver contentResolver = getContentResolver();
         String[] projection = new String[]{MediaStore.Video.Media.DATA, MediaStore.Video.Media.SIZE, MediaStore.Video.Media._ID, MediaStore.Video.Media.DISPLAY_NAME};
+
+
         final Cursor cursor = contentResolver.query(
                 MediaStore.Video.Media.EXTERNAL_CONTENT_URI, projection, MediaStore.Video.Media.MIME_TYPE + "='video/mp4'",
                 null, MediaStore.Video.Media.DEFAULT_SORT_ORDER);
@@ -146,6 +126,66 @@ public class LocalVideoActivity extends BaseActivity {
 
     }
 
+    private void initListView() {
+        lv.setAdapter(new LocalVideoAdapter());
+        lv.setSelector(new ColorDrawable(Color.TRANSPARENT));
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                String localurl = list.get(i).getVideoPath();
+
+                File file;
+                if (localurl != null) {
+                    file = new File(localurl);
+                } else {
+                    file = new File(" ");
+                }
+                System.out.println("===" + localurl);
+                if (file.exists()) {
+                    Intent intent;
+                    if (UnityTools.getGlasses().equals("1")) {
+                        intent = new Intent(LocalVideoActivity.this, DvrUnityActivity.class);
+                    } else {
+                        intent = new Intent(LocalVideoActivity.this, UnityPlayerActivity.class);
+                    }
+                    SharedPreUtil.getInstance(LocalVideoActivity.this).add("nowplayUrl", "file://" + localurl);
+                    SharedPreUtil.getInstance(LocalVideoActivity.this).add("qingxidu", "0");
+                    SharedPreUtil.getInstance(LocalVideoActivity.this).add("sdurl", "");
+                    SharedPreUtil.getInstance(LocalVideoActivity.this).add("hdrul", "");
+                    SharedPreUtil.getInstance(LocalVideoActivity.this).add("uhdrul", "");
+                    if (localurl.contains("_3d_interaction")) {
+                        SharedPreUtil.getInstance(LocalVideoActivity.this).add("type", "3d");
+                    } else if (localurl.contains("_vr_interaction")) {
+                        SharedPreUtil.getInstance(LocalVideoActivity.this).add("type", "vr_interaction");
+                    } else if (localurl.contains("_3d_noteraction")) {
+                        SharedPreUtil.getInstance(LocalVideoActivity.this).add("type", "3d_noteraction");
+                    } else {
+                        SharedPreUtil.getInstance(LocalVideoActivity.this).add("type", "vr");
+                    }
+                    LocalVideoActivity.this.startActivity(intent);
+                }
+            }
+        });
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case 100: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    getLocalVideo();
+                    initListView();
+
+                }
+
+                return;
+            }
+
+
+        }
+    }
 
     class LocalVideoAdapter extends BaseAdapter {
         @Override
