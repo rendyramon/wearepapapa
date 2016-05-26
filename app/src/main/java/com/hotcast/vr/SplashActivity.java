@@ -1,11 +1,14 @@
 package com.hotcast.vr;
 
+import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
@@ -14,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.hotcast.vr.asynctask.LocalVideosAsynctask;
@@ -53,7 +57,7 @@ import butterknife.InjectView;
 /**
  * Created by joey on 8/6/15.
  */
-public class SplashActivity extends BaseActivity {
+public class SplashActivity extends BaseActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
     @InjectView(R.id.vp_guide)
     ViewPager vp_guide;
     @InjectView(R.id.rl_animation)
@@ -95,6 +99,17 @@ public class SplashActivity extends BaseActivity {
 
     @Override
     public void init() {
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    100);
+
+
+        }
+
+
         AnalyticsConfig.enableEncrypt(true);
         packageManager = this.getPackageManager();
         try {
@@ -105,8 +120,7 @@ public class SplashActivity extends BaseActivity {
         }
 
         DbdateSave();
-        new LocalVideosAsynctask(this).execute();
-        new TestMediaAsynctask(this).execute();
+
         L.e("PackageName:" + getPackageName());
         getNetDate();
         String userData = sp.select("userData", "");
@@ -121,6 +135,22 @@ public class SplashActivity extends BaseActivity {
 
         System.out.println("***sp=" + sp);
 
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case 100:
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    new TestMediaAsynctask(this).execute();
+                    new LocalVideosAsynctask(this).execute();
+                }
+
+                break;
+
+        }
     }
 
     private void getUserData(String login_token) {
@@ -301,7 +331,7 @@ public class SplashActivity extends BaseActivity {
                         topPic.invalidate();
                         bottomPic.invalidate();
                     } else {
-                        isrung=false;
+                        isrung = false;
 
                         isFrist = sp.select("isFrist", true);
                         if (isFrist) {
