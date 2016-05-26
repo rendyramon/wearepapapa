@@ -11,7 +11,9 @@ import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.google.gson.Gson;
 import com.hotcast.vr.asynctask.LocalVideosAsynctask;
@@ -54,9 +56,14 @@ import butterknife.InjectView;
 public class SplashActivity extends BaseActivity {
     @InjectView(R.id.vp_guide)
     ViewPager vp_guide;
-    @InjectView(R.id.iv_start)
-    ImageView iv_start;
-
+    @InjectView(R.id.rl_animation)
+    RelativeLayout rl_animation;
+    @InjectView(R.id.fl_animation)
+    FrameLayout fl_animation;
+    @InjectView(R.id.topPic)
+    ImageView topPic;
+    @InjectView(R.id.bottomPic)
+    ImageView bottomPic;
     //    显示下载更新对话框
     protected static final int SHOW_UPDATE_DIALOG = 1;
     //    加载主UI界面
@@ -68,6 +75,9 @@ public class SplashActivity extends BaseActivity {
     //下载路径
     private String spec;
     //更新日志
+
+    private boolean isrung = true;
+    int image_alpha = 0;
     private String newFeatures;
     //是否强制更新
     private String is_force;
@@ -276,35 +286,86 @@ public class SplashActivity extends BaseActivity {
     Handler shanler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            System.out.println("---第一次运行，显示引导页");
-            vp_guide.setAdapter(new MyAdapter());
-            vp_guide.setVisibility(View.VISIBLE);
+            switch (msg.what) {
+                case 0:
+                    System.out.println("---第一次运行，显示引导页");
+                    rl_animation.setVisibility(View.GONE);
+                    vp_guide.setAdapter(new MyAdapter());
+                    vp_guide.setVisibility(View.VISIBLE);
+                    break;
+                case 100:
+                    if (image_alpha < 240) {
+                        topPic.setAlpha(image_alpha);
+                        bottomPic.setAlpha(image_alpha);
+                        // 设置textview显示当前的Alpha值
+                        topPic.invalidate();
+                        bottomPic.invalidate();
+                    } else {
+                       isrung=false;
+
+                        isFrist = sp.select("isFrist", true);
+                        if (isFrist) {
+                            shanler.sendEmptyMessage(0);
+
+                        } else {
+                            vp_guide.setVisibility(View.GONE);
+                            System.out.println("---启动mainactivity");
+                            pageJump();
+                        }
+
+
+                    }
+                    break;
+            }
+
         }
     };
 
     private void startJmp() {
-        timer = new Timer();
+//        timer = new Timer();
 //        timer.schedule(new TimerTask() {
 //            @Override
 //            public void run() {
-//                System.out.println("---启动unity");
-//                startGoInUnity();
+//                isFrist = sp.select("isFrist", true);
+//                if (isFrist) {
+//                    shanler.sendEmptyMessage(0);
+//
+//                } else {
+//                    vp_guide.setVisibility(View.GONE);
+//                    System.out.println("---启动mainactivity");
+//                    pageJump();
+//                }
 //            }
-//        }, 2500);
-        timer.schedule(new TimerTask() {
+//        }, 3000);
+
+        GameView gameView = new GameView(this);
+        rl_animation.addView(gameView);
+
+        new Thread(new Runnable() {
             @Override
             public void run() {
-                isFrist = sp.select("isFrist", true);
-                if (isFrist) {
-                    shanler.sendEmptyMessage(0);
-
-                } else {
-                    vp_guide.setVisibility(View.GONE);
-                    System.out.println("---启动mainactivity");
-                    pageJump();
+                while (isrung) {
+                    try {
+                        Thread.sleep(100);
+                        // 更新Alpha值
+                        updateAlpha();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
-        }, 3000);
+        }).start();
+
+    }
+
+    public void updateAlpha() {
+        if (image_alpha + 5 <= 250) {
+            image_alpha += 5;
+        } else {
+            image_alpha = 250;
+        }
+        // 发送需要更新imageview视图的消息-->这里是发给主线程
+        shanler.sendEmptyMessage(100);
     }
 
     public void startGoInUnity() {
