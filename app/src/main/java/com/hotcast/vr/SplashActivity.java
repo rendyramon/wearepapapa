@@ -30,6 +30,7 @@ import com.hotcast.vr.bean.Updater;
 import com.hotcast.vr.bean.User2;
 import com.hotcast.vr.bean.UserData;
 import com.hotcast.vr.download.DownLoadService;
+import com.hotcast.vr.imageView.GameView;
 import com.hotcast.vr.tools.Constants;
 import com.hotcast.vr.tools.L;
 import com.hotcast.vr.tools.Md5Utils;
@@ -324,7 +325,7 @@ public class SplashActivity extends BaseActivity implements ActivityCompat.OnReq
                     vp_guide.setVisibility(View.VISIBLE);
                     break;
                 case 100:
-                    if (image_alpha < 240) {
+                    if (image_alpha < 200) {
                         topPic.setAlpha(image_alpha);
                         bottomPic.setAlpha(image_alpha);
                         // 设置textview显示当前的Alpha值
@@ -389,8 +390,8 @@ public class SplashActivity extends BaseActivity implements ActivityCompat.OnReq
     }
 
     public void updateAlpha() {
-        if (image_alpha + 5 <= 250) {
-            image_alpha += 5;
+        if (image_alpha + 10 <= 250) {
+            image_alpha += 10;
         } else {
             image_alpha = 250;
         }

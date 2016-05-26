@@ -1,16 +1,21 @@
-package com.hotcast.vr;
+package com.hotcast.vr.imageView;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
+import android.graphics.Rect;
 import android.view.Display;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.WindowManager;
+import android.widget.ImageView;
+
+import com.hotcast.vr.R;
 
 /**
  * Created by zhangjunjun on 2016/5/24.
@@ -23,7 +28,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback,
     private Bitmap bitmap;
     private boolean isRunning = true;
     private int dx;        //用于背景移动
-    private int shebeiHight;
+    private int shebeiHight,shebeiWidth;
+    private int alphe = 1;
 
     public GameView(Context context) {
         super(context);
@@ -31,6 +37,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback,
                 .getSystemService(Context.WINDOW_SERVICE);
         Display display = manager.getDefaultDisplay();
         shebeiHight = display.getHeight();
+        shebeiWidth=display.getWidth();
         this.setFocusable(true);
         holder = this.getHolder();//这个this指的是这个Surface
         holder.addCallback(this); //这个this表示实现了Callback接口
@@ -55,7 +62,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback,
             options.inSampleSize = sampleSize;
         }
         options.inJustDecodeBounds = false;
-        dx = -options.outWidth;
+        dx = -(imageWidth-shebeiWidth);
         return BitmapFactory.decodeResource(getResources(),
                 R.mipmap.guidepic, options);
     }
@@ -80,7 +87,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback,
                 canvas = holder.lockCanvas();
                 canvas.drawColor(Color.BLACK);
                 //画背景, 并使其移动
-                dx += 10;
+                dx += 5;
                 canvas.drawBitmap(bitmap, dx, 0, null);
                 //判断是否到达屏幕底端, 到达了则使其回到屏幕上端
                 if (dx >= 0)
