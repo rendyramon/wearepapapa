@@ -357,9 +357,10 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".wxapi.WXEntryActiviy"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:configChanges="keyboardHidden|orientation|screenSize"
             android:exported="true"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".WebViewActivity"
             android:launchMode="singleTop"

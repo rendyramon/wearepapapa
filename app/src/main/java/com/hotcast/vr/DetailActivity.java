@@ -656,6 +656,8 @@ public class DetailActivity extends BaseActivity {
         shareParams.setShareType(Platform.SHARE_WEBPAGE);//设置分享属性
         shareParams.setTitle(details.getTitle());
         shareParams.setText(details.getDesc());
+//        showToast("--title=" + details.getTitle() + "--text=" + details.getDesc());
+
         shareParams.setImageUrl(details.getImage().get(0));
         shareParams.setUrl("http://m.hotcast.cn/Home/Play/play?set_id=" + videoset_id);
         switch (flag){
@@ -810,6 +812,7 @@ public class DetailActivity extends BaseActivity {
             tv_datetime.setText(getResources().getString(R.string.update_time) + date);
         }
         introduced.setText(details.getDesc());
+        System.out.println("--title=" + details.getTitle() + "--text=" + details.getDesc()+"---");
     }
 
     public void refreshPinglun() {
