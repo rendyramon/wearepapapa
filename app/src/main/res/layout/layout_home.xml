@@ -23,11 +23,14 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_margin="16dp"
         android:src="@mipmap/change_to_vr"
+        android:padding="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_margin="10dp"
         fab:fab_colorNormal="#00000000"
         fab:fab_colorPressed="#00000000"
-        fab:fab_colorRipple="#00000000" />
+        fab:fab_colorRipple="#00000000"
+        />
     <ImageView
         android:id="@+id/iv_noNet"
         android:layout_width="match_parent"
