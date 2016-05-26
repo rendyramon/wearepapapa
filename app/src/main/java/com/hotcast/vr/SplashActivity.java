@@ -301,7 +301,7 @@ public class SplashActivity extends BaseActivity {
                         topPic.invalidate();
                         bottomPic.invalidate();
                     } else {
-                       isrung=false;
+                        isrung=false;
 
                         isFrist = sp.select("isFrist", true);
                         if (isFrist) {
