@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -48,6 +50,7 @@ import com.hotcast.vr.tools.TokenUtils;
 import com.hotcast.vr.tools.UnityTools;
 import com.hotcast.vr.tools.Utils;
 import com.hotcast.vr.u3d.UnityPlayerActivity;
+import com.hotcast.vr.uikit.Util;
 import com.lidroid.xutils.BitmapUtils;
 import com.lidroid.xutils.DbUtils;
 import com.lidroid.xutils.exception.DbException;
@@ -78,6 +81,11 @@ import java.util.List;
 
 import butterknife.InjectView;
 import butterknife.OnClick;
+import cn.sharesdk.framework.Platform;
+import cn.sharesdk.framework.ShareSDK;
+import cn.sharesdk.wechat.friends.Wechat;
+import cn.sharesdk.wechat.moments.WechatMoments;
+import cn.sharesdk.wechat.utils.WechatHelper;
 
 /**
  * Created by lostnote on 15/11/28.
@@ -160,13 +168,12 @@ public class DetailActivity extends BaseActivity {
                 break;
             case R.id.iv_weixin:
                 L.e("---你点击了分享到微信");
-                wechatShare(0);//分享到微信好友
-                rl_share.setVisibility(View.GONE);
+                shareToWeixin(0);//分享到微信好友
                 break;
             case R.id.iv_friends:
                 L.e("---你点击了分享到朋友圈");
-                wechatShare(1);//分享到微信好友
-                rl_share.setVisibility(View.GONE);
+                shareToWeixin(1);//分享到微信好友
+
                 break;
         }
     }
@@ -402,6 +409,7 @@ public class DetailActivity extends BaseActivity {
         wxApi = WXAPIFactory.createWXAPI(DetailActivity.this, Constants.WX_APP_ID);
         wxApi.registerApp(Constants.WX_APP_ID);
 
+        ShareSDK.initSDK(this);
         db = DbUtils.create(DetailActivity.this);
         requestUrl = Constants.DETAIL;
         receiver = new DownloadReceiver();
@@ -486,95 +494,129 @@ public class DetailActivity extends BaseActivity {
 //        }
 //    }
 
-    /**
-     * 得到本地或者网络上的bitmap url - 网络或者本地图片的绝对路径,比如:
-     * <p/>
-     * A.网络路径: url="http://blog.foreverlove.us/girl2.png" ;
-     * <p/>
-     * B.本地路径:url="file://mnt/sdcard/photo/image.png";
-     * <p/>
-     * C.支持的图片格式 ,png, jpg,bmp,gif等等
-     *
-     * @param url
-     * @return
-     */
-    public  Bitmap GetLocalOrNetBitmap(String url) {
-//        progressBar5.setVisibility(View.VISIBLE);
-//        showToast("正在处理图片，请稍等");
-        Bitmap bitmap = null;
-        InputStream in = null;
-        BufferedOutputStream out = null;
-        try {
-            in = new BufferedInputStream(new URL(url).openStream(), 2 * 1024);
-            final ByteArrayOutputStream dataStream = new ByteArrayOutputStream();
-            out = new BufferedOutputStream(dataStream, 2 * 1024);
-            copy(in, out);
-            out.flush();
-            byte[] data = dataStream.toByteArray();
-            bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
-//            data = null;
-            System.out.println("---bitmap=" + bitmap.getRowBytes());
-
-            return bitmap;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }finally {
-//            progressBar5.setVisibility(View.GONE);
-        }
-
-    }
-
-
-    private static void copy(InputStream in, OutputStream out)
-            throws IOException {
-        byte[] b = new byte[2 * 1024];
-        int read;
-        while ((read = in.read(b)) != -1) {
-            out.write(b, 0, read);
-        }
-    }
-
-    /**
-     * 微信分享 （这里仅提供一个分享网页的示例，其它请参看官网示例代码）
-     *
-     * @param flag(0:分享到微信好友，1：分享到微信朋友圈)
-     */
-    WXWebpageObject webpage;
-    WXMediaMessage msg;
-
-    private void wechatShare(final int f) {
-        new Thread(new Runnable() {
-            int flag = f;
-            @Override
-            public void run() {
-                final Bitmap bitmap = GetLocalOrNetBitmap(details.getImage().get(0));
-
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        webpage = new WXWebpageObject();
-
-                        webpage.webpageUrl = "http://m.hotcast.cn/Home/Play/play?set_id=" + videoset_id;
-                        msg = new WXMediaMessage(webpage);
-                        msg.title = details.getTitle();
-                        msg.description = details.getDesc();
-                        //这里替换一张自己工程里的图片资源
-//                        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher);
-                        msg.setThumbImage(bitmap);
-//                        showToast("---bitmap="+bitmap);
-                        showToast("bitmap="+bitmap.getRowBytes());
-                        SendMessageToWX.Req req = new SendMessageToWX.Req();
-                        req.transaction = String.valueOf(System.currentTimeMillis());
-                        req.message = msg;
-                        req.scene = flag == 0 ? SendMessageToWX.Req.WXSceneSession : SendMessageToWX.Req.WXSceneTimeline;
-                        wxApi.sendReq(req);
-                        showToast("发送微信分享，跳转到微信"+flag);
-                    }
-                });
-            }
-        }).start();
-    }
+//    /**
+//     * 得到本地或者网络上的bitmap url - 网络或者本地图片的绝对路径,比如:
+//     * <p/>
+//     * A.网络路径: url="http://blog.foreverlove.us/girl2.png" ;
+//     * <p/>
+//     * B.本地路径:url="file://mnt/sdcard/photo/image.png";
+//     * <p/>
+//     * C.支持的图片格式 ,png, jpg,bmp,gif等等
+//     *
+//     * @param url
+//     * @return
+//     */
+//    public  Bitmap GetLocalOrNetBitmap(String url) {
+////        progressBar5.setVisibility(View.VISIBLE);
+////        showToast("正在处理图片，请稍等");
+//        Bitmap bitmap = null;
+//        InputStream in = null;
+//        BufferedOutputStream out = null;
+//        try {
+//            in = new BufferedInputStream(new URL(url).openStream(), 2 * 1024);
+//            final ByteArrayOutputStream dataStream = new ByteArrayOutputStream();
+//            out = new BufferedOutputStream(dataStream, 2 * 1024);
+//            copy(in, out);
+//            out.flush();
+//            byte[] data = dataStream.toByteArray();
+//            bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
+////            data = null;
+//            System.out.println("---bitmap=" + bitmap.getRowBytes());
+//
+//            return bitmap;
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            return null;
+//        }finally {
+////            progressBar5.setVisibility(View.GONE);
+//        }
+//
+//    }
+//    public  byte[] GetBtobyte(String url) {
+////        progressBar5.setVisibility(View.VISIBLE);
+////        showToast("正在处理图片，请稍等");
+//        byte[] data;
+//        InputStream in = null;
+//        BufferedOutputStream out = null;
+//        try {
+//            in = new BufferedInputStream(new URL(url).openStream(), 2 * 1024);
+//            final ByteArrayOutputStream dataStream = new ByteArrayOutputStream();
+//            out = new BufferedOutputStream(dataStream, 2 * 1024);
+//            copy(in, out);
+//            out.flush();
+//            data = dataStream.toByteArray();
+////            data = null;
+//            System.out.println("---byte=:"+data.length );
+//
+//            return data;
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            return new byte[1];
+//        }finally {
+////            progressBar5.setVisibility(View.GONE);
+//        }
+//
+//    }
+//
+//
+//    private static void copy(InputStream in, OutputStream out)
+//            throws IOException {
+//        byte[] b = new byte[2 * 1024];
+//        int read;
+//        while ((read = in.read(b)) != -1) {
+//            out.write(b, 0, read);
+//        }
+//    }
+//
+//    /**
+//     * 微信分享 （这里仅提供一个分享网页的示例，其它请参看官网示例代码）
+//     *
+//     * @param flag(0:分享到微信好友，1：分享到微信朋友圈)
+//     */
+//    WXWebpageObject webpage;
+//    WXMediaMessage msg;
+//
+//    private void wechatShare(final int f) {
+//        new Thread(new Runnable() {
+//            int flag = f;
+//            @Override
+//            public void run() {
+//                final Bitmap bmp = GetLocalOrNetBitmap(details.getImage().get(0));
+////final byte[] bytes = GetBtobyte(details.getImage().get(0));
+//                runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        webpage = new WXWebpageObject();
+//
+//                        webpage.webpageUrl = "http://m.hotcast.cn/Home/Play/play?set_id=" + videoset_id;
+//                        msg = new WXMediaMessage(webpage);
+//                        msg.title = details.getTitle();
+//                        msg.description = details.getDesc();
+//                        //这里替换一张自己工程里的图片资源
+////                        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher);
+//                        //msg.setThumbImage(bitmap);
+//                        Bitmap thumbBmp = Bitmap.createScaledBitmap(bmp, 150, 150, true);
+//                        bmp.recycle();
+//
+//                        msg.thumbData = Util.bmpToByteArray(thumbBmp,true);
+////                        showToast("---bitmap="+bitmap);
+////                        Bitmap bmp = BitmapFactory.decodeFile(details.getImage().get(0));
+////                        Bitmap thumbBmp = Bitmap.createScaledBitmap(bmp, 150, 150, true);
+////                        bmp.recycle();
+////                        msg.thumbData = Uti
+////                        showToast("bitmap="+bitmap.getRowBytes());
+//                        SendMessageToWX.Req req = new SendMessageToWX.Req();
+//                        req.transaction = String.valueOf(System.currentTimeMillis());
+//                        req.message = msg;
+//                        req.scene = flag == 0 ? SendMessageToWX.Req.WXSceneSession : SendMessageToWX.Req.WXSceneTimeline;
+//                        wxApi.sendReq(req);
+//                        showToast("发送微信分享，跳转到微信" + flag);
+//                        rl_share.setVisibility(View.GONE);
+//                    }
+//                });
+//            }
+//        }).start();
+//    }
 
 
     private void share() {
@@ -586,7 +628,51 @@ public class DetailActivity extends BaseActivity {
             }
         });
     }
+    /**
+     * 判断是否安装微信
+     *
+     * @return
+     */
+    private boolean isWeixinAvilible() {
+        PackageManager packageManager = this.getPackageManager();// 获取packagemanager
+        List<PackageInfo> pinfo = packageManager.getInstalledPackages(0);// 获取所有已安装程序的包信息
+        if (pinfo != null) {
+            for (int i = 0; i < pinfo.size(); i++) {
+                String pn = pinfo.get(i).packageName;
+                if (pn.equals("com.tencent.mm")) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    private void shareToWeixin(int flag){
+        if (!isWeixinAvilible()){
+            showToast("请安装微信后进行分享操作");
+            return;
+        }
+        //设置分享内容
+        Platform.ShareParams shareParams = new Platform.ShareParams();
+        shareParams.setShareType(Platform.SHARE_WEBPAGE);//设置分享属性
+        shareParams.setTitle(details.getTitle());
+        shareParams.setText(details.getDesc());
+        shareParams.setImageUrl(details.getImage().get(0));
+        shareParams.setUrl("http://m.hotcast.cn/Home/Play/play?set_id=" + videoset_id);
+        switch (flag){
+            case 0://分享到好友
+                Platform wechat1 = ShareSDK.getPlatform(Wechat.NAME);
+                wechat1.share(shareParams);
+                rl_share.setVisibility(View.GONE);
+                break;
+            case 1://分享到好友
+                Platform wechat2 = ShareSDK.getPlatform(WechatMoments.NAME);
+                wechat2.share(shareParams);
+                rl_share.setVisibility(View.GONE);
+                break;
+        }
 
+
+    }
     private void download() {
         ll_download.setOnClickListener(new View.OnClickListener() {
             @Override

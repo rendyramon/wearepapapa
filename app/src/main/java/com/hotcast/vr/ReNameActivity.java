@@ -85,7 +85,6 @@ public class ReNameActivity extends BaseActivity {
                             et_newpassword.setEnabled(true);
                         }else {
                             et_newpassword.setEnabled(false);
-                            showToast(getResources().getString(R.string.et_password));
                         }
                     }
                 });
@@ -164,6 +163,8 @@ public class ReNameActivity extends BaseActivity {
                         if (!TextUtils.isEmpty(oldPassword) && !TextUtils.isEmpty(newPassword)){
                                 saveNewPassword(oldPassword,newPassword);
                             bt_save.setEnabled(false);
+                        }else {
+
                         }
                         break;
                     case "更改用户名":
