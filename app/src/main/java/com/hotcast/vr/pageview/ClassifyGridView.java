@@ -217,7 +217,8 @@ public class ClassifyGridView extends BaseView {
                 tmpList = channelLister.getData();
                 progressBar2.setVisibility(View.GONE);
             }else {
-                activity.showToast(activity.getResources().getString(R.string.st_error));
+                activity.showToast(channelLister.getMessage());
+                return;
             }
         }
 
@@ -239,6 +240,7 @@ public class ClassifyGridView extends BaseView {
 
         }
         if(bPullDown){
+
             adapter.addNewAll(tmpList);
         }else{
             if (tmpList.size()>0) {
