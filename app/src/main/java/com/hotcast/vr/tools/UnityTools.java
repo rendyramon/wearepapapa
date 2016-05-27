@@ -1,15 +1,19 @@
 package com.hotcast.vr.tools;
 
+import android.Manifest;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 
@@ -88,18 +92,28 @@ public class UnityTools {
     }
 
     public static String getlocal() {
-        String json = "[";
-        ArrayList<LocalVideoBean> list = getLocalVideo();
-        if (list.size() > 0) {
-            for (int i = 0; i < list.size(); i++) {
-                if (i < list.size() - 1) {
-                    json = json + "{" + "\"videoPath\":" + "\"" + "file://" + list.get(i).getVideoPath() + "\"" + "," + "\"videoName\":" + "\"" + list.get(i).getVideoName() + "\"" + "," + "\"imagePath\":" + "\"" + BaseApplication.ImgCacheUrl + list.get(i).getVideoName() + ".jpg" + "\"" + "},";
-                } else {
-                    json = json + "{" + "\"videoPath\":" + "\"" + "file://" + list.get(i).getVideoPath() + "\"" + "," + "\"videoName\":" + "\"" + list.get(i).getVideoName() + "\"" + "," + "\"imagePath\":" + "\"" + BaseApplication.ImgCacheUrl + list.get(i).getVideoName() + ".jpg" + "\"" + "}]";
+        if (ContextCompat.checkSelfPermission(UnityPlayer.currentActivity,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                == PackageManager.PERMISSION_GRANTED) {
+            String json = "[";
+            ArrayList<LocalVideoBean> list = getLocalVideo();
+            if (list.size() > 0) {
+                for (int i = 0; i < list.size(); i++) {
+                    if (i < list.size() - 1) {
+                        json = json + "{" + "\"videoPath\":" + "\"" + "file://" + list.get(i).getVideoPath() + "\"" + "," + "\"videoName\":" + "\"" + list.get(i).getVideoName() + "\"" + "," + "\"imagePath\":" + "\"" + BaseApplication.ImgCacheUrl + list.get(i).getVideoName() + ".jpg" + "\"" + "},";
+                    } else {
+                        json = json + "{" + "\"videoPath\":" + "\"" + "file://" + list.get(i).getVideoPath() + "\"" + "," + "\"videoName\":" + "\"" + list.get(i).getVideoName() + "\"" + "," + "\"imagePath\":" + "\"" + BaseApplication.ImgCacheUrl + list.get(i).getVideoName() + ".jpg" + "\"" + "}]";
+                    }
                 }
             }
+            return json;
+
+
+        } else {
+            return "";
         }
-        return json;
+
+
     }
 
     public static String[] getPlayUrl() {
@@ -189,7 +203,7 @@ public class UnityTools {
                         duration = "0";
                     }
                     System.out.println("---视频时长：" + duration);
-                    UnityPlayer.UnitySendMessage("Manager","SetTimeOnUI",duration);
+                    UnityPlayer.UnitySendMessage("Manager", "SetTimeOnUI", duration);
                 }
             }
         }).start();
