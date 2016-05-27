@@ -39,8 +39,8 @@ public class UnityTools {
     public static Context context;
 
     public static void startActivity() {
-        System.out.println();
         UnityPlayer.currentActivity.startActivity(new Intent(UnityPlayer.currentActivity, SplashActivity.class));
+        System.out.println("---unity退出了");
     }
 
     /**
@@ -112,8 +112,6 @@ public class UnityTools {
         } else {
             return "";
         }
-
-
     }
 
     public static String[] getPlayUrl() {
@@ -132,9 +130,13 @@ public class UnityTools {
      * @return -1 表示没有选择（这种情况不会出现），1 多朵，2.cardboard 3.小宅，4暴风魔镜
      */
     public static String getGlasses() {
-        SharedPreUtil sp = SharedPreUtil.getInstance(context);
-        int g = sp.select("glass", 2);
-        return g + "";
+//        SharedPreUtil sp = SharedPreUtil.getInstance(context);
+//        int g = sp.select("glass", 2);
+        return "2";
+    }
+
+    public static boolean getJump() {
+        return UnityService.unityWork;
     }
 
     /**

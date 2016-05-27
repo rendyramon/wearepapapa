@@ -19,7 +19,6 @@ import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.ScrollView;
 
-import com.dlodlo.utils.FileUtil;
 import com.hotcast.vr.adapter.MyPagerAdapter;
 import com.hotcast.vr.pageview.BaseView;
 import com.hotcast.vr.pageview.ClassifyView;
@@ -243,6 +242,7 @@ public class MainActivity_new extends BaseActivity {
             }, 2000);
         } else {
             Intent intent = new Intent("finishUnity");
+            intent.putExtra("Unitisdoing",true);
             sendBroadcast(intent);
             super.onBackPressed();
 

@@ -11,6 +11,7 @@ import com.hotcast.vr.receiver.UnityReceiver;
 public class UnityService extends Service {
     UnityReceiver unityReceiver;
     public static String[] urls;
+    public static boolean unityWork = true;
 
     @Nullable
     @Override
@@ -20,11 +21,11 @@ public class UnityService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        System.out.println("---UnityService创建onStartCommand");
         if (unityReceiver == null) {
             unityReceiver = new UnityReceiver();
         }
         if (urls == null) {
-            System.out.println("---UnityService数组初始化");
             urls = new String[6];
             urls[0] = "";
             urls[1] = "";
@@ -36,6 +37,7 @@ public class UnityService extends Service {
         IntentFilter filter = new IntentFilter();
         filter.addAction("UnitySendMessage");
         filter.addAction("Unitystart");
+        filter.addAction("UnitWork");//表示Unity初始化后要不要跳转
         filter.addAction("finishUnity");
         registerReceiver(unityReceiver, filter);
         return super.onStartCommand(intent, flags, startId);

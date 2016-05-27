@@ -33,13 +33,16 @@ public class UnityReceiver extends BroadcastReceiver {
                 } else {
                     UnityService.setUrls(intent.getStringExtra("nowplayUrl"), intent.getStringExtra("qingxidu"), intent.getStringExtra("sdurl"), intent.getStringExtra("hdrul"), intent.getStringExtra("uhdrul"), intent.getStringExtra("type"));
                 }
-                System.out.println("---UnityReceiver："+ UnityService.urls[0]);
                 UnityPlayer.UnitySendMessage("Canvas", "Succ", "");
                 break;
             case "finishUnity":
                 if (UnityPlayer.currentActivity != null) {
+                    UnityService.unityWork = intent.getBooleanExtra("Unitisdoing", true);
                     UnityPlayer.currentActivity.finish();
                 }
+                break;
+            case "UnitWork":
+                UnityService.unityWork = intent.getBooleanExtra("Unitisdoing", true);
                 break;
         }
     }
