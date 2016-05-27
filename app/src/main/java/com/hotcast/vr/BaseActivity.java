@@ -13,36 +13,24 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
-import android.text.Spanned;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.dlodlo.dvr.sdk.unity.DvrUnityActivity;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import com.hotcast.vr.bean.Classify;
 import com.hotcast.vr.dialog.GlassesDialog;
 import com.hotcast.vr.download.DownLoadService;
-import com.hotcast.vr.pageview.LandscapeView;
-import com.hotcast.vr.tools.Constants;
 import com.hotcast.vr.tools.L;
 import com.hotcast.vr.tools.SharedPreUtil;
-import com.hotcast.vr.tools.UnityTools;
 import com.hotcast.vr.tools.Utils;
 import com.hotcast.vr.u3d.UnityPlayerActivity;
 import com.lidroid.xutils.HttpUtils;
-import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.RequestParams;
-import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 import com.umeng.analytics.MobclickAgent;
 
-import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Timer;
@@ -432,15 +420,15 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
 
     public void startGoInUnity() {
         Intent intent;
-        if (UnityTools.getGlasses().equals("1")) {
-            intent = new Intent(this, DvrUnityActivity.class);
-        } else {
-            intent = new Intent(this, UnityPlayerActivity.class);
-        }
-        SharedPreUtil.getInstance(this).add("nowplayUrl", "");
+        intent = new Intent(this, UnityPlayerActivity.class);
         DownLoadService.unitydoing = true;
         startActivity(intent);
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+
+        Intent intent1 = new Intent("Unitystart");
+        intent1.putExtra("nowplayUrl", "");
+        System.out.println("---发送广播111");
+        sendBroadcast(intent1);
     }
 
     //    判断是否有个网络连接

@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Handler;
 import android.os.Message;
-import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -16,11 +15,8 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.dlodlo.dvr.sdk.unity.DvrUnityActivity;
 import com.hotcast.vr.bean.LocalBean2;
 import com.hotcast.vr.bean.MediaDownloadManager;
-import com.hotcast.vr.tools.SharedPreUtil;
-import com.hotcast.vr.tools.UnityTools;
 import com.hotcast.vr.u3d.UnityPlayerActivity;
 import com.lidroid.xutils.BitmapUtils;
 import com.lidroid.xutils.DbUtils;
@@ -179,36 +175,25 @@ public class ListLocalActivity extends BaseActivity {
                 }
                 if (!editor) {
                     if (state == 3) {
-//                        Intent intent = new Intent(ListLocalActivity.this, PlayerVRActivityNew2.class);
-//                        intent.putExtra("play_url", localurl);
-//                        intent.putExtra("qingxidu", list.get(i).getQingxidu());
-//                        intent.putExtra("title", list.get(i).getTitle());
-//                        intent.putExtra("splite_screen", false);
-//                        ListLocalActivity.this.startActivity(intent);
-//                        System.out.println("---开始播放");
-//                        System.out.println("***播放：" + localurl);
-
                         Intent intent;
-                        if (UnityTools.getGlasses().equals("1")) {
-                            intent = new Intent(ListLocalActivity.this, DvrUnityActivity.class);
-                        } else {
-                            intent = new Intent(ListLocalActivity.this, UnityPlayerActivity.class);
-                        }
-                        SharedPreUtil.getInstance(ListLocalActivity.this).add("nowplayUrl", localurl);
-                        SharedPreUtil.getInstance(ListLocalActivity.this).add("qingxidu", list.get(i).getQingxidu() + "");
-                        SharedPreUtil.getInstance(ListLocalActivity.this).add("sdurl", "");
-                        SharedPreUtil.getInstance(ListLocalActivity.this).add("hdrul", "");
-                        SharedPreUtil.getInstance(ListLocalActivity.this).add("uhdrul", "");
-                        if (localurl.contains("_3d_interaction")) {
-                            SharedPreUtil.getInstance(ListLocalActivity.this).add("type", "3d");
-                        } else if (localurl.contains("_vr_interaction")) {
-                            SharedPreUtil.getInstance(ListLocalActivity.this).add("type", "vr_interaction");
-                        } else if (localurl.contains("_3d_noteraction")) {
-                            SharedPreUtil.getInstance(ListLocalActivity.this).add("type", "3d_noteraction");
-                        } else {
-                            SharedPreUtil.getInstance(ListLocalActivity.this).add("type", "vr");
-                        }
+                        intent = new Intent(ListLocalActivity.this, UnityPlayerActivity.class);
                         ListLocalActivity.this.startActivity(intent);
+                        Intent intent1 = new Intent("Unitystart");
+                        intent1.putExtra("nowplayUrl", localurl);
+                        intent1.putExtra("qingxidu", list.get(i).getQingxidu() + "");
+                        intent1.putExtra("sdurl", "");
+                        intent1.putExtra("hdrul", "");
+                        intent1.putExtra("uhdrul", "");
+                        if (localurl.contains("_3d_interaction")) {
+                            intent1.putExtra("type", "3d");
+                        } else if (localurl.contains("_vr_interaction")) {
+                            intent1.putExtra("type", "vr_interaction");
+                        } else if (localurl.contains("_3d_noteraction")) {
+                            intent1.putExtra("type", "3d_noteraction");
+                        } else {
+                            intent1.putExtra("type", "vr");
+                        }
+                        sendBroadcast(intent1);
                     } else if (state == 2) {
                         LocalBean2 localBean = list.get(i);
                         System.out.println("***开始" + list.get(i).getUrl());
@@ -535,7 +520,7 @@ public class ListLocalActivity extends BaseActivity {
 
         //SDPATH目录路径，fileName文件名
 
-        File file = new File(fileName.replace("file://",""));
+        File file = new File(fileName.replace("file://", ""));
         if (file == null || !file.exists() || file.isDirectory()) {
             System.out.println("---文件没有删除" + fileName);
             return false;

@@ -6,9 +6,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -24,9 +21,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.dlodlo.dvr.sdk.unity.DvrUnityActivity;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.hotcast.vr.adapter.PinglunAdapter;
 import com.hotcast.vr.bean.Details;
 import com.hotcast.vr.bean.Detailser;
@@ -47,10 +42,8 @@ import com.hotcast.vr.tools.DensityUtils;
 import com.hotcast.vr.tools.L;
 import com.hotcast.vr.tools.SharedPreUtil;
 import com.hotcast.vr.tools.TokenUtils;
-import com.hotcast.vr.tools.UnityTools;
 import com.hotcast.vr.tools.Utils;
 import com.hotcast.vr.u3d.UnityPlayerActivity;
-import com.hotcast.vr.uikit.Util;
 import com.lidroid.xutils.BitmapUtils;
 import com.lidroid.xutils.DbUtils;
 import com.lidroid.xutils.exception.DbException;
@@ -58,22 +51,12 @@ import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.RequestParams;
 import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
-import com.tencent.mm.sdk.modelmsg.SendMessageToWX;
-import com.tencent.mm.sdk.modelmsg.WXMediaMessage;
-import com.tencent.mm.sdk.modelmsg.WXWebpageObject;
 import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -85,7 +68,6 @@ import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.ShareSDK;
 import cn.sharesdk.wechat.friends.Wechat;
 import cn.sharesdk.wechat.moments.WechatMoments;
-import cn.sharesdk.wechat.utils.WechatHelper;
 
 /**
  * Created by lostnote on 15/11/28.
@@ -179,30 +161,31 @@ public class DetailActivity extends BaseActivity {
     }
 
     private void startPlay(String play_url, int qingxidu, Play play) {
-        if (UnityTools.getGlasses().equals("1")) {
-            intent = new Intent(this, DvrUnityActivity.class);
-        } else {
-            intent = new Intent(this, UnityPlayerActivity.class);
-        }
-        SharedPreUtil.getInstance(this).add("nowplayUrl", play_url);//默认播放地址
-        SharedPreUtil.getInstance(this).add("qingxidu", qingxidu + "");//清晰度
+        intent = new Intent(this, UnityPlayerActivity.class);
+        DetailActivity.this.startActivity(intent);
+
+        Intent intent1 = new Intent("Unitystart");
+        intent1.putExtra("nowplayUrl", play_url);
+        intent1.putExtra("qingxidu", qingxidu + "");
+
+
         if (!TextUtils.isEmpty(play.getSd_url())) {
-            SharedPreUtil.getInstance(this).add("sdurl", play.getSd_url());
+            intent1.putExtra("sdurl", play.getSd_url());
         } else {
-            SharedPreUtil.getInstance(this).add("sdurl", "");
+            intent1.putExtra("sdurl", "");
         }
         if (!TextUtils.isEmpty(play.getHd_url())) {
-            SharedPreUtil.getInstance(this).add("hdrul", play.getHd_url());
+            intent1.putExtra("hdrul", play.getHd_url());
         } else {
-            SharedPreUtil.getInstance(this).add("hdrul", "");
+            intent1.putExtra("hdrul", "");
         }
         if (!TextUtils.isEmpty(play.getUhd_url())) {
-            SharedPreUtil.getInstance(this).add("uhdrul", play.getUhd_url());
+            intent1.putExtra("uhdrul", play.getUhd_url());
         } else {
-            SharedPreUtil.getInstance(this).add("uhdrul", "");
+            intent1.putExtra("uhdrul", "");
         }
-        SharedPreUtil.getInstance(this).add("type", type);
-        DetailActivity.this.startActivity(intent);
+        intent1.putExtra("type", type);
+        sendBroadcast(intent1);
     }
 
     class ViewHolder {

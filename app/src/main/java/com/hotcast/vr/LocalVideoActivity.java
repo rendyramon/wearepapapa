@@ -10,11 +10,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.media.ThumbnailUtils;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -25,18 +23,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.dlodlo.dvr.sdk.unity.DvrUnityActivity;
-import com.hotcast.vr.BaseActivity;
-import com.hotcast.vr.R;
-import com.hotcast.vr.asynctask.LocalVideosAsynctask;
-import com.hotcast.vr.bean.ListBean;
-import com.hotcast.vr.bean.LocalBean2;
 import com.hotcast.vr.bean.LocalVideoBean;
-import com.hotcast.vr.tools.SharedPreUtil;
-import com.hotcast.vr.tools.UnityTools;
 import com.hotcast.vr.u3d.UnityPlayerActivity;
 import com.lidroid.xutils.BitmapUtils;
-import com.lidroid.xutils.exception.DbException;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -143,26 +132,25 @@ public class LocalVideoActivity extends BaseActivity implements ActivityCompat.O
                 System.out.println("===" + localurl);
                 if (file.exists()) {
                     Intent intent;
-                    if (UnityTools.getGlasses().equals("1")) {
-                        intent = new Intent(LocalVideoActivity.this, DvrUnityActivity.class);
-                    } else {
-                        intent = new Intent(LocalVideoActivity.this, UnityPlayerActivity.class);
-                    }
-                    SharedPreUtil.getInstance(LocalVideoActivity.this).add("nowplayUrl", "file://" + localurl);
-                    SharedPreUtil.getInstance(LocalVideoActivity.this).add("qingxidu", "0");
-                    SharedPreUtil.getInstance(LocalVideoActivity.this).add("sdurl", "");
-                    SharedPreUtil.getInstance(LocalVideoActivity.this).add("hdrul", "");
-                    SharedPreUtil.getInstance(LocalVideoActivity.this).add("uhdrul", "");
-                    if (localurl.contains("_3d_interaction")) {
-                        SharedPreUtil.getInstance(LocalVideoActivity.this).add("type", "3d");
-                    } else if (localurl.contains("_vr_interaction")) {
-                        SharedPreUtil.getInstance(LocalVideoActivity.this).add("type", "vr_interaction");
-                    } else if (localurl.contains("_3d_noteraction")) {
-                        SharedPreUtil.getInstance(LocalVideoActivity.this).add("type", "3d_noteraction");
-                    } else {
-                        SharedPreUtil.getInstance(LocalVideoActivity.this).add("type", "vr");
-                    }
+                    intent = new Intent(LocalVideoActivity.this, UnityPlayerActivity.class);
                     LocalVideoActivity.this.startActivity(intent);
+
+                    Intent intent1 = new Intent("Unitystart");
+                    intent1.putExtra("nowplayUrl", "file://" + localurl);
+                    intent1.putExtra("qingxidu", "0");
+                    intent1.putExtra("sdurl", "");
+                    intent1.putExtra("hdrul", "");
+                    intent1.putExtra("uhdrul", "");
+                    if (localurl.contains("_3d_interaction")) {
+                        intent1.putExtra("type", "3d");
+                    } else if (localurl.contains("_vr_interaction")) {
+                        intent1.putExtra("type", "vr_interaction");
+                    } else if (localurl.contains("_3d_noteraction")) {
+                        intent1.putExtra("type", "3d_noteraction");
+                    } else {
+                        intent1.putExtra("type", "vr");
+                    }
+                    sendBroadcast(intent1);
                 }
             }
         });
