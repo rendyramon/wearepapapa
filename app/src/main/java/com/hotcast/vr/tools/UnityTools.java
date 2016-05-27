@@ -3,28 +3,27 @@ package com.hotcast.vr.tools;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.AsyncTask;
 import android.provider.MediaStore;
+import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 
 import com.google.gson.Gson;
-import com.google.unity.GoogleUnityActivity;
 import com.hotcast.vr.BaseApplication;
-import com.hotcast.vr.PlayerVRActivityNew2;
-import com.hotcast.vr.bean.LocalBean;
+import com.hotcast.vr.SplashActivity;
 import com.hotcast.vr.bean.LocalBean2;
 import com.hotcast.vr.bean.LocalVideoBean;
 import com.hotcast.vr.download.DownLoadService;
+import com.hotcast.vr.services.UnityService;
 import com.lidroid.xutils.DbUtils;
 import com.lidroid.xutils.exception.DbException;
 import com.unity3d.player.UnityPlayer;
 
-import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -35,8 +34,9 @@ import java.util.List;
 public class UnityTools {
     public static Context context;
 
-    public static void startActivity(Context context) {
-
+    public static void startActivity() {
+        System.out.println();
+        UnityPlayer.currentActivity.startActivity(new Intent(UnityPlayer.currentActivity, SplashActivity.class));
     }
 
     /**
@@ -103,24 +103,8 @@ public class UnityTools {
     }
 
     public static String[] getPlayUrl() {
-        String[] urls = new String[6];
-        String urlnow = SharedPreUtil.getInstance(UnityPlayer.currentActivity).select("nowplayUrl", "");
-        String qingxidu = SharedPreUtil.getInstance(UnityPlayer.currentActivity).select("qingxidu", "0");
-        String sdurl = SharedPreUtil.getInstance(UnityPlayer.currentActivity).select("sdurl", "");
-        String hdrul = SharedPreUtil.getInstance(UnityPlayer.currentActivity).select("hdrul", "");
-        String uhdrul = SharedPreUtil.getInstance(UnityPlayer.currentActivity).select("uhdrul", "");
-        String type = SharedPreUtil.getInstance(UnityPlayer.currentActivity).select("type", "");
-        if (!urlnow.contains("http") && !urlnow.contains("file") && urlnow.length() > 1) {
-            urlnow = "file://" + urlnow;
-        }
-        urls[0] = urlnow; //默认的播放地址
-        urls[1] = qingxidu;//0标，1 高。2超
-        urls[2] = sdurl;
-        urls[3] = hdrul;
-        urls[4] = uhdrul;
-        urls[5] = type;//
-        System.out.println("---地址传递：" + urls[0] + "-11-" + urls[1] + "-11-" + urls[2] + "-11-" + urls[3] + "-11-" + urls[4] + "-11-" + urls[5]);
-        return urls;
+        System.out.println("---getPlayUrl：" + UnityService.urls[0]);
+        return UnityService.urls;
     }
 
     public static int getSence() {
@@ -148,7 +132,8 @@ public class UnityTools {
         Intent intent = new Intent("unitywork");
         UnityPlayer.currentActivity.sendBroadcast(intent);
         System.out.println("---unity退出了" + object.getClass().toString() + DownLoadService.unitydoing);
-        UnityPlayer.currentActivity.finish();
+//        UnityPlayer.currentActivity.finish();
+        startActivity();
 //        ((GoogleUnityActivity) UnityPlayer.currentActivity).getUnityPlayer().quit();
 
     }
@@ -169,39 +154,45 @@ public class UnityTools {
         }
     }
 
-    public static int getPlayTime(String mUri) {
+    public static void getPlayTime(final String mUri) {
         System.out.println("---地址：" + mUri);
-        String duration = "0";
-        android.media.MediaMetadataRetriever mmr = new android.media.MediaMetadataRetriever();
-        try {
-            if (mUri != null) {
-                if (mUri.contains("file://")) {
-                    mmr.setDataSource(mUri.replace("file://", ""));
-                } else {
-                    HashMap<String, String> headers = null;
-                    if (headers == null) {
-                        headers = new HashMap<String, String>();
-                        headers.put("User-Agent", "Mozilla/5.0 (Linux; U; Android 4.4.2; zh-CN; MW-KW-001 Build/JRO03C) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 UCBrowser/1.0.0.001 U4/0.8.0 Mobile Safari/533.1");
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String duration = "0";
+                android.media.MediaMetadataRetriever mmr = new android.media.MediaMetadataRetriever();
+                try {
+                    if (mUri != null) {
+                        if (mUri.contains("file://")) {
+                            mmr.setDataSource(mUri.replace("file://", ""));
+                        } else {
+                            HashMap<String, String> headers = null;
+                            if (headers == null) {
+                                headers = new HashMap<String, String>();
+                                headers.put("User-Agent", "Mozilla/5.0 (Linux; U; Android 4.4.2; zh-CN; MW-KW-001 Build/JRO03C) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 UCBrowser/1.0.0.001 U4/0.8.0 Mobile Safari/533.1");
+                            }
+                            mmr.setDataSource(mUri, headers);
+                        }
+                    } else {
+                        //mmr.setDataSource(mFD, mOffset, mLength);
                     }
-                    mmr.setDataSource(mUri, headers);
-                }
-            } else {
-                //mmr.setDataSource(mFD, mOffset, mLength);
-            }
 
-            duration = mmr.extractMetadata(android.media.MediaMetadataRetriever.METADATA_KEY_DURATION);//时长(毫秒)
+                    duration = mmr.extractMetadata(android.media.MediaMetadataRetriever.METADATA_KEY_DURATION);//时长(毫秒)
 //            String width = mmr.extractMetadata(android.media.MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH);//宽
 //            String height = mmr.extractMetadata(android.media.MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT);//高
 
-        } catch (Exception ex) {
-            System.out.println("---时长获取失败");
-        } finally {
-            mmr.release();
-            if (duration != null && Integer.parseInt(duration) < 100) {
-                duration = "0";
+                } catch (Exception ex) {
+                    System.out.println("---时长获取失败");
+                } finally {
+                    mmr.release();
+                    if (duration != null && Integer.parseInt(duration) < 100) {
+                        duration = "0";
+                    }
+                    System.out.println("---视频时长：" + duration);
+                    UnityPlayer.UnitySendMessage("Manager","SetTimeOnUI",duration);
+                }
             }
-            return Integer.parseInt(duration);
-        }
+        }).start();
     }
 
     /**
@@ -210,8 +201,24 @@ public class UnityTools {
      * @return
      */
     public static String getDeviceID() {
-        System.out.println("---device:" + BaseApplication.device);
-        return BaseApplication.device;
+        String device = "";
+        TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+        try {
+            device = tm.getDeviceId();
+        } catch (Exception e) {
+            SharedPreferences sp = UnityPlayer.currentActivity.getSharedPreferences("cache_config", Context.MODE_PRIVATE);
+            device = sp.getString("device", "");
+            if (device == null || device.length() < 5) {
+                device = System.currentTimeMillis() + (int) (Math.random() * 100) + "";
+                sp.edit().putString("device", device).commit();
+            }
+        } finally {
+            if (device == null || device.length() < 3) {
+                device = System.currentTimeMillis() + (int) (Math.random() * 100) + "";
+            }
+        }
+        System.out.println("---device111:" + device);
+        return device;
     }
 
     /**
@@ -281,13 +288,14 @@ public class UnityTools {
             intent.putExtra("qingxidu", qingxidu);
 
             UnityPlayer.currentActivity.sendBroadcast(intent);
-            System.out.println("---点击了下载" + imgurl);
+//            System.out.println("---点击了下载" + imgurl);
         } else {
             System.out.println("---无网络" + imgurl);
         }
     }
 
     public static String getToken() {
+        System.out.println("---getToken" + TokenUtils.createToken(UnityPlayer.currentActivity));
         return TokenUtils.createToken(UnityPlayer.currentActivity);
     }
 
