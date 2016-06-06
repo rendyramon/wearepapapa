@@ -1,8 +1,13 @@
 package com.hotcast.vr;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -10,6 +15,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -35,15 +41,16 @@ public class GlassesActivity extends Activity implements View.OnClickListener {
     GlassesAdapter adapter;
     List<Glass.GlassesData> glasses;
     BitmapUtils bitmapUtils;
-    LinearLayout glasses_head;
+    RelativeLayout glasses_head;
     ImageView iv_return;
+    HomeReceiver homeReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_glasses);
         bitmapUtils = new BitmapUtils(this);
-        glasses_head = (LinearLayout) findViewById(R.id.glasses_head);
+        glasses_head = (RelativeLayout) findViewById(R.id.glasses_head);
         TextView tv = (TextView) glasses_head.findViewById(R.id.tv_title);
         iv_return = (ImageView) glasses_head.findViewById(R.id.iv_return);
         iv_return.setOnClickListener(this);
@@ -55,6 +62,24 @@ public class GlassesActivity extends Activity implements View.OnClickListener {
         getGlassesData();
 
 
+    }
+
+    @Override
+    protected void onStop() {
+        if (homeReceiver != null) {
+            unregisterReceiver(homeReceiver);
+            homeReceiver = null;
+        }
+        super.onStop();
+    }
+
+    @Override
+    protected void onStart() {
+        if (homeReceiver == null) {
+            homeReceiver = new HomeReceiver();
+        }
+        registerReceiver(homeReceiver, new IntentFilter(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
+        super.onStart();
     }
 
     @Override
@@ -150,5 +175,34 @@ public class GlassesActivity extends Activity implements View.OnClickListener {
     public void httpPost(String url, RequestParams params, RequestCallBack callBack) {
         HttpUtils http = new HttpUtils();
         http.send(HttpRequest.HttpMethod.POST, url, params, callBack);
+    }
+
+    class HomeReceiver extends BroadcastReceiver {
+        String SYSTEM_REASON = "reason";
+        String SYSTEM_HOME_KEY = "homekey";
+        String SYSTEM_HOME_KEY_LONG = "recentapps";
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (action.equals(Intent.ACTION_CLOSE_SYSTEM_DIALOGS)) {
+                String reason = intent.getStringExtra(SYSTEM_REASON);
+                if (TextUtils.equals(reason, SYSTEM_HOME_KEY)) {
+                    //表示按了home键,程序到了后台
+                    System.out.println("---base——home键监听到了");
+                    SharedPreferences sph = getSharedPreferences("UnityConfig", Context.MODE_WORLD_WRITEABLE);
+                    SharedPreferences.Editor edit = sph.edit();
+                    edit.putBoolean("Unitisdoing", true).commit();
+
+                    Intent intent1 = new Intent("finishUnity");
+                    intent1.putExtra("Unitisdoing", true);
+                    sendBroadcast(intent1);
+                } else if (TextUtils.equals(reason, SYSTEM_HOME_KEY_LONG)) {
+                    //表示长按home键,显示最近使用的程序列表
+//                    System.out.println("---home键长按监听到了");
+                }
+            }
+        }
+
     }
 }

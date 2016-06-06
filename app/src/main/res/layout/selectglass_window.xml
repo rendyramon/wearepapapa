@@ -21,7 +21,7 @@
         android:background="#66000000" />
 <ScrollView
     android:layout_width="250dp"
-    android:layout_height="248dp"
+    android:layout_height="275dp"
     android:gravity="center">
     <RadioGroup
         android:id="@+id/rg"
@@ -37,7 +37,7 @@
             android:button="@null"
             android:drawableRight="@drawable/select_glasses_nomal"
             android:padding="5dp"
-            android:text="多 哚 Dlodlo"
+            android:text="灵 镜 小 白"
             android:textColor="#bb000000"
             android:textSize="15sp" />
 
@@ -145,7 +145,7 @@
             android:button="@null"
             android:drawableRight="@drawable/select_glasses_nomal"
             android:padding="5dp"
-            android:text="魔壳"
+            android:text="魔 壳"
             android:textColor="#bb000000"
             android:textSize="15sp" />
         <View

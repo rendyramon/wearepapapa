@@ -16,7 +16,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.hotcast.vr.bean.LocalBean2;
+import com.hotcast.vr.bean.LocalPlay;
 import com.hotcast.vr.bean.MediaDownloadManager;
+import com.hotcast.vr.services.UnityService;
 import com.hotcast.vr.u3d.UnityPlayerActivity;
 import com.lidroid.xutils.BitmapUtils;
 import com.lidroid.xutils.DbUtils;
@@ -45,7 +47,7 @@ public class ListLocalActivity extends BaseActivity {
     @InjectView(R.id.lv)
     GridView lv;
     @InjectView(R.id.bt_editor)
-    Button bt_editor;
+    TextView bt_editor;
     //    @InjectView(R.id.fab)
 //    FloatingActionButton fab;
     @InjectView(R.id.cache_no)
@@ -66,7 +68,6 @@ public class ListLocalActivity extends BaseActivity {
             editor = true;
         }
         edit++;
-//        adapter.notify();
         lv.setAdapter(new HuancunAdapter());
         adapter.notifyDataSetChanged();
         System.out.println("你点击了编辑 editor = " + editor);
@@ -113,6 +114,23 @@ public class ListLocalActivity extends BaseActivity {
         initListView();
     }
 
+    public void DBUnity(String[] urls, boolean flag) {
+        LocalPlay localPlay = new LocalPlay();
+        localPlay.setNowplayUrl(urls[0]);
+        localPlay.setQingxidu(urls[1]);
+        localPlay.setSdurl(urls[2]);
+        localPlay.setHdrul(urls[3]);
+        localPlay.setUhdrul(urls[4]);
+        localPlay.setType(urls[5]);
+
+        localPlay.setUnityJump(flag);
+        try {
+            db.saveOrUpdate(localPlay);
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
+    }
+
     static class ViewHolder {
         TextView tv_finish;
         ImageView iv_huancun_img;//預覽圖
@@ -128,6 +146,7 @@ public class ListLocalActivity extends BaseActivity {
         try {
             list = db.findAll(LocalBean2.class);
             if (list == null) {
+                list = new ArrayList<>();
                 tv_downloded.setVisibility(View.GONE);
                 tv_downloding.setVisibility(View.GONE);
                 bt_editor.setVisibility(View.GONE);
@@ -175,25 +194,21 @@ public class ListLocalActivity extends BaseActivity {
                 }
                 if (!editor) {
                     if (state == 3) {
+                        String type;
+                        if (localurl.contains("_3d_interaction")) {
+                            type = "3d";
+                        } else if (localurl.contains("_vr_interaction")) {
+                            type = "vr_interaction";
+                        } else if (localurl.contains("_3d_noteraction")) {
+                            type = "3d_noteraction";
+                        } else {
+                            type = "vr";
+                        }
+                        DBUnity(new String[]{localurl, list.get(i).getQingxidu()+"", "", "","", type,}, false);
+                        startService(new Intent(ListLocalActivity.this, UnityService.class));
                         Intent intent;
                         intent = new Intent(ListLocalActivity.this, UnityPlayerActivity.class);
                         ListLocalActivity.this.startActivity(intent);
-                        Intent intent1 = new Intent("Unitystart");
-                        intent1.putExtra("nowplayUrl", localurl);
-                        intent1.putExtra("qingxidu", list.get(i).getQingxidu() + "");
-                        intent1.putExtra("sdurl", "");
-                        intent1.putExtra("hdrul", "");
-                        intent1.putExtra("uhdrul", "");
-                        if (localurl.contains("_3d_interaction")) {
-                            intent1.putExtra("type", "3d");
-                        } else if (localurl.contains("_vr_interaction")) {
-                            intent1.putExtra("type", "vr_interaction");
-                        } else if (localurl.contains("_3d_noteraction")) {
-                            intent1.putExtra("type", "3d_noteraction");
-                        } else {
-                            intent1.putExtra("type", "vr");
-                        }
-                        sendBroadcast(intent1);
                     } else if (state == 2) {
                         LocalBean2 localBean = list.get(i);
                         System.out.println("***开始" + list.get(i).getUrl());

@@ -19,6 +19,7 @@ import android.text.TextUtils;
 
 import com.google.gson.Gson;
 import com.hotcast.vr.BaseApplication;
+import com.hotcast.vr.MainActivity_new;
 import com.hotcast.vr.SplashActivity;
 import com.hotcast.vr.bean.LocalBean2;
 import com.hotcast.vr.bean.LocalVideoBean;
@@ -40,7 +41,6 @@ public class UnityTools {
 
     public static void startActivity() {
         UnityPlayer.currentActivity.startActivity(new Intent(UnityPlayer.currentActivity, SplashActivity.class));
-        System.out.println("---unity退出了");
     }
 
     /**
@@ -82,7 +82,6 @@ public class UnityTools {
                 Bitmap bitmap = MediaStore.Video.Thumbnails.getThumbnail(contentResolver, videoId,
                         MediaStore.Images.Thumbnails.MINI_KIND, options);
                 localVideoBean.setVideoImage(bitmap);
-
                 list.add(localVideoBean);
             }
             cursor.moveToNext();
@@ -107,21 +106,14 @@ public class UnityTools {
                 }
             }
             return json;
-
-
         } else {
             return "";
         }
     }
 
     public static String[] getPlayUrl() {
-        System.out.println("---getPlayUrl：" + UnityService.urls[0]);
+        System.out.println("---UnityService.urls:" + UnityService.urls[0]);
         return UnityService.urls;
-    }
-
-    public static int getSence() {
-        // 0:首页，1：vr播放器  2：vr互动播放器  3：3d互动播放器
-        return ((Integer) SharedPreUtil.getInstance(UnityPlayer.currentActivity).select("sence", Integer.valueOf(0))).intValue();
     }
 
     /**
@@ -130,13 +122,16 @@ public class UnityTools {
      * @return -1 表示没有选择（这种情况不会出现），1 多朵，2.cardboard 3.小宅，4暴风魔镜
      */
     public static String getGlasses() {
-//        SharedPreUtil sp = SharedPreUtil.getInstance(context);
-//        int g = sp.select("glass", 2);
         return "2";
     }
 
     public static boolean getJump() {
         return UnityService.unityWork;
+    }
+
+    public static void setUnityWork(boolean unityWork, Context context) {
+        SharedPreUtil.getInstance(context).add("unityWork", unityWork);
+        UnityService.unityWork = unityWork;
     }
 
     /**
@@ -147,7 +142,6 @@ public class UnityTools {
     public static void finishUnity(Object object) {
         Intent intent = new Intent("unitywork");
         UnityPlayer.currentActivity.sendBroadcast(intent);
-        System.out.println("---unity退出了" + object.getClass().toString() + DownLoadService.unitydoing);
 //        UnityPlayer.currentActivity.finish();
         startActivity();
 //        ((GoogleUnityActivity) UnityPlayer.currentActivity).getUnityPlayer().quit();
@@ -166,12 +160,14 @@ public class UnityTools {
         if (l == null || TextUtils.isEmpty(l.getUrl()) || TextUtils.isEmpty(l.getLocalurl())) {
             return "";
         } else {
-            return l.getLocalurl();
+            if (l != null && l.getCurState() == 3) {
+                return l.getLocalurl();
+            }
+            return "";
         }
     }
 
     public static void getPlayTime(final String mUri) {
-        System.out.println("---地址：" + mUri);
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -233,7 +229,6 @@ public class UnityTools {
                 device = System.currentTimeMillis() + (int) (Math.random() * 100) + "";
             }
         }
-        System.out.println("---device111:" + device);
         return device;
     }
 
@@ -282,7 +277,6 @@ public class UnityTools {
             imgurl = i;
             vid = v;
             qingxidu = q;
-            System.out.println("---下载类别" + type);
             Intent intent = new Intent("startDownLoad");
             if ("3d".equals(type)) {
                 intent.putExtra("type", "_3d_interaction");
@@ -304,14 +298,12 @@ public class UnityTools {
             intent.putExtra("qingxidu", qingxidu);
 
             UnityPlayer.currentActivity.sendBroadcast(intent);
-//            System.out.println("---点击了下载" + imgurl);
         } else {
             System.out.println("---无网络" + imgurl);
         }
     }
 
     public static String getToken() {
-        System.out.println("---getToken" + TokenUtils.createToken(UnityPlayer.currentActivity));
         return TokenUtils.createToken(UnityPlayer.currentActivity);
     }
 
@@ -338,8 +330,8 @@ public class UnityTools {
     }
 
     public static boolean TestPhone() {
-        boolean islow = SharedPreUtil.getInstance(UnityPlayer.currentActivity).select("islow", false);
-        return islow;
+//        boolean islow = SharedPreUtil.getInstance(UnityPlayer.currentActivity).select("islow", false);
+        return false;
     }
 
     /**

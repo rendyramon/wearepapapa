@@ -23,6 +23,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.hotcast.vr.tools.L;
+import com.hotcast.vr.tools.NetUtils;
 import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.HttpHandler;
@@ -90,7 +91,11 @@ public class UpdateAppManager {
                 showNoticeDialog(newFeatures);
                 break;
             case "1"://强制更新
-                showDownloadDialog();
+                if (NetUtils.isWifiConnected(context)){
+                    showDownloadDialog();
+                }else{
+                    showNoticeDialog(newFeatures);
+                }
                 break;
         }
     }

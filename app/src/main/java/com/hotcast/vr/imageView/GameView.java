@@ -87,7 +87,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback,
                 canvas = holder.lockCanvas();
                 canvas.drawColor(Color.BLACK);
                 //画背景, 并使其移动
-                dx += 5;
+                dx += 4;
                 canvas.drawBitmap(bitmap, dx, 0, null);
                 //判断是否到达屏幕底端, 到达了则使其回到屏幕上端
                 if (dx >= 0)

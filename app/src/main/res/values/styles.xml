@@ -12,6 +12,7 @@
         <item name="android:backgroundDimAmount">0.4</item>
     </style>
     =""
+
     <style name="about_text">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -107,6 +108,7 @@
         <item name="android:drawablePadding">2dp</item>
         <item name="android:layout_weight">1.0</item>
     </style>
+
     <style name="classify_button">
         <item name="android:textSize">16sp</item>
         <item name="android:textColor">@color/button_text_color</item>
@@ -143,11 +145,37 @@
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowIsFloating">true</item>
     </style>
-    <style name="myProgressBarStyle_play" >
-        　　<item name="android:indeterminateDrawable">@drawable/progressbar_play</item>
-        　　<item name="android:minWidth">76dip</item>
-        　　<item name="android:maxWidth">76dip</item>
-        　　<item name="android:minHeight">76dip</item>
-        　　<item name="android:maxHeight">76dip</item>
+
+    <style name="myProgressBarStyle_play">
+        　　
+        <item name="android:indeterminateDrawable">@drawable/progressbar_play</item>
+        　　
+        <item name="android:minWidth">76dip</item>
+        　　
+        <item name="android:maxWidth">76dip</item>
+        　　
+        <item name="android:minHeight">76dip</item>
+        　　
+        <item name="android:maxHeight">76dip</item>
     </style>
+
+    <style name="Theme.NoAnimation" parent="android:Theme.NoTitleBar.Fullscreen">
+        <item name="android:windowAnimationStyle">@style/Animation</item>
+    </style>
+
+    <style name="Animation">
+        <item name="android:activityOpenEnterAnimation">@null</item>
+        <item name="android:activityOpenExitAnimation">@null</item>
+        <item name="android:activityCloseEnterAnimation">@null</item>
+        <item name="android:activityCloseExitAnimation">@null</item>
+        <item name="android:taskOpenEnterAnimation">@null</item>
+        <item name="android:taskOpenExitAnimation">@null</item>
+        <item name="android:taskCloseEnterAnimation">@null</item>
+        <item name="android:taskCloseExitAnimation">@null</item>
+        <item name="android:taskToFrontEnterAnimation">@null</item>
+        <item name="android:taskToFrontExitAnimation">@null</item>
+        <item name="android:taskToBackEnterAnimation">@null</item>
+        <item name="android:taskToBackExitAnimation">@null</item>
+    </style>
+
 </resources>

@@ -1,10 +1,11 @@
 package com.hotcast.vr;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.ActivityCompat;
@@ -17,7 +18,6 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.hotcast.vr.asynctask.LocalVideosAsynctask;
@@ -29,12 +29,9 @@ import com.hotcast.vr.bean.Update;
 import com.hotcast.vr.bean.Updater;
 import com.hotcast.vr.bean.User2;
 import com.hotcast.vr.bean.UserData;
-import com.hotcast.vr.download.DownLoadService;
 import com.hotcast.vr.imageView.GameView;
 import com.hotcast.vr.tools.Constants;
 import com.hotcast.vr.tools.L;
-import com.hotcast.vr.tools.Md5Utils;
-import com.hotcast.vr.tools.SharedPreUtil;
 import com.hotcast.vr.tools.TokenUtils;
 import com.hotcast.vr.tools.Utils;
 import com.hotcast.vr.u3d.UnityPlayerActivity;
@@ -100,6 +97,12 @@ public class SplashActivity extends BaseActivity implements ActivityCompat.OnReq
 
     @Override
     public void init() {
+        Intent intent = new Intent("UnitWork");
+        intent.putExtra("Unitisdoing", false);
+        SharedPreferences sph = getSharedPreferences("UnityConfig", Context.MODE_WORLD_WRITEABLE);
+        SharedPreferences.Editor edit = sph.edit();
+        edit.putBoolean("Unitisdoing", false).commit();
+        sendBroadcast(intent);
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -107,10 +110,10 @@ public class SplashActivity extends BaseActivity implements ActivityCompat.OnReq
                     new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                     100);
 
-
+        } else {
+//            new TestMediaAsynctask(this).execute();
+            new LocalVideosAsynctask(this).execute();
         }
-
-
         AnalyticsConfig.enableEncrypt(true);
         packageManager = this.getPackageManager();
         try {
@@ -125,7 +128,6 @@ public class SplashActivity extends BaseActivity implements ActivityCompat.OnReq
         L.e("PackageName:" + getPackageName());
         getNetDate();
         String userData = sp.select("userData", "");
-        System.out.println("---userData=" + userData);
         if (!TextUtils.isEmpty(userData)) {
             UserData userData1 = new Gson().fromJson(userData, UserData.class);
             if (userData1 != null) {
@@ -133,7 +135,6 @@ public class SplashActivity extends BaseActivity implements ActivityCompat.OnReq
                 getUserData(sp.select("login_token", ""));
             }
         }
-
         System.out.println("***sp=" + sp);
 
     }
@@ -148,9 +149,7 @@ public class SplashActivity extends BaseActivity implements ActivityCompat.OnReq
                     new TestMediaAsynctask(this).execute();
                     new LocalVideosAsynctask(this).execute();
                 }
-
                 break;
-
         }
     }
 
@@ -161,7 +160,6 @@ public class SplashActivity extends BaseActivity implements ActivityCompat.OnReq
         params.addBodyParameter("version", BaseApplication.version);
         params.addBodyParameter("platform", BaseApplication.platform);
         params.addBodyParameter("login_token", login_token);
-        System.out.println("---login_token=" + login_token);
         this.httpPost(requestUrl, params, new RequestCallBack<String>() {
             @Override
             public void onStart() {
@@ -270,7 +268,7 @@ public class SplashActivity extends BaseActivity implements ActivityCompat.OnReq
 
             @Override
             public void onSuccess(ResponseInfo<String> responseInfo) {
-                L.e("DetailActivity responseInfo:" + responseInfo.result);
+
                 setViewData(responseInfo.result);
             }
 
@@ -295,7 +293,6 @@ public class SplashActivity extends BaseActivity implements ActivityCompat.OnReq
                 System.out.println("--update = " + update);
                 newFeatures = update.getLog();
             }
-
         }
     }
 
@@ -334,7 +331,7 @@ public class SplashActivity extends BaseActivity implements ActivityCompat.OnReq
                     } else {
                         isrung = false;
 
-                        isFrist = sp.select("isFrist", true);
+                        isFrist = sp.select("isFrist_2.0", true);
                         if (isFrist) {
                             shanler.sendEmptyMessage(0);
 
@@ -390,20 +387,13 @@ public class SplashActivity extends BaseActivity implements ActivityCompat.OnReq
     }
 
     public void updateAlpha() {
-        if (image_alpha + 10 <= 250) {
-            image_alpha += 10;
+        if (image_alpha + 8 <= 250) {
+            image_alpha += 8;
         } else {
             image_alpha = 250;
         }
         // 发送需要更新imageview视图的消息-->这里是发给主线程
         shanler.sendEmptyMessage(100);
-    }
-
-    public void startGoInUnity() {
-        Intent intent = new Intent(this, UnityPlayerActivity.class);
-        SharedPreUtil.getInstance(this).add("nowplayUrl", "");
-        startActivity(intent);
-        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
     }
 
     private void pageJump() {
@@ -412,7 +402,8 @@ public class SplashActivity extends BaseActivity implements ActivityCompat.OnReq
         if (isFrist) {
 //            sp.getBooleanData(SplashActivity.this,"isFrist",false);
             L.e("***第一次运行" + isFrist + "显示声明");
-            sp.add("isFrist", false);
+            sp.add("isFrist_2.0", false);
+            sp.add("isFrist", true);
             isFrist1 = true;
             if (!BaseApplication.version.equals(version)) {
                 BaseApplication.isUpdate = true;
@@ -420,7 +411,6 @@ public class SplashActivity extends BaseActivity implements ActivityCompat.OnReq
                 intent.putExtra("is_force", is_force);
                 intent.putExtra("newFeatures", newFeatures);
             }
-
         } else {
             L.e("***不是第一次运行" + isFrist + "不显示");
             isFrist1 = false;
@@ -474,4 +464,7 @@ public class SplashActivity extends BaseActivity implements ActivityCompat.OnReq
         }
     }
 
+    @Override
+    public void onBackPressed() {
+    }
 }

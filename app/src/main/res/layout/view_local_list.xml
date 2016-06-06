@@ -68,16 +68,16 @@
 
     </FrameLayout>
 
-    <Button
-        android:id="@+id/bt_editor"
-        android:layout_width="80dp"
-        android:layout_height="40dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginBottom="5dp"
-        android:layout_marginRight="10dp"
-        android:background="@mipmap/username"
-        android:text="@string/editor" />
+    <!--<Button-->
+        <!--android:id="@+id/bt_editor"-->
+        <!--android:layout_width="80dp"-->
+        <!--android:layout_height="40dp"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--android:layout_alignParentRight="true"-->
+        <!--android:layout_marginBottom="5dp"-->
+        <!--android:layout_marginRight="10dp"-->
+        <!--android:background="@mipmap/username"-->
+        <!--android:text="@string/editor" />-->
 </RelativeLayout><!--
  <com.melnykov.fab.FloatingActionButton
         android:id="@+id/fab"

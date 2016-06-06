@@ -89,7 +89,6 @@ public class ClassifyGridView extends BaseView {
             @Override
             public void onPullUpToRefresh(PullToRefreshBase<GridView> refreshView) {
                 bPullDown = false;
-                System.out.println("---ClassfyGridView() page" + page++);
                 getNetData(page);
             }
         });
@@ -152,17 +151,12 @@ public class ClassifyGridView extends BaseView {
     }
 
     private void getNetData(int page) {
-//        if (Utils.textIsNull(requestUrl)) {
-//            grid.onRefreshComplete();
-//            return;
-//        }
         params = new RequestParams();
         params.addBodyParameter("token", TokenUtils.createToken(activity));
         params.addBodyParameter("channel_id", channel_id);
         params.addBodyParameter("version", BaseApplication.version);
         params.addBodyParameter("platform", BaseApplication.platform);
         params.addBodyParameter("page_size", String.valueOf(10));
-        System.out.println("---channel_id = " + channel_id + " version = " + BaseApplication.version + " platform = " + BaseApplication.platform );
         if(!bPullDown){
             params.addBodyParameter("page", String.valueOf(page));
         }
@@ -182,7 +176,6 @@ public class ClassifyGridView extends BaseView {
                 bDataProcessed = true;
                 bProcessing = false;
                 grid.onRefreshComplete();
-                L.e("responseInfo:" + responseInfo.result);
                 setViewData(responseInfo.result);
                 if (iv_noNet == null) {
                     iv_noNet = (ImageView) getRootView().findViewById(R.id.iv_noNet);
@@ -240,14 +233,14 @@ public class ClassifyGridView extends BaseView {
 
         }
         if(bPullDown){
-
+            page++;
             adapter.addNewAll(tmpList);
         }else{
             if (tmpList.size()>0) {
+                page++;
                 adapter.addAll(tmpList,grid);
                 grid.smoothScrollBy(300,600);
             }
         }
-        L.e("adapter size=" + adapter.getCount());
     }
 }

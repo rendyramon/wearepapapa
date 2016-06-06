@@ -1,8 +1,10 @@
 package com.hotcast.vr;
 
+import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -23,8 +25,8 @@ import com.hotcast.vr.adapter.MyPagerAdapter;
 import com.hotcast.vr.pageview.BaseView;
 import com.hotcast.vr.pageview.ClassifyView;
 import com.hotcast.vr.pageview.HomeView2;
-
 import com.hotcast.vr.pageview.MineView2;
+import com.hotcast.vr.services.UnityService;
 import com.hotcast.vr.tools.Constants;
 import com.hotcast.vr.tools.FileUtils;
 import com.hotcast.vr.tools.L;
@@ -42,7 +44,6 @@ import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.security.Signature;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
@@ -153,9 +154,7 @@ public class MainActivity_new extends BaseActivity {
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 BaseView baseView = views[position];
                 baseView.getRootView();
-
             }
-
             @Override
             public void onPageSelected(int position) {
 //                    title.setText(titles.get(position));
@@ -195,7 +194,6 @@ public class MainActivity_new extends BaseActivity {
             curTabIndex = index;
         }
     }
-
 
     private void changeViewIndex(int index) {
         views[index].init();
@@ -241,8 +239,10 @@ public class MainActivity_new extends BaseActivity {
                 }
             }, 2000);
         } else {
+            DBUnity(new String[]{"", "0", "", "", "", ""},true);
+            startService(new Intent(this, UnityService.class));
             Intent intent = new Intent("finishUnity");
-            intent.putExtra("Unitisdoing",true);
+            intent.putExtra("Unitisdoing", true);
             sendBroadcast(intent);
             super.onBackPressed();
 
@@ -293,7 +293,7 @@ public class MainActivity_new extends BaseActivity {
             case CAMERA_REQUEST_CODE:
                 Log.i(TAG, "相机, 开始裁剪");
                 File picture = new File(userpath
-                        ,"vrhotcastuser.jpg");
+                        , "vrhotcastuser.jpg");
                 startCrop(Uri.fromFile(picture));
                 break;
             case CROP_REQUEST_CODE:
@@ -362,18 +362,17 @@ public class MainActivity_new extends BaseActivity {
             params1.addBodyParameter("version", BaseApplication.version);
             params1.addBodyParameter("platform", BaseApplication.platform);
             params1.addBodyParameter("login_token", sp.select("login_token", ""));
-            params1.addBodyParameter("UploadAvatarForm[avatar]", new File(userpath,"vrhotcastuser.jpg"));
+            params1.addBodyParameter("UploadAvatarForm[avatar]", new File(userpath, "vrhotcastuser.jpg"));
             HttpUtils httpUtils = new HttpUtils();
             httpUtils.send(HttpRequest.HttpMethod.POST, Constants.UPHEAD, params1, new RequestCallBack<String>() {
                 @Override
                 public void onSuccess(ResponseInfo<String> responseInfo) {
-                    System.out.println("----------上传头像成功" + responseInfo.result);
                     try {
                         JSONObject j = new JSONObject(responseInfo.result);
                         JSONObject data = j.getJSONObject("data");
                         String avatar = data.getString("avatar_url");
                         sp.add("avatar", avatar);
-                        FileUtils.delFile(userpath+"/vrhotcastuser.jpg");
+                        FileUtils.delFile(userpath + "/vrhotcastuser.jpg");
                         mhandler.sendEmptyMessage(2);
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -392,6 +391,17 @@ public class MainActivity_new extends BaseActivity {
         protected void onPostExecute(String s) {
 
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        System.out.println("----main销毁onDestroy");
+        DBUnity(new String[]{"", "0", "", "", "", ""},true);
+        startService(new Intent(this, UnityService.class));
+        Intent intent = new Intent("finishUnity");
+        intent.putExtra("Unitisdoing", true);
+        sendBroadcast(intent);
+        super.onDestroy();
     }
 }
 

@@ -4,28 +4,36 @@ package com.hotcast.vr;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
+import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.hotcast.vr.bean.LocalPlay;
 import com.hotcast.vr.dialog.GlassesDialog;
 import com.hotcast.vr.download.DownLoadService;
+import com.hotcast.vr.services.UnityService;
 import com.hotcast.vr.tools.L;
 import com.hotcast.vr.tools.SharedPreUtil;
 import com.hotcast.vr.tools.Utils;
 import com.hotcast.vr.u3d.UnityPlayerActivity;
+import com.lidroid.xutils.DbUtils;
 import com.lidroid.xutils.HttpUtils;
+import com.lidroid.xutils.exception.DbException;
 import com.lidroid.xutils.http.RequestParams;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
@@ -59,8 +67,7 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
     public SimpleDateFormat format;
 
     public SharedPreUtil sp;
-
-
+    public DbUtils db;
     private Handler messageHandler = new Handler() {
 
         @Override
@@ -142,16 +149,14 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
         // 4.设置布局
         setContentView(getLayoutId());
         ButterKnife.inject(this);
+        db = DbUtils.create(this);
         sp = SharedPreUtil.getInstance(this);
         format = new SimpleDateFormat("yyyyMMddHH");
         // 5.获取页面传入数据
         getIntentData(getIntent());
         // 6.初始化
-
-
         init();
     }
-
 
     /**
      * alertdialog确定按钮点击监听
@@ -247,14 +252,23 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
         MobclickAgent.onResume(this);
     }
 
+    HomeReceiver homeReceiver;
 
     @Override
     protected void onStart() {
+        if (homeReceiver == null) {
+            homeReceiver = new HomeReceiver();
+        }
+        registerReceiver(homeReceiver, new IntentFilter(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
         super.onStart();
     }
 
     @Override
     protected void onStop() {
+        if (homeReceiver != null) {
+            unregisterReceiver(homeReceiver);
+            homeReceiver = null;
+        }
         super.onStop();
     }
 
@@ -418,17 +432,37 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
         }
     }
 
+    public void DBUnity(String[] urls, boolean flag) {
+        LocalPlay localPlay = new LocalPlay();
+        localPlay.setNowplayUrl(urls[0]);
+        localPlay.setQingxidu(urls[1]);
+        localPlay.setSdurl(urls[2]);
+        localPlay.setHdrul(urls[3]);
+        localPlay.setUhdrul(urls[4]);
+
+        if (urls[0].contains("_3d_interaction")) {
+            localPlay.setType("3d");
+        } else if (urls[0].contains("_vr_interaction")) {
+            localPlay.setType("vr_interaction");
+        } else if (urls[0].contains("_3d_noteraction")) {
+            localPlay.setType("3d_noteraction");
+        } else {
+            localPlay.setType("vr");
+        }
+        localPlay.setUnityJump(flag);
+        try {
+            db.saveOrUpdate(localPlay);
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void startGoInUnity() {
+        DBUnity(new String[]{"", "0", "", "", "", ""}, false);
+        startService(new Intent(this, UnityService.class));
         Intent intent;
         intent = new Intent(this, UnityPlayerActivity.class);
-        DownLoadService.unitydoing = true;
         startActivity(intent);
-        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-
-        Intent intent1 = new Intent("Unitystart");
-        intent1.putExtra("nowplayUrl", "");
-        System.out.println("---发送广播111");
-        sendBroadcast(intent1);
     }
 
     //    判断是否有个网络连接
@@ -485,4 +519,29 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
         return -1;
     }
 
+    class HomeReceiver extends BroadcastReceiver {
+        String SYSTEM_REASON = "reason";
+        String SYSTEM_HOME_KEY = "homekey";
+        String SYSTEM_HOME_KEY_LONG = "recentapps";
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (action.equals(Intent.ACTION_CLOSE_SYSTEM_DIALOGS)) {
+                String reason = intent.getStringExtra(SYSTEM_REASON);
+                if (TextUtils.equals(reason, SYSTEM_HOME_KEY)) {
+                    //表示按了home键,程序到了后台
+                    System.out.println("---base——home键监听到了");
+
+                    DBUnity(new String[]{"", "", "", "", "", ""}, true);
+                    Intent intent1 = new Intent("finishUnity");
+                    sendBroadcast(intent1);
+                } else if (TextUtils.equals(reason, SYSTEM_HOME_KEY_LONG)) {
+                    //表示长按home键,显示最近使用的程序列表
+//                    System.out.println("---home键长按监听到了");
+                }
+            }
+        }
+
+    }
 }

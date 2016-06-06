@@ -37,22 +37,28 @@ public class MyDialog extends Dialog {
         private boolean isFocusable3;
         private OnClickListener positiveButtonClickListener;
         private OnClickListener negativeButtonClickListener;
+
         //        private
         public Builder(Context context) {
             this.context = context;
         }
 
         public abstract void setCarity1();
+
         public abstract void setCarity2();
+
         public abstract void setCarity3();
+
         public Builder setIsFocusable1(boolean isFocusable) {
             this.isFocusable1 = isFocusable;
             return this;
         }
+
         public Builder setIsFocusable2(boolean isFocusable) {
             this.isFocusable2 = isFocusable;
             return this;
         }
+
         public Builder setIsFocusable3(boolean isFocusable) {
             this.isFocusable3 = isFocusable;
             return this;
@@ -132,11 +138,27 @@ public class MyDialog extends Dialog {
             return this;
         }
 
+        public int getCheck() {
+            switch (rg.getCheckedRadioButtonId()) {
+                case R.id.rb_biao:
+                    return 0;
+                case R.id.rb_gao:
+                    return 1;
+                case R.id.rb_chao:
+                    return 2;
+                default:
+                    return 0;
+            }
+
+        }
+
+        RadioGroup rg;
+
         public MyDialog create() {
             LayoutInflater inflater = (LayoutInflater) context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             // instantiate the dialog with the custom Theme
-            final MyDialog dialog = new MyDialog(context,R.style.Dialog);
+            final MyDialog dialog = new MyDialog(context, R.style.Dialog);
             View layout = inflater.inflate(R.layout.layout_dialog, null);
             dialog.addContentView(layout, new ViewGroup.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
@@ -145,20 +167,20 @@ public class MyDialog extends Dialog {
             RadioButton rb_biao = (RadioButton) layout.findViewById(R.id.rb_biao);
             RadioButton rb_gao = (RadioButton) layout.findViewById(R.id.rb_gao);
             RadioButton rb_chao = (RadioButton) layout.findViewById(R.id.rb_chao);
-            RadioGroup rg = (RadioGroup)layout.findViewById(R.id.rg);
+            rg = (RadioGroup) layout.findViewById(R.id.rg);
 
-            if (isFocusable1){
+            if (isFocusable1) {
                 rg.check(R.id.rb_biao);
-            }else if(isFocusable2){
+            } else if (isFocusable2) {
                 rg.check(R.id.rb_gao);
-            }else if (isFocusable3){
+            } else if (isFocusable3) {
                 rg.check(R.id.rb_chao);
             }
 
             rb_biao.setEnabled(isFocusable1);
             rb_gao.setEnabled(isFocusable2);
             rb_chao.setEnabled(isFocusable3);
-            System.out.println("---isFocusable1 = " + isFocusable1 + "-isFocusable2= "+isFocusable2+"-isFocusable3="+isFocusable3);
+            System.out.println("---isFocusable1 = " + isFocusable1 + "-isFocusable2= " + isFocusable2 + "-isFocusable3=" + isFocusable3);
 
             rg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                 @Override
@@ -218,18 +240,6 @@ public class MyDialog extends Dialog {
                 layout.findViewById(R.id.negativeButton).setVisibility(
                         View.GONE);
             }
-            // set the content message
-//            if (message != null) {
-//                ((TextView) layout.findViewById(R.id.message)).setText(message);
-//            } else if (contentView != null) {
-//                // if no message set
-//                // add the contentView to the dialog body
-//                ((LinearLayout) layout.findViewById(R.id.content))
-//                        .removeAllViews();
-//                ((LinearLayout) layout.findViewById(R.id.content))
-//                        .addView(contentView, new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT));
-//            }
-
             dialog.setContentView(layout);
             return dialog;
         }

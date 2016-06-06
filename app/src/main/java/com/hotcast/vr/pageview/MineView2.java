@@ -192,7 +192,7 @@ public class MineView2 extends BaseView implements View.OnClickListener {
                 break;
             case R.id.rl_glasses2:
                 SharedPreUtil sp = SharedPreUtil.getInstance(activity);
-                int g = sp.select("glass", -1);
+                int g = sp.select("glass", 2);
                 final GlassesDialog.Builder builder = new GlassesDialog.Builder(activity) {
                     @Override
                     public void YouCanDo() {
@@ -202,7 +202,6 @@ public class MineView2 extends BaseView implements View.OnClickListener {
                 builder.setNegativeButton(activity.getResources().getString(R.string.cancel),
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                System.out.println("---您选择取消");
                                 dialog.dismiss();
                             }
                         });

@@ -52,6 +52,9 @@ public class AndroidReceiver extends BroadcastReceiver {
             case "continueDownLoad":
                 BaseApplication.downLoadManager.startTask(url);
                 break;
+            case "UnityCancle":
+
+                break;
             case "unitywork":
                 DownLoadService.unitydoing = false;
                 break;

@@ -8,6 +8,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
@@ -21,7 +22,6 @@ import com.hotcast.vr.services.AndroidService;
 import com.hotcast.vr.services.FileCacheService;
 import com.hotcast.vr.services.UnityService;
 import com.hotcast.vr.tools.L;
-import com.hotcast.vr.tools.Md5Utils;
 import com.hotcast.vr.tools.UnityTools;
 import com.lidroid.xutils.BitmapUtils;
 
@@ -53,17 +53,17 @@ public class BaseApplication extends Application {
         return instance;
     }
 
-    public static String version = "v1.0.5";//版本号
+    public static String version = "v2.0.0";//版本号
     public static String platform;//平台号
     public static String device = "weihuoqu";//设备号
-    public static String packagename;//包名
+    public static String packagename = "com.hotcast.vr";//包名
 
 
     public static final String IMG_DISCCACHE_DIR = "/mnt/sdcard/jarvis/imgcache";
     public static boolean pagerf = false;
     public static boolean cacheFileChange = false;
-    public static  String VedioCacheUrl;
-    public static String ImgCacheUrl ;
+    public static String VedioCacheUrl;
+    public static String ImgCacheUrl;
 
 
     public static List<Classify> classifies = new ArrayList<>();
@@ -84,12 +84,12 @@ public class BaseApplication extends Application {
 
     @Override
     public void onCreate() {
-        if (hasSDCard()){
+        if (hasSDCard()) {
             VedioCacheUrl = Environment.getExternalStorageDirectory().getAbsolutePath() + "/hostcast/vr/";
             ImgCacheUrl = Environment.getExternalStorageDirectory().getAbsolutePath() + "/hostcast/vr/vedioImg/";
-        }else {
+        } else {
             VedioCacheUrl = Environment.getDataDirectory() + "/hostcast/vr/";
-            ImgCacheUrl = Environment.getDataDirectory()+ "/hostcast/vr/vedioImg/";
+            ImgCacheUrl = Environment.getDataDirectory() + "/hostcast/vr/vedioImg/";
         }
 //        updateDb();
         UnityTools.context = getApplicationContext();
@@ -131,6 +131,7 @@ public class BaseApplication extends Application {
             android.os.Process.killProcess(android.os.Process.myPid());
         }
     }
+
     /**
      * 判断手机是否有SD卡。
      *

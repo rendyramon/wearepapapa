@@ -283,15 +283,13 @@ public class DownLoadService extends Service {
     public void sendMessageToUnity(String url, String state, String pecnet, long s) {
         String speed = (s / 1024) + "";
         System.out.println("---发送消息到unity1");
-        if (unitydoing) {
-            System.out.println("---发送消息到unity2");
-            Intent intent = new Intent("UnitySendMessage");
-            intent.putExtra("url", url);
-            intent.putExtra("state", state);
-            intent.putExtra("pecnet", pecnet);
-            intent.putExtra("speed", speed);
-            sendBroadcast(intent);
-        }
+        System.out.println("---发送消息到unity2");
+        Intent intent = new Intent("UnitySendMessage");
+        intent.putExtra("url", url);
+        intent.putExtra("state", state);
+        intent.putExtra("pecnet", pecnet);
+        intent.putExtra("speed", speed);
+        sendBroadcast(intent);
     }
 
     public class NetStateReceiver extends BroadcastReceiver {

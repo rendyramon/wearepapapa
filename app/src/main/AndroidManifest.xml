@@ -56,7 +56,7 @@
         <activity
             android:name=".SplashActivity"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
+            android:theme="@style/Theme.NoAnimation">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -439,7 +439,7 @@
             android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale"
             android:launchMode="singleTask"
             android:process=":Unity"
-            android:screenOrientation="landscape">
+            android:screenOrientation="portrait">
             <intent-filter>
                 <category android:name="com.google.intent.category.CARDBOARD" />
                 <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
@@ -459,28 +459,8 @@
             android:name=".services.AndroidService"
             android:enabled="true"
             android:exported="true"></service>
-        <!--多朵-->
-        <activity
-            android:name="com.dlodlo.dvr.sdk.unity.DvrUnityActivity"
-            android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale"
-            android:label="@string/app_name"
-            android:launchMode="singleTask"
-            android:process=":Unity"
-            android:screenOrientation="landscape">
-            <intent-filter>
-                <category android:name="com.dlodlo.intent.category.DVR" />
-                <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
-            </intent-filter>
 
-            <meta-data
-                android:name="unityplayer.UnityActivity"
-                android:value="true" />
-            <meta-data
-                android:name="unityplayer.ForwardNativeEventsToDalvik"
-                android:value="false" />
-        </activity>
     </application>
-    <!-- 多朵-->
     <supports-screens
         android:anyDensity="true"
         android:largeScreens="true"

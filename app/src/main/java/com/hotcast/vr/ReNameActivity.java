@@ -104,7 +104,7 @@ public class ReNameActivity extends BaseActivity {
                             bt_save.setEnabled(true);
                         }else {
                             bt_save.setEnabled(false);
-                            //showToast(getResources().getString(R.string.et_password));
+//                            showToast(getResources().getString(R.string.et_password));
                         }
                     }
                 });

@@ -24,6 +24,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.hotcast.vr.bean.LocalVideoBean;
+import com.hotcast.vr.services.UnityService;
 import com.hotcast.vr.u3d.UnityPlayerActivity;
 import com.lidroid.xutils.BitmapUtils;
 
@@ -44,7 +45,7 @@ public class LocalVideoActivity extends BaseActivity implements ActivityCompat.O
     @InjectView(R.id.lv)
     GridView lv;
     @InjectView(R.id.bt_editor)
-    Button bt_editor;
+    TextView bt_editor;
     ArrayList<LocalVideoBean> list;
     BitmapUtils bitmapUtils;
 
@@ -107,12 +108,9 @@ public class LocalVideoActivity extends BaseActivity implements ActivityCompat.O
                 localBean2.setImagePath(BaseApplication.ImgCacheUrl + VideoName.replace(".mp4", ".jpg"));
                 list.add(localBean2);
             }
-
             cursor.moveToNext();
         }
-
         cursor.close();
-
     }
 
     private void initListView() {
@@ -131,26 +129,22 @@ public class LocalVideoActivity extends BaseActivity implements ActivityCompat.O
                 }
                 System.out.println("===" + localurl);
                 if (file.exists()) {
+                    String type;
+                    if (localurl.contains("_3d_interaction")) {
+                        type = "3d";
+                    } else if (localurl.contains("_vr_interaction")) {
+                        type = "vr_interaction";
+                    } else if (localurl.contains("_3d_noteraction")) {
+                        type = "3d_noteraction";
+                    } else {
+                        type = "vr";
+                    }
+                    DBUnity(new String[]{"file://" + localurl, "0", "", "", "", type}, true);
+                    startService(new Intent(LocalVideoActivity.this, UnityService.class));
                     Intent intent;
                     intent = new Intent(LocalVideoActivity.this, UnityPlayerActivity.class);
                     LocalVideoActivity.this.startActivity(intent);
 
-                    Intent intent1 = new Intent("Unitystart");
-                    intent1.putExtra("nowplayUrl", "file://" + localurl);
-                    intent1.putExtra("qingxidu", "0");
-                    intent1.putExtra("sdurl", "");
-                    intent1.putExtra("hdrul", "");
-                    intent1.putExtra("uhdrul", "");
-                    if (localurl.contains("_3d_interaction")) {
-                        intent1.putExtra("type", "3d");
-                    } else if (localurl.contains("_vr_interaction")) {
-                        intent1.putExtra("type", "vr_interaction");
-                    } else if (localurl.contains("_3d_noteraction")) {
-                        intent1.putExtra("type", "3d_noteraction");
-                    } else {
-                        intent1.putExtra("type", "vr");
-                    }
-                    sendBroadcast(intent1);
                 }
             }
         });

@@ -37,6 +37,7 @@ import com.hotcast.vr.bean.VideosNew;
 import com.hotcast.vr.dialog.MyDialog;
 import com.hotcast.vr.pageview.DetailScrollView;
 import com.hotcast.vr.receiver.DownloadReceiver;
+import com.hotcast.vr.services.UnityService;
 import com.hotcast.vr.tools.Constants;
 import com.hotcast.vr.tools.DensityUtils;
 import com.hotcast.vr.tools.L;
@@ -53,6 +54,7 @@ import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
+import com.unity3d.player.UnityPlayer;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -161,31 +163,39 @@ public class DetailActivity extends BaseActivity {
     }
 
     private void startPlay(String play_url, int qingxidu, Play play) {
-        intent = new Intent(this, UnityPlayerActivity.class);
-        DetailActivity.this.startActivity(intent);
+        LocalBean2 l = null;
+        try {
+            l = db.findById(LocalBean2.class, play_url);
 
-        Intent intent1 = new Intent("Unitystart");
-        intent1.putExtra("nowplayUrl", play_url);
-        intent1.putExtra("qingxidu", qingxidu + "");
-
-
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
+        if (l != null && l.getCurState() == 3) {
+            play_url = l.getLocalurl();
+        }
+        String[] urls = new String[6];
+        urls[0] = play_url;
+        urls[1] = qingxidu + "";
         if (!TextUtils.isEmpty(play.getSd_url())) {
-            intent1.putExtra("sdurl", play.getSd_url());
+            urls[2] = play.getSd_url();
         } else {
-            intent1.putExtra("sdurl", "");
+            urls[2] = "";
         }
         if (!TextUtils.isEmpty(play.getHd_url())) {
-            intent1.putExtra("hdrul", play.getHd_url());
+            urls[3] = play.getHd_url();
         } else {
-            intent1.putExtra("hdrul", "");
+            urls[3] = "";
         }
         if (!TextUtils.isEmpty(play.getUhd_url())) {
-            intent1.putExtra("uhdrul", play.getUhd_url());
+            urls[4] = play.getUhd_url();
         } else {
-            intent1.putExtra("uhdrul", "");
+            urls[4] = "";
         }
-        intent1.putExtra("type", type);
-        sendBroadcast(intent1);
+        urls[5] = type;
+        DBUnity(urls,false);
+        startService(new Intent(this, UnityService.class));
+        intent = new Intent(this, UnityPlayerActivity.class);
+        DetailActivity.this.startActivity(intent);
     }
 
     class ViewHolder {
@@ -217,6 +227,7 @@ public class DetailActivity extends BaseActivity {
             @Override
             public void onSuccess(ResponseInfo<String> responseInfo) {
                 if (flag) {
+                    System.out.println("---详情页：" + responseInfo.result);
                     initPlayUrl(responseInfo.result);
                 } else {
                     progressBar5.setVisibility(View.GONE);
@@ -228,35 +239,20 @@ public class DetailActivity extends BaseActivity {
                         if ("success".equals(playerBean.getMessage()) || 0 <= playerBean.getCode() && playerBean.getCode() <= 10) {
                             play = playerBean.getData();
                             type = play.getType();
-                            if (SharedPreUtil.getBooleanData(DetailActivity.this, "islow", false)) {
-                                if (!TextUtils.isEmpty(play.getSd_url())) {
-                                    play_url = play.getSd_url();
-                                    qingxidu = 0;
-                                    BaseApplication.clarityText = getResources().getString(R.string.standard_definition);
-                                } else if (!TextUtils.isEmpty(play.getHd_url())) {
-                                    play_url = play.getHd_url();
-                                    qingxidu = 1;
-                                    BaseApplication.clarityText = getResources().getString(R.string.hd);
-                                } else if (!TextUtils.isEmpty(play.getUhd_url())) {
-                                    play_url = play.getUhd_url();
-                                    qingxidu = 2;
-                                    BaseApplication.clarityText = getResources().getString(R.string.super_clear);
-                                }
-                            } else {
-                                if (!TextUtils.isEmpty(play.getHd_url())) {
-                                    play_url = play.getHd_url();
-                                    qingxidu = 1;
-                                    BaseApplication.clarityText = getResources().getString(R.string.hd);
-                                } else if (!TextUtils.isEmpty(play.getSd_url())) {
-                                    play_url = play.getSd_url();
-                                    qingxidu = 0;
-                                    BaseApplication.clarityText = getResources().getString(R.string.standard_definition);
-                                } else if (!TextUtils.isEmpty(play.getUhd_url())) {
-                                    play_url = play.getUhd_url();
-                                    qingxidu = 2;
-                                    BaseApplication.clarityText = getResources().getString(R.string.super_clear);
-                                }
+                            if (!TextUtils.isEmpty(play.getHd_url())) {
+                                play_url = play.getHd_url();
+                                qingxidu = 1;
+                                BaseApplication.clarityText = getResources().getString(R.string.hd);
+                            } else if (!TextUtils.isEmpty(play.getSd_url())) {
+                                play_url = play.getSd_url();
+                                qingxidu = 0;
+                                BaseApplication.clarityText = getResources().getString(R.string.standard_definition);
+                            } else if (!TextUtils.isEmpty(play.getUhd_url())) {
+                                play_url = play.getUhd_url();
+                                qingxidu = 2;
+                                BaseApplication.clarityText = getResources().getString(R.string.super_clear);
                             }
+//                            }
                         }
                         if (play_url.length() > 1) {
                             startPlay(play_url, qingxidu, play);
@@ -285,43 +281,24 @@ public class DetailActivity extends BaseActivity {
             if ("success".equals(playerBean.getMessage()) || 0 <= playerBean.getCode() && playerBean.getCode() <= 10) {
                 play = playerBean.getData();
                 type = play.getType();
-                if (SharedPreUtil.getBooleanData(this, "islow", false)) {
-                    if (!TextUtils.isEmpty(play.getSd_url())) {
-                        play_url = play.getSd_url();
-                        qingxidu = 0;
-                        BaseApplication.clarityText = getResources().getString(R.string.standard_definition);
-                    } else if (!TextUtils.isEmpty(play.getHd_url())) {
-                        play_url = play.getHd_url();
-                        qingxidu = 1;
-                        BaseApplication.clarityText = getResources().getString(R.string.hd);
-                    } else if (!TextUtils.isEmpty(play.getUhd_url())) {
-                        play_url = play.getUhd_url();
-                        qingxidu = 2;
-                        BaseApplication.clarityText = getResources().getString(R.string.super_clear);
-                    }
-                    download();
-                    initCatch(play_url);
-                    saveUrl = play_url;
-                    title = play.getTitle();
-                } else {
-                    if (!TextUtils.isEmpty(play.getHd_url())) {
-                        play_url = play.getHd_url();
-                        qingxidu = 1;
-                        BaseApplication.clarityText = getResources().getString(R.string.hd);
-                    } else if (!TextUtils.isEmpty(play.getSd_url())) {
-                        play_url = play.getSd_url();
-                        qingxidu = 0;
-                        BaseApplication.clarityText = getResources().getString(R.string.standard_definition);
-                    } else if (!TextUtils.isEmpty(play.getUhd_url())) {
-                        play_url = play.getUhd_url();
-                        qingxidu = 2;
-                        BaseApplication.clarityText = getResources().getString(R.string.super_clear);
-                    }
-                    download();
-                    initCatch(play_url);
-                    saveUrl = play_url;
-                    title = play.getTitle();
+                if (!TextUtils.isEmpty(play.getHd_url())) {
+                    play_url = play.getHd_url();
+                    qingxidu = 1;
+                    BaseApplication.clarityText = getResources().getString(R.string.hd);
+                } else if (!TextUtils.isEmpty(play.getSd_url())) {
+                    play_url = play.getSd_url();
+                    qingxidu = 0;
+                    BaseApplication.clarityText = getResources().getString(R.string.standard_definition);
+                } else if (!TextUtils.isEmpty(play.getUhd_url())) {
+                    play_url = play.getUhd_url();
+                    qingxidu = 2;
+                    BaseApplication.clarityText = getResources().getString(R.string.super_clear);
                 }
+                download();
+                initCatch(play_url);
+                saveUrl = play_url;
+                title = play.getTitle();
+//                }
 
 
             }
@@ -432,174 +409,6 @@ public class DetailActivity extends BaseActivity {
         });
 
     }
-//    class BtAsyncTask  extends AsyncTask<Integer, Integer, Bitmap>{
-//        String url;
-//        int flag = 0;
-//        public BtAsyncTask(String url,int flag) {
-//            super();
-//            this.url = url;
-//            this.flag = flag;
-//
-//        }
-//        @Override
-//        protected Bitmap doInBackground(Integer... params) {
-//            Bitmap bitmap = null;
-//            InputStream in = null;
-//            BufferedOutputStream out = null;
-//            try
-//            {
-//                in = new BufferedInputStream(new URL(url).openStream(), 2*1024);
-//                final ByteArrayOutputStream dataStream = new ByteArrayOutputStream();
-//                out = new BufferedOutputStream(dataStream, 2*1024);
-//                copy(in, out);
-//                out.flush();
-//                byte[] data = dataStream.toByteArray();
-//                bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
-////            data = null;
-//                System.out.println("---bitmap="+bitmap);
-//                return bitmap;
-//            }
-//            catch (IOException e) {
-//                e.printStackTrace();
-//                return null;
-//            }
-//        }
-//
-//        @Override
-//        protected void onPostExecute(Bitmap bitmap) {
-//            msg.setThumbImage(bitmap);
-//            SendMessageToWX.Req req = new SendMessageToWX.Req();
-//            req.transaction = String.valueOf(System.currentTimeMillis());
-//            req.message = msg;
-//            req.scene = flag==0?SendMessageToWX.Req.WXSceneSession:SendMessageToWX.Req.WXSceneTimeline;
-//            wxApi.sendReq(req);
-////            super.onPostExecute(bitmap);
-//        }
-//    }
-
-//    /**
-//     * 得到本地或者网络上的bitmap url - 网络或者本地图片的绝对路径,比如:
-//     * <p/>
-//     * A.网络路径: url="http://blog.foreverlove.us/girl2.png" ;
-//     * <p/>
-//     * B.本地路径:url="file://mnt/sdcard/photo/image.png";
-//     * <p/>
-//     * C.支持的图片格式 ,png, jpg,bmp,gif等等
-//     *
-//     * @param url
-//     * @return
-//     */
-//    public  Bitmap GetLocalOrNetBitmap(String url) {
-////        progressBar5.setVisibility(View.VISIBLE);
-////        showToast("正在处理图片，请稍等");
-//        Bitmap bitmap = null;
-//        InputStream in = null;
-//        BufferedOutputStream out = null;
-//        try {
-//            in = new BufferedInputStream(new URL(url).openStream(), 2 * 1024);
-//            final ByteArrayOutputStream dataStream = new ByteArrayOutputStream();
-//            out = new BufferedOutputStream(dataStream, 2 * 1024);
-//            copy(in, out);
-//            out.flush();
-//            byte[] data = dataStream.toByteArray();
-//            bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
-////            data = null;
-//            System.out.println("---bitmap=" + bitmap.getRowBytes());
-//
-//            return bitmap;
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//            return null;
-//        }finally {
-////            progressBar5.setVisibility(View.GONE);
-//        }
-//
-//    }
-//    public  byte[] GetBtobyte(String url) {
-////        progressBar5.setVisibility(View.VISIBLE);
-////        showToast("正在处理图片，请稍等");
-//        byte[] data;
-//        InputStream in = null;
-//        BufferedOutputStream out = null;
-//        try {
-//            in = new BufferedInputStream(new URL(url).openStream(), 2 * 1024);
-//            final ByteArrayOutputStream dataStream = new ByteArrayOutputStream();
-//            out = new BufferedOutputStream(dataStream, 2 * 1024);
-//            copy(in, out);
-//            out.flush();
-//            data = dataStream.toByteArray();
-////            data = null;
-//            System.out.println("---byte=:"+data.length );
-//
-//            return data;
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//            return new byte[1];
-//        }finally {
-////            progressBar5.setVisibility(View.GONE);
-//        }
-//
-//    }
-//
-//
-//    private static void copy(InputStream in, OutputStream out)
-//            throws IOException {
-//        byte[] b = new byte[2 * 1024];
-//        int read;
-//        while ((read = in.read(b)) != -1) {
-//            out.write(b, 0, read);
-//        }
-//    }
-//
-//    /**
-//     * 微信分享 （这里仅提供一个分享网页的示例，其它请参看官网示例代码）
-//     *
-//     * @param flag(0:分享到微信好友，1：分享到微信朋友圈)
-//     */
-//    WXWebpageObject webpage;
-//    WXMediaMessage msg;
-//
-//    private void wechatShare(final int f) {
-//        new Thread(new Runnable() {
-//            int flag = f;
-//            @Override
-//            public void run() {
-//                final Bitmap bmp = GetLocalOrNetBitmap(details.getImage().get(0));
-////final byte[] bytes = GetBtobyte(details.getImage().get(0));
-//                runOnUiThread(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        webpage = new WXWebpageObject();
-//
-//                        webpage.webpageUrl = "http://m.hotcast.cn/Home/Play/play?set_id=" + videoset_id;
-//                        msg = new WXMediaMessage(webpage);
-//                        msg.title = details.getTitle();
-//                        msg.description = details.getDesc();
-//                        //这里替换一张自己工程里的图片资源
-////                        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher);
-//                        //msg.setThumbImage(bitmap);
-//                        Bitmap thumbBmp = Bitmap.createScaledBitmap(bmp, 150, 150, true);
-//                        bmp.recycle();
-//
-//                        msg.thumbData = Util.bmpToByteArray(thumbBmp,true);
-////                        showToast("---bitmap="+bitmap);
-////                        Bitmap bmp = BitmapFactory.decodeFile(details.getImage().get(0));
-////                        Bitmap thumbBmp = Bitmap.createScaledBitmap(bmp, 150, 150, true);
-////                        bmp.recycle();
-////                        msg.thumbData = Uti
-////                        showToast("bitmap="+bitmap.getRowBytes());
-//                        SendMessageToWX.Req req = new SendMessageToWX.Req();
-//                        req.transaction = String.valueOf(System.currentTimeMillis());
-//                        req.message = msg;
-//                        req.scene = flag == 0 ? SendMessageToWX.Req.WXSceneSession : SendMessageToWX.Req.WXSceneTimeline;
-//                        wxApi.sendReq(req);
-//                        showToast("发送微信分享，跳转到微信" + flag);
-//                        rl_share.setVisibility(View.GONE);
-//                    }
-//                });
-//            }
-//        }).start();
-//    }
 
 
     private void share() {
@@ -611,6 +420,7 @@ public class DetailActivity extends BaseActivity {
             }
         });
     }
+
     /**
      * 判断是否安装微信
      *
@@ -629,8 +439,9 @@ public class DetailActivity extends BaseActivity {
         }
         return false;
     }
-    private void shareToWeixin(int flag){
-        if (!isWeixinAvilible()){
+
+    private void shareToWeixin(int flag) {
+        if (!isWeixinAvilible()) {
             showToast("请安装微信后进行分享操作");
             return;
         }
@@ -643,7 +454,7 @@ public class DetailActivity extends BaseActivity {
 
         shareParams.setImageUrl(details.getImage().get(0));
         shareParams.setUrl("http://m.hotcast.cn/Home/Play/play?set_id=" + videoset_id);
-        switch (flag){
+        switch (flag) {
             case 0://分享到好友
                 Platform wechat1 = ShareSDK.getPlatform(Wechat.NAME);
                 wechat1.share(shareParams);
@@ -658,11 +469,12 @@ public class DetailActivity extends BaseActivity {
 
 
     }
+
     private void download() {
         ll_download.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MyDialog.Builder builder = new MyDialog.Builder(DetailActivity.this) {
+                final MyDialog.Builder builder = new MyDialog.Builder(DetailActivity.this) {
                     @Override
                     public void setCarity1() {
                         if (!TextUtils.isEmpty(play.getSd_url())) {
@@ -700,31 +512,35 @@ public class DetailActivity extends BaseActivity {
                     }
                 };
                 if (TextUtils.isEmpty(play.getSd_url())) {
-                    System.out.println("---标清无");
                     builder.setIsFocusable1(false);
                 } else {
                     builder.setIsFocusable1(true);
                 }
-                if ((!TextUtils.isEmpty(play.getSd_url())) && SharedPreUtil.getBooleanData(DetailActivity.this, "islow", true)) {
+                if (TextUtils.isEmpty(play.getHd_url())) {
                     builder.setIsFocusable2(false);
+                } else {
+                    builder.setIsFocusable2(true);
+                }
+                if (TextUtils.isEmpty(play.getUhd_url())) {
                     builder.setIsFocusable3(false);
                 } else {
-                    if (TextUtils.isEmpty(play.getHd_url())) {
-                        builder.setIsFocusable2(false);
-                    } else {
-                        builder.setIsFocusable2(true);
-                    }
-                    if (TextUtils.isEmpty(play.getUhd_url())) {
-                        builder.setIsFocusable3(false);
-                    } else {
-                        builder.setIsFocusable3(true);
-                    }
+                    builder.setIsFocusable3(true);
                 }
-
                 builder.setTitle(getResources().getString(R.string.select_downlod));
                 builder.setPositiveButton(getResources().getString(R.string.determine), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         System.out.println("---您选择确定");
+                        switch (builder.getCheck()) {
+                            case 0:
+                                saveUrl = play.getSd_url();
+                                break;
+                            case 1:
+                                saveUrl = play.getHd_url();
+                                break;
+                            case 2:
+                                saveUrl = play.getUhd_url();
+                                break;
+                        }
                         BaseApplication.detailsList.add(details);
                         BaseApplication.playUrls.add(saveUrl);
 //                        showToast("已经加入下载列表");
@@ -795,7 +611,7 @@ public class DetailActivity extends BaseActivity {
             tv_datetime.setText(getResources().getString(R.string.update_time) + date);
         }
         introduced.setText(details.getDesc());
-        System.out.println("--title=" + details.getTitle() + "--text=" + details.getDesc()+"---");
+        System.out.println("--title=" + details.getTitle() + "--text=" + details.getDesc() + "---");
     }
 
     public void refreshPinglun() {

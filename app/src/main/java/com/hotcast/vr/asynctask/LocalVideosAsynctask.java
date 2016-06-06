@@ -139,7 +139,6 @@ public class LocalVideosAsynctask extends AsyncTask<Integer, Integer, List<Local
                         MediaStore.Images.Thumbnails.MINI_KIND, options);
                 saveBitmap(VideoName.replace(".mp4", ".jpg"), bitmap);
             }
-
             cursor.moveToNext();
         }
 

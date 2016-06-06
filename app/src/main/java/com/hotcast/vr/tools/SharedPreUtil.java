@@ -21,7 +21,7 @@ public class SharedPreUtil {
 
     private SharedPreUtil(Context context) {
         mSharedPreference = context.getSharedPreferences(SHAREDNAME,
-                Context.MODE_PRIVATE);
+                Context.MODE_WORLD_WRITEABLE);
     }
 
     public static SharedPreUtil getInstance(Context context) {
